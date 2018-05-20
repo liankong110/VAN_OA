@@ -1,0 +1,1204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sf-canned-report PUBLIC
+ "-//SuccessFactors, Inc.//DTD Report Definition File 1.0//EN"
+ "http://svn/viewvc/svn/V4/trunk/src/com/sf/dtd/RDF.dtd?view=co">
+
+<sf-canned-report name="2014 - Test - RP Inventory of Replacements Report (2014) v6_28012014" category="Employees" mergeDataWithExcelWriter="true" mergeDataWithBIP="false" mergeDataWithAspose="false" reportInExcel2007="false" priority="normal" enableDiagnostics="false" useStreamingApproach="false">
+  <report-desc><![CDATA[RP Inventory of Replacements Report, 28012014]]></report-desc>
+  <report-detailed-desc><![CDATA[RP Inventory of Replacements Report,updated version 28012014]]></report-detailed-desc>
+  <xls-report-template sysConfigKey="2014 - Test - RP Inventory of Replacements Report (2014) v6_28012014" />
+  <global-params>
+    <query-param name="selectedDiv" dataType="string" inputMode="select-multiple" required="true" permission-type="div-permissions" size="4">
+      <param-desc><![CDATA[Select Division]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct USERS_SYS_DIVISION from change_on_setup.USERS_SYSINFO order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedDept" dataType="string" inputMode="select-multiple" required="true" permission-type="dept-permissions" size="4">
+      <param-desc><![CDATA[Select Cost Centre]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct USERS_SYS_DEPARTMENT from change_on_setup.USERS_SYSINFO order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedLoc" dataType="string" inputMode="select-multiple" required="true" permission-type="loc-permissions" size="4">
+      <param-desc><![CDATA[Select Location]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct USERS_SYS_LOCATION from change_on_setup.USERS_SYSINFO order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedCustom13" dataType="string" inputMode="select-multiple" required="false" permission-type="custom13-permissions" size="4">
+      <param-desc><![CDATA[HR Function Indicator]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct CUSTOM13 from change_on_setup.USER_CUSTOMFIELD 
+        where CUSTOM13 is not null and CUSTOM13 != 'N/A' order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedCustom02" dataType="string" inputMode="select-multiple" required="false" permission-type="custom02-permissions" size="4">
+      <param-desc><![CDATA[Business Unit]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct CUSTOM02 from change_on_setup.USER_CUSTOMFIELD
+        where CUSTOM02 is not null and CUSTOM02 != 'N/A' order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedCustom12" dataType="string" inputMode="select-multiple" required="false" permission-type="custom12-permissions" size="4">
+      <param-desc><![CDATA[Function]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct CUSTOM12 from change_on_setup.USER_CUSTOMFIELD
+        where CUSTOM12 is not null and CUSTOM12 != 'N/A' order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedCustom14" dataType="string" inputMode="select-multiple" required="false" permission-type="custom14-permissions" size="4">
+      <param-desc><![CDATA[Report Group]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct CUSTOM14 from change_on_setup.USER_CUSTOMFIELD
+        where CUSTOM14 is not null and CUSTOM14 != 'N/A' order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedCustom09" dataType="string" inputMode="select-multiple" required="false" permission-type="custom09-permissions" size="4">
+      <param-desc><![CDATA[Position Level]]></param-desc>
+      <param-option-value-query><![CDATA[select distinct CUSTOM09 from change_on_setup.USER_CUSTOMFIELD
+        where CUSTOM09 is not null and CUSTOM09 != 'N/A' order by 1]]></param-option-value-query>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="selectedTitle" dataType="string" inputMode="radio-group" required="true">
+      <param-desc><![CDATA[Title Type]]></param-desc>
+      <param-radio-value desc="Job Title"><![CDATA[jt]]></param-radio-value>
+      <param-radio-value desc="Preferred Title"><![CDATA[pt]]></param-radio-value>
+      <param-default-value><![CDATA[]]></param-default-value>
+    </query-param>
+    <query-param name="includePKH" dataType="string" inputMode="radio-group" required="true">
+      <param-desc><![CDATA[Include Position Know How]]></param-desc>
+      <param-radio-value desc="No"><![CDATA[no]]></param-radio-value>
+      <param-radio-value desc="Yes"><![CDATA[yes]]></param-radio-value>
+      <param-default-value><![CDATA[no]]></param-default-value>
+    </query-param>
+    <query-param name="includeRPRating" dataType="string" inputMode="radio-group" required="true">
+      <param-desc><![CDATA[Include RP Rating]]></param-desc>
+      <param-radio-value desc="No"><![CDATA[no]]></param-radio-value>
+      <param-radio-value desc="Yes"><![CDATA[yes]]></param-radio-value>
+      <param-default-value><![CDATA[no]]></param-default-value>
+    </query-param>
+  </global-params>
+  <query name="Title Type">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+       select decode((?{selectedTitle}),
+                     'jt', 'Job Title',
+                     'pt', 'Preferred Title',
+                     null) as "Title Type"  
+         from dual                                                                                      
+     ]]></query-sql>
+  </query>
+  <query name="IncludePKH">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+          select case when (?{includePKH}) = 'yes' then 'Yes'
+                      when (?{includePKH}) = 'no' then 'No'
+                 else ''
+                 end as "Include PKH"
+            from dual
+     ]]></query-sql>
+  </query>
+  <query name="IncludeRPRating">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+          select case when (?{includeRPRating}) = 'yes' then 'Yes'
+                      when (?{includeRPRating}) = 'no' then 'No'
+                 else ''
+                 end as "Include RP Rating"
+            from dual
+     ]]></query-sql>
+  </query>
+  <query name="Division Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct USERS_SYS_DIVISION) SELECTED_NUMBER
+                        from change_on_setup.USERS_SYSINFO
+                      where USERS_SYS_DIVISION in (?{selectedDiv})
+                    )
+      , allselection as (select count(distinct u.USERS_SYS_DIVISION) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USERS_SYSINFO u
+						  where (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             else null
+             end as "Division Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Select Division">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      select distinct  USERS_SYS_DIVISION as "Division"
+        from change_on_setup.USERS_SYSINFO
+       where USERS_SYS_DIVISION in (?{selectedDiv}) 
+       order by USERS_SYS_DIVISION 
+                      
+     ]]></query-sql>
+  </query>
+  <query name="Cost Centre Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct USERS_SYS_DEPARTMENT) SELECTED_NUMBER
+                        from change_on_setup.USERS_SYSINFO
+                      where USERS_SYS_DEPARTMENT in (?{selectedDept})
+                    )
+      , allselection as (select count(distinct USERS_SYS_DEPARTMENT) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USERS_SYSINFO
+						   where (('${RBP_ENABLED}' = 'true' and USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             else null 
+             end as "Cost Centre Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Cost Centre">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      select distinct  USERS_SYS_DEPARTMENT as "Cost Centre"
+                             from change_on_setup.USERS_SYSINFO
+                            where USERS_SYS_DEPARTMENT in (?{selectedDept}) 
+                         order by USERS_SYS_DEPARTMENT
+     ]]></query-sql>
+  </query>
+  <query name="Location Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct USERS_SYS_LOCATION) SELECTED_NUMBER
+                        from change_on_setup.USERS_SYSINFO
+                      where USERS_SYS_LOCATION in (?{selectedLoc})
+                    )
+      , allselection as (select count(distinct USERS_SYS_LOCATION) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USERS_SYSINFO
+						   where (('${RBP_ENABLED}' = 'true' and USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             else null
+             end as "Location Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Select Location">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct USERS_SYS_LOCATION) SELECTED_NUMBER
+                        from change_on_setup.USERS_SYSINFO
+                      where USERS_SYS_LOCATION in (?{selectedLoc})
+                    )
+      , allselection as (select count(distinct USERS_SYS_LOCATION) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USERS_SYSINFO
+						   where (('${RBP_ENABLED}' = 'true' and USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+     select distinct USERS_SYS_LOCATION as "Location"
+                             from change_on_setup.USERS_SYSINFO
+                            where USERS_SYS_LOCATION in (?{selectedLoc}) 
+                         order by USERS_SYS_LOCATION
+             
+      
+     ]]></query-sql>
+  </query>
+  <query name="Hrfun Indicator Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct CUSTOM13) SELECTED_NUMBER
+                        from change_on_setup.USER_CUSTOMFIELD
+                      where CUSTOM13 in (?{selectedCustom13})
+                    )
+      , allselection as (select count(distinct CUSTOM13) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USER_CUSTOMFIELD uc
+                              , change_on_setup.USERS_SYSINFO u
+                          where u.USERS_SYS_ID = uc.USERS_SYS_ID
+						  and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'  
+             else null 
+             end as "HrFun Indicator Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Hrfunction Indicator">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      select distinct  CUSTOM13 as "Hr Function Indicator"
+                             from change_on_setup.USER_CUSTOMFIELD   
+                            where CUSTOM13 in (?{selectedCustom13}) 
+                         order by CUSTOM13
+     ]]></query-sql>
+  </query>
+ <query name="Business Unit Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct CUSTOM02) SELECTED_NUMBER
+                        from change_on_setup.USER_CUSTOMFIELD
+                      where CUSTOM02 in (?{selectedCustom02})
+                    )
+      , allselection as (select count(distinct CUSTOM02) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USER_CUSTOMFIELD uc
+                              , change_on_setup.USERS_SYSINFO u
+                          where u.USERS_SYS_ID = uc.USERS_SYS_ID
+                            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'			  
+             else null
+             end as "Business Unit Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Business Unit">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+    select distinct  CUSTOM02 as "Business Unit"
+                             from change_on_setup.USER_CUSTOMFIELD   
+                            where CUSTOM02 in (?{selectedCustom02}) 
+                         order by CUSTOM02
+            
+     ]]></query-sql>
+  </query>
+   <query name="Position Level Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct CUSTOM09) SELECTED_NUMBER
+                        from change_on_setup.USER_CUSTOMFIELD
+                      where CUSTOM09 in (?{selectedCustom09})
+                    )
+      , allselection as (select count(distinct CUSTOM09) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USER_CUSTOMFIELD uc
+                              , change_on_setup.USERS_SYSINFO u
+                          where u.USERS_SYS_ID = uc.USERS_SYS_ID
+                            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             else null 
+             end as "Position Level Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Position Level">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      select distinct CUSTOM09 as "Position Level"
+                             from change_on_setup.USER_CUSTOMFIELD   
+                            where CUSTOM09 in (?{selectedCustom09}) 
+                         order by CUSTOM09
+     ]]></query-sql>
+  </query>
+  <query name="Function Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct CUSTOM12) SELECTED_NUMBER  
+                       from change_on_setup.USER_CUSTOMFIELD
+                      where CUSTOM12 in (?{selectedCustom12})
+                    )
+      , allselection as (select count(distinct CUSTOM12) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USER_CUSTOMFIELD uc
+                              , change_on_setup.USERS_SYSINFO u
+                          where u.USERS_SYS_ID = uc.USERS_SYS_ID
+                            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             
+             else null 
+             end as "Function Flag"
+        from selected
+           , allselection     
+     ]]></query-sql>
+  </query>
+  <query name="Function">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      select distinct  CUSTOM12 as "Function"
+                             from change_on_setup.USER_CUSTOMFIELD   
+                            where CUSTOM12 in (?{selectedCustom12}) 
+                         order by CUSTOM12
+     ]]></query-sql>
+  </query>
+  <query name="Report Group Flag">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+      with 
+        selected as (select count(distinct CUSTOM14) SELECTED_NUMBER  
+                       from change_on_setup.USER_CUSTOMFIELD
+                      where CUSTOM14 in (?{selectedCustom14})
+                    )
+      , allselection as (select count(distinct CUSTOM14) ALL_SELECTION_NUMBER  
+                           from change_on_setup.USER_CUSTOMFIELD uc
+                              , change_on_setup.USERS_SYSINFO u
+                          where u.USERS_SYS_ID = uc.USERS_SYS_ID
+                            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                        )
+          
+      select 
+        case when selected.SELECTED_NUMBER = allselection.ALL_SELECTION_NUMBER
+             then 'All'
+             else null
+             end as "Report Group Flag"
+        from selected
+           , allselection 
+     ]]></query-sql>
+  </query>
+  <query name="Report Group">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[       
+     select distinct  CUSTOM14 as "Report Group"
+                             from change_on_setup.USER_CUSTOMFIELD 
+                            where CUSTOM14 in (?{selectedCustom14})
+                         order by CUSTOM14
+     ]]></query-sql>
+  </query>
+  <query name="Inventory of Replacements">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[
+      with knowhow as (
+         select USERS_SYS_ID
+              , SM_BG_VFLD1
+              , decode(SM_BG_VFLD1,
+                       '1216', 1,
+                       '1056', 2,
+                       '920', 3,
+                       '800', 4,
+                       '700', 5,
+                       '608', 6,
+                       '528', 7,
+                       '460', 8,
+                       '400', 9,
+                       '40', 10,
+                       '12', 11,
+                       '11', 12,
+                       '10', 13,
+                       '0', 14,
+                       'MP', 15,
+                       'E06', 16,
+                       'E05', 17,
+                       'E04', 18,
+                       'E03', 19,
+                       'E02', 20,
+                       'E01', 21,
+                       'L12', 22,
+                       'L11', 23,
+                       'L10', 24,
+                       'L09', 25,
+                       'L08', 26,
+                       'L07', 27,
+                       'L06', 28,
+                       'L05', 29,
+                       'L04', 30,
+                       'L03', 31,
+                       'L02', 32,
+                       'L01', 33,
+                       99
+                     ) PKH_CODE
+           from
+             (select isb.*
+                , dense_rank() over (
+                    partition by isb.USERS_SYS_ID
+                    order by isb.SM_BG_LASTMODIFIED desc
+                  ) as dr
+              from change_on_setup.SM_BACKGROUND isb  
+              where isb.SM_BG_TYPE = 'know'
+             )
+           where dr <= 1
+          ) 
+        , erprating as (select *
+           from 
+             (
+              select distinct sb.USERS_SYS_ID
+                   , sb.SM_BG_VFLD1
+                   , row_number() over (
+                       partition by sb.USERS_SYS_ID
+                       order by sb.SM_BG_STARTDATE desc
+                     ) as rn            
+                from change_on_setup.SM_BACKGROUND sb
+               where sb.SM_BG_TYPE = 'overRPAssess'
+             )
+          where rn <= 1)
+        , rbp as (select u.USERS_SYS_ID
+                    from change_on_setup.USERS_SYSINFO u
+				   where u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})                            
+                 )
+        
+   select distinct puc.CUSTOM02 as "Business Unit"
+        , puc.CUSTOM14 as "Report Group"
+        , puc.CUSTOM09 as "Position Level"
+        , decode(puc.CUSTOM09,
+                  'CEO', 1,
+                  'GH', 2,
+                  'EVP', 3,
+                  'SVP', 4,
+                  'VP', 5,
+                  'VP/MD', 6,
+                  'VP Equivalents', 7,
+                  'L12/AVP/DVP/MD', 8,
+                  'AVP Equivalents', 9,
+                  'AVP', 10,
+                  'L11', 11,
+                  'U11', 12,
+                  'L10', 13,
+                  'U10', 14,
+                  'L09', 15,
+                  'U09', 16,
+                  'L08', 17,
+                  'U08', 18,
+                  'L07', 19,
+                  'U07', 20,
+                  'L06', 21,
+                  'U06', 22,
+                  'L05', 23,
+                  'U05', 24,
+                  'L04', 25,
+                  'U04', 26,
+                  'L03', 27,
+                  'U03', 28,
+                  'L02', 29,
+                  'U02', 30,
+                  'L01', 31,
+                  'U01', 32,
+				  'U12', 33,
+				  'UMP', 34,
+				  'EVP Equivalent',35,
+				  'SVP Equivalent',36,
+                  99) as "Position Level Code"
+        , decode((?{selectedTitle}), 
+                  'jt', (select USERS_VALUE
+                           from change_on_setup.USERS_INFO
+                          where USERS_KEY = 'TITLE'
+                            and USERS_SYS_ID = pusr.USERS_SYS_ID
+							and rownum = 1),
+                  'pt', nvl(puc.CUSTOM08, (select USERS_VALUE
+                           from change_on_setup.USERS_INFO
+                          where USERS_KEY = 'TITLE'
+                            and USERS_SYS_ID = pusr.USERS_SYS_ID
+							and rownum = 1)),
+                  (select USERS_VALUE
+                     from change_on_setup.USERS_INFO
+                    where USERS_KEY = 'TITLE'
+                      and USERS_SYS_ID = pusr.USERS_SYS_ID
+					  and rownum = 1)
+                )  as "Position"
+        , pos.PKH_CODE as "Position PKH Code"
+        , pos.INCUMBENT_CODE as "Position Incumbent Code"
+        , pos.POSITION_CODE as "Position Code"
+        , pusr.USERS_SYS_GENDER as "Gender" 
+        , decode(pusr.USERS_SYS_VALID, 'v', 'TBH',
+            rtrim(pusr.USERS_SYS_FIRSTNAME || ' ' || pusr.USERS_SYS_LASTNAME)
+          ) as "Incumbent Name"
+        , pusr.USERS_SYS_ID as "Incumbent ID"
+        , decode(?{includePKH}, 'yes', pknow.SM_BG_VFLD1, null) as "Incumbent Position Know How"
+        , pknow.PKH_CODE as "Incumbent PKH Code"
+        , successor.SUCCESSOR_NAME as "Successor Name"
+		, nomineeNum.nomiNum as "nomiNum"
+        , successor.USERS_SYS_ID as "Successor ID"
+        , successor.NOMINATOR_NAME as "Nominator Name"
+        , successor.NOMINATION_DATE as "Nomination Date"
+        , successor.SUCCESSOR_GENDER as "Successor Gender" 
+        , decode((?{selectedTitle}), 
+                  'jt', successor.SUCCESSOR_TITLE,
+                  'pt', nvl(successor.SUCCESSOR_PREFERRED_TITLE, successor.SUCCESSOR_TITLE),
+                  successor.SUCCESSOR_TITLE)  as "Successor Title"
+        , successor.SUCCESSOR_READINESS_RATING as "Successor Readiness Rating"
+        , decode(?{includePKH}, 'yes', successor.SUCCESSOR_POSITION_KNOW_HOW, null) as "Successor Position Know How"
+        , successor.PKH_CODE as "Successor PKH Code"
+        , decode(?{includeRPRating}, 'yes', successor.CURRENT_RP_RATING, null) as "Current RP Rating"
+        , decode(decode(?{includeRPRating}, 'yes', successor.CURRENT_RP_RATING, null)
+                 , 'Advanced Progression', 1
+                 , 'Promotable Resource', 2
+                 , 'Versatile Resource', 3
+                 , 'Valued Contributor', 4
+                 , 'Key', 5
+                 , 'Risk', 6
+                 , null
+                ) "Cur RP Rating Number"
+        , successor.ROLE_BASED_PERMISSIONS as "Role Based Permissions"
+        , puc.CUSTOM11 as "Job Grade Evaluated"
+        , puc.CUSTOM12 as "Function"
+      from
+          change_on_setup.USERS_SYSINFO pusr
+        , change_on_setup.USER_CUSTOMFIELD puc
+        , (select * 
+             from (select pos.POSITION_CODE
+                        , pos.INCUMBENT
+                        , decode(iu.USERS_SYS_VALID, 'v', 'TBH',
+                                 rtrim(iu.USERS_SYS_FIRSTNAME || ' ' || iu.USERS_SYS_LASTNAME)
+                          ) INCUMBENT_CODE
+                        , pknow.SM_BG_VFLD1
+                        , pknow.PKH_CODE
+                        , row_number() over(partition by pos.POSITION_CODE order by pknow.PKH_CODE) rn
+                     from change_on_setup.POSITION pos
+                        , change_on_setup.USERS_SYSINFO iu
+                        , knowhow pknow
+                    where pos.INCUMBENT = pknow.USERS_SYS_ID(+)
+                      and iu.USERS_SYS_ID = pos.INCUMBENT
+                      and iu.USERS_SYS_VALID in ('t', 'T', 'v')
+                  )   
+            where rn <= 1
+          ) pos
+        , (select distinct pos.INCUMBENT  
+                , su.USERS_SYS_ID  
+                , rtrim(su.USERS_SYS_FIRSTNAME || ' ' || su.USERS_SYS_LASTNAME) as "SUCCESSOR_NAME"
+                , suc.CUSTOM02 as "SUCCESSOR_BUSINESS_UNIT"
+                , su.USERS_SYS_GENDER as "SUCCESSOR_GENDER" 
+                , (select USERS_VALUE
+                     from change_on_setup.USERS_INFO
+                    where USERS_KEY = 'TITLE'
+                      and USERS_SYS_ID = su.USERS_SYS_ID
+					  and rownum = 1
+                  ) as "SUCCESSOR_TITLE"
+                , suc.CUSTOM08 as "SUCCESSOR_PREFERRED_TITLE"  
+                , sknow.SM_BG_VFLD1 as "SUCCESSOR_POSITION_KNOW_HOW"
+                , sknow.PKH_CODE
+                , case when rbp.USERS_SYS_ID is not null
+                       then (select l.LABEL
+                               from change_on_setup.LABEL l
+                                  , change_on_setup.PICKLIST p
+                              where l.OPTIONID = p.OPTIONID
+                                and p.PICKLISTID = 'overallResPlan2'
+                                and p.SOURCE = 'live_profile'
+                                and l.SOURCE = 'picklist'
+                                and to_char(l.OPTIONID) = erprating.SM_BG_VFLD1
+                                and l.LOCALE = 'en_US'
+                                and rownum = 1) 
+                  end as "CURRENT_RP_RATING"
+                , case when rbp.USERS_SYS_ID is not null
+                       then 1
+                       else 0
+                  end as "ROLE_BASED_PERMISSIONS"
+                , ltrim(rtrim(sv.SCALE_SHORTNAME)) as "SUCCESSOR_READINESS_RATING"
+                , (select rtrim(nu.USERS_SYS_FIRSTNAME || ' ' || nu.USERS_SYS_LASTNAME)
+                     from change_on_setup.USERS_SYSINFO nu
+                    where nu.USERS_SYS_ID = nominee.CREATED_BY
+                  ) as "NOMINATOR_NAME"
+                , to_char(nominee.CREATED_DATE, 'dd/mm/yyyy') as "NOMINATION_DATE"
+             from change_on_setup.USERS_SYSINFO su
+                , change_on_setup.USER_CUSTOMFIELD suc
+                , change_on_setup.POSITION pos
+                , change_on_setup.SM_NOMINATION nomination
+                , change_on_setup.SM_NOMINEE nominee
+                , change_on_setup.SCALE s
+                , change_on_setup.SCALE_VALUES sv
+                , knowhow sknow
+                , erprating
+                , rbp
+            where nomination.POSITION_ID = pos.POSITION_ID
+              and nomination.NOMINATION_ID = nominee.NOMINATION_ID
+              and nominee.NOMINEE_USER_ID = su.USERS_SYS_ID
+              and nominee.NOMINEE_USER_ID = sknow.USERS_SYS_ID (+)
+              and nominee.NOMINEE_USER_ID = erprating.USERS_SYS_ID (+)
+              and nominee.NOMINEE_USER_ID = rbp.USERS_SYS_ID (+)
+              and nominee.STATUS = 1
+              and nomination.NOMINATION_TYPE = 1
+              and s.SCALE_NAME='Readiness'
+              and sv.SCALE_LOCALE = 'en_US'
+              and s.SCALE_ID = sv.SCALE_ID
+              and sv.SCALE_VALUE = nominee.READINESS
+              and su.USERS_SYS_ID = suc.USERS_SYS_ID 
+              and su.USERS_SYS_VALID in ('t','T')
+          ) successor
+        , knowhow pknow
+		, (select  nominee.NOMINEE_USER_ID
+		        , COUNT(nominee.NOMINEE_USER_ID) nomiNum		
+			 from change_on_setup.USERS_SYSINFO u
+				, change_on_setup.POSITION pos
+				, change_on_setup.SM_NOMINATION nomination
+				, change_on_setup.SM_NOMINEE nominee        
+			where nomination.POSITION_ID = pos.POSITION_ID
+			  AND nomination.NOMINATION_ID = nominee.NOMINATION_ID
+			  AND nominee.NOMINEE_USER_ID = u.USERS_SYS_ID
+			  AND pos.DELETED = 0
+			  AND nominee.STATUS = 1
+			  AND nomination.NOMINATION_TYPE = 1
+              AND u.USERS_SYS_VALID in ('t', 'T', 'v')	
+           GROUP BY nominee.NOMINEE_USER_ID		
+		   ) nomineeNum
+    where pusr.USERS_SYS_ID = pos.INCUMBENT
+      and pusr.USERS_SYS_ID = successor.INCUMBENT(+)
+	  and successor.USERS_SYS_ID = nomineeNum.NOMINEE_USER_ID (+)
+      and pusr.USERS_SYS_ID = puc.USERS_SYS_ID 
+      and pusr.USERS_SYS_ID = pknow.USERS_SYS_ID (+)
+      and pusr.USERS_SYS_VALID in ('t', 'T', 'v')
+      and puc.CUSTOM02 in (?{selectedCustom02})
+      and puc.CUSTOM09 in (?{selectedCustom09})
+      and puc.CUSTOM12 in (?{selectedCustom12})
+      and puc.CUSTOM14 in (?{selectedCustom14})   
+      and puc.CUSTOM13 in (?{selectedCustom13})
+      and pusr.USERS_SYS_DIVISION in (?{selectedDiv})
+      and pusr.USERS_SYS_DEPARTMENT in (?{selectedDept})
+      and pusr.USERS_SYS_LOCATION in (?{selectedLoc})
+      and (('${RBP_ENABLED}' = 'true' and pusr.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))	   
+      order by "Report Group"
+             , "Position Level Code"
+             , "Position PKH Code"
+             , "Business Unit"
+             , "Position Incumbent Code"
+             , "Position Code"
+             , "Successor PKH Code"
+             , "Current RP Rating"
+             , "Successor Name"
+     ]]></query-sql>
+  </query>
+  <query name="SVPnumSummary">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[
+	     with nominationData as
+			(
+			SELECT distinct p.incumbent incumbentUserID
+				 , u.users_sys_id
+				 , lower(sv.SCALE_SHORTNAME) shortname
+			FROM change_on_setup.USERS_SYSINFO u
+			   , change_on_setup.USER_CUSTOMFIELD uc
+			   , change_on_setup.POSITION p
+			   , change_on_setup.SCALE_VALUES sv
+			   , change_on_setup.SCALE s
+			   , change_on_setup.SM_NOMINEE nominee
+			   , change_on_setup.SM_NOMINATION nomination
+			where u.USERS_SYS_ID = nominee.NOMINEE_USER_ID
+			  and u.USERS_SYS_VALID in ('T','t', 'v')
+			  and u.USERS_SYS_ID = uc.USERS_SYS_ID 
+			  and uc.CUSTOM09 in ('SVP','SVP Equivalent') 
+			  and uc.CUSTOM02 in (?{selectedCustom02})
+			  and uc.CUSTOM09 in (?{selectedCustom09})
+			  and uc.CUSTOM12 in (?{selectedCustom12})
+			  and uc.CUSTOM14 in (?{selectedCustom14})   
+			  and uc.CUSTOM13 in (?{selectedCustom13})
+			  and u.USERS_SYS_DIVISION in (?{selectedDiv})
+			  and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+			  and u.USERS_SYS_LOCATION in (?{selectedLoc})    
+			  and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+			  and nominee.NOMINATION_ID = nomination.NOMINATION_ID
+			  and nomination.NOMINATION_TYPE = 1
+			  and nominee.STATUS = 1
+			  and nomination.POSITION_ID = p.POSITION_ID
+			  and nominee.READINESS = sv.SCALE_VALUE
+			  and sv.SCALE_ID = s.SCALE_ID
+			  and sv.SCALE_LOCALE = 'en_US'
+			  and s.SCALE_NAME = 'Readiness'
+			  and lower(sv.SCALE_SHORTNAME) <> 'unplanned/emergency'
+			order by 1
+			)
+        , nomineeData as
+			(select nomination.nomination_id
+				  , nomination.POSITION_ID
+				  , sv.scale_shortname
+				  , p.incumbent 
+			   from change_on_setup.SM_NOMINEE nominee
+				  , change_on_setup.SM_NOMINATION nomination
+				  , change_on_setup.SCALE_VALUES sv
+				  , change_on_setup.SCALE s
+				  , change_on_setup.users_sysinfo u
+				  , change_on_setup.POSITION p
+			  where nominee.NOMINATION_ID = nomination.NOMINATION_ID
+				and u.USERS_SYS_ID = nominee.nominee_user_id
+				and nomination.POSITION_ID = p.POSITION_ID
+				and nomination.NOMINATION_TYPE = 1
+				and nominee.STATUS = 1
+				and nominee.READINESS = sv.SCALE_VALUE
+				and sv.SCALE_ID = s.SCALE_ID
+				and sv.SCALE_LOCALE = 'en_US'
+				and s.SCALE_NAME = 'Readiness'
+				and lower(sv.SCALE_SHORTNAME) <> 'unplanned/emergency' 
+			)
+
+         SELECT (SELECT count(*)  
+           FROM change_on_setup.USERS_SYSINFO u
+              , change_on_setup.POSITION p
+              , change_on_setup.USER_CUSTOMFIELD uc
+          where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+            and uc.CUSTOM09 in ('SVP','SVP Equivalent')  
+            and uc.CUSTOM02 in (?{selectedCustom02})
+            and uc.CUSTOM09 in (?{selectedCustom09})
+            and uc.CUSTOM12 in (?{selectedCustom12})
+            and uc.CUSTOM14 in (?{selectedCustom14})   
+            and uc.CUSTOM13 in (?{selectedCustom13})
+            and u.USERS_SYS_DIVISION in (?{selectedDiv})
+            and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+            and u.USERS_SYS_LOCATION in (?{selectedLoc})
+            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))      
+            and p.POSITION_ID in (
+                   select POSITION_ID
+                     from nomineeData                  
+                     )
+         ) as "successorNum"
+      ,  (SELECT count(*) 
+            FROM change_on_setup.USERS_SYSINFO u
+               , change_on_setup.POSITION p
+              , change_on_setup.USER_CUSTOMFIELD uc
+           where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+             and uc.CUSTOM09 in ('SVP','SVP Equivalent')  
+             and uc.CUSTOM02 in (?{selectedCustom02})
+             and uc.CUSTOM09 in (?{selectedCustom09})
+             and uc.CUSTOM12 in (?{selectedCustom12})
+             and uc.CUSTOM14 in (?{selectedCustom14})   
+             and uc.CUSTOM13 in (?{selectedCustom13})
+             and u.USERS_SYS_DIVISION in (?{selectedDiv})
+             and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+             and u.USERS_SYS_LOCATION in (?{selectedLoc})  
+             and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))       
+             and p.POSITION_ID not in (
+                     select POSITION_ID
+                       from nomineeData 
+                     )
+           ) as "noSuccessor"  
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData 
+               GROUP BY incumbentUserID                     
+                )
+          WHERE RN_Total >= 1 
+            AND NT_Total >= 1
+            AND LT_Total >= 1)    as "totalReadyAll"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                                
+                )
+         WHERE RN_Total >= 1 
+           AND (NT_Total >= 1 or LT_Total >= 1  )) as "totalReadySorL"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                             
+                )
+         WHERE RN_Total >= 1    
+           AND NT_Total = 0 
+           AND LT_Total = 0)  as "ReadyNow"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                  
+                )
+           WHERE RN_Total = 0
+             AND (NT_Total >= 1 OR LT_Total >= 1 ))  as "SorLonly"
+	   , (SELECT count(*)
+           FROM  (select nomination_id
+                       , count(POSITION_ID)
+                    from nomineeData
+                       , change_on_setup.USERS_SYSINFO u
+                       , change_on_setup.USER_CUSTOMFIELD uc
+                   where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+                     and uc.CUSTOM09 in ('SVP','SVP Equivalent')
+                     and nomineeData.incumbent = u.users_sys_id                       
+                     and uc.CUSTOM02 in (?{selectedCustom02})
+                     and uc.CUSTOM09 in (?{selectedCustom09})
+                     and uc.CUSTOM12 in (?{selectedCustom12})
+                     and uc.CUSTOM14 in (?{selectedCustom14})   
+                     and uc.CUSTOM13 in (?{selectedCustom13})
+                     and u.USERS_SYS_DIVISION in (?{selectedDiv})
+                     and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+                     and u.USERS_SYS_LOCATION in (?{selectedLoc})
+                     and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                  group by nomination_id, POSITION_ID
+                  having count(POSITION_ID) = 1 )
+         ) as "uniquSuForRN"
+        , (SELECT count(*)
+           FROM  (select nomination_id
+                       , count(POSITION_ID)
+                    from nomineeData 
+                       , change_on_setup.USERS_SYSINFO u
+                       , change_on_setup.USER_CUSTOMFIELD uc
+                   where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+                     and uc.CUSTOM09 in ('SVP','SVP Equivalent')
+                     and nomineeData.incumbent = u.users_sys_id  
+                     and uc.CUSTOM02 in (?{selectedCustom02})
+                     and uc.CUSTOM09 in (?{selectedCustom09})
+                     and uc.CUSTOM12 in (?{selectedCustom12})
+                     and uc.CUSTOM14 in (?{selectedCustom14})   
+                     and uc.CUSTOM13 in (?{selectedCustom13})
+                     and u.USERS_SYS_DIVISION in (?{selectedDiv})
+                     and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+                     and u.USERS_SYS_LOCATION in (?{selectedLoc})
+                     and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                  group by  nomination_id, POSITION_ID
+                  having count(POSITION_ID) = 1 )
+         ) as "uniquSuForAll"
+   FROM dual
+   ]]></query-sql>
+  </query>
+  <query name="EVPnumSummary">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[
+		with nominationData as
+			(
+			SELECT distinct p.incumbent incumbentUserID
+				 , u.users_sys_id
+				 , lower(sv.SCALE_SHORTNAME) shortname
+			FROM change_on_setup.USERS_SYSINFO u
+			   , change_on_setup.USER_CUSTOMFIELD uc
+			   , change_on_setup.POSITION p
+			   , change_on_setup.SCALE_VALUES sv
+			   , change_on_setup.SCALE s
+			   , change_on_setup.SM_NOMINEE nominee
+			   , change_on_setup.SM_NOMINATION nomination
+			where u.USERS_SYS_ID = nominee.NOMINEE_USER_ID
+			  and u.USERS_SYS_VALID in ('T','t', 'v')
+			  and u.USERS_SYS_ID = uc.USERS_SYS_ID 
+			  and uc.CUSTOM09 in ('EVP','EVP Equivalent') 
+			  and uc.CUSTOM02 in (?{selectedCustom02})
+			  and uc.CUSTOM09 in (?{selectedCustom09})
+			  and uc.CUSTOM12 in (?{selectedCustom12})
+			  and uc.CUSTOM14 in (?{selectedCustom14})   
+			  and uc.CUSTOM13 in (?{selectedCustom13})
+			  and u.USERS_SYS_DIVISION in (?{selectedDiv})
+			  and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+			  and u.USERS_SYS_LOCATION in (?{selectedLoc})    
+			  and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+			  and nominee.NOMINATION_ID = nomination.NOMINATION_ID
+			  and nomination.NOMINATION_TYPE = 1
+			  and nominee.STATUS = 1
+			  and nomination.POSITION_ID = p.POSITION_ID
+			  and nominee.READINESS = sv.SCALE_VALUE
+			  and sv.SCALE_ID = s.SCALE_ID
+			  and sv.SCALE_LOCALE = 'en_US'
+			  and s.SCALE_NAME = 'Readiness'
+			  and lower(sv.SCALE_SHORTNAME) <> 'unplanned/emergency'
+			order by 1
+			)
+        , nomineeData as
+			(select nomination.nomination_id
+				  , nomination.POSITION_ID
+				  , sv.scale_shortname
+				  , p.incumbent 
+			   from change_on_setup.SM_NOMINEE nominee
+				  , change_on_setup.SM_NOMINATION nomination
+				  , change_on_setup.SCALE_VALUES sv
+				  , change_on_setup.SCALE s
+				  , change_on_setup.users_sysinfo u
+				  , change_on_setup.POSITION p
+			  where nominee.NOMINATION_ID = nomination.NOMINATION_ID
+				and u.USERS_SYS_ID = nominee.nominee_user_id
+				and nomination.POSITION_ID = p.POSITION_ID
+				and nomination.NOMINATION_TYPE = 1
+				and nominee.STATUS = 1
+				and nominee.READINESS = sv.SCALE_VALUE
+				and sv.SCALE_ID = s.SCALE_ID
+				and sv.SCALE_LOCALE = 'en_US'
+				and s.SCALE_NAME = 'Readiness'
+				and lower(sv.SCALE_SHORTNAME) <> 'unplanned/emergency' 
+			)
+
+         SELECT (SELECT count(*)  
+           FROM change_on_setup.USERS_SYSINFO u
+              , change_on_setup.POSITION p
+              , change_on_setup.USER_CUSTOMFIELD uc
+          where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+            and uc.CUSTOM09 in ('EVP','EVP Equivalent')  
+            and uc.CUSTOM02 in (?{selectedCustom02})
+            and uc.CUSTOM09 in (?{selectedCustom09})
+            and uc.CUSTOM12 in (?{selectedCustom12})
+            and uc.CUSTOM14 in (?{selectedCustom14})   
+            and uc.CUSTOM13 in (?{selectedCustom13})
+            and u.USERS_SYS_DIVISION in (?{selectedDiv})
+            and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+            and u.USERS_SYS_LOCATION in (?{selectedLoc})
+            and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))      
+            and p.POSITION_ID in (
+                   select POSITION_ID
+                     from nomineeData                  
+                     )
+         ) as "successorNum"
+      ,  (SELECT count(*) 
+            FROM change_on_setup.USERS_SYSINFO u
+               , change_on_setup.POSITION p
+              , change_on_setup.USER_CUSTOMFIELD uc
+           where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+             and uc.CUSTOM09 in ('EVP','EVP Equivalent')  
+             and uc.CUSTOM02 in (?{selectedCustom02})
+             and uc.CUSTOM09 in (?{selectedCustom09})
+             and uc.CUSTOM12 in (?{selectedCustom12})
+             and uc.CUSTOM14 in (?{selectedCustom14})   
+             and uc.CUSTOM13 in (?{selectedCustom13})
+             and u.USERS_SYS_DIVISION in (?{selectedDiv})
+             and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+             and u.USERS_SYS_LOCATION in (?{selectedLoc})  
+             and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))       
+             and p.POSITION_ID not in (
+                     select POSITION_ID
+                       from nomineeData 
+                     )
+           ) as "noSuccessor"  
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData 
+               GROUP BY incumbentUserID                     
+                )
+          WHERE RN_Total >= 1 
+            AND NT_Total >= 1
+            AND LT_Total >= 1)    as "totalReadyAll"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                                
+                )
+         WHERE RN_Total >= 1 
+           AND (NT_Total >= 1 or LT_Total >= 1  )) as "totalReadySorL"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                             
+                )
+         WHERE RN_Total >= 1    
+           AND NT_Total = 0 
+           AND LT_Total = 0)  as "ReadyNow"
+       , (SELECT COUNT(*)
+           FROM (SELECT incumbentUserID
+                      , sum(decode(shortname,'ready Now (immediate)',1,0))RN_Total
+                      , sum(decode(shortname,'long-term (within 48 months)',1,0))LT_Total
+                      , sum(decode(shortname,'near-term (within 24 months)',1,0))NT_Total
+                   FROM nominationData
+               GROUP BY incumbentUserID                  
+                )
+           WHERE RN_Total = 0
+             AND (NT_Total >= 1 OR LT_Total >= 1 ))  as "SorLonly"
+	   , (SELECT count(*)
+           FROM  (select nomination_id
+                       , count(POSITION_ID)
+                    from nomineeData
+                       , change_on_setup.USERS_SYSINFO u
+                       , change_on_setup.USER_CUSTOMFIELD uc
+                   where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+                     and uc.CUSTOM09 in ('EVP','EVP Equivalent')
+                     and nomineeData.incumbent = u.users_sys_id                       
+                     and uc.CUSTOM02 in (?{selectedCustom02})
+                     and uc.CUSTOM09 in (?{selectedCustom09})
+                     and uc.CUSTOM12 in (?{selectedCustom12})
+                     and uc.CUSTOM14 in (?{selectedCustom14})   
+                     and uc.CUSTOM13 in (?{selectedCustom13})
+                     and u.USERS_SYS_DIVISION in (?{selectedDiv})
+                     and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+                     and u.USERS_SYS_LOCATION in (?{selectedLoc})
+                     and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                  group by nomination_id, POSITION_ID
+                  having count(POSITION_ID) = 1 )
+         ) as "uniquSuForRN"
+        , (SELECT count(*)
+           FROM  (select nomination_id
+                       , count(POSITION_ID)
+                    from nomineeData 
+                       , change_on_setup.USERS_SYSINFO u
+                       , change_on_setup.USER_CUSTOMFIELD uc
+                   where u.USERS_SYS_ID = uc.USERS_SYS_ID 
+                     and uc.CUSTOM09 in ('EVP','EVP Equivalent')
+                     and nomineeData.incumbent = u.users_sys_id  
+                     and uc.CUSTOM02 in (?{selectedCustom02})
+                     and uc.CUSTOM09 in (?{selectedCustom09})
+                     and uc.CUSTOM12 in (?{selectedCustom12})
+                     and uc.CUSTOM14 in (?{selectedCustom14})   
+                     and uc.CUSTOM13 in (?{selectedCustom13})
+                     and u.USERS_SYS_DIVISION in (?{selectedDiv})
+                     and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+                     and u.USERS_SYS_LOCATION in (?{selectedLoc})
+                     and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))
+                  group by  nomination_id, POSITION_ID
+                  having count(POSITION_ID) = 1 )
+         ) as "uniquSuForAll"
+   FROM dual
+   ]]></query-sql>
+  </query>
+  <query name="totalSummary">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[
+	  with successor as
+	(
+       SELECT distinct successor.successorName  
+          , u.users_sys_id incumbentId
+          , rbp.USERS_SYS_ID RBP_USERID
+          , 'Y' ON_SUCCESSION 
+		  , case when rbp.USERS_SYS_ID is not null
+             then erprating.LABEL
+            end as "CURRENT_RP_RATING"
+          , successor.readiness
+		  , successor.successorId successorId
+         FROM change_on_setup.USERS_SYSINFO u
+          , change_on_setup.USER_CUSTOMFIELD uc
+          , (select u.USERS_SYS_ID
+                      from change_on_setup.USERS_SYSINFO u
+                     where u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})                            
+                   ) rbp
+          
+          , (SELECT sv.scale_shortname
+                  , p.incumbent incumbentId
+                  , u.users_sys_id successorId
+              , rtrim(u.USERS_SYS_FIRSTNAME || ' ' || u.USERS_SYS_LASTNAME) successorName
+              , trim(lower(sv.scale_shortname)) readiness
+               FROM change_on_setup.USERS_SYSINFO u
+                , change_on_setup.USER_CUSTOMFIELD uc
+                  , change_on_setup.POSITION p
+                  , change_on_setup.SCALE_VALUES sv
+                  , change_on_setup.SCALE s
+                  , change_on_setup.SM_NOMINEE nominee
+                  , change_on_setup.SM_NOMINATION nomination
+                where u.USERS_SYS_ID = nominee.NOMINEE_USER_ID
+                and u.USERS_SYS_VALID in ('T','t', 'v')
+              and u.USERS_SYS_ID = uc.USERS_SYS_ID (+)
+                and nominee.NOMINATION_ID = nomination.NOMINATION_ID
+                and nomination.NOMINATION_TYPE = 1
+                and nominee.STATUS = 1
+                and nomination.POSITION_ID = p.POSITION_ID
+                and nominee.READINESS = sv.SCALE_VALUE
+                and sv.SCALE_ID = s.SCALE_ID
+                and sv.SCALE_LOCALE = 'en_US'
+                and s.SCALE_NAME = 'Readiness' 
+                and uc.CUSTOM02 in (?{selectedCustom02})
+			          and uc.CUSTOM09 in (?{selectedCustom09})
+			          and uc.CUSTOM12 in (?{selectedCustom12})
+			          and uc.CUSTOM14 in (?{selectedCustom14})   
+			          and uc.CUSTOM13 in (?{selectedCustom13})
+			          and u.USERS_SYS_DIVISION in (?{selectedDiv})
+			          and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+			          and u.USERS_SYS_LOCATION in (?{selectedLoc})    
+                and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true'))     
+             ) successor     
+		  ,  (select latestSb.users_sys_id               
+                   , (select l.label
+                        from change_on_setup.LABEL l
+                           , change_on_setup.PICKLIST p
+                       where l.OPTIONID = p.OPTIONID
+                         and p.PICKLISTID = 'overallResPlan2'
+                         and p.SOURCE = 'live_profile'
+                         and l.SOURCE = 'picklist'
+                         and p.STATUS = 0
+                         and to_char(l.OPTIONID) = latestSb.SM_BG_VFLD1
+                         and l.LOCALE = 'en_US'
+                         and rownum=1    
+                      ) label
+                from 
+                   (select sb.users_sys_id   
+                         , sb.SM_BG_VFLD1
+                      from (select users_sys_id
+                                 , SM_BG_VFLD1
+                                 , dense_rank() over(partition by users_sys_id order by sm_bg_startdate desc, SM_BG_ORDERPOS desc) dr
+                              from change_on_setup.SM_BACKGROUND
+                             where SM_BG_TYPE = 'overRPAssess'
+                            ) sb
+                     where dr<=1) latestSb
+             )  erprating   
+		WHERE successor.successorId = erprating.users_sys_id  
+          AND u.USERS_SYS_ID = successor.incumbentId   
+          AND u.USERS_SYS_ID = uc.USERS_SYS_ID 
+          AND u.USERS_SYS_ID = rbp.USERS_SYS_ID
+		)
+		SELECT successor.successorName as "SUCCESSOR_NAME"
+			 , 'Y' "ON_SUCCESSION" 
+			 , successor."CURRENT_RP_RATING"
+			 , sum(decode(successor.readiness,'ready now (immediate)',1,0))RN_Total   
+			 , sum(decode(successor.readiness,'long-term (within 48 months)',1,0)) LT_Total  
+			 , sum(decode(successor.readiness,'near-term (within 24 months)',1,0)) NT_Total
+		  FROM successor
+		group by successor.successorName, successor.successorId, successor."CURRENT_RP_RATING", successor.ON_SUCCESSION	
+		order by 1
+	]]></query-sql>
+  </query>
+  <query name="summaryByUnit">
+    <query-desc><![CDATA[]]></query-desc>
+    <query-sql><![CDATA[
+	        SELECT rtrim(u.USERS_SYS_FIRSTNAME || ' ' || u.USERS_SYS_LASTNAME) as "INCUMBENT"
+                 , successor.successorName as "SUCCESSOR"
+			     , decode((?{selectedTitle}), 
+					           'jt', (select USERS_VALUE
+						                  from change_on_setup.USERS_INFO
+						                 where USERS_KEY = 'TITLE'
+						                   and USERS_SYS_ID = u.USERS_SYS_ID
+						                   and rownum = 1),
+					           'pt', nvl(uc.CUSTOM08, (select USERS_VALUE
+						                                   from change_on_setup.USERS_INFO
+						                                  where USERS_KEY = 'TITLE'
+						                                    and USERS_SYS_ID = u.USERS_SYS_ID
+						                                    and rownum = 1)),
+					           (select USERS_VALUE
+					              from change_on_setup.USERS_INFO
+					             where USERS_KEY = 'TITLE'
+						             and USERS_SYS_ID = u.USERS_SYS_ID
+						             and rownum = 1)
+					     )  as "POSITION"   
+				  , uc.CUSTOM02 as "BUSINESS UNIT"  
+                  , successor.readiness as "READINESS" 				  
+			   FROM change_on_setup.USERS_SYSINFO u
+				  , change_on_setup.USER_CUSTOMFIELD uc
+				  , (SELECT sv.scale_shortname
+					        , p.incumbent incumbentId
+                            , u.users_sys_id successorId
+							, rtrim(u.USERS_SYS_FIRSTNAME || ' ' || u.USERS_SYS_LASTNAME) successorName
+							, lower(sv.scale_shortname) readiness
+					     FROM change_on_setup.USERS_SYSINFO u
+						    , change_on_setup.USER_CUSTOMFIELD uc
+					        , change_on_setup.POSITION p
+					        , change_on_setup.SCALE_VALUES sv
+					        , change_on_setup.SCALE s
+					        , change_on_setup.SM_NOMINEE nominee
+					        , change_on_setup.SM_NOMINATION nomination
+				        where u.USERS_SYS_ID = nominee.NOMINEE_USER_ID
+					      and u.USERS_SYS_VALID in ('T','t', 'v')
+						  and u.USERS_SYS_ID = uc.USERS_SYS_ID (+)
+					      and nominee.NOMINATION_ID = nomination.NOMINATION_ID
+					      and nomination.NOMINATION_TYPE = 1
+					      and nominee.STATUS = 1
+					      and nomination.POSITION_ID = p.POSITION_ID
+					      and nominee.READINESS = sv.SCALE_VALUE
+					      and sv.SCALE_ID = s.SCALE_ID
+					      and sv.SCALE_LOCALE = 'en_US'
+					      and s.SCALE_NAME = 'Readiness'                          
+                          and uc.CUSTOM02 in (?{selectedCustom02})
+                          and uc.CUSTOM09 in (?{selectedCustom09})
+                          and uc.CUSTOM12 in (?{selectedCustom12})
+                          and uc.CUSTOM14 in (?{selectedCustom14})   
+                          and uc.CUSTOM13 in (?{selectedCustom13})
+                          and u.USERS_SYS_DIVISION in (?{selectedDiv})
+                          and u.USERS_SYS_DEPARTMENT in (?{selectedDept})
+                          and u.USERS_SYS_LOCATION in (?{selectedLoc})    
+			              and (('${RBP_ENABLED}' = 'true' and u.USERS_SYS_ID in (?{RBP_TARGET_POPULATION})) or ('${RBP_ENABLED}' != 'true')) 						  
+				     ) successor
+			WHERE u.users_sys_id = successor.incumbentId   
+              AND u.USERS_SYS_ID = uc.USERS_SYS_ID 			 
+	     ORDER BY "BUSINESS UNIT", "POSITION"
+        
+	]]></query-sql>
+  </query>
+</sf-canned-report>

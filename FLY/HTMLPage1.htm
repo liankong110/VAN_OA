@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>无标题页</title>
+</head>
+<body>
+ <noscript><iframe src="55.htm" width="100px"></iframe>dsdsds</noscript>sssss
+<!-- 禁止选择文本： --> 
+<script type="text/javascript">
+var omitformtags=["input", "textarea", "select"]
+omitformtags=omitformtags.join("|")
+function disableselect(e){ 
+if (omitformtags.indexOf(e.target.tagName.toLowerCase())==-1) 
+return false 
+}
+function reEnable(){ 
+return true 
+}
+if (typeof document.onselectstart!="undefined") 
+document.onselectstart=new Function ("return false") 
+else{ 
+document.onmousedown=disableselect 
+document.onmouseup=reEnable 
+} 
+</script>
+<!-- 禁用右键: --> 
+<script> 
+function stop(){ 
+return false; 
+} 
+document.oncontextmenu=stop; 
+</script>
+
+
+</body>
+</html>

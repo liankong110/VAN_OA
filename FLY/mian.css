@@ -1,0 +1,205 @@
+﻿        body, div, p, h1, h2, h3, h4, ul, li, table
+{
+	margin:0;
+	padding:0;
+	border:none;
+}
+	 
+body
+{
+	background: #B4B4B4 url(Image/body_bg.gif) repeat left top;	
+	font-family: Tahoma, Arial, sans-serif;
+	font-size:75%;
+}
+
+/* Master Page Layout */
+#master_header
+{
+	margin: -1px auto 0 auto;
+	
+}
+
+#master_headertop
+{
+	background: url(Image/headertop_img.jpg) no-repeat left top;
+}
+
+#master_headerbottom
+{
+	background: url(Image/headerbottom_img.png) no-repeat left top;
+}
+
+#master_page
+{
+	margin: 5px auto 20px auto;
+ 
+}
+
+#master_menu 
+{
+	float: left;
+ 
+	padding-left: 10px;
+}
+
+.sidebar 
+{
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.sidebarheader
+{
+	height: 24px;
+	padding: 10px 0 0 35px;
+	background: url(Image/sidebar_header.png) no-repeat left top;
+	color: #FFF;
+	font-family: Arial, Sans-Serif;
+	font-size: 1.2em;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.sidebarcontent
+{	
+	border: 1px solid #0F2543;
+	padding: 20px 20px 20px 30px;
+	line-height: 1.5em;
+	font-weight: bold;
+}
+
+#master_sidebarSamples
+{	
+	padding-top: 72px;
+	background: #FFF url(Image/samples_bg.gif) no-repeat left top;
+}
+
+#master_sidebarWalkthroughs
+{
+	padding-top: 72px;
+	background: #FFF url(Image/walkthrough_bg.gif) no-repeat left top;
+}
+
+.sidebarcontent a
+{
+	padding: 2px 5px;
+	color: #5377A9;
+	text-decoration: none;
+}
+
+.sidebarcontent a:hover
+{
+	background-color: #0F2543;
+	color: #FFF;
+}
+
+.sidebarcontent a:visited
+{
+	font-weight: normal;
+}
+
+#master_content
+{
+	float: left;
+	 
+	margin-left:0px;
+	color: #666666;
+}
+
+/*
+#master_content a
+{
+	color: #5377A9;
+	padding: 1px;
+}
+
+#master_content a:link
+{
+}
+
+#master_content a:visited
+{
+}
+
+#master_content a:hover
+{
+	background-color: #BFBFBF;
+	color:#FFF;
+}
+*/
+
+#master_content ul
+{
+	margin: 0 25px 0 30px;
+}
+
+#master_contentheader
+{
+	height: 0px;
+	
+}
+
+#master_contentplaceholder
+{
+	padding: 30px 20px 40px 20px;
+	border-left: 1px solid #0F2543;
+	border-right: 1px solid #0F2543;
+	border-bottom: 1px solid #0F2543;
+	border-top: 1px solid #0F2543;
+
+	line-height: 1.5em;
+	
+}
+
+#master_contentfooter
+{
+	clear: both;
+	padding: 10px 0 5px 10px;
+	color: #333;
+	font-size: 0.8em;
+	letter-spacing: 0.1em;
+}
+
+        body
+{
+	background: #B4B4B4 url(Image/body_bg.gif) repeat left top;	
+	font-family: Tahoma, Arial, sans-serif;
+	font-size:75%;
+}
+.accordionHeader
+{
+    border: 1px solid #2F4F4F;
+    color: white;
+   
+	font-family: Arial, Sans-Serif;
+	font-size: 12px;
+	font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+     	background: url(Image/sidebar_header.png) no-repeat left top;
+}
+
+ a
+{
+	color:Black;
+	background: none;
+	text-decoration: none;
+}
+
+a:hover
+{
+	background: none;
+	text-decoration: underline;
+}
+
+.accordionContent
+{
+     background-color:White;   
+    border: 1px dashed #2F4F4F;
+    border-top: none;
+    padding: 5px;
+    padding-top: 10px;
+}
+
+ 

@@ -1,0 +1,879 @@
+﻿using System;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web.UI.WebControls;
+using System.Collections.Generic;
+using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Dal.JXC;
+using VAN_OA.Model.BaseInfo;
+using VAN_OA.Model;
+using System.Data;
+
+namespace VAN_OA.JXC
+{
+    
+    public partial class SetPONoIsSpecial : BasePage
+    {
+
+        CG_POOrderService POSer = new CG_POOrderService();
+        List<FpTypeBaseInfo> gooQGooddList = new List<FpTypeBaseInfo>();
+        List<TB_BasePoType> _basePoTypeList = new List<TB_BasePoType>();
+
+       
+        protected string GetType(object type)
+        {
+            if (type.ToString() == "0")
+            {
+                return "收到";
+            }
+
+            return "未收到";
+        }
+
+        protected bool IsSelectedEdit()
+        {
+            if (ViewState["cbIsSelected"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected bool IsCloseEdist()
+        {
+            if (ViewState["isCloseEdist"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected bool IsSpecialEdit()
+        {
+            if (ViewState["isSpecialEdit"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+        protected bool IsPOType()
+        {
+            if (ViewState["isPOType"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        protected string GetNum(string num)
+        {
+            return string.Format("{0:n2}",num);            
+        }
+
+
+        protected bool IsFaxEdist()
+        {
+            if (ViewState["isFaxEdist"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected bool IsFPTypeEdist()
+        {
+            if (ViewState["isFPTypeEdist"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected bool IsJieIsSelected()
+        {
+            if (ViewState["IsJieIsSelected"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected void cbIsPoFax_CheckedChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                TB_CompanyService comSer = new TB_CompanyService();
+                var comList = comSer.GetListArray("");
+                foreach (var m in comList)
+                {
+                    m.ComSimpName += "," + m.Id + "," + m.ComCode;
+                }
+                comList.Insert(0, new VAN_OA.Model.BaseInfo.TB_Company() { ComSimpName = "-1", ComName = "全部" });
+                ddlCompany.DataSource = comList;
+                ddlCompany.DataBind();
+                if (NewShowAll_textName("项目归类", "关闭可编辑") == false)
+                {
+                    ViewState["isCloseEdist"] = false;
+                    btnSaveIsClose.Visible = false;
+                }
+                if (NewShowAll_textName("项目归类", "特殊可编辑") == false)
+                {
+                    ViewState["isSpecialEdit"] = false;
+                }
+                if (NewShowAll_textName("项目归类", "项目类型可编辑") == false)
+                {
+                    ViewState["isPOType"] = false;
+                }
+                if (NewShowAll_textName("项目归类", "含税可编辑") == false)
+                {
+                    ViewState["isFaxEdist"] = false;
+                }
+                if (NewShowAll_textName("项目归类", "发票类型可编辑") == false)
+                {
+                    ViewState["isFPTypeEdist"] = false;
+                }
+                if (NewShowAll_textName("项目归类", "选中可编辑") == false)
+                {
+                    ViewState["cbIsSelected"] = false;
+                    btnIsSelected.Visible = false;
+                }
+                if (NewShowAll_textName("项目归类", "结算选中可编辑") == false)
+                {
+                    ViewState["IsJieIsSelected"] = false;
+                    btnJieIsSelected.Visible = false;
+                }
+
+                var user = new List<Model.User>();
+                var userSer = new Dal.SysUserService();
+
+                //主单
+                var pOOrderList = new List<CG_POOrderService>();
+                gvMain.DataSource = pOOrderList;
+                gvMain.DataBind();
+
+                if (QuanXian_ShowAll("项目归类") == false)
+                {
+                    ViewState["showAll"] = false;
+                    var model = Session["userInfo"] as User;
+                    user.Insert(0, model);
+                }
+                else
+                {
+                    user = userSer.getAllUserByPOList();
+                    user.Insert(0, new VAN_OA.Model.User() { LoginName = "全部", Id = -1 });
+                }
+                ddlUser.DataSource = user;
+                ddlUser.DataBind();
+                ddlUser.DataTextField = "LoginName";
+                ddlUser.DataValueField = "Id";
+
+                var fpTypeBaseInfoService = new FpTypeBaseInfoService();
+                List<FpTypeBaseInfo> fpTypeList = fpTypeBaseInfoService.GetListArray("");
+                fpTypeList.Insert(0, new FpTypeBaseInfo { FpType = "全部", Id = -1 });
+                fpTypeList.Add(new FpTypeBaseInfo { Id = 999, FpType = "" });
+                dllFPstye.DataSource = fpTypeList;
+                dllFPstye.DataBind();
+                dllFPstye.DataTextField = "FpType";
+                dllFPstye.DataValueField = "Id";
+
+                dllFPstye.Items[fpTypeList.Count-1].Attributes.Add("style", "background-color: red");
+
+                List<FpTypeBaseInfo> newFpTypeList = new List<FpTypeBaseInfo>();
+                foreach (var fp in fpTypeList)
+                {
+                    newFpTypeList.Add(new FpTypeBaseInfo { Id=fp.Id,FpType=fp.FpType });
+                }
+               
+                newFpTypeList.Add(new FpTypeBaseInfo { Id=1000,FpType="其他"});
+                ddlFPType.DataSource = newFpTypeList;
+                ddlFPType.DataBind();
+                ddlFPType.DataTextField = "FpType";
+                ddlFPType.DataValueField = "Id";
+
+                ddlFPType.Items[newFpTypeList.Count - 2].Attributes.Add("style", "background-color: red");
+
+
+                List<TB_BasePoType> basePoTypeList = new TB_BasePoTypeService().GetListArray("");
+                basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });
+                ddlPOTyle.DataSource = basePoTypeList;
+                ddlPOTyle.DataBind();
+                ddlPOTyle.DataTextField = "BasePoType";
+                ddlPOTyle.DataValueField = "Id";
+
+                GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
+                var dalList = dal.GetListArray("");
+                dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
+                ddlGuestTypeList.DataSource = dalList;
+                ddlGuestTypeList.DataBind();
+                ddlGuestTypeList.DataTextField = "GuestType";
+                ddlGuestTypeList.DataValueField = "GuestType";
+
+                GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
+                var proList = guestProBaseInfodal.GetListArray("");
+                proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2 });
+                ddlGuestProList.DataSource = proList;
+                ddlGuestProList.DataBind();
+                ddlGuestProList.DataTextField = "GuestProString";
+                ddlGuestProList.DataValueField = "GuestPro";
+            }
+        }
+
+        private List<string> allFpTypes = new List<string>();
+        private void Show()
+        {
+
+            ddlFPType.Items[ddlFPType.Items.Count - 2].Attributes.Add("style", "background-color: red");
+
+            _basePoTypeList = new TB_BasePoTypeService().GetListArray("");
+            _basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });
+
+            var fpTypeBaseInfoService = new FpTypeBaseInfoService();
+            gooQGooddList = fpTypeBaseInfoService.GetListArray("");
+            gooQGooddList.Add(new FpTypeBaseInfo { FpType=""});
+            allFpTypes = gooQGooddList.Select(t => t.FpType).ToList();
+            var sql = "";
+
+            if (txtPONo.Text.Trim() != "")
+            {
+                if (CheckPoNO(txtPONo.Text) == false)
+                {
+                    return;
+                }
+                sql += string.Format(" and CG_POOrder.PONo like '%{0}%'", txtPONo.Text.Trim());
+            }
+            if (!string.IsNullOrEmpty(txtPOName.Text))
+            {
+                sql += string.Format(" and PONAME like '%{0}%'", txtPOName.Text.Trim());
+            }
+            if (txtFrom.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and PODate>='{0} 00:00:00'", txtFrom.Text);
+            }
+
+            if (txtTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and PODate<='{0} 23:59:59'", txtTo.Text);
+            }
+
+            if (txtProNo.Text.Trim() != "")
+            {
+                if (CheckProNo(txtProNo.Text) == false)
+                {
+                    return;
+                }
+                sql += string.Format(" and ProNo like '%{0}%'", txtProNo.Text.Trim());
+            }
+
+            if (ddlUser.Text != "-1")
+            {
+                var strSql = new System.Text.StringBuilder();
+                int month = DateTime.Now.Month;
+                int year = DateTime.Now.Year;
+                if (1 <= month && month <= 3)
+                {
+                    strSql.Append(string.Format(" and QuartNo='1' and YearNo='{0}' ", year));
+                }
+                else if (4 <= month && month <= 6)
+                {
+                    strSql.Append(string.Format(" and QuartNo='2' and YearNo='{0}' ", year));
+                }
+                else if (7 <= month && month <= 9)
+                {
+                    strSql.Append(string.Format(" and QuartNo='3' and YearNo='{0}' ", year));
+                }
+                else if (10 <= month && month <= 12)
+                {
+                    strSql.Append(string.Format(" and QuartNo='4' and YearNo='{0}' ", year));
+
+                }
+                // sql += string.Format(" and AppName={0}", ddlUser.Text);
+                sql += string.Format(" and AE='{0}'", ddlUser.SelectedItem.Text);
+            }
+            if (ddlCompany.Text != "-1")
+            {
+                string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
+                sql += string.Format(" and AE IN(select loginName from tb_User where {0})", where);
+            }
+
+            if (ddlSpecial.Text!="-1")
+            {
+                sql += string.Format(" and IsSpecial={0}",ddlSpecial.Text);
+            }
+            if (ddlNoSelected.Text != "-1")
+            {
+                sql += string.Format(" and IsSelected=" + ddlNoSelected.Text);
+            }
+            if (ddlJieIsSelected.Text != "-1")
+            {
+                sql += string.Format(" and JieIsSelected=" + ddlJieIsSelected.Text);
+            }
+            if (ddlColse.Text!="-1")
+            {
+                sql += string.Format(" and IsClose={0}", ddlColse.Text);
+            }
+
+            if (ddlIsPoFax.Text!="-1")
+            {
+                sql += string.Format(" and IsPoFax={0}", ddlIsPoFax.Text);
+
+                if (ddlIsPoFax.Text == "1" && dllFPstye.Text!="-1")
+                {
+                    sql += string.Format(" and FpType='" + dllFPstye.SelectedItem.Text + "'");
+                }
+            }
+            if (ddlPOTyle.Text != "-1")
+            {
+                sql += string.Format(" and POType=" + ddlPOTyle.Text);
+            }
+
+            if (!string.IsNullOrEmpty(txtPoTotal.Text))
+            {
+                if (CommHelp.VerifesToNum(txtPoTotal.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and SumPOTotal{0}{1}",ddlFuHao.Text, txtPoTotal.Text);
+            }
+            
+            if (!string.IsNullOrEmpty(txtGuestName.Text.Trim()))
+            {
+                sql += string.Format(" and GuestName like '%{0}%'", txtGuestName.Text.Trim());
+            }
+            if (ddlFPType.Text != "-1")
+            {
+                if (ddlFPType.SelectedItem.Text != "其他")
+                {
+                    sql += string.Format(" and FPType='{0}'", ddlFPType.SelectedItem.Text);
+                }                
+                else
+                {
+                    sql += string.Format(" and FPType not in (select FpType from FpTypeBaseInfo) and FPType<>''");
+                }
+            }
+            if (txtEque1.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtEque1.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and {1}{0}SumPOTotal", ddlEque1.Text, txtEque1.Text);
+            }
+            if (txtEque2.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtEque2.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and SumPOTotal{0}{1}", ddlEque2.Text, txtEque2.Text);
+            }
+
+            if (ddlGuestTypeList.SelectedValue != "全部")
+            {
+                sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
+            }
+            if (ddlGuestProList.SelectedValue != "-2")
+            {
+                sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+            }
+
+            var dt = this.POSer.SetPoSpecial(sql);
+
+            //foreach (DataRow dr in dt.Rows)
+            //{
+            //    if (ViewState["isCloseEdist"] != null)
+            //        dr["isCloseEdist"] = false;
+            //    else
+            //    {
+            //        dr["isCloseEdist"] = true;
+            //    }
+
+            //}
+            AspNetPager1.RecordCount = dt.Rows.Count;
+            this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
+            this.gvMain.DataSource = dt;
+            this.gvMain.DataBind();
+
+
+        }
+        protected void AspNetPager1_PageChanged(object src, EventArgs e)
+        {
+            Show();
+        }
+
+        protected void btnSelect_Click(object sender, EventArgs e)
+        {
+            AspNetPager1.CurrentPageIndex = 1;
+            Show();
+        }
+
+        protected void gvMain_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            this.gvMain.PageIndex = e.NewPageIndex;
+            Show();
+        }
+
+        protected void gvMain_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
+                e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
+                DropDownList drp = (DropDownList)e.Row.FindControl("dllFPstye");
+                if (ViewState["isFPTypeEdist"] != null)
+                {
+                    drp.Enabled = false;
+                }
+                drp.DataSource = gooQGooddList;
+                drp.DataTextField = "FpType";
+                drp.DataValueField = "FpType";
+                drp.DataBind();
+
+                drp.Items[gooQGooddList.Count - 1].Attributes.Add("style", "background-color: red");
+                //  选中 DropDownList
+                try
+                {
+                    var hidTxt = ((HiddenField)e.Row.FindControl("hidtxt")).Value;
+                    //if (hidTxt == "")
+                    //{
+                    //    drp.SelectedIndex = allFpTypes.IndexOf("");
+                    //}
+                    //else
+                    //{
+                        drp.SelectedIndex = allFpTypes.IndexOf(hidTxt);
+                    //}
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+                try
+                {
+                    DropDownList dllPOType = (DropDownList)e.Row.FindControl("dllPOType");
+                    dllPOType.DataSource = _basePoTypeList;
+                    dllPOType.DataBind();
+                    dllPOType.DataTextField = "BasePoType";
+                    dllPOType.DataValueField = "Id";
+
+                    var hidPOTypetxt = ((HiddenField)e.Row.FindControl("hidPOTypetxt")).Value;
+                    if (hidPOTypetxt != "-1")
+                    {
+                        dllPOType.SelectedIndex = _basePoTypeList.FindIndex(t => t.Id.ToString() == hidPOTypetxt);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+            }
+        }
+
+        protected void gvMain_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+
+        private void setValue(Label control, string value)
+        {
+            control.Text = value;
+        }
+
+        private bool CheckIsSpecial()
+        {
+            using (SqlConnection sqlconn = DBHelp.getConn())
+            {
+                sqlconn.Open();
+                SqlCommand sqlComm = sqlconn.CreateCommand();
+                for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                {
+                    CheckBox cb = (gvMain.Rows[i].FindControl("cbIsSpecial")) as CheckBox;
+                    if (cb.Checked)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        sqlComm.CommandText = string.Format(@"declare  @AllCount  int=0 ;
+select @AllCount=COUNT(*)  from TB_BusCardUse where PONo ='{0}';
+select @AllCount+=COUNT(*) from tb_UseCar   where PONo ='{0}';
+select @AllCount+=COUNT(*) from TB_UseCarDetail where  PONo ='{0}';
+select @AllCount+=COUNT(*) from Tb_DispatchList where  PONo ='{0}'; 
+select @AllCount+=COUNT(*) from tb_OverTime where  PONo ='{0}';
+select @AllCount+=COUNT(*) from tb_FundsUse where PONo ='{0}';
+SELECT @AllCount;", lblIds.Text);
+                        if (Convert.ToInt32(sqlComm.ExecuteScalar()) > 0)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null,
+                                string.Format( "<script>alert('项目{0},有费用，不能定义为特殊订单！');</script>", lblIds.Text));
+                            return false;
+                        }
+                    }
+                }
+                sqlconn.Close();
+            }
+            return true;
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            string where = " PONo  in (";
+            string expWhere = " PONo  in (";
+            if (ViewState["isSpecialEdit"] == null)
+            {
+                if (CheckIsSpecial() == false)
+                {
+                    return ;
+                }
+                for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                {
+                    CheckBox cb = (gvMain.Rows[i].FindControl("cbIsSpecial")) as CheckBox;
+                    if (cb.Checked)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        where += "'" + lblIds.Text + "',";
+                    }
+                    else
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        expWhere += "'" + lblIds.Text + "',";
+                    }
+                }
+
+                if (where != " PONo  in (")
+                {
+                    where = where.Substring(0, where.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsSpecial=1 where " + where;
+                    DBHelp.ExeCommand(sql);
+                    //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+
+                if (expWhere != " PONo  in (")
+                {
+                    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsSpecial=0 where " + expWhere;
+                    DBHelp.ExeCommand(sql);
+                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+            }
+
+            if (ViewState["isPOType"] == null)
+            {
+
+                //保存含税信息               
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
+
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("dllPOType"));
+                        objCommand.CommandText = string.Format("update CG_POOrder set POType={1} where PONO='{0}'",
+                            lblIds.Text, drp.Text);
+                        objCommand.ExecuteNonQuery();
+
+                    }
+                    conn.Close();
+                }
+
+                ////保存含税信息
+                //where = " PONo  in (";
+                //expWhere = " POType  in (";
+
+
+                //    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                //    {
+                //        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                //        DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("dllPOType"));
+
+                //        //if (drp.Text == "1")
+                //        //{
+                //            where += "'" + lblIds.Text + "',";
+                //            expWhere += "" + drp.Text + ",";
+                //        //}
+                //        //if (drp.Text == "2")
+                //        //{
+                //        //    expWhere += "'" + lblIds.Text + "',";
+                //        //}       
+                //    }
+
+                //    if (where != " PONo  in (")
+                //    {
+                //        where = where.Substring(0, where.Length - 1) + ")";
+                //        var sql = "update CG_POOrder set POType=1 where " + where;
+                //        DBHelp.ExeCommand(sql);
+                //    }
+                //if (expWhere != " PONo  in (")
+                //{
+                //    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                //    var sql = "update CG_POOrder set POType=2 where " + expWhere;
+                //    DBHelp.ExeCommand(sql);
+                //}
+            }
+
+            if (ViewState["isFaxEdist"] == null)
+            {
+                //保存含税信息
+                expWhere = " PONo  in (";
+                var fpTypeBaseInfoService = new FpTypeBaseInfoService();
+                gooQGooddList = fpTypeBaseInfoService.GetListArray("");
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
+
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        CheckBox cb = (gvMain.Rows[i].FindControl("cbIsPoFax")) as CheckBox;
+                        if (cb.Checked)
+                        {
+                            Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                            //where += "'" + lblIds.Text + "',";
+                            DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("dllFPstye"));
+                            objCommand.CommandText = string.Format("update CG_POOrder set IsPoFax=1, FpType='{1}',FpTax={2} where PONO='{0}'",
+                                lblIds.Text, drp.Text, gooQGooddList.Find(p => p.FpType == drp.Text).Tax);
+                            objCommand.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                            expWhere += "'" + lblIds.Text + "',";
+                        }
+                    }
+                    conn.Close();
+                }
+
+
+
+                if (expWhere != " PONo  in (")
+                {
+                    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsPoFax=0,FpType='',FpTax=0 where " + expWhere;
+                    DBHelp.ExeCommand(sql);
+
+                }
+            }
+            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            //AspNetPager1.CurrentPageIndex = 1;
+            Show();
+        }
+
+        protected void btnSaveIsClose_Click(object sender, EventArgs e)
+        {
+            if (ViewState["isCloseEdist"] == null)
+            {
+                string where = " PONo  in (";
+                string expWhere = " PONo  in (";
+
+                string whereEpec= " PONo  in (";
+                string expWhereEpec= " PONo  in (";
+
+                for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                {
+                    CheckBox cb = (gvMain.Rows[i].FindControl("cbIsClose")) as CheckBox;
+                    Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                    if (cb.Checked)
+                    {                    
+                        where += "'" + lblIds.Text + "',";
+                    }
+                    else
+                    {                        
+                        expWhere += "'" + lblIds.Text + "',";
+                    }
+                    decimal poTotal = Convert.ToDecimal(gvMain.Rows[i].Cells[3].Text);
+                    var pp = gvMain.Rows[i].Cells[4].Text;
+                    decimal maoliTotal = Convert.ToDecimal((pp == "" ? "0" : pp));
+                    if (poTotal == 0 && maoliTotal == 0)
+                    {
+                        whereEpec += "'" + lblIds.Text + "',";
+                    }
+                    else
+                    {
+                        expWhereEpec += "'" + lblIds.Text + "',";
+                    }
+                }
+
+                if (where != " PONo  in (")
+                {
+                    where = where.Substring(0, where.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsClose=1 where " + where;
+                    DBHelp.ExeCommand(sql);
+                    //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+
+                if (expWhere != " PONo  in (")
+                {
+                    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsClose=0 where " + expWhere;
+                    DBHelp.ExeCommand(sql);
+                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+
+                if (whereEpec != " PONo  in (")
+                {
+                    whereEpec = whereEpec.Substring(0, whereEpec.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsSpecial=1 where " + whereEpec;
+                    DBHelp.ExeCommand(sql); 
+                }
+
+                //if (expWhereEpec != " PONo  in (")
+                //{
+                //    expWhereEpec = expWhereEpec.Substring(0, expWhereEpec.Length - 1) + ")";
+                //    var sql = "update CG_POOrder set IsSpecial=0 where " + expWhereEpec;
+                //    DBHelp.ExeCommand(sql);                    
+                //}
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            } 
+            Show();
+        }
+
+        protected void btnJieIsSelected_Click(object sender, EventArgs e)
+        {
+
+            string where = " PONo  in (";
+            string expWhere = " PONo  in (";
+            for (int i = 0; i < this.gvMain.Rows.Count; i++)
+            {
+                CheckBox cb = (gvMain.Rows[i].FindControl("cbJieIsSelected")) as CheckBox;
+                if (cb.Checked)
+                {
+                    Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                    where += "'" + lblIds.Text + "',";
+                }
+                else
+                {
+                    Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                    expWhere += "'" + lblIds.Text + "',";
+                }
+            }
+
+            if (where != " PONo  in (")
+            {
+                where = where.Substring(0, where.Length - 1) + ")";
+                var sql = "update CG_POOrder set JieIsSelected=1 where " + where;
+                DBHelp.ExeCommand(sql);
+                //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            }
+
+            if (expWhere != " PONo  in (")
+            {
+                expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                var sql = "update CG_POOrder set JieIsSelected=0 where " + expWhere;
+                DBHelp.ExeCommand(sql);
+                // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            }
+            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+
+            // AspNetPager1.CurrentPageIndex = 1;
+            Show();
+        }
+
+        protected void cbHanShui_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb1 = sender as CheckBox;
+            for (int i = 0; i < this.gvMain.Rows.Count; i++)
+            {
+                CheckBox cb = (gvMain.Rows[i].FindControl("cbIsClose")) as CheckBox;
+                cb.Checked = cb1.Checked;
+            }
+        }
+        protected void cbJieIsSelected_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb1 = sender as CheckBox;
+            for (int i = 0; i < this.gvMain.Rows.Count; i++)
+            {
+                CheckBox cb = (gvMain.Rows[i].FindControl("cbJieIsSelected")) as CheckBox;
+                cb.Checked = cb1.Checked;
+            }
+        }
+
+        protected void cbIsSelected_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb1 = sender as CheckBox;
+            for (int i = 0; i < this.gvMain.Rows.Count; i++)
+            {
+                CheckBox cb = (gvMain.Rows[i].FindControl("cbIsSelected")) as CheckBox;
+                cb.Checked = cb1.Checked;
+            }
+        }
+
+        protected void btnIsSelected_Click(object sender, EventArgs e)
+        {
+            if (ViewState["cbIsSelected"] == null)
+            {
+                string where = " PONo  in (";
+                string expWhere = " PONo  in (";
+                for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                {
+                    CheckBox cb = (gvMain.Rows[i].FindControl("cbIsSelected")) as CheckBox;
+                    if (cb.Checked)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        where += "'" + lblIds.Text + "',";
+                    }
+                    else
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        expWhere += "'" + lblIds.Text + "',";
+                    }
+                }
+
+                if (where != " PONo  in (")
+                {
+                    where = where.Substring(0, where.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsSelected=1 where " + where;
+                    DBHelp.ExeCommand(sql);
+                    //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+
+                if (expWhere != " PONo  in (")
+                {
+                    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                    var sql = "update CG_POOrder set IsSelected=0 where " + expWhere;
+                    DBHelp.ExeCommand(sql);
+                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            }
+            //AspNetPager1.CurrentPageIndex = 1;
+            Show();
+        }
+
+        protected void ddlIsPoFax_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (ddlIsPoFax.Text=="1")
+            {
+                dllFPstye.Enabled = true;
+            }
+            else
+            {
+                dllFPstye.Enabled = false;
+            }
+        }
+
+
+    }
+}

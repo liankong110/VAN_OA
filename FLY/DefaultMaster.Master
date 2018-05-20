@@ -1,0 +1,136 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="DefaultMaster.master.cs"
+    Inherits="VAN_OA.DefaultMaster" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8" /> 
+    <title>无标题页</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="mian.css" rel="stylesheet" type="text/css" />
+
+    <script language="JavaScript">
+        function OnTreeNodeChecked() {
+            var ele = event.srcElement;
+            if (ele.type == 'checkbox') {
+                var childrenDivID = ele.id.replace('CheckBox', 'Nodes');
+                var div = document.getElementById(childrenDivID);
+                if (div == null) return;
+                var checkBoxs = div.getElementsByTagName('INPUT');
+                for (var i = 0; i < checkBoxs.length; i++) {
+                    if (checkBoxs[i].type == 'checkbox')
+                        checkBoxs[i].checked = ele.checked;
+                }
+            }
+        }
+
+        function tick() {
+            var now = new Date();
+            var currentTime = document.getElementById("Clock");
+            currentTime.innerHTML = "                 " + now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日  " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "";
+            window.setTimeout("tick();", 100);
+        }
+
+        function SingleReviewCheck(cbFirstReview, ddlFirstReview, cbSecondReview, ddlSecondReview, cbMultiReview, ddlMultiReview) {
+            var cbFirst = document.getElementById(cbFirstReview + "_I")
+            var ddlFirst = document.getElementById(ddlFirstReview)
+            var cbSecond = document.getElementById(cbSecondReview + "_I")
+            var ddlSecond = document.getElementById(ddlSecondReview)
+            var cbMulti = document.getElementById(cbMultiReview + "_I")
+            var ddlMulti = document.getElementById(ddlMultiReview)
+            if (cbFirst.checked || cbSecond.checked) {
+                ddlFirst.disabled = false;
+                ddlSecond.disabled = false;
+                cbMulti.checked = false;
+                ddlMulti.disabled = true;
+            }
+        }
+        function MultiReviewCheck(cbFirstReview, ddlFirstReview, cbSecondReview, ddlSecondReview, cbMultiReview, ddlMultiReview) {
+            var cbFirst = document.getElementById(cbFirstReview + "_I")
+            var ddlFirst = document.getElementById(ddlFirstReview)
+            var cbSecond = document.getElementById(cbSecondReview + "_I")
+            var ddlSecond = document.getElementById(ddlSecondReview)
+            var cbMulti = document.getElementById(cbMultiReview + "_I")
+            var ddlMulti = document.getElementById(ddlMultiReview)
+            var dvMulti = document.getElementById(ddlMultiReview + "_D")
+            if (cbMulti.checked) {
+                cbFirst.checked = false;
+                cbSecond.checked = false;
+                ddlFirst.disabled = true;
+                ddlSecond.disabled = true;
+                ddlMulti.disabled = false;
+                var checkBoxs = dvMulti.getElementsByTagName('input');
+                for (var i = 0; i < checkBoxs.length; i++) {
+                    if (checkBoxs[i].type == 'checkbox') {
+                        checkBoxs[i].disabled = false;
+                    }
+                }
+            }
+        }
+        window.onload = tick;
+    </script>
+ 
+</head>
+<body onload="tick()">
+    <form id="form1" runat="server">
+    <div id="master_header">
+        <div id="master_headertop">
+        </div>
+        <div id="master_headerbottom">
+        </div>
+    </div>
+    <div id="master_page">
+        <div id="master_menu">
+            <asp:ScriptManager ID="ScriptManager1" runat="server" EnableScriptGlobalization="true"
+                EnableScriptLocalization="true">
+            </asp:ScriptManager>
+        </div>
+        
+        <div id="master_content" style="width: 95%; margin-top: 0px;">
+            <div id="state" style="width: 100%; background-color: White; height: 40px; color: Black;
+                margin-top: 0px">
+                欢迎你:<asp:Label ID="lblLoginName" runat="server" Text=""></asp:Label>
+                <label id="Clock" style="margin-left: 100px">
+                </label>
+                <asp:LinkButton ID="LinkButton2" runat="server" Style="margin-left: 50px" PostBackUrl="~/UpdatePwd.aspx">密码修改</asp:LinkButton>
+                <asp:LinkButton ID="LinkButton1" runat="server" Style="margin-left: 200px; vertical-align: top"
+                    OnClick="LinkButton1_Click">注销</asp:LinkButton>
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>
+                        <asp:Timer ID="Timer1" runat="server" Interval="300000" OnTick="Timer1_Tick">
+                        </asp:Timer>
+                        |<asp:Image ID="imgMess" runat="server" ImageUrl="~/Image/mess.gif" Height="20" Width="20" />
+                        <asp:LinkButton ID="lblMessTodo" runat="server" ForeColor="Red" OnClick="lblMessTodo_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp; |
+                        <asp:LinkButton ID="lblDoing" runat="server" ForeColor="Red" OnClick="lblDoing_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp;|
+                        <asp:LinkButton ID="lblSuccess" runat="server" ForeColor="Red" OnClick="lblSuccess_Click"></asp:LinkButton>
+                        &nbsp; &nbsp;
+                        <asp:LinkButton ID="lblCaiSuccess" runat="server" ForeColor="Red" OnClick="lblCaiSuccess_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp;|
+                        <asp:LinkButton ID="lblContract" runat="server" ForeColor="Red" 
+                            OnClick="lblContract_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp;|<asp:LinkButton ID="lblFail" runat="server" ForeColor="Red" OnClick="lblFail_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp;|
+                        <asp:LinkButton ID="lbtnWare" runat="server" Text="提示栏" OnClick="lbtnWare_Click"
+                            ForeColor="Red"></asp:LinkButton>
+                            
+                             &nbsp; &nbsp; &nbsp; &nbsp;|
+                        <asp:LinkButton ID="btnExoInv" runat="server" Text="货品使用状态" 
+                            ForeColor="Red" onclick="btnExoInv_Click"></asp:LinkButton>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <div id="master_contentheader">
+            </div>
+            <div id="master_contentplaceholder" style="background-color: White; color: Black;">
+                <asp:ContentPlaceHolder ID="SampleContent" runat="server" />
+            </div>
+            <div id="master_contentfooter"></div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>
