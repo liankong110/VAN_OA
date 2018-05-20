@@ -154,5 +154,16 @@ namespace VAN_OA.Fin
             return MoneyStr;
         }
         #endregion
+
+        protected void btnPrint_Click(object sender, EventArgs e)
+        {
+            var model = Session["ElectronicInvoice"] as ElectronicInvoice;
+            model.SupplierName = txtSupplierName.Text;
+            model.SupplierBrandNo = txtSupplierCardNo.Text;
+            model.SupplierBrandName = txtSupplierBrandName.Text;
+            model.ProNo = txtUse.Text;
+            Session["ElectronicInvoice"] = model;
+            base.Response.Redirect("~/Fin/EI_InComePrint.aspx");
+        }
     }
 }

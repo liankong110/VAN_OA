@@ -10,7 +10,7 @@
 namespace VAN_OA.Fin {
     
     
-    public partial class EI_BlankCheck {
+    public partial class EI_InComePrint {
         
         /// <summary>
         /// form1 控件。
@@ -22,15 +22,6 @@ namespace VAN_OA.Fin {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// txtPrNo 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrNo;
-        
-        /// <summary>
         /// txtDate 控件。
         /// </summary>
         /// <remarks>
@@ -40,49 +31,31 @@ namespace VAN_OA.Fin {
         protected global::System.Web.UI.WebControls.TextBox txtDate;
         
         /// <summary>
-        /// txtShouKuanRen 控件。
+        /// txtCompanyName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtShouKuanRen;
+        protected global::System.Web.UI.WebControls.TextBox txtCompanyName;
         
         /// <summary>
-        /// txtTotal 控件。
+        /// txtCompanyCardNo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTotal;
+        protected global::System.Web.UI.WebControls.TextBox txtCompanyCardNo;
         
         /// <summary>
-        /// txtUse 控件。
+        /// txtCompanyBrandName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUse;
-        
-        /// <summary>
-        /// txtDaDate 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDaDate;
-        
-        /// <summary>
-        /// txtDaShouKuan 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDaShouKuan;
+        protected global::System.Web.UI.WebControls.TextBox txtCompanyBrandName;
         
         /// <summary>
         /// txtDaTotal 控件。
@@ -94,39 +67,48 @@ namespace VAN_OA.Fin {
         protected global::System.Web.UI.WebControls.TextBox txtDaTotal;
         
         /// <summary>
-        /// txtDaNum 控件。
+        /// txtSupplierName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDaNum;
+        protected global::System.Web.UI.WebControls.TextBox txtSupplierName;
         
         /// <summary>
-        /// txtDaUse 控件。
+        /// txtSupplierCardNo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDaUse;
+        protected global::System.Web.UI.WebControls.TextBox txtSupplierCardNo;
         
         /// <summary>
-        /// txtDaRemark 控件。
+        /// txtSupplierBrandName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDaRemark;
+        protected global::System.Web.UI.WebControls.TextBox txtSupplierBrandName;
         
         /// <summary>
-        /// btnPrint 控件。
+        /// txtNum 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPrint;
+        protected global::System.Web.UI.WebControls.TextBox txtNum;
+        
+        /// <summary>
+        /// txtUse 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUse;
     }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EI_InCome.aspx.cs" Inherits="VAN_OA.Fin.EI_InCome" Title="进账单" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EI_InComePrint.aspx.cs" Inherits="VAN_OA.Fin.EI_InComePrint"  Title="进账单"%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,70 +12,70 @@
     <style type="text/css">
         .Date {
             position: absolute;
-            left: 250px;
+            left: 215px;
             top: 44px;
             width: 200px;
         }
 
         .CompanyName {
             position: absolute;
-            left: 130px;
-            top: 65px;
+            left: 80px;
+            top: 70px;
             width: 200px;
         }
 
         .CompanyCardNo {
             position: absolute;
-            left: 130px;
-            top: 87px;
+            left: 80px;
+            top: 92px;
             width: 200px;
         }
 
         .CompanyBrandName {
             position: absolute;
-            left: 130px;
-            top: 107px;
+            left: 80px;
+            top: 115px;
             width: 200px;
         }
 
         .DaTotal {
             position: absolute;
-            left: 120px;
-            top: 140px;
+            left: 70px;
+            top: 150px;
             width: 240px;
         }
 
         .SupplierName {
             position: absolute;
-            left: 395px;
-            top: 65px;
+            left: 370px;
+            top: 70px;
             width: 210px;
         }
 
         .SupplierCardNo {
             position: absolute;
-            left: 395px;
-            top: 87px;
+            left: 370px;
+            top: 92px;
             width: 200px;
         }
 
         .SupplierBrandName {
             position: absolute;
-            left: 395px;
-            top: 108px;
+            left: 370px;
+            top: 115px;
             width: 200px;
         }
 
         .DaNum {
             position: absolute;
-            left: 420px;
-            top: 145px;
+            left: 395px;
+            top: 155px;
             width: 170px;
             text-align: right;
             letter-spacing: 5.5px;
         }
 
-        .RightUse {
+         .RightUse {
             position: absolute;
             left: 365px;
             top: 193px;
@@ -87,12 +87,9 @@
             left: 465px;
             top: 355px;
         }
-
         #content input {
-            border: 0px;
-            background: rgba(0, 0, 0, 0)
-        }
-
+       border:0px;background:rgba(0, 0, 0, 0)
+             }
         input {
             font-size: 14px;
         }
@@ -107,7 +104,7 @@
         }
     </style>
 </head>
-<body style="background-image: url('../Image/InCome.png'); background-repeat: no-repeat; vertical-align: top; margin: 0;">
+<body style="vertical-align: top; margin: 0;">
     <form id="form1" runat="server">
         <div id="content" style="vertical-align: top">
             <asp:TextBox ID="txtDate" runat="server" Text="123" class="Date"></asp:TextBox>
@@ -122,26 +119,29 @@
             <asp:TextBox ID="txtNum" runat="server" Text="123" class="DaNum"></asp:TextBox>
             <asp:TextBox ID="txtUse" runat="server" Text="111111111" class="RightUse"></asp:TextBox>
         </div>
-        <object classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" id="WebBrowser"
+         <object classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" id="WebBrowser"
             width="0">
         </object>
         <div id="print">
             <center class="Noprint">
-             <asp:Button ID="btnPrint" runat="server" Text="打印" BackColor="Yellow" OnClick="btnPrint_Click"  />
+            <input id="btnyulan" type="button" value="预览" onclick="check();document.all.WebBrowser.ExecWB(7, 1);" />
+            <input id="btnymsz" type="button" value="页面设置" onclick="check();document.all.WebBrowser.ExecWB(8, 1);" />
+            <input id="btndy" type="button" value="打印" onclick="check();document.all.WebBrowser.ExecWB(6, 1);" />
+            <input id="btnclose" type="button" value="关闭" onclick="window.close();" />
         </center>
         </div>
     </form>
-    <script type="text/javascript">
+      <script type="text/javascript">
 
         function check() {
             var supplierName = document.getElementById('<%= txtSupplierName.ClientID %>').value;
-
+            
             if (supplierName.length > 15) {
                 document.getElementById('<%= txtSupplierName.ClientID %>').style.fontSize = "10px";
             } else {
-                document.getElementById('<%= txtSupplierName.ClientID %>').style.fontSize = "14px";
+                  document.getElementById('<%= txtSupplierName.ClientID %>').style.fontSize = "14px";
             }
-
+           
         }
     </script>
 </body>

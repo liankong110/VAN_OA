@@ -10,7 +10,7 @@ using VAN_OA.Model.JXC;
 
 namespace VAN_OA.Fin
 {
-    public partial class EI_BlankCheck : System.Web.UI.Page
+    public partial class EI_BlankCheckPrint : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -21,20 +21,21 @@ namespace VAN_OA.Fin
                 if (Session["ElectronicInvoice"] != null)
                 {
                     var model = Session["ElectronicInvoice"] as ElectronicInvoice;
-                    txtPrNo.Text = model.ProNo;
+                    txtPrNo.Text= model.ProNo;
 
-                    txtDate.Text = string.Format("{0:yyyy    MM    dd}", DateTime.Now);
+                    txtDate.Text = string.Format("{0:yyyy    MM    dd}",DateTime.Now);
                     txtShouKuanRen.Text = model.SupplieSimpeName;
-                    txtTotal.Text = string.Format("¥{0:n2}", model.ActPay);
+                    txtTotal.Text = string.Format("¥{0:n2}",model.ActPay);
                     txtUse.Text = model.Use;
 
                     txtDaShouKuan.Text = model.SupplierName;
                     txtDaTotal.Text = ConvertMoney(model.ActPay);
                     txtDaUse.Text = model.Use;
-                    txtDaNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
-                    txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString()) + "    " +
-                      (DateTime.Now.Month > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Month).Replace("圆整", "") + "    "
+                    txtDaNum.Text = "¥"+model.ActPay.ToString("f2").Replace(".","");
+                    txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString())+"    " +
+                      (DateTime.Now.Month>9?"":"零")+ ConvertMoney(DateTime.Now.Month).Replace("圆整", "") + "    "
                         + (DateTime.Now.Day > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Day).Replace("圆整", "");
+
                     if (!string.IsNullOrEmpty(model.Person))
                     {
                         var person = new Invoice_PersonService().GetListArray(string.Format(" name='{0}'", model.Person))[0];
@@ -51,9 +52,9 @@ namespace VAN_OA.Fin
             int i = 0;
             foreach (char c in Num)
             {
-                if (i > 0 && Convert.ToInt32(Num) > 9)
+                if (i > 0&&Convert.ToInt32(Num)>9)
                 {
-
+                    
                 }
                 string da = "";
                 if (c.ToString() == "0")
@@ -96,11 +97,11 @@ namespace VAN_OA.Fin
                 {
                     da = "玖";
                 }
-
-
+                 
+               
                 result += da;
                 i++;
-
+              
             }
             return result;
         }
@@ -164,17 +165,5 @@ namespace VAN_OA.Fin
             return MoneyStr;
         }
         #endregion
-
-        protected void btnPrint_Click(object sender, EventArgs e)
-        {
-            var model = Session["ElectronicInvoice"] as ElectronicInvoice;
-            model.ProNo = txtPrNo.Text;
-            model.SupplieSimpeName = txtShouKuanRen.Text;
-            model.Use = txtUse.Text;
-            model.SupplierName = txtDaShouKuan.Text;
-            model.Use = txtDaUse.Text;
-            Session["ElectronicInvoice"] = model;
-            base.Response.Redirect("~/Fin/EI_BlankCheckPrint.aspx");
-        }
     }
 }

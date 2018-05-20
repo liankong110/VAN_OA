@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EI_BlankCheck.aspx.cs" Inherits="VAN_OA.Fin.EI_BlankCheck"  Title="支票"%>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EI_BlankCheckPrint.aspx.cs" Inherits="VAN_OA.Fin.EI_BlankCheckPrint"  Title="支票"%>
 
 <!DOCTYPE html> 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,75 +12,75 @@
     <style type="text/css">
 
         .ProNo {
-           position: absolute;
-    left: 60px;
-    top: 140px;
-    width: 140px;
+            position: absolute;
+            left: 40px;
+            top: 110px;
+            width: 140px;
         }
 
         .Data {
-             position: absolute;
-    left: 97px;
-    top: 168px;
-    width: 140px;
+            position: absolute;
+            left: 40px;
+            top: 155px;
+            width: 140px;
         }
 
         .ShouKuanRen {
-              position: absolute;
-    left: 60px;
-    top: 205px;
-    width: 150px;     
+            position: absolute;
+            left: 40px;
+            top: 185px;
+            width: 150px;         
         }
 
         .Total {
-               position: absolute;
-    left: 93px;
-    top: 230px;
-    width: 100px;
+            position: absolute;
+            left: 40px;
+            top: 217px;
+            width: 100px;
         }
 
         .Use {
             position: absolute;
-    left: 93px;
-    top: 250px;
-    width: 100px;
+            left: 40px;
+            top: 235px;
+            width: 100px;
         }
 
         .DaDate {
-              position: absolute;
-    left: 375px;
-    top: 58px;
-    width: 200px;
+            position: absolute;
+            left: 290px;
+            top: 45px;
+            width: 200px;
         }
 
         .DaShouKuan {
-               position: absolute;
-    left: 310px;
-    top: 76px;
-    width: 300px;
+            position: absolute;
+            left: 240px;
+            top: 65px;
+            width: 300px;
         }
 
         .DaTotal {
-              position: absolute;
-    left: 320px;
-    top: 109px;
-    width: 255px;
+            position: absolute;
+            left: 250px;
+            top: 95px;
+            width: 255px;
         }
 
         .DaNum {
-           position: absolute;
-    left: 675px;
-    top: 118px;
-    width: 170px;
-    text-align: right;
-    letter-spacing: 7px;
+            position: absolute;
+            left: 575px;
+            top: 98px;
+            width: 170px;
+            text-align:right;
+            letter-spacing:7px;
         }
 
         .DaUse {
-             position: absolute;
-    left: 295px;
-    top: 145px;
-    width: 100px;
+            position: absolute;
+            left: 265px;
+            top: 135px;
+            width: 100px;
         }
 
         .DaRemark {
@@ -120,7 +120,7 @@
     
    
 </head>
-<body style="background-image: url('../Image/BlankCheck.png'); background-repeat: no-repeat;vertical-align:top;margin: 0; ">
+<body style="vertical-align:top;margin: 0; ">
     <form id="form1" runat="server">
         <div id="content" style="vertical-align:top">
             
@@ -135,14 +135,17 @@
             <asp:TextBox ID="txtDaTotal" runat="server" Text="" class="DaTotal"></asp:TextBox>
             <asp:TextBox ID="txtDaNum" runat="server" Text="" class="DaNum"></asp:TextBox>
             <asp:TextBox ID="txtDaUse" runat="server" Text="" class="DaUse"></asp:TextBox>
-            <asp:TextBox ID="txtDaRemark" runat="server" Text="" class="DaRemark"></asp:TextBox>
+            <asp:TextBox ID="txtDaRemark" runat="server" Text="320382198610227010" class="DaRemark"></asp:TextBox>
         </div>
          <object classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" id="WebBrowser"
         width="0">
     </object>
          <div id="print" >
         <center class="Noprint">
-               <asp:Button ID="btnPrint" runat="server" Text="打印" BackColor="Yellow" OnClick="btnPrint_Click"  />
+            <input id="btnyulan" type="button" value="预览" onclick="document.all.WebBrowser.ExecWB(7, 1);" />
+            <input id="btnymsz" type="button" value="页面设置" onclick="document.all.WebBrowser.ExecWB(8,1);" />
+            <input id="btndy" type="button" value="打印" onclick="document.all.WebBrowser.ExecWB(6,1);" />
+            <input id="btnclose" type="button" value="关闭" onclick="window.close();" />
         </center>
              
     </div>

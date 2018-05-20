@@ -133,8 +133,11 @@
     <Content Include="Default.aspx" />
     <Content Include="Fin\CommCostList.aspx" />
     <Content Include="Fin\EI_B.aspx" />
+    <Content Include="Fin\EI_BankBillPrint.aspx" />
     <Content Include="Fin\EI_BankBill.aspx" />
+    <Content Include="Fin\EI_BlankCheckPrint.aspx" />
     <Content Include="Fin\EI_BlankCheck.aspx" />
+    <Content Include="Fin\EI_InComePrint.aspx" />
     <Content Include="Fin\EI_InCome.aspx" />
     <Content Include="Fin\SetPONoIsSelected.aspx" />
     <Content Include="Fin\WFAll.aspx" />
@@ -1156,6 +1159,13 @@
     <Compile Include="Fin\EI_B.aspx.designer.cs">
       <DependentUpon>EI_B.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Fin\EI_BankBillPrint.aspx.cs">
+      <DependentUpon>EI_BankBillPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Fin\EI_BankBillPrint.aspx.designer.cs">
+      <DependentUpon>EI_BankBillPrint.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Fin\EI_BankBill.aspx.cs">
       <DependentUpon>EI_BankBill.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1163,12 +1173,26 @@
     <Compile Include="Fin\EI_BankBill.aspx.designer.cs">
       <DependentUpon>EI_BankBill.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Fin\EI_BlankCheckPrint.aspx.cs">
+      <DependentUpon>EI_BlankCheckPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Fin\EI_BlankCheckPrint.aspx.designer.cs">
+      <DependentUpon>EI_BlankCheckPrint.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Fin\EI_BlankCheck.aspx.cs">
       <DependentUpon>EI_BlankCheck.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Fin\EI_BlankCheck.aspx.designer.cs">
       <DependentUpon>EI_BlankCheck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Fin\EI_InComePrint.aspx.cs">
+      <DependentUpon>EI_InComePrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Fin\EI_InComePrint.aspx.designer.cs">
+      <DependentUpon>EI_InComePrint.aspx</DependentUpon>
     </Compile>
     <Compile Include="Fin\EI_InCome.aspx.cs">
       <DependentUpon>EI_InCome.aspx</DependentUpon>

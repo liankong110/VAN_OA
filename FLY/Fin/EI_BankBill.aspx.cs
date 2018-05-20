@@ -27,23 +27,31 @@ namespace VAN_OA.Fin
                     txtSupplierCardNo.Text = model.SupplierBrandNo;
                     txtRightSupplierCardNo.Text = model.SupplierBrandNo;
                     txtBrandName.Text = model.SupplierBrandName;
-                    txtRightBrandName.Text= model.SupplierBrandName;
-                    txtNum.Text= "¥" + model.ActPay.ToString("f2").Replace(".", "");
+                    txtRightBrandName.Text = model.SupplierBrandName;
+                    txtNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
                     txtDaTotal.Text = ConvertMoney(model.ActPay);
                     txtUse.Text = model.ProNo;
+                    txtTotal.Text = "¥"+string.Format("{0:n2}", model.ActPay);
 
                     TB_CompanyService companySer = new TB_CompanyService();
-                    var companyModel=companySer.GetListArray(string.Format(" ComName='{0}'", model.Company))[0];
+                    var companyModel = companySer.GetListArray(string.Format(" ComName='{0}'", model.Company))[0];
                     txtCardNo.Text = companyModel.KaHao;
                     txtRightCompanyCardNo.Text = companyModel.KaHao;
 
                     TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
 
-                    var supplierModel=supplierSer.GetListArray(string.Format(" SupplierName='{0}'",model.SupplierName))[0];
+                    var supplierModel = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", model.SupplierName))[0];
                     txtPhone.Text = supplierModel.Phone;
                     txtRightPhone.Text = supplierModel.Phone;
-                    txtBrandAddress.Text = supplierModel.Province+"  "+supplierModel.City;
+                    txtBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
                     txtRightBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
+
+                    if (!string.IsNullOrEmpty(model.Person))
+                    {
+                        var person = new Invoice_PersonService().GetListArray(string.Format(" name='{0}'", model.Person))[0];
+                        txtId.Text = person.CardNo;
+                    }
+
                 }
             }
         }
@@ -167,5 +175,17 @@ namespace VAN_OA.Fin
             return MoneyStr;
         }
         #endregion
+
+        protected void btnPrint_Click(object sender, EventArgs e)
+        {
+            var model = Session["ElectronicInvoice"] as ElectronicInvoice;
+            model.Company = txtCompanyName.Text;
+            model.SupplierName = txtSupplierName.Text;
+            model.SupplierBrandNo = txtSupplierCardNo.Text;
+            model.SupplierBrandName = txtBrandName.Text;
+            model.ProNo = txtUse.Text;
+            Session["ElectronicInvoice"] = model;
+            base.Response.Redirect("~/Fin/EI_BankBillPrint.aspx");
+        }
     }
 }

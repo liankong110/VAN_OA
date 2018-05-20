@@ -4,46 +4,49 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Microsoft.Win32;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Dal.ReportForms;
 using VAN_OA.Model.JXC;
 
 namespace VAN_OA.Fin
 {
-    public partial class EI_BlankCheck : System.Web.UI.Page
+    public partial class EI_BankBillPrint : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //RegistryKey pregkey;
-            //pregkey = Registry.CurrentUser.OpenSubKey("Software//Microsoft//Internet Explorer//PageSetup//", false);
             if (!IsPostBack)
             {
                 if (Session["ElectronicInvoice"] != null)
                 {
                     var model = Session["ElectronicInvoice"] as ElectronicInvoice;
-                    txtPrNo.Text = model.ProNo;
+                    txtCompanyName.Text = model.Company;
+                    txtRightCompanyName.Text = model.Company;
 
-                    txtDate.Text = string.Format("{0:yyyy    MM    dd}", DateTime.Now);
-                    txtShouKuanRen.Text = model.SupplieSimpeName;
-                    txtTotal.Text = string.Format("¥{0:n2}", model.ActPay);
-                    txtUse.Text = model.Use;
-
-                    txtDaShouKuan.Text = model.SupplierName;
+                    txtSupplierName.Text = model.SupplierName;
+                    txtRightSupplierName.Text = model.SupplierName;
+                    txtSupplierCardNo.Text = model.SupplierBrandNo;
+                    txtRightSupplierCardNo.Text = model.SupplierBrandNo;
+                    txtBrandName.Text = model.SupplierBrandName;
+                    txtRightBrandName.Text= model.SupplierBrandName;
+                    txtNum.Text= "¥" + model.ActPay.ToString("f2").Replace(".", "");
                     txtDaTotal.Text = ConvertMoney(model.ActPay);
-                    txtDaUse.Text = model.Use;
-                    txtDaNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
-                    txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString()) + "    " +
-                      (DateTime.Now.Month > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Month).Replace("圆整", "") + "    "
-                        + (DateTime.Now.Day > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Day).Replace("圆整", "");
-                    if (!string.IsNullOrEmpty(model.Person))
-                    {
-                        var person = new Invoice_PersonService().GetListArray(string.Format(" name='{0}'", model.Person))[0];
-                        txtDaRemark.Text = person.CardNo;
-                    }
+                    txtUse.Text = model.ProNo;
+
+                    TB_CompanyService companySer = new TB_CompanyService();
+                    var companyModel=companySer.GetListArray(string.Format(" ComName='{0}'", model.Company))[0];
+                    txtCardNo.Text = companyModel.KaHao;
+                    txtRightCompanyCardNo.Text = companyModel.KaHao;
+
+                    TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
+
+                    var supplierModel=supplierSer.GetListArray(string.Format(" SupplierName='{0}'",model.SupplierName))[0];
+                    txtPhone.Text = supplierModel.Phone;
+                    txtRightPhone.Text = supplierModel.Phone;
+                    txtBrandAddress.Text = supplierModel.Province+"  "+supplierModel.City;
+                    txtRightBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
                 }
             }
         }
-
 
         public string ConvertNum(string Num)
         {
@@ -164,17 +167,5 @@ namespace VAN_OA.Fin
             return MoneyStr;
         }
         #endregion
-
-        protected void btnPrint_Click(object sender, EventArgs e)
-        {
-            var model = Session["ElectronicInvoice"] as ElectronicInvoice;
-            model.ProNo = txtPrNo.Text;
-            model.SupplieSimpeName = txtShouKuanRen.Text;
-            model.Use = txtUse.Text;
-            model.SupplierName = txtDaShouKuan.Text;
-            model.Use = txtDaUse.Text;
-            Session["ElectronicInvoice"] = model;
-            base.Response.Redirect("~/Fin/EI_BlankCheckPrint.aspx");
-        }
     }
 }
