@@ -40,9 +40,8 @@ namespace VAN_OA.Fin
 
                     TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
 
-                    var supplierModel = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", model.SupplierName))[0];
-                    txtPhone.Text = supplierModel.Phone;
-                    txtRightPhone.Text = supplierModel.Phone;
+                    var supplierModel = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", model.SupplierName))[0];                   
+                    
                     txtBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
                     txtRightBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
 
@@ -50,6 +49,8 @@ namespace VAN_OA.Fin
                     {
                         var person = new Invoice_PersonService().GetListArray(string.Format(" name='{0}'", model.Person))[0];
                         txtId.Text = person.CardNo;
+                        txtRightPhone.Text = person.Phone;
+                        txtPhone.Text = person.Phone;
                     }
 
                 }
