@@ -31,6 +31,7 @@ namespace VAN_OA.Fin
                     txtNum.Text= "¥" + model.ActPay.ToString("f2").Replace(".", "");
                     txtDaTotal.Text = ConvertMoney(model.ActPay);
                     txtUse.Text = model.ProNo;
+                    txtTotal.Text = "¥" + string.Format("{0:n2}", model.ActPay);
 
                     TB_CompanyService companySer = new TB_CompanyService();
                     var companyModel=companySer.GetListArray(string.Format(" ComName='{0}'", model.Company))[0];
@@ -40,10 +41,17 @@ namespace VAN_OA.Fin
                     TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
 
                     var supplierModel=supplierSer.GetListArray(string.Format(" SupplierName='{0}'",model.SupplierName))[0];
-                    txtPhone.Text = supplierModel.Phone;
-                    txtRightPhone.Text = supplierModel.Phone;
+                  
                     txtBrandAddress.Text = supplierModel.Province+"  "+supplierModel.City;
                     txtRightBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
+
+                    if (!string.IsNullOrEmpty(model.Person))
+                    {
+                        var person = new Invoice_PersonService().GetListArray(string.Format(" name='{0}'", model.Person))[0];
+                        txtId.Text = person.CardNo;
+                        txtRightPhone.Text = person.Phone;
+                        txtPhone.Text = person.Phone;
+                    }
                 }
             }
         }

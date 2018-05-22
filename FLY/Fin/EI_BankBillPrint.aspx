@@ -62,11 +62,11 @@
 
         .DaNum {
             position: absolute;
-            left: 287px;
+            left: 290px;
             top: 255px;
             width: 180px;
             text-align: right;
-            letter-spacing: 7.5px;
+            letter-spacing: 7px;
         }
 
         .Phone {

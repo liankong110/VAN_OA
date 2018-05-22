@@ -69,8 +69,8 @@
 
         .DaNum {
             position: absolute;
-            left: 575px;
-            top: 98px;
+            left: 583px;
+            top: 101px;
             width: 170px;
             text-align:right;
             letter-spacing:7px;
