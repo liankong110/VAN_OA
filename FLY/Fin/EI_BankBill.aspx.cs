@@ -39,11 +39,20 @@ namespace VAN_OA.Fin
                     txtRightCompanyCardNo.Text = companyModel.KaHao;
 
                     TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
-
-                    var supplierModel = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", model.SupplierName))[0];                   
-                    
-                    txtBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
-                    txtRightBrandAddress.Text = supplierModel.Province + "  " + supplierModel.City;
+                    var list = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", model.SupplierName));
+                    if (list.Count > 0)
+                    {
+                        var supplierModel = list[0];
+                        txtBrandAddress.Text = (string.IsNullOrEmpty(supplierModel.Province) ? "        " : supplierModel.Province)
+                            + "  " + supplierModel.City;
+                        txtRightBrandAddress.Text = (string.IsNullOrEmpty(supplierModel.Province) ? "        " : supplierModel.Province)
+                            + "  " + supplierModel.City;                       
+                    }
+                    else
+                    {
+                        txtBrandAddress.Text = "";
+                        txtRightBrandAddress.Text = "";
+                    }
 
                     if (!string.IsNullOrEmpty(model.Person))
                     {
@@ -52,7 +61,6 @@ namespace VAN_OA.Fin
                         txtRightPhone.Text = person.Phone;
                         txtPhone.Text = person.Phone;
                     }
-
                 }
             }
         }

@@ -318,7 +318,7 @@ namespace VAN_OA.ReportForms
                 this.txtZhuJi.Focus();
                 return false;
             }
-            if (ddlResult.Text=="通过"&&(this.ddlProvince.Text.Trim().Length == 0|| this.ddlCity.Text.Trim().Length == 0))
+            if (ddlResult.Text=="通过"&&(this.ddlCity.Text.Trim().Length == 0))
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('省份城市不能为空！');</script>");
                 this.ddlProvince.Focus();
@@ -391,15 +391,15 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
             cbIsSpecial.Checked = model.IsSpecial;
             ddlProvince.Text = model.Province;
 
-            if (!string.IsNullOrEmpty(model.Province))
-            {
+            //if (!string.IsNullOrEmpty(model.Province))
+            //{
                 Province_CityService proList = new Province_CityService();
                 var cityList = proList.CityList(model.Province);
                 cityList.Insert(0, "");
                 ddlCity.DataSource =cityList;
                 ddlCity.DataBind();
                 ddlCity.Text = model.City;
-            }
+            //}
            
         }
 
@@ -413,7 +413,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
             {
                 Province_CityService proList = new Province_CityService();
                 var comList = proList.ProvinceList();
-                comList.Insert(0, "");
+              
                 ddlProvince.DataSource = comList;
                 ddlProvince.DataBind();
 
@@ -431,6 +431,12 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
                     tb_EFormService eformSer = new tb_EFormService();
                     if (Request["allE_id"] == null)//单据增加
                     {
+                        
+                        var cityList = proList.CityList("");
+
+                        ddlCity.DataSource = cityList;
+                        ddlCity.DataBind();
+
                         txtTime.Text = DateTime.Now.ToString();      
                         //检查自己是否在请假单中流程设置中，来确定自己下一个审批人
                         lblResult.Visible = false;
@@ -928,7 +934,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
         {          
             Province_CityService proList = new Province_CityService();
             var cityList = proList.CityList(ddlProvince.Text);
-            cityList.Insert(0, "");
+            
             ddlCity.DataSource = cityList;
             ddlCity.DataBind();
         }

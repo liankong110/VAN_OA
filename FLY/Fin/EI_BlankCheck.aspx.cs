@@ -32,8 +32,8 @@ namespace VAN_OA.Fin
                     txtDaTotal.Text = ConvertMoney(model.ActPay);
                     txtDaUse.Text = model.Use;
                     txtDaNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
-                    txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString()) + "    " +
-                      (DateTime.Now.Month > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Month).Replace("圆整", "") + "    "
+                    txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString()) + "      " +
+                      (DateTime.Now.Month > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Month).Replace("圆整", "") + "       "
                         + (DateTime.Now.Day > 9 ? "" : "零") + ConvertMoney(DateTime.Now.Day).Replace("圆整", "");
                     if (!string.IsNullOrEmpty(model.Person))
                     {

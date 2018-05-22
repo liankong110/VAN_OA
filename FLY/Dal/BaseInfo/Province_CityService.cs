@@ -15,7 +15,7 @@ namespace VAN_OA.Dal.BaseInfo
         public List<string> ProvinceList()
         {
             List<string> provinceList = new List<string>();
-            string sql = "select ProvinceName from TB_Province";
+            string sql = "select ProvinceName from TB_Province ORDER BY ID DESC";
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();

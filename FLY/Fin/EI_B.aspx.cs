@@ -27,6 +27,7 @@ namespace VAN_OA.Fin
                 dllPerson.DataTextField = "Name";
                 dllPerson.DataValueField = "Id";
                 dllPerson.DataBind();
+               
             }
         }
 
@@ -102,12 +103,40 @@ namespace VAN_OA.Fin
                 var supplierList = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", txtSupplierName.Text));
                 if (supplierList.Count > 0)
                 {
+                    
                     var supplierModel = supplierList[0];
                     txtBandName.Text = supplierModel.SupplierBrandName;
                     txtBrandNo.Text = supplierModel.SupplierBrandNo;
                     txtCity.Text = supplierModel.City;
-                    txtProvice.Text = supplierModel.Province;                    
+                    txtProvice.Text = supplierModel.Province;
+
+                    if (supplierModel.City.Contains("苏州") || supplierModel.City.Contains("太仓") || supplierModel.City.Contains("相城")
+                   || supplierModel.City.Contains("吴中") || supplierModel.City.Contains("张家港")
+                   || supplierModel.City.Contains("常熟") || supplierModel.City.Contains("昆山"))
+                    {
+                        foreach (ListItem item in dllBillType.Items)
+                        {
+                            if (item.Text == "支票")
+                            {
+                                dllBillType.Text = item.Value;
+                                break;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        foreach (ListItem item in dllBillType.Items)
+                        {
+                            if (item.Text == "银行申请单")
+                            {
+                                dllBillType.Text = item.Value;
+                                break;
+                            }
+                        }
+                    }
                 }
+                
               
             }
         }

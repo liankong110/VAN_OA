@@ -149,7 +149,25 @@ namespace VAN_OA.JXC
                 dllPerson.DataValueField = "Id";
                 dllPerson.DataBind();
 
-                dataList.Add(e.Row.DataItem as ElectronicInvoice);
+
+
+                var model = e.Row.DataItem as ElectronicInvoice;
+                if (model.SupplierName.Contains("本部门") || model.SupplierName.Contains("淘宝"))
+                {
+                    e.Row.BackColor = System.Drawing.Color.LightGray;
+                }
+                if (model.City.Contains("苏州") || model.City.Contains("太仓") || model.City.Contains("相城")
+                    || model.City.Contains("吴中") || model.City.Contains("张家港")
+                    || model.City.Contains("常熟") || model.City.Contains("昆山"))
+                {
+                    dllBillType.Text = billTypeList.Find(t=>t.BillName== "支票").Id.ToString();
+                }
+                else
+                {
+                    dllBillType.Text = billTypeList.Find(t => t.BillName == "银行申请单").Id.ToString();
+                    
+                }
+                dataList.Add(model);
             }
 
             if (e.Row.RowType == DataControlRowType.Footer)
