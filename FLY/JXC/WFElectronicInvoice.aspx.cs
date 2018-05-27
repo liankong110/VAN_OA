@@ -18,7 +18,7 @@ namespace VAN_OA.JXC
         ElectronicInvoiceService electronicInvoiceSer = new ElectronicInvoiceService();
         List<Invoice_BillType> billTypeList = new List<Invoice_BillType>();
         List<Invoice_Person> personList = new List<Invoice_Person>();
-
+        System.Collections.Hashtable hb = new System.Collections.Hashtable();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -46,17 +46,37 @@ namespace VAN_OA.JXC
         }
 
         private List<string> allFpTypes = new List<string>();
-        private void Show()
-        {            
+
+        private List<ElectronicInvoice> GetData()
+        {
             billTypeList = new Invoice_BillTypeService().GetListArray(" IsStop=0");
             personList = new Invoice_PersonService().GetListArray(" IsStop=0");
             var sql = "";
+            var sumWhere = "having 1=1";
+            if (txtSmallTotal.Text.Trim() != "")
+            {
+                if (CommHelp.VerifesToNum(txtSmallTotal.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('金额 格式错误！');</script>");
+                    return null;
+                }
+                sumWhere += string.Format(" and {1}{0}isnull(sum(ActPay),0) ", ddlTotal.Text, txtSmallTotal.Text.Trim());
+            }
+            if (txtBigTotal.Text.Trim() != "")
+            {
+                if (CommHelp.VerifesToNum(txtBigTotal.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('金额 格式错误！');</script>");
+                    return null;
+                }
+                sumWhere += string.Format(" and isnull(sum(ActPay),0){0} {1}", ddlTotal.Text, txtBigTotal.Text.Trim());
+            }
 
             if (txtPONo.Text.Trim() != "")
             {
                 if (CheckPoNO(txtPONo.Text) == false)
                 {
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and PONo like '%{0}%'", txtPONo.Text.Trim());
             }
@@ -65,7 +85,7 @@ namespace VAN_OA.JXC
                 if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and PODate>='{0} 00:00:00'", txtFrom.Text);
             }
@@ -75,7 +95,7 @@ namespace VAN_OA.JXC
                 if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and PODate<='{0} 23:59:59'", txtTo.Text);
             }
@@ -84,7 +104,7 @@ namespace VAN_OA.JXC
             {
                 if (CheckProNo(txtProNo.Text) == false)
                 {
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and ProNo like '%{0}%'", txtProNo.Text.Trim());
             }
@@ -96,21 +116,63 @@ namespace VAN_OA.JXC
 
             if (!string.IsNullOrEmpty(txtSupplierName.Text))
             {
-                sql += string.Format(" and SupplierName like '%{0}%'", txtSupplierName.Text.Trim());
+                if (cbSupplierName.Checked == false)
+                {
+                    sql += string.Format(" and SupplierName like '%{0}%'", txtSupplierName.Text.Trim());
+                }
+                else
+                {
+                    sql += string.Format(" and SupplierName='{0}'", txtSupplierName.Text.Trim());
+                }
+            }
+            if (!string.IsNullOrEmpty(txtSupplierSimpName.Text))
+            {
+                if (cbSupplierSimpName.Checked == false)
+                {
+                    sql += string.Format(" and SupplieSimpeName like '%{0}%'", txtSupplierSimpName.Text.Trim());
+                }
+                else
+                {
+                    sql += string.Format(" and SupplieSimpeName='{0}'", txtSupplierSimpName.Text.Trim());
+                }
             }
             if (ddlPayType.Text != "-1")
             {
                 sql += string.Format(" and busType='{0}'", ddlPayType.Text);
             }
 
-            var list = this.electronicInvoiceSer.GetReport(sql);
+            var list = this.electronicInvoiceSer.GetReport(sql,sumWhere);
 
+            var countList = list.GroupBy(t => t.busType + t.ProNo).Where(t => t.Count() > 1);
+
+
+            foreach (var m in countList)
+            {
+                hb.Add(m.Key, null);
+            }
+            return list;
+        }
+        private void Show()
+        {
+            var list = GetData();
+            if (list == null)
+            {
+                return;
+            }
+            if (list.Count > 0&&txtProNo.Text.Trim().Length==8)
+            {
+                btbPrint.Enabled = true;
+                btnYuLan.Enabled = true;
+            }
+            else
+            {
+                btbPrint.Enabled = false;
+                btnYuLan.Enabled = false;
+            }
             AspNetPager1.RecordCount = list.Count;
             this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
             this.gvMain.DataSource = list;
             this.gvMain.DataBind();
-
-
         }
         protected void AspNetPager1_PageChanged(object src, EventArgs e)
         {
@@ -137,6 +199,8 @@ namespace VAN_OA.JXC
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
+
+
                 DropDownList dllBillType = (DropDownList)e.Row.FindControl("dllBillType");
                 dllBillType.DataSource = billTypeList;
                 dllBillType.DataTextField = "BillName";
@@ -152,20 +216,28 @@ namespace VAN_OA.JXC
 
 
                 var model = e.Row.DataItem as ElectronicInvoice;
-                if (model.SupplierName.Contains("本部门") || model.SupplierName.Contains("淘宝"))
+                if (hb.ContainsKey(model.busType + model.ProNo))
+                {
+                    ImageButton btnEdit = (ImageButton)e.Row.FindControl("btnEdit");
+                    ImageButton btnJinZhangDan = (ImageButton)e.Row.FindControl("btnJinZhangDan");
+                    btnEdit.Visible = false;
+                    btnJinZhangDan.Visible = false;
+                }
+                if (model.SupplierName != null && (model.SupplierName.Contains("本部门") || model.SupplierName.Contains("淘宝")))
                 {
                     e.Row.BackColor = System.Drawing.Color.LightGray;
                 }
-                if (model.City.Contains("苏州") || model.City.Contains("太仓") || model.City.Contains("相城")
+                if (model.City != null &&
+                    (model.City.Contains("苏州") || model.City.Contains("太仓") || model.City.Contains("相城")
                     || model.City.Contains("吴中") || model.City.Contains("张家港")
-                    || model.City.Contains("常熟") || model.City.Contains("昆山"))
+                    || model.City.Contains("常熟") || model.City.Contains("昆山")))
                 {
-                    dllBillType.Text = billTypeList.Find(t=>t.BillName== "支票").Id.ToString();
+                    dllBillType.Text = billTypeList.Find(t => t.BillName == "支票").Id.ToString();
                 }
                 else
                 {
                     dllBillType.Text = billTypeList.Find(t => t.BillName == "银行申请单").Id.ToString();
-                    
+
                 }
                 dataList.Add(model);
             }
@@ -194,7 +266,7 @@ namespace VAN_OA.JXC
             //判断项目有没有使用
             var data = ViewState["DataList"] as List<ElectronicInvoice>;
             if (data != null)
-            {             
+            {
                 var model = data[e.RowIndex];
                 var dllBillType = gvMain.Rows[e.RowIndex].FindControl("dllBillType") as DropDownList;
                 var dllPerson = gvMain.Rows[e.RowIndex].FindControl("dllPerson") as DropDownList;
@@ -205,7 +277,7 @@ namespace VAN_OA.JXC
                 model.Use = dllUse.SelectedItem.Text;
                 model.Company = dllCompany.SelectedItem.Text;
                 Session["ElectronicInvoice"] = model;
-                Response.Write("<script>window.open('/Fin/EI_InCome.aspx','_blank')</script>");               
+                Response.Write("<script>window.open('/Fin/EI_InCome.aspx','_blank')</script>");
             }
 
 
@@ -218,7 +290,7 @@ namespace VAN_OA.JXC
             if (data != null)
             {
                 var model = data[e.NewEditIndex];
-                var dllBillType=gvMain.Rows[e.NewEditIndex].FindControl("dllBillType") as DropDownList;
+                var dllBillType = gvMain.Rows[e.NewEditIndex].FindControl("dllBillType") as DropDownList;
                 var dllPerson = gvMain.Rows[e.NewEditIndex].FindControl("dllPerson") as DropDownList;
                 var dllUse = gvMain.Rows[e.NewEditIndex].FindControl("dllUse") as DropDownList;
                 var dllCompany = gvMain.Rows[e.NewEditIndex].FindControl("dllCompany") as DropDownList;
@@ -228,22 +300,75 @@ namespace VAN_OA.JXC
                 model.Company = dllCompany.SelectedItem.Text;
                 Session["ElectronicInvoice"] = model;
                 if (model.BillType == "银行申请单")
-                { 
+                {
                     Response.Write("<script>window.open('/Fin/EI_BankBill.aspx','_blank')</script>");
                 }
                 else if (model.BillType == "支票")
                 {
                     Response.Write("<script>window.open('/Fin/EI_BlankCheck.aspx','_blank')</script>");
-                }                
+                }
                 //Response.Write(" <script>document.location=document.location; </script>");
                 return;
             }
 
 
         }
-
-
-
-
+        /// <summary>
+        /// 预览
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnYuLan_Click(object sender, EventArgs e)
+        {
+            var list = GetData();
+            if (list == null || list.Count == 0)
+            {
+                return;
+            }
+            var model = list[0];
+            var dllBillType = gvMain.Rows[0].FindControl("dllBillType") as DropDownList;
+            var dllPerson = gvMain.Rows[0].FindControl("dllPerson") as DropDownList;
+            var dllUse = gvMain.Rows[0].FindControl("dllUse") as DropDownList;
+            var dllCompany = gvMain.Rows[0].FindControl("dllCompany") as DropDownList;
+            model.BillType = dllBillType.SelectedItem.Text;
+            model.Person = dllPerson.SelectedItem.Text;
+            model.Use = dllUse.SelectedItem.Text;
+            model.Company = dllCompany.SelectedItem.Text;
+            model.ActPay = list.Sum(t => t.ActPay);
+            Session["ElectronicInvoice"] = model;
+            if (model.BillType == "银行申请单")
+            {
+                Response.Write("<script>window.open('/Fin/EI_BankBill.aspx','_blank')</script>");
+            }
+            else if (model.BillType == "支票")
+            {
+                Response.Write("<script>window.open('/Fin/EI_BlankCheck.aspx','_blank')</script>");
+            }
+        }
+        /// <summary>
+        /// 打印
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btbPrint_Click(object sender, EventArgs e)
+        {
+            var list = GetData();
+            if (list == null || list.Count == 0)
+            {
+                return;
+            }
+            var model = list[0];
+            var dllBillType = gvMain.Rows[0].FindControl("dllBillType") as DropDownList;
+            var dllPerson = gvMain.Rows[0].FindControl("dllPerson") as DropDownList;
+            var dllUse = gvMain.Rows[0].FindControl("dllUse") as DropDownList;
+            var dllCompany = gvMain.Rows[0].FindControl("dllCompany") as DropDownList;
+            model.BillType = dllBillType.SelectedItem.Text;
+            model.Person = dllPerson.SelectedItem.Text;
+            model.Use = dllUse.SelectedItem.Text;
+            model.Company = dllCompany.SelectedItem.Text;
+            model.ActPay = list.Sum(t => t.ActPay);
+            Session["ElectronicInvoice"] = model;
+            Response.Write("<script>window.open('/Fin/EI_InCome.aspx','_blank')</script>");
+        }
     }
 }

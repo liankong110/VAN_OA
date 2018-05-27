@@ -433,7 +433,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
                     {
                         
                         var cityList = proList.CityList("");
-
+                        cityList.Insert(0,"");
                         ddlCity.DataSource = cityList;
                         ddlCity.DataBind();
 
@@ -934,7 +934,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
         {          
             Province_CityService proList = new Province_CityService();
             var cityList = proList.CityList(ddlProvince.Text);
-            
+            cityList.Insert(0, "");
             ddlCity.DataSource = cityList;
             ddlCity.DataBind();
         }

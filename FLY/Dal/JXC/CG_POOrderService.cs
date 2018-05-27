@@ -354,7 +354,8 @@ namespace VAN_OA.Dal.JXC
             strSql1.Append("PORemark,");
             strSql2.Append("'" + model.PORemark + "',");
 
-
+            strSql1.Append("Model,");
+            strSql2.Append("'" + model.Model + "',");
             if (model.IsSpecial != null)
             {
                 strSql1.Append("IsSpecial,");
@@ -523,7 +524,7 @@ namespace VAN_OA.Dal.JXC
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" CG_POOrder.PoType,CG_POOrder.Id,AppName,loginName,CaiGou,cRemark ,fileName,fileType ,proNo,GuestId,GuestNo,GuestName,AE,INSIDE,PONo,POName,PODate,POTotal,POPayStype,Status,IFZhui,POStatue,PORemark,IsSpecial,IsPoFax,FpType,FpTax");
+            strSql.Append(" Model,CG_POOrder.PoType,CG_POOrder.Id,AppName,loginName,CaiGou,cRemark ,fileName,fileType ,proNo,GuestId,GuestNo,GuestName,AE,INSIDE,PONo,POName,PODate,POTotal,POPayStype,Status,IFZhui,POStatue,PORemark,IsSpecial,IsPoFax,FpType,FpTax");
             strSql.Append(" from CG_POOrder left join tb_User on tb_User.id=CG_POOrder.AppName");
             strSql.Append(" where CG_POOrder.Id=" + id + "");
 
@@ -552,7 +553,7 @@ namespace VAN_OA.Dal.JXC
                         model.IsPoFax = Convert.ToBoolean(dataReader["IsPoFax"]);
                         model.FpType = dataReader["FpType"].ToString();
                         model.FpTax = Convert.ToDecimal(dataReader["FpTax"]);
-
+                        model.Model = dataReader["Model"].ToString();
                     }
                 }
             }

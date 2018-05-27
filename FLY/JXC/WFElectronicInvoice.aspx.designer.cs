@@ -103,6 +103,33 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.TextBox txtSupplierName;
         
         /// <summary>
+        /// cbSupplierName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbSupplierName;
+        
+        /// <summary>
+        /// txtSupplierSimpName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSupplierSimpName;
+        
+        /// <summary>
+        /// cbSupplierSimpName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbSupplierSimpName;
+        
+        /// <summary>
         /// ddlPayType 控件。
         /// </summary>
         /// <remarks>
@@ -112,6 +139,33 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.DropDownList ddlPayType;
         
         /// <summary>
+        /// txtSmallTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSmallTotal;
+        
+        /// <summary>
+        /// ddlTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTotal;
+        
+        /// <summary>
+        /// txtBigTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBigTotal;
+        
+        /// <summary>
         /// btnSelect 控件。
         /// </summary>
         /// <remarks>
@@ -119,6 +173,24 @@ namespace VAN_OA.JXC {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSelect;
+        
+        /// <summary>
+        /// btnYuLan 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnYuLan;
+        
+        /// <summary>
+        /// btbPrint 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btbPrint;
         
         /// <summary>
         /// gvMain 控件。

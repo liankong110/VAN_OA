@@ -201,9 +201,15 @@
         <tr>
             <td>备注:
             </td>
-            <td colspan="3">
+            <td>
                 <asp:TextBox ID="txtPORemark" runat="server" Width="95%"></asp:TextBox>
                 <font style="color: Red">*</font>
+            </td>
+            <td>项目模型:
+            </td>
+            <td>
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList><font
+                    style="color: Red">*</font>
             </td>
         </tr>
         <tr>
@@ -498,12 +504,12 @@
                         <asp:BoundField DataField="UpdateUser" HeaderText="更新人" SortExpression="UpdateUser"
                             ItemStyle-HorizontalAlign="Center" Visible="false" />
 
-                       
-                         <asp:TemplateField HeaderText="销售单价" >
+
+                        <asp:TemplateField HeaderText="销售单价">
                             <ItemTemplate>
                                 <asp:Label ID="lblSellPrice" runat="server" Text='<%# Eval("SellPrice") %>'></asp:Label>
                             </ItemTemplate>
-                           
+
                         </asp:TemplateField>
 
                         <asp:TemplateField HeaderText="初步利润" FooterStyle-BackColor="Black" FooterStyle-ForeColor="White">
@@ -680,7 +686,32 @@
             </td>
         </tr>
         <tr>
+            <td colspan="6">备注：<br />
+                1.计划完工天数指项目自建立起至完全交付并验收的自然天数
+                <br />
+                2.项目模型说明： 
+       <asp:GridView ID="gvModel" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
+           ShowFooter="false" Width="100%" AutoGenerateColumns="False"
+           ShowHeader="false"
+           Style="border-collapse: collapse;">
+           <Columns>
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+           </Columns>
+           <PagerStyle HorizontalAlign="Center" />
+           <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
+           <HeaderStyle CssClass="GV_header" BackColor="#336699" Height="24px" ForeColor="White"
+               HorizontalAlign="Center" />
+           <AlternatingRowStyle CssClass="InfoDetail2" BackColor="#FBFBFB" />
+           <RowStyle CssClass="InfoDetail1" />
+           <FooterStyle BackColor="#D7E8FF" />
+       </asp:GridView>
+            </td>
+        </tr>
+        <tr>
             <td colspan="6" align="center">
+
+
                 <asp:Label ID="lblWarn" Visible="false" runat="server" Font-Bold="true" ForeColor="Red" Font-Size="20px" Text="项目利润为负数，请确认！！！"></asp:Label>
                 <br />
                 <br />

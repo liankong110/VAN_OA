@@ -132,7 +132,11 @@ namespace VAN_OA.JXC
 
                 }
             }
-
+            if (ddlModel.Text == "")
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请选择项目模型！');</script>");
+                return false;
+            }
             if (txtAE.Text != txtName.Text)
             {
                 VAN_OA.Dal.ReportForms.TB_GuestTrackService guestTrackSer = new VAN_OA.Dal.ReportForms.TB_GuestTrackService();
@@ -329,6 +333,7 @@ namespace VAN_OA.JXC
             //txtGuestNo.Enabled = false;
             //txtINSIDE.Enabled = false;
             //txtAE.Enabled = false;
+            ddlModel.Enabled = false;
             cbSpecial.Enabled = false;
             txtName.ReadOnly = true;
             txtPORemark.ReadOnly = true;
@@ -422,6 +427,17 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var modelList=modelService.GetListArray("");
+                modelList.Insert(0, new TB_Model { Id = -1, ModelName = "" });
+                ddlModel.DataSource = modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";              
+                
+                this.gvModel.DataSource = modelService.GetListArray(""); ;
+                this.gvModel.DataBind();
+
                 string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='可操作特殊客户'
 where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='项目订单') and sys_Object.AutoID is not null", Session["currentUserId"]);
                 if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
@@ -621,6 +637,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
 
                         CG_POOrderService mainSer = new CG_POOrderService();
                         CG_POOrder pp = mainSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        ddlModel.Text = pp.Model;
                         cbIsPoFax.Checked = pp.IsPoFax;
                         dllFPstye.Enabled = pp.IsPoFax;
                         dllFPstye.SelectedItem.Text = pp.FpType;
@@ -714,6 +731,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
 
                         CG_POOrderService mainSer = new CG_POOrderService();
                         CG_POOrder pp = mainSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        ddlModel.Text = pp.Model;
                         cbIsPoFax.Checked = pp.IsPoFax;
                         dllFPstye.Enabled = pp.IsPoFax;
                         dllFPstye.SelectedItem.Text = pp.FpType;
@@ -1024,7 +1042,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                     order.PORemark = txtPORemark.Text;
                     order.IsSpecial = cbSpecial.Checked;
                     order.POType = Convert.ToInt32(ddlPOTyle.Text);
-
+                    order.Model = ddlModel.Text;
                     List<CG_POOrders> POOrders = ViewState["Orders"] as List<CG_POOrders>;
                     List<CG_POCai> caiOrders = ViewState["Cais"] as List<CG_POCai>;
 

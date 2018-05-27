@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BaseInfo\GoodTemp.aspx" />
+    <Content Include="BaseInfo\WFModel.aspx" />
+    <Content Include="BaseInfo\WFModelList.aspx" />
     <Content Include="BaseInfo\WFInvoicePerson.aspx" />
     <Content Include="BaseInfo\WFInvoiceBillType.aspx" />
     <Content Include="BaseInfo\WFBaseBus.aspx" />
@@ -305,6 +307,20 @@
     </Compile>
     <Compile Include="BaseInfo\GuestProBaseInfoList.aspx.designer.cs">
       <DependentUpon>GuestProBaseInfoList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\WFModel.aspx.cs">
+      <DependentUpon>WFModel.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFModel.aspx.designer.cs">
+      <DependentUpon>WFModel.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\WFModelList.aspx.cs">
+      <DependentUpon>WFModelList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFModelList.aspx.designer.cs">
+      <DependentUpon>WFModelList.aspx</DependentUpon>
     </Compile>
     <Compile Include="BaseInfo\WFInvoicePerson.aspx.cs">
       <DependentUpon>WFInvoicePerson.aspx</DependentUpon>
@@ -665,6 +681,7 @@
     <Compile Include="Dal\BaseInfo\Tb_InventoryService.cs" />
     <Compile Include="Dal\BaseInfo\TB_HouseInfoService.cs" />
     <Compile Include="Dal\BaseInfo\FpTaxInfoService.cs" />
+    <Compile Include="Dal\BaseInfo\TB_ModelService.cs" />
     <Compile Include="Dal\BaseInfo\TeamInfoService.cs" />
     <Compile Include="Dal\EFrom\A_ProInfoService.cs" />
     <Compile Include="Dal\EFrom\A_ProInfosService.cs" />
@@ -1996,6 +2013,7 @@
     <Compile Include="Model\BaseInfo\TB_HouseInfo.cs" />
     <Compile Include="Model\BaseInfo\Tb_Inventory.cs" />
     <Compile Include="Model\BaseInfo\FpTaxInfo.cs" />
+    <Compile Include="Model\BaseInfo\TB_Model.cs" />
     <Compile Include="Model\BaseInfo\TeamInfo.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\EFrom\A_ProInfo.cs" />

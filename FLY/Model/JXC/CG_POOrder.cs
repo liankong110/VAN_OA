@@ -394,6 +394,11 @@ namespace VAN_OA.Model.JXC
         /// 
         /// </summary>
         public decimal? MaoliTotal { get; set; }
+
+        /// <summary>
+        /// 模型名称
+        /// </summary>
+        public string Model { get; set; }
     }
 
 }

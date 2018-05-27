@@ -16,7 +16,7 @@
             <td colspan="1">
                 <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>
             </td>
-            <td>单据号:
+            <td>支/预单据号:
             </td>
             <td>
                 <asp:TextBox ID="txtProNo" runat="server"></asp:TextBox>
@@ -52,6 +52,10 @@
             </td>
             <td colspan="1">
                 <asp:TextBox ID="txtSupplierName" runat="server"></asp:TextBox>
+                <asp:CheckBox ID="cbSupplierName" runat="server"  Text="匹配"/>
+                供应商简称:
+                <asp:TextBox ID="txtSupplierSimpName" runat="server"></asp:TextBox>
+                <asp:CheckBox ID="cbSupplierSimpName" runat="server"  Text="匹配"/>
             </td>
             <td>支付类型:
             </td>
@@ -65,9 +69,21 @@
         </tr>
 
         <tr>
-            <td colspan="4">
+            <td colspan="2">
+                  <asp:TextBox ID="txtSmallTotal" runat="server" Width="100PX"></asp:TextBox>
+                金额
+                <asp:DropDownList ID="ddlTotal" runat="server">
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                </asp:DropDownList>
+                <asp:TextBox ID="txtBigTotal" runat="server" Width="100PX"></asp:TextBox>
+                </td>
+            <td colspan="2">
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;&nbsp;
+                     <asp:Button ID="btnYuLan" runat="server" Text=" 合并预览 " BackColor="Yellow" OnClick="btnYuLan_Click" Enabled="false" />&nbsp;&nbsp;&nbsp;&nbsp;
+                     <asp:Button ID="btbPrint" runat="server" Text=" 合并打印进账单 " BackColor="Yellow" OnClick="btbPrint_Click" Enabled="false"/>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -86,7 +102,7 @@
                 <tr style="height: 20px; background-color: #336699; color: White;">
                     <td>项目编号
                     </td>
-                    <td>单据号
+                    <td>支/预单据号
                     </td>
                     <td>支付类型
                     </td>
@@ -138,13 +154,16 @@
                     <asp:Label ID="PONo" runat="server" Text='<%# Eval("PONo") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="ProNo" HeaderText="单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center">
+            <asp:BoundField DataField="ProNo" HeaderText="支/预单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="busType" HeaderText="支付类型" SortExpression="busType" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="SupplierName" HeaderText="供应商全称" SortExpression="SupplierName" ItemStyle-HorizontalAlign="Center">
+                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+            </asp:BoundField>
+               <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="SupplierBrandName" HeaderText="开户行" SortExpression="SupplierBrandName" ItemStyle-HorizontalAlign="Center">
