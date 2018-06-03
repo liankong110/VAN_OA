@@ -60,7 +60,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('金额 格式错误！');</script>");
                     return null;
                 }
-                sumWhere += string.Format(" and {1}{0}isnull(sum(ActPay),0) ", ddlTotal.Text, txtSmallTotal.Text.Trim());
+                sumWhere += string.Format(" and {1}{0}isnull(sum(ActPay),0) ", ddlLeftTotal.Text, txtSmallTotal.Text.Trim());
             }
             if (txtBigTotal.Text.Trim() != "")
             {
@@ -325,6 +325,13 @@ namespace VAN_OA.JXC
             {
                 return;
             }
+            //查询结果既有支付单又有预付款单且供应商简称不同，
+            //点击合并预览 或 合并打印进账单 提示“请选择支付类型”，返回界面
+            if (list.FindAll(t => t.busType == "支").Count > 0 && list.FindAll(t => t.busType == "预").Count > 0 && list.GroupBy(t => t.SupplieSimpeName).Count() > 1)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('请选择支付类型！');</script>"));
+                return;
+            }
             var model = list[0];
             var dllBillType = gvMain.Rows[0].FindControl("dllBillType") as DropDownList;
             var dllPerson = gvMain.Rows[0].FindControl("dllPerson") as DropDownList;
@@ -355,6 +362,13 @@ namespace VAN_OA.JXC
             var list = GetData();
             if (list == null || list.Count == 0)
             {
+                return;
+            }
+            //查询结果既有支付单又有预付款单且供应商简称不同，
+            //点击合并预览 或 合并打印进账单 提示“请选择支付类型”，返回界面
+            if (list.FindAll(t => t.busType == "支").Count > 0 && list.FindAll(t => t.busType == "预").Count > 0 && list.GroupBy(t => t.SupplieSimpeName).Count() > 1)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('请选择支付类型！');</script>"));
                 return;
             }
             var model = list[0];

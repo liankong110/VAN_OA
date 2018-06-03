@@ -17,7 +17,7 @@ namespace VAN_OA.Dal.JXC
 ,sum(ActPay) as  SumActPay,PODate,AE,[SupplieSimpeName] from (
 select
 CAI_OrderInHouse.PONo,TB_SupplierInvoice.ProNo,'支' as busType,ActPay,
-LastSupplier as SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierInvoice.Status,CreateName,PODate,AE,[SupplieSimpeName]
+TB_SupplierInfo.SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierInvoice.Status,CreateName,PODate,AE,[SupplieSimpeName]
   from  TB_SupplierInvoices  
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses  on  TB_SupplierInvoices.RuIds= CAI_OrderInHouses.Ids 
@@ -41,7 +41,7 @@ order by ProNo desc", Where, sumWhere);
             sql = string.Format(@"select  PONo,ProNo,busType,SupplierName,SupplierBrandName,SupplierBrandNo,Province,City
 ,sum(ActPay) as  SumActPay,PODate,AE,[SupplieSimpeName] from (
 select CAI_OrderInHouse.PONo,TB_SupplierInvoice.ProNo,'支' as busType,ActPay,
-TB_SupplierInvoice.LastSupplier as SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierInvoice.Status,CreateName,CG_POOrder.PODate,CG_POOrder.AE,[SupplieSimpeName]
+TB_SupplierInfo.SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierInvoice.Status,CreateName,CG_POOrder.PODate,CG_POOrder.AE,[SupplieSimpeName]
 from  TB_TempSupplierInvoice  
  left join TB_SupplierInvoices  ON TB_SupplierInvoices.Ids=TB_TempSupplierInvoice.SupplierInvoiceIds     
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_TempSupplierInvoice.SupplierInvoiceId
@@ -55,7 +55,7 @@ left join TB_SupplierInfo on TB_SupplierInfo.SupplieSimpeName=TB_SupplierInvoice
 where SupplierAdvanceId=0
 union all
 select CAI_POOrder.PONo,TB_SupplierAdvancePayment.ProNo as InvProNo,'预' as busType,SupplierInvoiceTotal as ActPay,
-CAI_OrderInHouse.Supplier as SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierAdvancePayment.Status,CreateName,CG_POOrder.PODate,CG_POOrder.AE,[SupplieSimpeName] from 
+TB_SupplierInfo.SupplierName,SupplierBrandName,SupplierBrandNo,Province,City,TB_SupplierAdvancePayment.Status,CreateName,CG_POOrder.PODate,CG_POOrder.AE,[SupplieSimpeName] from 
  TB_TempSupplierInvoice  
  left join TB_SupplierInvoices  ON TB_SupplierInvoices.Ids=TB_TempSupplierInvoice.SupplierInvoiceIds 
 left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_TempSupplierInvoice.SupplierAdvanceId

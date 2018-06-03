@@ -211,9 +211,9 @@
                                 var m = modelList[index];
                                 xiaoji += m.GoodSellPriceTotal;
                                 string name2 =m.GoodTypeSmName+ m.GoodName + m.GoodSpec + m.Good_Model;
-                                if (name2.Length > 32)
+                                if (name2.Length > 20)
                                 {
-                                    name2 = name2.Substring(0, 31);
+                                    name2 = name2.Substring(0, 19);
                                 }
                         %>
                         <tr>
@@ -297,9 +297,9 @@
                                 var m = modelList[index];
                                 xiaoji += m.GoodSellPriceTotal;
                                 string name1 = m.GoodTypeSmName + m.GoodName + m.GoodSpec + m.Good_Model;
-                                if (name1.Length > 32)
+                                if (name1.Length > 20)
                                 {
-                                    name1 = name1.Substring(0, 31);
+                                    name1 = name1.Substring(0, 19);
                                 }
                         %>
                         <tr>

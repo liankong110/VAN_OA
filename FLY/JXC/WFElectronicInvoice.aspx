@@ -71,7 +71,12 @@
         <tr>
             <td colspan="2">
                   <asp:TextBox ID="txtSmallTotal" runat="server" Width="100PX"></asp:TextBox>
-                金额
+                 <asp:DropDownList ID="ddlLeftTotal" runat="server">
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                </asp:DropDownList>
+                单笔金额
                 <asp:DropDownList ID="ddlTotal" runat="server">
                     <asp:ListItem Text="=" Value="="></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
