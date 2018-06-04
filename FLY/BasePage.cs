@@ -250,7 +250,6 @@ select @result;
                 return false;
             }
             return true;
-
         }
        
     }
