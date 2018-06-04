@@ -73,5 +73,10 @@ namespace VAN_OA.Model.JXC
         public string CaiTuiProNo { get; set; }
 
         public decimal SumActPay { get; set; }
+
+        public string FristFPNo { set; get; }
+
+        public string SecondFPNo { get; set; }
+        public string LastFPNo { get; set; }
     }
 }

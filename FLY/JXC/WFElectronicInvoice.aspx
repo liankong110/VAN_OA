@@ -162,19 +162,22 @@
             <asp:BoundField DataField="ProNo" HeaderText="支/预单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
-            <asp:BoundField DataField="busType" HeaderText="支付类型" SortExpression="busType" ItemStyle-HorizontalAlign="Center">
+             <asp:BoundField DataField="PFNo" HeaderText="票据号" SortExpression="PFNo" ItemStyle-HorizontalAlign="Center"  ItemStyle-ForeColor="Red" HeaderStyle-Font-Bold="true">  
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
-            <asp:BoundField DataField="SupplierName" HeaderText="供应商全称" SortExpression="SupplierName" ItemStyle-HorizontalAlign="Center">
+            <asp:BoundField DataField="busType" HeaderText="类型" SortExpression="busType" ItemStyle-HorizontalAlign="Center">
+                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="SupplierName" HeaderText="供应商全称" ItemStyle-Width="150" SortExpression="SupplierName" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
                <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
-            <asp:BoundField DataField="SupplierBrandName" HeaderText="开户行" SortExpression="SupplierBrandName" ItemStyle-HorizontalAlign="Center">
+            <asp:BoundField DataField="SupplierBrandName" HeaderText="开户行" ItemStyle-Width="120" SortExpression="SupplierBrandName" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
-            <asp:BoundField DataField="SupplierBrandNo" HeaderText="银行账户" SortExpression="SupplierBrandNo" ItemStyle-HorizontalAlign="Center">
+            <asp:BoundField DataField="SupplierBrandNo" HeaderText="银行账户" ItemStyle-Width="120" SortExpression="SupplierBrandNo" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="Province" HeaderText="省份" SortExpression="Province" ItemStyle-HorizontalAlign="Center">
@@ -217,7 +220,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="公司名称">
                 <ItemTemplate>
-                    <asp:DropDownList ID="dllCompany" runat="server">
+                    <asp:DropDownList ID="dllCompany" runat="server" Width="70">
                         <asp:ListItem>苏州万邦电脑系统有限公司</asp:ListItem>
                         <asp:ListItem>苏州工业园区万邦科技有限公司</asp:ListItem>
                         <asp:ListItem>苏州源达万维智能科技有限公司</asp:ListItem>

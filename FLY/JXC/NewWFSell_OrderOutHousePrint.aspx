@@ -48,7 +48,7 @@
         <%
             //decimal iniPx = 1280;
             //decimal iniCm = 43;
-            decimal iniPx = 1330;
+            decimal iniPx = 1375;
             decimal iniCm = 43;
             decimal fristWidth = 2 * iniPx * Convert.ToDecimal(12) / iniCm;
 
@@ -76,7 +76,7 @@
                         vertical-align: top;" bordercolor="threeddarkshadow" border="0">
                         <tr>
                             <td align="center" colspan="7">
-                                <font style="font-family:KaiTi; margin:0; padding:0; font-size:20px;">
+                                <font style="font-family:KaiTi; margin:0; padding:0; font-size:26px;">
                                     苏州万邦电脑系统有限公司销售出库单</font>
                             </td>
                         </tr>
@@ -159,13 +159,13 @@
                     var m = modelList[index];
                     xiaoji += m.GoodSellPriceTotal;
                     string name2 = m.GoodName + m.GoodSpec;
-                    if (name2.Length > 52)
+                    if (name2.Length > 50)
                     {
-                        name2 = name2.Substring(0, 51);
+                        name2 = name2.Substring(0, 49);
                     }
                         %>
                         <tr>
-                            <td class="MyTd">
+                            <td class="MyTd" align="center">
                                 <%=(index+1)%>
                             </td>
                             <td class="MyTd">

@@ -1,5 +1,3 @@
-
-
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WFSupplierAdvancePaymentVerify.aspx.cs"
     Inherits="VAN_OA.JXC.WFSupplierAdvancePaymentVerify" Culture="auto" UICulture="auto"
     MasterPageFile="~/DefaultMaster.Master" Title="订单报批表" %>
@@ -33,8 +31,14 @@
         <tr>
             <td>备注：
             </td>
-            <td colspan="3">
-                <asp:TextBox ID="txtRemark" Width="95%" runat="server"></asp:TextBox>
+            <td>
+                <asp:TextBox ID="txtRemark" Width="100%" runat="server"></asp:TextBox>
+            </td>
+            <td colspan="2">原票据号：             
+                  <asp:TextBox ID="txtFristFPNo" runat="server" Width="150px" Enabled="false"></asp:TextBox>
+                新票据号:
+                  <asp:TextBox ID="txtSecondFPNo" runat="server" Width="150px" Enabled="false"></asp:TextBox>
+
             </td>
         </tr>
     </table>
@@ -186,7 +190,7 @@
                 </asp:TemplateField>
                 <asp:BoundField DataField="HuiKuanLiLv" HeaderText="回款率" SortExpression="HuiKuanLiLv"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" HeaderStyle-Width="3%" />
-                <asp:TemplateField HeaderText="供应商全称"  HeaderStyle-Width="50">
+                <asp:TemplateField HeaderText="供应商全称" HeaderStyle-Width="50">
                     <ItemTemplate>
                         <asp:Label ID="lblSupplierAllName" runat="server" Text='<%# Eval("SupplierAllName") %>'></asp:Label>
                     </ItemTemplate>
@@ -198,7 +202,7 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
-                <asp:BoundField DataField="PORemark" HeaderText="备注" SortExpression="PORemark"  HeaderStyle-Width="200"/>
+                <asp:BoundField DataField="PORemark" HeaderText="备注" SortExpression="PORemark" HeaderStyle-Width="200" />
             </Columns>
             <PagerStyle HorizontalAlign="Center" />
             <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="Black" Font-Size="12px" />

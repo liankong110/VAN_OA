@@ -192,6 +192,12 @@ namespace VAN_OA.Dal.JXC
                 strSql1.Append("SumActPay,");
                 strSql2.Append("" + model.SumActPay + ",");
             }
+            strSql1.Append("FristFPNo,");
+            strSql2.Append("'" + model.FristFPNo + "',");
+
+            strSql1.Append("SecondFPNo,");
+            strSql2.Append("'" + model.SecondFPNo + "',");
+
             strSql.Append("insert into TB_SupplierAdvancePayment(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
             strSql.Append(")");
@@ -238,6 +244,9 @@ namespace VAN_OA.Dal.JXC
             {
                 strSql.Append("SumActPay='" + model.SumActPay + "',");
             }
+            strSql.Append("FristFPNo='" + model.FristFPNo + "',");
+            strSql.Append("SecondFPNo='" + model.SecondFPNo + "',");
+            strSql.Append("LastFPNo='" + (model.SecondFPNo != "" ? model.SecondFPNo : model.FristFPNo) + "',");
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -263,7 +272,7 @@ namespace VAN_OA.Dal.JXC
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" Id,ProNo,CreateName,CreteTime,Status,Remark ");
+            strSql.Append(" Id,ProNo,CreateName,CreteTime,Status,Remark,FristFPNo,SecondFPNo ");
             strSql.Append(" from TB_SupplierAdvancePayment ");
             strSql.Append(" where Id=" + id + "");
             VAN_OA.Model.JXC.TB_SupplierAdvancePayment model = null;
@@ -293,7 +302,7 @@ namespace VAN_OA.Dal.JXC
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select Id,ProNo,CreateName,CreteTime,Status,Remark ");
+            strSql.Append("select Id,ProNo,CreateName,CreteTime,Status,Remark ,FristFPNo,SecondFPNo ");
             strSql.Append(" FROM TB_SupplierAdvancePayment ");
             if (strWhere.Trim() != "")
             {
@@ -382,8 +391,9 @@ select 1 as type,TB_SupplierInvoice.Id,lastSupplier from TB_SupplierInvoice WHER
             model.CreateName = dataReader["CreateName"].ToString();
             model.CreteTime =Convert.ToDateTime(dataReader["CreteTime"]);
             model.Status = dataReader["Status"].ToString();
-            model.Remark = dataReader["Remark"].ToString();  
-            
+            model.Remark = dataReader["Remark"].ToString();
+            model.FristFPNo = dataReader["FristFPNo"].ToString();
+            model.SecondFPNo = dataReader["SecondFPNo"].ToString();
             return model;
         }
 

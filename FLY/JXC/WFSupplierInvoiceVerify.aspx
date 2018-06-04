@@ -35,8 +35,14 @@
             <td>
                 备注：
             </td>
-            <td colspan="3">
-                <asp:TextBox ID="txtRemark" Width="95%" runat="server"></asp:TextBox>
+            <td>
+                <asp:TextBox ID="txtRemark" Width="100%" runat="server"></asp:TextBox>
+            </td>
+             <td colspan="2">原票据号：             
+                  <asp:TextBox ID="txtFristFPNo" runat="server" Width="150px" Enabled="false"></asp:TextBox>
+                新票据号:
+                  <asp:TextBox ID="txtSecondFPNo" runat="server" Width="150px" Enabled="false"></asp:TextBox>
+
             </td>
         </tr>
         <tr>
