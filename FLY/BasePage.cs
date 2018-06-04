@@ -20,12 +20,7 @@ namespace VAN_OA
         /// <returns></returns>
         public bool CheckPoNO(string PONO)
         {
-            PONO = PONO.Trim();
-            //if (string.IsNullOrEmpty(PONO))
-            //{
-            //    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('项目编码不能为空！');</script>"));
-            //    return false;
-            //}
+            PONO = PONO.Trim();           
             if (PONO.ToLower().Contains("kc"))
             {
                 if (PONO.Length > 11)
