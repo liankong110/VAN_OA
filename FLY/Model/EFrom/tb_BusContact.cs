@@ -111,5 +111,10 @@ namespace VAN_OA.Model.EFrom
         public string fileName { get; set; }
 
         public string fileType { get; set; }
+
+        /// <summary>
+        /// 是否是新客户
+        /// </summary>
+        public bool IsNewUnit { get; set; }
     }
 }

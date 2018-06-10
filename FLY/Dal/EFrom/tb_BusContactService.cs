@@ -72,7 +72,7 @@ namespace VAN_OA.Dal.EFrom
                     objCommand.Parameters.Clear();
                     id = Add(model, objCommand);
 
-                  
+
                     eform.allE_id = id;
                     eformSer.Add(eform, objCommand);
 
@@ -157,7 +157,9 @@ namespace VAN_OA.Dal.EFrom
                 strSql1.Append("fileType,");
                 strSql2.Append("'" + model.fileType + "',");
             }
-            
+            strSql1.Append("IsNewUnit,");
+            strSql2.Append("" + (model.IsNewUnit ? 1 : 0) + ",");
+
             strSql.Append("insert into tb_BusContact(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
             strSql.Append(")");
@@ -257,6 +259,8 @@ namespace VAN_OA.Dal.EFrom
             {
                 strSql.Append("fileType='" + model.fileType + "',");
             }
+            strSql.Append("IsNewUnit=" + (model.IsNewUnit ? 1 : 0) + ",");
+
 
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
@@ -284,7 +288,7 @@ namespace VAN_OA.Dal.EFrom
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" fileName,fileType,id,Name,DepartName,DateTime,ContactUnit,Contacer,Tel,Gotime,BackTime,proNo,AppDate ");
+            strSql.Append(" fileName,fileType,id,Name,DepartName,DateTime,ContactUnit,Contacer,Tel,Gotime,BackTime,proNo,AppDate,IsNewUnit ");
             strSql.Append(" from tb_BusContact ");
             strSql.Append(" where id=" + id + "");
 
@@ -313,7 +317,7 @@ namespace VAN_OA.Dal.EFrom
         public List<VAN_OA.Model.EFrom.tb_BusContact> GetListArray(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(" select fileName,fileType,id,Name,DepartName,DateTime,ContactUnit,Contacer,Tel,Gotime,BackTime,proNo,AppDate ");
+            strSql.Append(" select fileName,fileType,id,Name,DepartName,DateTime,ContactUnit,Contacer,Tel,Gotime,BackTime,proNo,AppDate,IsNewUnit ");
             strSql.Append(" FROM tb_BusContact ");
             if (strWhere.Trim() != "")
             {
@@ -377,7 +381,7 @@ namespace VAN_OA.Dal.EFrom
             ojb = dataReader["AppDate"];
             if (ojb != null && ojb != DBNull.Value)
             {
-                model.AppDate =Convert.ToDateTime(ojb);
+                model.AppDate = Convert.ToDateTime(ojb);
             }
 
             ojb = dataReader["fileName"];
@@ -391,6 +395,8 @@ namespace VAN_OA.Dal.EFrom
             {
                 model.fileType = ojb.ToString();
             }
+            model.IsNewUnit =Convert.ToBoolean(dataReader["IsNewUnit"]);
+            
             return model;
         }
         /// <summary>
@@ -465,7 +471,7 @@ namespace VAN_OA.Dal.EFrom
                             }
                             model.ContactUnit = dataReader["ContactUnit"].ToString();
                             model.Contacer = dataReader["Contacer"].ToString();
-                            
+
 
                             ojb = dataReader["DateTime"];
                             if (ojb != null && ojb != DBNull.Value)
@@ -533,7 +539,8 @@ namespace VAN_OA.Dal.EFrom
                                 DateTime dateTime = Convert.ToDateTime(ojb);
                                 model.Mouth = dateTime.Day.ToString();
                                 model.Desc = dateTime.Year + "-" + dateTime.Month;
-                            } ojb = dataReader["Id"];
+                            }
+                            ojb = dataReader["Id"];
                             if (ojb != null && ojb != DBNull.Value)
                             {
                                 string id = Convert.ToString(dataReader["id"]);

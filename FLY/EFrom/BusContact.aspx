@@ -69,7 +69,7 @@ function show()
                 外出联系单位：<font style="color: Red">*</font>
             </td>
             <td colspan="5">
-                <asp:TextBox ID="txtContactUnit" runat="server" Width="95%"></asp:TextBox>
+                <asp:TextBox ID="txtContactUnit" runat="server" Width="70%"></asp:TextBox><asp:CheckBox ID="cbIsNewUnit" runat="server" Text="新客户" />
             </td>
         </tr>
         <tr>

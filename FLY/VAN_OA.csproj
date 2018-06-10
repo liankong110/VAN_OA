@@ -209,6 +209,7 @@
     <Content Include="Image\To_Act.gif" />
     <Content Include="Image\up.gif" />
     <Content Include="JXC\JXC_SkilllList.aspx" />
+    <Content Include="JXC\KPI_Sell.aspx" />
     <Content Include="JXC\NEW_Sell_Cai_OrderInHouseList.aspx" />
     <Content Include="JXC\WebDoForm.aspx" />
     <Content Include="JXC\WFElectronicInvoice.aspx" />
@@ -1379,6 +1380,13 @@
     <Compile Include="JXC\JXC_SkilllList.aspx.designer.cs">
       <DependentUpon>JXC_SkilllList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="JXC\KPI_Sell.aspx.cs">
+      <DependentUpon>KPI_Sell.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JXC\KPI_Sell.aspx.designer.cs">
+      <DependentUpon>KPI_Sell.aspx</DependentUpon>
+    </Compile>
     <Compile Include="JXC\NEW_Sell_Cai_OrderInHouseList.aspx.cs">
       <DependentUpon>NEW_Sell_Cai_OrderInHouseList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2082,6 +2090,7 @@
     <Compile Include="Model\JXC\JXCDetail.cs" />
     <Compile Include="Model\JXC\JXC_REPORT.cs" />
     <Compile Include="Model\JXC\JXC_Report_Detail.cs" />
+    <Compile Include="Model\JXC\KPI_SellModel.cs" />
     <Compile Include="Model\JXC\PoRemarkInfo.cs" />
     <Compile Include="Model\JXC\Pro_JSXDetailInfo.cs" />
     <Compile Include="Model\JXC\RuSellReport.cs" />
@@ -2593,6 +2602,7 @@
     <Compile Include="ReportForms\FundList.aspx.designer.cs">
       <DependentUpon>FundList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="RMBCapitalization.cs" />
     <Compile Include="ServiceAppSetting.cs" />
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>

@@ -154,7 +154,7 @@
                 <ItemStyle HorizontalAlign="Center" Width="50px" />
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="项目编码">
+            <asp:TemplateField HeaderText="项目编码" ItemStyle-Width="60px">
                 <ItemTemplate>
                     <asp:Label ID="PONo" runat="server" Text='<%# Eval("PONo") %>'></asp:Label>
                 </ItemTemplate>
@@ -171,7 +171,7 @@
             <asp:BoundField DataField="SupplierName" HeaderText="供应商全称" ItemStyle-Width="150" SortExpression="SupplierName" ItemStyle-HorizontalAlign="Center">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
-               <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName" ItemStyle-HorizontalAlign="Center">
+               <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="100px">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="SupplierBrandName" HeaderText="开户行" ItemStyle-Width="120" SortExpression="SupplierBrandName" ItemStyle-HorizontalAlign="Center">
@@ -190,7 +190,7 @@
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
 
-            <asp:TemplateField HeaderText="票据类型">
+            <asp:TemplateField HeaderText="票据类型" ItemStyle-Width="80px">
                 <ItemTemplate>
                     <asp:DropDownList ID="dllBillType" runat="server" DataValueField="Id" DataTextField="BillName">
                     </asp:DropDownList>
@@ -198,7 +198,7 @@
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="财务票据人员">
+            <asp:TemplateField HeaderText="财务票据人员" ItemStyle-Width="80px">
                 <ItemTemplate>
                     <asp:DropDownList ID="dllPerson" runat="server" DataTextField="Name"
                         DataValueField="Id">
@@ -207,7 +207,7 @@
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="用途">
+            <asp:TemplateField HeaderText="用途" ItemStyle-Width="70px">
                 <ItemTemplate>
                     <asp:DropDownList ID="dllUse" runat="server">
                         <asp:ListItem>货款</asp:ListItem>
@@ -220,7 +220,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="公司名称">
                 <ItemTemplate>
-                    <asp:DropDownList ID="dllCompany" runat="server" Width="70">
+                    <asp:DropDownList ID="dllCompany" runat="server" >
                         <asp:ListItem>苏州万邦电脑系统有限公司</asp:ListItem>
                         <asp:ListItem>苏州工业园区万邦科技有限公司</asp:ListItem>
                         <asp:ListItem>苏州源达万维智能科技有限公司</asp:ListItem>

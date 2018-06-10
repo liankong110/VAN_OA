@@ -245,7 +245,7 @@ where  TB_ToInvoice.state='通过' and datediff(day,MinOutDate,TB_ToInvoice.DaoK
         public List<Model.JXC.JXC_REPORTTotal> GetSkill_Total(string strWhere, string having, string fuhao)
         {
             TB_BaseSkillService skillSer = new TB_BaseSkillService();
-            var skillList=skillSer.GetListArray("");
+            var skillList = skillSer.GetListArray("");
             StringBuilder strSql = new StringBuilder();
             strSql.Append(" select  SumPOTotal,* from (");
             strSql.Append("select  MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
@@ -403,7 +403,7 @@ left join
                             model.GuestType = model.GuestType.Replace("用户", "");
                         }
 
-                       
+
                         model.TrueLiRun = model.InvoiceTotal - model.goodTotal;
                         model.AETotal = model.AEPer * model.maoliTotal / 100;
                         model.InsidTotal = model.INSIDEPer * model.maoliTotal / 100;
@@ -443,7 +443,7 @@ left join
                         {
                             model.allScore = Convert.ToDecimal(ojb);
 
-                          
+
                         }
                         if (model.allScore != 0)
                         {
@@ -452,7 +452,7 @@ left join
                             {
                                 model.allScore = (skillList.Find(t => t.MyPoType == "零售") ?? new TB_BaseSkill()).XiShu * model.allScore;
                             }
-                            else if (POType ==2)
+                            else if (POType == 2)
                             {
                                 model.allScore = (skillList.Find(t => t.MyPoType == "工程") ?? new TB_BaseSkill()).XiShu * model.allScore;
                             }
@@ -464,7 +464,7 @@ left join
                         ojb = dataReader["GuestPro"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb); 
+                            model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb);
                         }
                         list.Add(model);
                     }
@@ -838,6 +838,135 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         }
                         model.potype = dataReader["POType"].ToString();
                         list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
+
+
+        public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao, DateTime StartTime, string compare, string fuhao_E,
+          string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere)
+        {
+            BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * from (");
+            strSql.Append(@"select AE,SUM(POTotal_SumView.SumPOTotal) AS SumPOTotal,SUM(goodSellTotal) AS goodSellTotal,SUM(goodTotal) AS goodTotal,
+SUM(maoliTotal) AS maoliTotal,SUM(InvoTotal) AS InvoTotal,SUM(SellFPTotal) AS SellFPTotal,SUM(KouInvoTotal) AS KouInvoTotal from (");
+            strSql.Append(@"select *" + (compare == "" ? ",0 as KouInvoTotal" : ",WaiInvoTotal as KouInvoTotal") + @"  from (
+select  CG_POOrder.PoNo,AE,sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal,  isnull(sum(maoli),0) as maoliTotal,
+isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,avg(" + (compare == "" ? "0.05" : "WaiInvoTotal") + @") as WaiInvoTotal  from CG_POOrder  
+left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  
+left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
+left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse 
+left join Sell_OrderOutHouses on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO ");
+
+            if (!string.IsNullOrEmpty(compare))
+            {
+                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
+else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
+(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
+ where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
+ group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
+   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+                
+            }
+            strSql.Append(@" left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) as ntb2 on CG_POOrder.PONo=ntb2.PONo
+where ifzhui=0  and CG_POOrder.Status='通过' ");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(strWhere);
+            }
+
+            strSql.Append(" GROUP BY  AE ,CG_POOrder.PoNo ");
+
+            if (having != "")
+            {
+                strSql.Append(having);
+            }
+
+            strSql.AppendFormat(@" ) AS TEMPTB ) as NewTB 
+LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono  GROUP BY NewTB.AE )  as SUMPO 
+LEFT JOIN
+(
+    select Name,count(*) AS ContactCount,sum(case when IsNewUnit=1 then 1 else 0 end) as NewCount  from tb_BusContact {0} group by Name
+) AS contact on contact.Name=SUMPO.AE", contactWhere);
+            strSql.Append(" ORDER BY AE ");
+            List<Model.JXC.KPI_SellModel> list = new List<KPI_SellModel>();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        KPI_SellModel model = new KPI_SellModel();
+                        model.AE = dataReader["AE"].ToString();
+
+                        object ojb;
+                        int ContactCount = 0;
+                        ojb = dataReader["ContactCount"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            ContactCount = (int)ojb;
+                        }
+                        ojb = dataReader["NewCount"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.NewContractCount = (int)ojb;
+                        }
+                        model.OldContractCount= ContactCount-model.NewContractCount;
+                        ojb = dataReader["SumPOTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.POTotal = (decimal)ojb;
+                        }
+
+                        ojb = dataReader["goodSellTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SellTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["InvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.InvoiceTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["maoliTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ProfitTotal = (decimal)ojb;
+                        }
+                        decimal goodTotal = 0;
+                        ojb = dataReader["goodTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            goodTotal = (decimal)ojb;
+                        }
+                        model.LastProfitTotal = model.InvoiceTotal - goodTotal;
+                        ojb = dataReader["SellFPTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            var SellFPTotal = (decimal)ojb;
+                            if (model.POTotal!=0)
+                            {
+                                model.KP_Percent = SellFPTotal / model.POTotal*100;
+                            }
+                        }
+
+                        ojb = dataReader["KouInvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            var WaiInvoTotal = (decimal)ojb;
+                            if (model.POTotal != 0)
+                            {
+                                model.DK_Percent = WaiInvoTotal / model.POTotal*100;
+                            }
+                        }
+                        list.Add(model);
+
                     }
                 }
             }

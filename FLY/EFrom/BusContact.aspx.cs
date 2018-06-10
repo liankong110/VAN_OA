@@ -176,7 +176,7 @@ namespace VAN_OA.EFrom
             txtBackTime.ReadOnly = !result;
             txtGotime.ReadOnly = !result;
             Image1.Enabled = result;
-
+            cbIsNewUnit.Enabled = result;
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -338,7 +338,9 @@ namespace VAN_OA.EFrom
                             lblAttName.Visible = true;
                             lblAttName.Text = busModel.fileName;
                             lblAttName_Vis.Text = busModel.fileName.Substring(0, busModel.fileName.LastIndexOf('.')) + "_" + busModel.id + busModel.fileName.Substring(busModel.fileName.LastIndexOf('.'));
-                        }        
+                        }
+
+                        cbIsNewUnit.Checked = busModel.IsNewUnit;
                         #endregion
                         //判断单据是否已经结束
                         if (eformSer.ifFinish(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])))
@@ -377,27 +379,7 @@ namespace VAN_OA.EFrom
 
                                     ViewState["ids"] = ids;
                                     if (roleUserList != null)
-                                    {//从获取出的审核中 获取上级信息
-                                        //List<A_Role_User> newList = new List<A_Role_User>();
-                                        //for (int i = 0; i < roleUserList.Count; i++)
-                                        //{
-                                        //    if (roleUserList[i].UserId == use.ReportTo)
-                                        //    {
-                                        //        A_Role_User a = roleUserList[i];
-                                        //        newList.Add(a);
-                                        //        break;
-                                        //    }
-                                        //}
-
-                                        //if (newList.Count > 0)
-                                        //{
-                                        //    ddlPers.DataSource = newList;
-                                        //}
-                                        //else
-                                        //{
-                                        //    ddlPers.DataSource = roleUserList;
-                                        //}
-
+                                    { 
                                         ddlPers.DataSource = roleUserList;
                                         ddlPers.DataBind();
                                         ddlPers.DataTextField = "UserName";
@@ -436,28 +418,7 @@ namespace VAN_OA.EFrom
                                         List<A_Role_User> roleUserList = eformSer.getUserToAdu(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"]), out ids);
                                         ViewState["ids"] = ids;
                                         if (roleUserList != null)
-                                        {
-                                            //从获取出的审核中 获取上级信息
-                                            //List<A_Role_User> newList = new List<A_Role_User>();
-                                            //for (int i = 0; i < roleUserList.Count; i++)
-                                            //{
-                                            //    if (roleUserList[i].UserId == use.ReportTo)
-                                            //    {
-                                            //        A_Role_User a = roleUserList[i];
-                                            //        newList.Add(a);
-                                            //        break;
-                                            //    }
-                                            //}
-
-                                            //if (newList.Count > 0)
-                                            //{
-                                            //    ddlPers.DataSource = newList;
-                                            //}
-                                            //else
-                                            //{
-                                            //    ddlPers.DataSource = roleUserList;
-                                            //}
-                                            //ddlPers.DataSource = roleUserList;
+                                        {                                             
                                             ddlPers.DataSource = roleUserList;
                                             ddlPers.DataBind();
                                             ddlPers.DataTextField = "UserName";
@@ -539,6 +500,7 @@ namespace VAN_OA.EFrom
                     busInfo.BackTime = Convert.ToDateTime(txtDateTime.Text + " " +txtBackTime.Text);
 
                     busInfo.AppDate = DateTime.Now;
+                    busInfo.IsNewUnit = cbIsNewUnit.Checked;
                     #endregion
                     if (Request["allE_id"] == null)//单据增加
                     {

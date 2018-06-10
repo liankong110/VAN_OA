@@ -123,7 +123,7 @@
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:TemplateField HeaderText="Ô¤¸¶ÊýÁ¿" HeaderStyle-Width="3%">
                     <ItemTemplate>
-                        <asp:TextBox ID="txtSupplierInvoiceNum" runat="server" Text='<%# Eval("SupplierInvoiceNum") %>'
+                        <asp:TextBox ID="txtSupplierInvoiceNum" runat="server" Text='<%# Eval("SupplierInvoiceNum") %>' 
                             Width="70px"></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -147,7 +147,7 @@
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
                 <asp:TemplateField HeaderText="·¢Æ±ºÅ">
                     <ItemTemplate>
-                        <asp:TextBox ID="txtSupplierFPNo" runat="server" Text='<%# Eval("SupplierFPNo") %>'
+                        <asp:TextBox ID="txtSupplierFPNo" runat="server" Text='<%# Eval("SupplierFPNo") %>' 
                             Width="80px"></asp:TextBox>
                         <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="*" ControlToValidate="txtSupplierFPNo" ValidationGroup="aa"></asp:RequiredFieldValidator>--%>
                     </ItemTemplate>

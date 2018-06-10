@@ -572,10 +572,11 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                 //供应商付款单（预付单转支付单）检验
                 //凡是含税的项，发票一栏 是个 输入框，不含税就没有输入框。
 
-                if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过")
+                if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过"&& Request["ProId"] != "33")
                 {
                     //注意票据号需要校验：不能和所有以前输过的票据号重复！
                     string checkFPNo = "";
+                    string checkFPNo1 = "";
                     if (txtFristFPNo.Enabled)
                     {
                         if (txtFristFPNo.Text.Trim() == "")
@@ -583,7 +584,9 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('原始票据号必填！');</script>");
                             return false;
                         }
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where LastFPNo='{0}' AND ID<>{1} AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1}  AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1} AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+
                     }
                     if (txtSecondFPNo.Enabled)
                     {
@@ -592,11 +595,12 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('新票据号必填！');</script>");
                             return false;
                         }
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where LastFPNo='{0}' AND ID<>{1} AND Status<>'不通过'", txtSecondFPNo.Text, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where  (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过'", txtFristFPNo.Text, txtSecondFPNo.Text, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过'", txtFristFPNo.Text, txtSecondFPNo.Text, Request["allE_id"]);
                     }
                     if (checkFPNo != "")
                     {
-                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0)
+                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0 || Convert.ToInt32(DBHelp.ExeScalar(checkFPNo1)) > 0)
                         {
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('票据号码有误（重复），请重新输入');</script>");
                             return false;
@@ -870,20 +874,20 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                     }
                 }
                 //供应商付款单（预付单转支付单）
-                if (Request["ProId"] == "33")
-                {
-                    if (count >= 1 && (count - 1) % 4 != 0)
-                    {
-                        if ((count - 1) <= 4)
-                        {
-                            txtFristFPNo.Enabled = true;
-                        }
-                        else
-                        {
-                            txtSecondFPNo.Enabled = true;
-                        }
-                    }
-                }
+                //if (Request["ProId"] == "33")
+                //{
+                //    if (count >= 1 && (count - 1) % 4 != 0)
+                //    {
+                //        if ((count - 1) <= 4)
+                //        {
+                //            txtFristFPNo.Enabled = true;
+                //        }
+                //        else
+                //        {
+                //            txtSecondFPNo.Enabled = true;
+                //        }
+                //    }
+                //}
             }
         }
 

@@ -278,6 +278,7 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                 {
                     //注意票据号需要校验：不能和所有以前输过的票据号重复！
                     string checkFPNo = "";
+                    string checkFPNo1 = "";
                     if (txtFristFPNo.Enabled)
                     {
                         if (txtFristFPNo.Text.Trim() == "")
@@ -285,7 +286,9 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('原始票据号必填！');</script>");
                             return false;
                         }
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where LastFPNo='{0}' AND ID<>{1}  AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1}  AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1} AND Status<>'不通过'", txtFristFPNo.Text, Request["allE_id"]);
+
                     }
                     if (txtSecondFPNo.Enabled)
                     {
@@ -294,16 +297,18 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('新票据号必填！');</script>");
                             return false;
                         }
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where LastFPNo='{0}' AND ID<>{1} AND Status<>'不通过'", txtSecondFPNo.Text, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where  (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过'", txtFristFPNo.Text, txtSecondFPNo.Text, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过'", txtFristFPNo.Text, txtSecondFPNo.Text, Request["allE_id"]);
                     }
                     if (checkFPNo != "")
                     {
-                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0)
+                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0|| Convert.ToInt32(DBHelp.ExeScalar(checkFPNo1)) > 0)
                         {
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('票据号码有误（重复），请重新输入');</script>");
                             return false;
                         }
                     }
+                    
                     List<SupplierToInvoiceView> POOrders = ViewState["Orders"] as List<SupplierToInvoiceView>;
                     if (POOrders == null || POOrders.Count <= 0)
                     {
@@ -347,167 +352,167 @@ where Status<>'不通过' and  CaiId in ({0})", ids);//--增加采购订单的ID
                         return false;
                     }
                 }
-                if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过" && Request["ReAudit"] != null)
-                {
-                    List<SupplierToInvoiceView> POOrders = ViewState["Orders"] as List<SupplierToInvoiceView>;
-                    if (POOrders == null || POOrders.Count <= 0)
-                    {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请添加明显信息！');</script>");
-                        return false;
-                    }
-                    var myids = new StringBuilder();
-                    var myPayIds = new StringBuilder();
-                    foreach (var m in POOrders)
-                    {
-                        if (m.IfCheck == false)
-                        {
-                            continue;
-                        }
-                        myids.AppendFormat("{0},", m.Ids);
-                        myPayIds.AppendFormat("{0},", m.payIds);
-                    }
-                    var ids = myids.ToString().Substring(0, myids.ToString().Length - 1);
-                    var payIds = myPayIds.ToString().Substring(0, myPayIds.ToString().Length - 1);
+//                if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过" && Request["ReAudit"] != null)
+//                {
+//                    List<SupplierToInvoiceView> POOrders = ViewState["Orders"] as List<SupplierToInvoiceView>;
+//                    if (POOrders == null || POOrders.Count <= 0)
+//                    {
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请添加明显信息！');</script>");
+//                        return false;
+//                    }
+//                    var myids = new StringBuilder();
+//                    var myPayIds = new StringBuilder();
+//                    foreach (var m in POOrders)
+//                    {
+//                        if (m.IfCheck == false)
+//                        {
+//                            continue;
+//                        }
+//                        myids.AppendFormat("{0},", m.Ids);
+//                        myPayIds.AppendFormat("{0},", m.payIds);
+//                    }
+//                    var ids = myids.ToString().Substring(0, myids.ToString().Length - 1);
+//                    var payIds = myPayIds.ToString().Substring(0, myPayIds.ToString().Length - 1);
 
-                    if (ids == "")
-                    {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请添加明细！');</script>");
-                        return false;
-                    }
-                    //--在创建/编辑 预付单时 判断是否已经有入库记录(包含正在执行的单子)
-                    string checkSql = string.Format(@"select proNo,SupplierName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
-left join TB_Good on TB_Good.GoodId=CAI_OrderChecks.CheckGoodId 
-where Status<>'不通过' and  CaiId in ({0})", ids);//--增加采购订单的ID ( and CaiId=?)
+//                    if (ids == "")
+//                    {
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请添加明细！');</script>");
+//                        return false;
+//                    }
+//                    //--在创建/编辑 预付单时 判断是否已经有入库记录(包含正在执行的单子)
+//                    string checkSql = string.Format(@"select proNo,SupplierName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
+//left join TB_Good on TB_Good.GoodId=CAI_OrderChecks.CheckGoodId 
+//where Status<>'不通过' and  CaiId in ({0})", ids);//--增加采购订单的ID ( and CaiId=?)
 
-                    var errorText = new StringBuilder();
-                    DataTable dt = DBHelp.getDataTable(checkSql);
-                    if (dt.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in dt.Rows)
-                        {
-                            errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2}\\n", dr["proNo"], dr["SupplierName"], dr["GoodNo"] + @"\" + dr["GoodName"] + @"\" + dr["GoodTypeSmName"] + @"\" + dr["GoodSpec"]);
-                        }
-                        errorText.Append("数据已经存在入库数据，或正在入库的单子！");
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('" + errorText.ToString() + "');</script>");
-                        return false;
-                    }
+//                    var errorText = new StringBuilder();
+//                    DataTable dt = DBHelp.getDataTable(checkSql);
+//                    if (dt.Rows.Count > 0)
+//                    {
+//                        foreach (DataRow dr in dt.Rows)
+//                        {
+//                            errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2}\\n", dr["proNo"], dr["SupplierName"], dr["GoodNo"] + @"\" + dr["GoodName"] + @"\" + dr["GoodTypeSmName"] + @"\" + dr["GoodSpec"]);
+//                        }
+//                        errorText.Append("数据已经存在入库数据，或正在入库的单子！");
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('" + errorText.ToString() + "');</script>");
+//                        return false;
+//                    }
 
-                    //--获取采购单一共开了多少预付款单
-                    // LastTruePrice=lastPrice 修改
-                    checkSql = string.Format(@"select CAI_POCai.ids,Num,LastTruePrice as lastPrice ,isnull(SupplierInvoiceTotal,0) as allSupplierInvoiceTotal
-from CAI_POCai
-left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
-left join 
-(
-select CaiIds,Sum(SupplierInvoiceTotal) as  SupplierInvoiceTotal from 
-TB_SupplierAdvancePayments 
-left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.id
-where status<>'不通过' and CaiIds in ({0}) and ids not in ({1})
-group by CaiIds
-)
-as tb1 on CAI_POCai.IDs=tb1.CaiIds
-where CAI_POOrder.status='通过' and CAI_POCai.ids in ({0}) ", ids, payIds);
+//                    //--获取采购单一共开了多少预付款单
+//                    // LastTruePrice=lastPrice 修改
+//                    checkSql = string.Format(@"select CAI_POCai.ids,Num,LastTruePrice as lastPrice ,isnull(SupplierInvoiceTotal,0) as allSupplierInvoiceTotal
+//from CAI_POCai
+//left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
+//left join 
+//(
+//select CaiIds,Sum(SupplierInvoiceTotal) as  SupplierInvoiceTotal from 
+//TB_SupplierAdvancePayments 
+//left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.id
+//where status<>'不通过' and CaiIds in ({0}) and ids not in ({1})
+//group by CaiIds
+//)
+//as tb1 on CAI_POCai.IDs=tb1.CaiIds
+//where CAI_POOrder.status='通过' and CAI_POCai.ids in ({0}) ", ids, payIds);
 
-                    dt = DBHelp.getDataTable(checkSql);
-                    if (dt.Rows.Count != ids.ToString().Split(',').Length)
-                    {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('部分数据不存在，请重新选择数据提交');</script>");
-                        return false;
-                    }
+//                    dt = DBHelp.getDataTable(checkSql);
+//                    if (dt.Rows.Count != ids.ToString().Split(',').Length)
+//                    {
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('部分数据不存在，请重新选择数据提交');</script>");
+//                        return false;
+//                    }
 
-                    //CAI_POCaiService POSer = new CAI_POCaiService();
-                    for (int i = 0; i < gvList.Rows.Count; i++)
-                    {
-                        var model = POOrders[i];
-                        if (model.IfCheck == false)
-                        {
-                            continue;
-                        }
+//                    //CAI_POCaiService POSer = new CAI_POCaiService();
+//                    for (int i = 0; i < gvList.Rows.Count; i++)
+//                    {
+//                        var model = POOrders[i];
+//                        if (model.IfCheck == false)
+//                        {
+//                            continue;
+//                        }
 
-                        TextBox txtSupplierInvoiceNum = gvList.Rows[i].FindControl("txtSupplierInvoiceNum") as TextBox;
-                        if (txtSupplierInvoiceNum == null || txtSupplierInvoiceNum.Text == "")
-                        {
-                            try
-                            {
-                                model.SupplierInvoiceNum = Convert.ToDecimal(txtSupplierInvoiceNum.Text);
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预付数量必须大于0');</script>");
-                                return false;
-                            }
-                            catch (Exception)
-                            {
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预付数量格式有误');</script>");
-                                return false;
-                            }
+//                        TextBox txtSupplierInvoiceNum = gvList.Rows[i].FindControl("txtSupplierInvoiceNum") as TextBox;
+//                        if (txtSupplierInvoiceNum == null || txtSupplierInvoiceNum.Text == "")
+//                        {
+//                            try
+//                            {
+//                                model.SupplierInvoiceNum = Convert.ToDecimal(txtSupplierInvoiceNum.Text);
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预付数量必须大于0');</script>");
+//                                return false;
+//                            }
+//                            catch (Exception)
+//                            {
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预付数量格式有误');</script>");
+//                                return false;
+//                            }
 
-                        }
-                        else
-                        {
-                            model.SupplierInvoiceNum = Convert.ToDecimal(txtSupplierInvoiceNum.Text);
-                            //TODO  需要判断支付数量《= 入库数量
-                            if (model.SupplierInvoiceNum > model.GoodNum || model.SupplierInvoiceNum <= 0)
-                            {
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付数量必须大于0小于等于采购数量！');</script>"));
-                                return false;
-                            }
-                        }
+//                        }
+//                        else
+//                        {
+//                            model.SupplierInvoiceNum = Convert.ToDecimal(txtSupplierInvoiceNum.Text);
+//                            //TODO  需要判断支付数量《= 入库数量
+//                            if (model.SupplierInvoiceNum > model.GoodNum || model.SupplierInvoiceNum <= 0)
+//                            {
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付数量必须大于0小于等于采购数量！');</script>"));
+//                                return false;
+//                            }
+//                        }
 
-                        TextBox supplierFPNo = gvList.Rows[i].FindControl("txtSupplierFPNo") as TextBox;
-                        if (supplierFPNo != null)
-                        {
-                            model.SupplierFPNo = supplierFPNo.Text;
-                        }
-                        TextBox txtSupplierInvoicePrice = gvList.Rows[i].FindControl("txtSupplierInvoicePrice") as TextBox;
-                        if (txtSupplierInvoicePrice != null)
-                        {
-                            model.SupplierInvoicePrice = Convert.ToDecimal(txtSupplierInvoicePrice.Text);
-                            if (model.SupplierInvoicePrice <= 0)
-                            {
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付单价必须大于0！');</script>"));
-                                return false;
-                            }
-                            model.SupplierInvoiceTotal = model.SupplierInvoicePrice * model.SupplierInvoiceNum;
-                            if (model.SupplierInvoiceTotal > model.LastTotal)
-                            {
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付金额必须小于等于金额！');</script>"));
-                                return false;
-                            }
+//                        TextBox supplierFPNo = gvList.Rows[i].FindControl("txtSupplierFPNo") as TextBox;
+//                        if (supplierFPNo != null)
+//                        {
+//                            model.SupplierFPNo = supplierFPNo.Text;
+//                        }
+//                        TextBox txtSupplierInvoicePrice = gvList.Rows[i].FindControl("txtSupplierInvoicePrice") as TextBox;
+//                        if (txtSupplierInvoicePrice != null)
+//                        {
+//                            model.SupplierInvoicePrice = Convert.ToDecimal(txtSupplierInvoicePrice.Text);
+//                            if (model.SupplierInvoicePrice <= 0)
+//                            {
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付单价必须大于0！');</script>"));
+//                                return false;
+//                            }
+//                            model.SupplierInvoiceTotal = model.SupplierInvoicePrice * model.SupplierInvoiceNum;
+//                            if (model.SupplierInvoiceTotal > model.LastTotal)
+//                            {
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('预付金额必须小于等于金额！');</script>"));
+//                                return false;
+//                            }
 
-                            bool isExist = false;
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                if (dr["ids"].ToString() == model.Ids.ToString())
-                                {
-                                    isExist = true;
-                                    decimal resultTotal = Convert.ToDecimal(dr["lastPrice"]) * Convert.ToDecimal(dr["Num"]) - Convert.ToDecimal(dr["allSupplierInvoiceTotal"]);
-                                    if (model.SupplierInvoiceTotal > resultTotal)
-                                    {
+//                            bool isExist = false;
+//                            foreach (DataRow dr in dt.Rows)
+//                            {
+//                                if (dr["ids"].ToString() == model.Ids.ToString())
+//                                {
+//                                    isExist = true;
+//                                    decimal resultTotal = Convert.ToDecimal(dr["lastPrice"]) * Convert.ToDecimal(dr["Num"]) - Convert.ToDecimal(dr["allSupplierInvoiceTotal"]);
+//                                    if (model.SupplierInvoiceTotal > resultTotal)
+//                                    {
 
-                                        errorText = new StringBuilder();
-                                        errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2} 剩余总金额为：{3}", model.ProNo, model.GuestName, model.GoodNo + @"\" + model.GoodName + @"\" + model.GoodTypeSmName + @"\" + model.GoodSpec, resultTotal);
-                                        base.ClientScript.RegisterStartupScript(base.GetType(), null,
-                                            string.Format(@"<script>alert('" + errorText.ToString() + "');</script>"));
-                                        return false;
-                                    }
-                                    break;
-                                }
-                            }
-                            if (isExist == false)
-                            {
-                                errorText = new StringBuilder();
-                                errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2} 数据不存在", model.ProNo, model.GuestName, model.GoodNo + @"\" + model.GoodName + @"\" + model.GoodTypeSmName + @"\" + model.GoodSpec);
-                                base.ClientScript.RegisterStartupScript(base.GetType(), null,
-                                    string.Format(@"<script>alert('" + errorText.ToString() + "');</script>"));
-                                return false;
-                            }
-                        }
-                        TextBox supplierInvoiceDate = gvList.Rows[i].FindControl("txtSupplierInvoiceDate") as TextBox;
-                        if (supplierInvoiceDate != null)
-                        {
-                            model.SupplierInvoiceDate = Convert.ToDateTime(supplierInvoiceDate.Text);
-                        }
-                    }
-                    ViewState["Orders"] = POOrders;
-                }
+//                                        errorText = new StringBuilder();
+//                                        errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2} 剩余总金额为：{3}", model.ProNo, model.GuestName, model.GoodNo + @"\" + model.GoodName + @"\" + model.GoodTypeSmName + @"\" + model.GoodSpec, resultTotal);
+//                                        base.ClientScript.RegisterStartupScript(base.GetType(), null,
+//                                            string.Format(@"<script>alert('" + errorText.ToString() + "');</script>"));
+//                                        return false;
+//                                    }
+//                                    break;
+//                                }
+//                            }
+//                            if (isExist == false)
+//                            {
+//                                errorText = new StringBuilder();
+//                                errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2} 数据不存在", model.ProNo, model.GuestName, model.GoodNo + @"\" + model.GoodName + @"\" + model.GoodTypeSmName + @"\" + model.GoodSpec);
+//                                base.ClientScript.RegisterStartupScript(base.GetType(), null,
+//                                    string.Format(@"<script>alert('" + errorText.ToString() + "');</script>"));
+//                                return false;
+//                            }
+//                        }
+//                        TextBox supplierInvoiceDate = gvList.Rows[i].FindControl("txtSupplierInvoiceDate") as TextBox;
+//                        if (supplierInvoiceDate != null)
+//                        {
+//                            model.SupplierInvoiceDate = Convert.ToDateTime(supplierInvoiceDate.Text);
+//                        }
+//                    }
+//                    ViewState["Orders"] = POOrders;
+//                }
 
 
 
@@ -715,7 +720,7 @@ where CAI_POOrder.status='通过' and CAI_POCai.ids in ({0}) ", ids, payIds);
                     }
                     else if (Request["ReAudit"] != null)//重新提交编辑
                     {
-                        SetColumnsVis(false);
+                        SetColumnsVis(true);
                         ViewState["POOrdersIds"] = "";
                         //权限1（销售）
 

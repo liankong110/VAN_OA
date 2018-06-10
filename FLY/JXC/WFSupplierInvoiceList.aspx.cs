@@ -755,15 +755,15 @@ where status='通过'  and TB_SupplierInvoice.id={0} and SupplierInvoiceTotal<0"
                 {
                     type = "供应商预付款单";
                     //首先查询这个单子有没有 生成相应的支付单
-                    var checksql = string.Format(@"select count(*) from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
-where Status<>'不通过' and  CaiId in (select  caiIds from TB_SupplierAdvancePayment left join TB_SupplierAdvancePayments
-on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id
-where status='通过' and TB_SupplierAdvancePayment.id={0} )", payType_Id[1]);
-                    if (Convert.ToInt32(DBHelp.ExeScalar(checksql)) > 0)
-                    {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('数据已经存在入库数据，或正在入库的单子，无法修改！');</script>");
-                        return;
-                    }
+//                    var checksql = string.Format(@"select count(*) from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
+//where Status<>'不通过' and  CaiId in (select  caiIds from TB_SupplierAdvancePayment left join TB_SupplierAdvancePayments
+//on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id
+//where status='通过' and TB_SupplierAdvancePayment.id={0} )", payType_Id[1]);
+//                    if (Convert.ToInt32(DBHelp.ExeScalar(checksql)) > 0)
+//                    {
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('数据已经存在入库数据，或正在入库的单子，无法修改！');</script>");
+//                        return;
+//                    }
                     sql = "select CreateName,Status,ProNo,Id from  TB_SupplierAdvancePayment where id=" + payType_Id[1];
                 }
 
