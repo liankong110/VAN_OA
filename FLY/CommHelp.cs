@@ -62,10 +62,7 @@ namespace VAN_OA
 
                 return "";
             }
-        }
-
-
-
+        } 
         /// <summary>
         /// DES解密
         /// </summary>
@@ -92,8 +89,6 @@ namespace VAN_OA
                 return "";
             }
         }
-
-
         #endregion
     }
 }
