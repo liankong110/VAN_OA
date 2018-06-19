@@ -11,14 +11,14 @@ namespace VAN_OA
     public class RMBCapitalization
     {
         private const string DXSZ = "零壹贰叁肆伍陆柒捌玖";
-        private const string DXDW = "毫厘分角元拾佰仟萬拾佰仟亿拾佰仟萬兆拾佰仟萬亿京拾佰仟萬亿兆垓";
-        private const string SCDW = "元拾佰仟萬亿京兆垓";
+        private const string DXDW = "毫厘分角元拾佰仟万拾佰仟亿拾佰仟万兆拾佰仟万亿京拾佰仟万亿兆垓";
+        private const string SCDW = "元拾佰仟万亿京兆垓";
 
         /// <summary>
         /// 转换整数为大写金额
         /// 最高精度为垓，保留小数点后4位，实际精度为亿兆已经足够了，理论上精度无限制，如下所示：
         /// 序号:...30.29.28.27.26.25.24  23.22.21.20.19.18  17.16.15.14.13  12.11.10.9   8 7.6.5.4  . 3.2.1.0
-        /// 单位:...垓兆亿萬仟佰拾        京亿萬仟佰拾       兆萬仟佰拾      亿仟佰拾     萬仟佰拾元 . 角分厘毫
+        /// 单位:...垓兆亿万仟佰拾        京亿万仟佰拾       兆万仟佰拾      亿仟佰拾     万仟佰拾元 . 角分厘毫
         /// 数值:...1000000               000000             00000           0000         00000      . 0000
         /// 下面列出网上搜索到的数词单位：
         /// 元、十、百、千、万、亿、兆、京、垓、秭、穰、沟、涧、正、载、极
@@ -55,7 +55,7 @@ namespace VAN_OA
                     switch (posIndex)
                     {
                         case 4: currCap = "元"; break;
-                        case 8: currCap = "萬"; break;
+                        case 8: currCap = "万"; break;
                         case 12: currCap = "亿"; break;
                         case 17: currCap = "兆"; break;
                         case 23: currCap = "京"; break;

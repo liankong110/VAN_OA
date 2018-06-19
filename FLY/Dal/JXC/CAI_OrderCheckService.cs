@@ -140,6 +140,8 @@ order by CAI_OrderInHouse.ProNo desc", goodId);
 
                         orderInHouse.addTran(orderInModel, eformMain, ordersInHouses, objCommand);
 
+
+
                     }
                     tan.Commit();
                 }

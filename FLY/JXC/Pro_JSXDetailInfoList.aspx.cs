@@ -20,7 +20,10 @@ namespace VAN_OA.JXC
     {
         Pro_JSXDetailInfoService jxcDetailSer = new Pro_JSXDetailInfoService();
 
-
+        protected void AspNetPager1_PageChanged(object src, EventArgs e)
+        {
+            Show();
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -162,15 +165,41 @@ namespace VAN_OA.JXC
                 }
                 pOOrderList[i].GoodResultNum = iniNum;
             }
-        
+
+            foreach (var m in pOOrderList)
+            {
+                m.KuCunTotal = m.GoodResultNum * m.TempHousePrice;
+            }
             lblHadInvoice.Text = string.Format("{0:n2}", pOOrderList.Sum(t=>t.HadInvoice));
             lblNoInvoice.Text = string.Format("{0:n2}", pOOrderList.Sum(t => t.NoInvoice));
+
+            lblGoodInNum.Text = string.Format("{0:n2}", pOOrderList.Sum(t => t.GoodInNum));
+            lbllblGoodInNumTotal.Text = string.Format("{0:n2}", pOOrderList.Sum(t => t.GoodInNum*t.Price));
+            lblGoodOutNum.Text = string.Format("{0:n2}", pOOrderList.Sum(t => t.GoodOutNum));
+            lblGoodOutNumTotal.Text = string.Format("{0:n2}", pOOrderList.Sum(t => t.GoodOutTotal));
+            if (pOOrderList.Count > 0)
+            {
+                var lastModel = pOOrderList[pOOrderList.Count - 1];
+                lblGoodResultNum.Text = string.Format("{0:n2}", lastModel.GoodResultNum);
+                LBLHouseTotal.Text = string.Format("{0:n2}", lastModel.KuCunTotal);
+            }
+            else
+            {
+                lblGoodResultNum.Text = "0";
+            }
+          
+
+
+            AspNetPager1.RecordCount = pOOrderList.Count;
+            this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
+
             this.gvMain.DataSource = pOOrderList;
             this.gvMain.DataBind();
 
         }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
+            AspNetPager1.CurrentPageIndex = 1;
             Show();
         }
 
@@ -183,9 +212,18 @@ namespace VAN_OA.JXC
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
                 Pro_JSXDetailInfo model = e.Row.DataItem as Pro_JSXDetailInfo;
-                if (txtPONO.Text.Trim()!=""&&model.PONO.Contains(txtPONO.Text.Trim()))
+                if (txtProNO.Text.Trim()==""&& txtPONO.Text.Trim()!=""&&model.PONO.Contains(txtPONO.Text.Trim()))
                 {                    
                     e.Row.BackColor = System.Drawing.Color.YellowGreen;
+                }
+                if (txtProNO.Text.Trim() != "" && txtPONO.Text.Trim() == "" && model.ProNo.Contains(txtProNO.Text.Trim()))
+                {
+                    e.Row.BackColor = System.Drawing.Color.Pink;
+                }
+
+                if (txtProNO.Text.Trim() != "" && txtPONO.Text.Trim() != "" && model.ProNo.Contains(txtProNO.Text.Trim()) && model.PONO.Contains(txtPONO.Text.Trim()))
+                {
+                    e.Row.BackColor = System.Drawing.Color.LightBlue;
                 }
             }
         }

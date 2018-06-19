@@ -205,7 +205,11 @@ group by RuIds) as TB_Invoice  on TB_Invoice.RuIds=TB_OUT.OrderCheckIds where CA
                         {
                             model.Price = Convert.ToDecimal(ojb);
                         }
-
+                        ojb = dataReader["TempHousePrice"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.TempHousePrice = Convert.ToDecimal(ojb);
+                        }
                         ojb = dataReader["PONO"];
                         if (ojb != null && ojb != DBNull.Value)
                         {

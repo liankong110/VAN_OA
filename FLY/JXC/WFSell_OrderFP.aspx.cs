@@ -141,6 +141,18 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目信息为不含税项目！');</script>");
                     return false;
                 }
+                //判断项目是否有预付到款单 ，如果有需要排队新增发票单，防止 预付转支付的时候 出现金额转错误。
+                string checkSumSql = string.Format("select isnull(sum(Total),0) from TB_ToInvoice where BusType=1 and PoNo='{0}' and State='通过'", txtPONo.Text);
+                var payTotal = Convert.ToDecimal(DBHelp.ExeScalar(checkSumSql));
+                if (payTotal > 0)
+                {
+                    checkSumSql = string.Format("select count(*) from Sell_OrderFP where Status='执行中' and PoNo='{0}'", txtPONo.Text);
+                    if (Convert.ToInt32(DBHelp.ExeScalar(checkSumSql))>0)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('同一项目因为有预付款，且有他项发票流程在进行中，请审批结束后开启本流程！');</script>");
+                        return false;
+                    }
+                }
 
                 List<Sell_OrderFPs> POOrders = Session["Orders"] as List<Sell_OrderFPs>;
 

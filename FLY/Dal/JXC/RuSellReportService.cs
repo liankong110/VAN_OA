@@ -192,20 +192,20 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
         public List<NoSellAndCaiGoods> GetListNoSellAndCaiGoods(string ponoWhere, string userId,
-            string goodNoWhere, string guestWhere, string ruTimeWhere, string poTimeWhere, string where,string company,bool isJingjian)
+            string goodNoWhere, string guestWhere, string ruTimeWhere, string poTimeWhere, string where,string company,bool isJingjian,string poNoSql)
         {
             List<NoSellAndCaiGoods> list = new List<NoSellAndCaiGoods>();
             StringBuilder strSql = new StringBuilder();
 
             strSql.AppendFormat(@"select GoodAreaNumber,caiAvgPrice,hanShui,allCaiNum,kuCaiNum,waiCaiNum,PONo,AE,GuestName,[NoSellAndCaiGoods].GoodId,GoodNo,GoodName,GoodSpec,
-GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum
+GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum,POName
 from 
 NoSellAndCaiGoods
 left join TB_Good on TB_Good.GoodId=[NoSellAndCaiGoods].GoodId
-left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6}  order by PONo desc " + where,
+left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6} {7} order by PONo desc " + where,
                                                                                                      userId == "" ? "" : string.Format(" and AE='{0}'", userId)
                                                                                                     , goodNoWhere,
-                         guestWhere, ruTimeWhere, poTimeWhere, ponoWhere, company);
+                         guestWhere, ruTimeWhere, poTimeWhere, ponoWhere, company, poNoSql);
 
             Hashtable sh = new Hashtable();
 
@@ -250,6 +250,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
             NoSellAndCaiGoods model = new NoSellAndCaiGoods();
             object ojb;
             model.PONo = dataReader["PONo"].ToString();
+            model.POName= dataReader["POName"].ToString();
             model.AE = dataReader["AE"].ToString();
             model.GuestName = dataReader["GuestName"].ToString();
             ojb = dataReader["GoodId"];

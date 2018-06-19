@@ -76,5 +76,12 @@ namespace VAN_OA.Model.JXC
 
         public decimal CaiLastTruePrice { get; set; }
         public string GoodAreaNumber { get; set; }
+
+        /// <summary>
+        /// 临时库存
+        /// </summary>
+        public decimal TempHousePrice { get; set; }
+        public DateTime RuTime { get; set; }
+        public int Type { get; set; }
     }
 }
