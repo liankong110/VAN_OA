@@ -154,5 +154,6 @@ namespace VAN_OA.Model.JXC
         public string GoodAreaNumber { get; set; }
 
         public string Supplier { get; set; }
+        public string POName { get; internal set; }
     }
 }

@@ -2618,6 +2618,13 @@
     <Compile Include="WebForm3.aspx.designer.cs">
       <DependentUpon>WebForm3.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WebForm4.aspx.cs">
+      <DependentUpon>WebForm4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm4.aspx.designer.cs">
+      <DependentUpon>WebForm4.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebQuerySessin.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -3126,6 +3133,7 @@
     <Content Include="UpdatePwd.aspx" />
     <Content Include="WebForm1.aspx" />
     <Content Include="WebForm3.aspx" />
+    <Content Include="WebForm4.aspx" />
     <Content Include="WfAttachmentList.aspx" />
     <Content Include="WFDownLoad.aspx" />
     <Content Include="WFNull.aspx" />

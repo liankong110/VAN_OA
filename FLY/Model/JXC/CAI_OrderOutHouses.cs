@@ -82,5 +82,9 @@ namespace VAN_OA.Model.JXC
         #endregion
 
         public string GoodAreaNumber { get; set; }
+        /// <summary>
+        /// 临时库存
+        /// </summary>
+        public decimal TempHousePrice { get; set; }
     }
 }

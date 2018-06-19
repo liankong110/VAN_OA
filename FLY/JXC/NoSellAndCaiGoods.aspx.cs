@@ -20,6 +20,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
+                var dalList = dal.GetListArray("");
+                dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
+                ddlGuestTypeList.DataSource = dalList;
+                ddlGuestTypeList.DataBind();
+                ddlGuestTypeList.DataTextField = "GuestType";
+                ddlGuestTypeList.DataValueField = "GuestType";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -179,8 +187,23 @@ namespace VAN_OA.JXC
                 string where1 = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
                 company = string.Format("and AE IN(select loginName from tb_User where {0})", where1);
             }
+            string poNoSql = "";
+            if (ddlGuestTypeList.SelectedValue != "全部"|| ddlIsSpecial.Text != "-1")
+            {
+                poNoSql = " and exists (select id from CG_POOrder where CG_POOrder.pono=NoSellAndCaiGoods.PONO AND IFZhui=0 ";
+                if (ddlGuestTypeList.SelectedValue != "全部")
+                {
+                    poNoSql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
+                }
+                if (ddlIsSpecial.Text != "-1")
+                {
+                    poNoSql += string.Format(" and IsSpecial={0} ", ddlIsSpecial.Text);
+                }
+                poNoSql += ")";
+            }
+           
             var resultList = _dal.GetListNoSellAndCaiGoods(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where, company
-                ,(ddlKCType.Text=="1"?true:false));
+                ,(ddlKCType.Text=="1"?true:false), poNoSql);
 
             if (cbZero.Checked)
             {
