@@ -877,9 +877,18 @@ where status='执行中' and GooId={0} and ids<>{1}", model.GooId,model.Ids);
                                 new TB_SupplierInvoiceService().AddSupplierInvoice(POOrders, Session["LoginName"].ToString(),
                                     Convert.ToInt32(Session["currentUserId"].ToString()), txtSupplier.Text, lblProNo.Text);
 
-                                //更新库存价格字段
-                                string sql = string.Format("update UPDATE_CAIOUTHOUSE__PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}", order.Id);
-                                DBHelp.ExeCommand(sql);
+                                try
+                                {
+                                    //更新库存价格字段
+                                    string sql = string.Format("update UPDATE_CAIOUTHOUSE__PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}", order.Id);
+                                    DBHelp.ExeCommand(sql);
+
+                                }
+                                catch (Exception)
+                                {
+
+                                   
+                                }
                             }
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
                             if (Session["backurl"] != null)

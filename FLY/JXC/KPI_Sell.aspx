@@ -220,6 +220,10 @@
             </td>
         </tr>
     </table>
+    <br />
+    <asp:Label ID="lblDateMess" runat="server" Text=""></asp:Label>
+    <br />
+    <asp:Label ID="lblProjectInfo" runat="server" Text=""></asp:Label>
     <asp:Panel ID="Panel2" runat="server" Width="100%" ScrollBars="Horizontal">
         <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid" Width="100%"
             AllowPaging="false" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
@@ -229,52 +233,29 @@
             <EmptyDataTemplate>
                 <table width="100%">
                     <tr style="height: 20px; background-color: #336699; color: White;">
-                        <td>项目编号
-                        </td>
-                        <td>项目名称
-                        </td>
-                        <td>项目日期
-                        </td>
-                        <td>客户名称
-                        </td>
-                        <td>销售额
-                        </td>
-                        <td>项目金额
-                        </td>
-                        <td>发票总额
-                        </td>
-                        <td>实际到账
-                        </td>
-                        <td>总成本
-                        </td>
-                        <td>项目净利润
-                        </td>
-                        <td>实际利润
-                        </td>
-                        <td>帐内到款
-                        </td>
-                        <td>帐内欠款
-                        </td>
-                        <td>利润扣除
-                        </td>
-                        <td>发票号码
-                        </td>
-                        <td>帐期
-                        </td>
-                        <td>实际到款期
-                        </td>
                         <td>AE
                         </td>
-                        <td>INSIDE
+                        <td>超期项目数
                         </td>
-                        <td>AE%
+                        <td>新客户拜访数
                         </td>
-                        <td>INSIDE%
+                        <td>老客户拜访次数
                         </td>
-                        <td>AE金额
+                        <td>项目金额
+                        
+                        <td>销售总金额
                         </td>
-                        <td>INSIDE金额
+                        <td>到账总金额
                         </td>
+                        <td>项目总利润
+                        </td>
+                        <td>实际总利润
+                        </td>
+                        <td>开票率%
+                        </td>
+                        <td>到款率%
+                        </td>
+                        
                     </tr>
                     <tr>
                         <td colspan="6" align="center" style="height: 80%">---暂无数据---
@@ -287,17 +268,13 @@
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-
-                <asp:BoundField DataField="DataString" HeaderText="日期" SortExpression="DataString"
-                    HeaderStyle-Width="100" ItemStyle-HorizontalAlign="Left">
-                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="ProjectCount" HeaderText="超期XX项目数" SortExpression="ProjectCount"
-                     ItemStyle-HorizontalAlign="Right" />
+             
+                <asp:BoundField DataField="TimeOutCount" HeaderText="超期项目数" SortExpression="TimeOutCount"
+                    ItemStyle-HorizontalAlign="Right" />
                 <asp:BoundField DataField="NewContractCount" HeaderText="新客户拜访数" SortExpression="NewContractCount"
-                     ItemStyle-HorizontalAlign="Right" />
+                    ItemStyle-HorizontalAlign="Right" />
                 <asp:BoundField DataField="OldContractCount" HeaderText="老客户拜访次数" SortExpression="OldContractCount"
-                   ItemStyle-HorizontalAlign="Right" />
+                    ItemStyle-HorizontalAlign="Right" />
                 <asp:BoundField DataField="POTotal" HeaderText="项目金额" DataFormatString="{0:n6}"
                     SortExpression="POTotal" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
@@ -336,7 +313,7 @@
             <RowStyle CssClass="InfoDetail1" />
         </asp:GridView>
         <br />
-     <%--   <webdiyer:AspNetPager ID="AspNetPager1" runat="server" Width="100%" ShowPageIndexBox="Always"
+        <%--   <webdiyer:AspNetPager ID="AspNetPager1" runat="server" Width="100%" ShowPageIndexBox="Always"
             TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%"
             CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left" ButtonImageAlign="Middle"
             CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"

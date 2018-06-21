@@ -846,15 +846,27 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
 
 
         public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao, DateTime StartTime, string compare, string fuhao_E,
-          string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere)
+          string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere,string zhangQiWhere)
         {
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select * from (");
-            strSql.Append(@"select AE,SUM(POTotal_SumView.SumPOTotal) AS SumPOTotal,SUM(goodSellTotal) AS goodSellTotal,SUM(goodTotal) AS goodTotal,
-SUM(maoliTotal) AS maoliTotal,SUM(InvoTotal) AS InvoTotal,SUM(SellFPTotal) AS SellFPTotal,SUM(KouInvoTotal) AS KouInvoTotal from (");
+            strSql.Append(@"select AE,SUM(SumPOTotal) AS SumPOTotal,SUM(goodSellTotal) AS goodSellTotal,SUM(goodTotal) AS goodTotal,
+SUM(maoliTotal) AS maoliTotal,SUM(InvoTotal) AS InvoTotal,SUM(SellFPTotal) AS SellFPTotal,SUM(KouInvoTotal) AS KouInvoTotal,count(*) AS PCount from (");
+
+
+            strSql.Append(@"select * from (SELECT 
+case
+when isnull(POTotal_SumView.SumPOTotal,0)=0 then 0
+when  MaxDaoKuanDate is not null and MinOutDate is not null and isnull(POTotal_SumView.SumPOTotal,0)<= isnull(InvoTotal,0) 
+then datediff(day,CONVERT(varchar(100), MinOutDate, 23),CONVERT(varchar(100), MaxDaoKuanDate, 23))
+when MinOutDate is not null then datediff(day,CONVERT(varchar(100), MinOutDate, 23), CONVERT(varchar(100), GETDATE(), 23))
+else 0
+end as ZhangQi,NewTB.*,POTotal_SumView.SumPOTotal
+from (");
+
             strSql.Append(@"select *" + (compare == "" ? ",0 as KouInvoTotal" : ",WaiInvoTotal as KouInvoTotal") + @"  from (
-select  CG_POOrder.PoNo,AE,sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal,  isnull(sum(maoli),0) as maoliTotal,
+select  MinOutDate,isnull(MaxDaoKuanDate,getdate()) as MaxDaoKuanDate,CG_POOrder.PoNo,AE,sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal,  isnull(sum(maoli),0) as maoliTotal,
 isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,avg(" + (compare == "" ? "0.05" : "WaiInvoTotal") + @") as WaiInvoTotal  from CG_POOrder  
 left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  
 left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
@@ -879,7 +891,7 @@ where ifzhui=0  and CG_POOrder.Status='通过' ");
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  AE ,CG_POOrder.PoNo ");
+            strSql.Append(" GROUP BY  AE ,CG_POOrder.PoNo,MaxDaoKuanDate,MinOutDate  ");
 
             if (having != "")
             {
@@ -887,7 +899,7 @@ where ifzhui=0  and CG_POOrder.Status='通过' ");
             }
 
             strSql.AppendFormat(@" ) AS TEMPTB ) as NewTB 
-LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono  GROUP BY NewTB.AE )  as SUMPO 
+LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono ) as AAAAA "+ zhangQiWhere + @") AS BBBB GROUP BY BBBB.AE  )  as SUMPO 
 LEFT JOIN
 (
     select Name,count(*) AS ContactCount,sum(case when IsNewUnit=1 then 1 else 0 end) as NewCount  from tb_BusContact {0} group by Name
@@ -965,6 +977,7 @@ LEFT JOIN
                                 model.DK_Percent = WaiInvoTotal / model.POTotal*100;
                             }
                         }
+                        model.TimeOutCount=Convert.ToInt32(dataReader["PCount"]);
                         list.Add(model);
 
                     }

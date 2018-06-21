@@ -274,7 +274,7 @@ namespace VAN_OA.Fin
             if (ddlOutType.Text == "支付单")
             {
                 sql = string.Format(@"select SUM(TB_SupplierInvoices.SupplierInvoiceTotal),SupplierName from TB_SupplierInvoice  left join TB_SupplierInfo
-on TB_SupplierInfo.SupplieSimpeName = TB_SupplierInvoice.LastSupplier 
+on TB_SupplierInfo.SupplieSimpeName = TB_SupplierInvoice.LastSupplier  and TB_SupplierInfo.Status='通过'
 LEFT JOIN TB_SupplierInvoices on TB_SupplierInvoices.Id=TB_SupplierInvoice.Id
 where TB_SupplierInvoice.ProNo ='{0}'
 group BY SupplierName,TB_SupplierInvoice.ProNo", txtProNo.Text.Trim());
@@ -285,7 +285,7 @@ group BY SupplierName,TB_SupplierInvoice.ProNo", txtProNo.Text.Trim());
                 sql = string.Format(@"select TOP 1 SumActPay,SupplierName from TB_SupplierAdvancePayment left join TB_SupplierAdvancePayments
 on TB_SupplierAdvancePayment.Id=TB_SupplierAdvancePayments.Id
 left join CAI_POCai on CAI_POCai.Ids=TB_SupplierAdvancePayments.CaiIds
-left join TB_SupplierInfo on TB_SupplierInfo.SupplieSimpeName = CAI_POCai.lastSupplier
+left join TB_SupplierInfo on TB_SupplierInfo.SupplieSimpeName = CAI_POCai.lastSupplier and TB_SupplierInfo.Status='通过'
 where TB_SupplierAdvancePayment.ProNo='{0}'", txtProNo.Text.Trim());
             }
             else if (ddlOutType.Text == "申请请款单")

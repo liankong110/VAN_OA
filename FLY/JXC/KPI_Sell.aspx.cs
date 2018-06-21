@@ -156,29 +156,24 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and CG_POOrder.POName like '%{0}%'", ttxPOName.Text.Trim());
             }
 
-            if (txtFrom.Text != "")
+             
+            if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
             {
-                if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
-                {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
-                    return;
-                }
-                sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00'", txtFrom.Text);
-                contactWhere += string.Format(" and [DateTime]>='{0} 00:00:00'", txtFrom.Text);
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
+                return;
             }
-
-            if (txtTo.Text != "")
+            
+            if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
             {
-                if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
-                {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
-                    return;
-                }
-                sql += string.Format(" and CG_POOrder.PODate<='{0} 23:59:59'", txtTo.Text);
-                contactWhere += string.Format(" and DateTime]<='{0} 23:59:59'", txtTo.Text);
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
+                return;
             }
+            contactWhere += string.Format(" and [DateTime]>='{0} 00:00:00'", txtFrom.Text);
+            contactWhere += string.Format(" and [DateTime]<='{0} 23:59:59'", txtTo.Text);
 
-
+            sql += string.Format(" and ((CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59') or (CG_POOrder.PODate>='{2} 00:00:00' and CG_POOrder.PODate<='{3} 23:59:59'))", 
+                txtFrom.Text, txtTo.Text, Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"), Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
+             
             if (txtGuestName.Text.Trim() != "")
             {
                 sql += string.Format(" and CG_POOrder.GuestName  like '%{0}%'", txtGuestName.Text.Trim());
@@ -409,31 +404,35 @@ namespace VAN_OA.JXC
                     fuhao_E = ">";
                 }
             }
-            List<KPI_SellModel> pOOrderList = this.POSer.KIP_SellReport(sql, having, fuhao, StartTime, fh, fuhao_E, KAO_POType, NO_Kao_POType, PoTypeList, contactWhere);
-            //if (ddlTrueZhangQI.Text != "-1")
-            //{
-            //    if (ddlTrueZhangQI.Text == "1")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi <= 30);
-            //    }
-            //    if (ddlTrueZhangQI.Text == "2")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 30 && T.trueZhangQi <= 60);
-            //    }
-            //    if (ddlTrueZhangQI.Text == "3")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 60 && T.trueZhangQi <= 90);
-            //    }
-            //    if (ddlTrueZhangQI.Text == "4")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 90 && T.trueZhangQi <= 120);
-            //    }
-            //    if (ddlTrueZhangQI.Text == "5")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 120);
-            //    }
-            //}
-            
+            string zhangQi = "where 1=1 ";
+
+            if (ddlTrueZhangQI.Text != "-1")
+            {
+                if (ddlTrueZhangQI.Text == "1")
+                {
+                    zhangQi += string.Format(" and ZhangQi<=30"); 
+                }
+                if (ddlTrueZhangQI.Text == "2")
+                {
+                    zhangQi += string.Format(" and ZhangQi<=60 and ZhangQi>30");                    
+                }
+                if (ddlTrueZhangQI.Text == "3")
+                {
+                    zhangQi += string.Format(" and ZhangQi<=90 and ZhangQi>60");                   
+                }
+                if (ddlTrueZhangQI.Text == "4")
+                {
+                    zhangQi += string.Format(" and ZhangQi<=120 and ZhangQi>90");
+                }
+                if (ddlTrueZhangQI.Text == "5")
+                {
+                    zhangQi += string.Format(" and ZhangQi>120"); 
+                }
+            }
+
+
+            List<KPI_SellModel> pOOrderList = this.POSer.KIP_SellReport(sql, having, fuhao, StartTime, fh, fuhao_E, KAO_POType, NO_Kao_POType, PoTypeList, contactWhere, zhangQi);
+           
             //AspNetPager1.RecordCount = pOOrderList.Count;
             //this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
 
@@ -443,7 +442,26 @@ namespace VAN_OA.JXC
         }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
+            if (txtFrom.Text == ""|| txtTo.Text == "")
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('项目日期必填！');</script>"));
+                return;
+            }
             //AspNetPager1.CurrentPageIndex = 1;
+
+            lblDateMess.Text = string.Format("项目日期：{0} 至 {1}",txtFrom.Text,txtTo.Text);
+
+            string selectType = "";
+            foreach (ListItem item in cbKaoList.Items)
+            {
+                if (item.Selected||cbKaoAll.Checked)
+                {
+                    selectType += item.Text + ",";
+                }
+            }
+            
+            selectType = selectType.Trim(',');
+            lblProjectInfo.Text = string.Format("超期项目数是统计 项目类别为{0}的项目", selectType);
             Show();
         }
 

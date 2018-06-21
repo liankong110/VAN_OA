@@ -766,9 +766,17 @@ and status='通过' and Ids={1}", model.Ids, model.CaiId);
                                     caiIds = caiIds.Substring(0, caiIds.Length - 1);
                                 }
                                 new TB_SupplierInvoiceService().AddSupplierInvoice(checkIds, caiIds, Session["LoginName"].ToString(), Convert.ToInt32(Session["currentUserId"].ToString()), POOrders[0].SupplierName);
-                                //更新库存价格字段
-                                string sql = string.Format("update UPDATE_CAIINHOUSE_PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}",order.Id);
-                                DBHelp.ExeCommand(sql);
+                                try
+                                {
+                                    //更新库存价格字段
+                                    string sql = string.Format("update UPDATE_CAIINHOUSE_PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}", order.Id);
+                                    DBHelp.ExeCommand(sql);
+                                }
+                                catch (Exception)
+                                {
+
+                                     
+                                }
 
                             }
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");

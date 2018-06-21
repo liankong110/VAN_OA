@@ -57,5 +57,10 @@ namespace VAN_OA.Model.JXC
         ///  到款率=项目的账内到款合计/项目金额合计
         /// </summary>
         public decimal DK_Percent { get; set; }
+
+        /// <summary>
+        /// 超期项目
+        /// </summary>
+        public int TimeOutCount { get; set; }
     }
 }
