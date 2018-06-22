@@ -149,8 +149,9 @@ namespace VAN_OA.Fin
                 //京东 ，京东商城 可以不一样） ，修改或添加 才能保存数据，否则提示预付款单和支付单 抬头必须一致
                 if (ddlOutType.Text == "支付单" || ddlOutType.Text == "预付款单")
                 {
-                    string name = txtName.Text.Trim();
-                    if (lblInPayeeName.Text != name && (name!= "淘宝"&& name != "本部门" &&name != "本部门（含税）" && name != "淘宝(含1.33税)" 
+                    //中文括号转为英文
+                    string name = txtName.Text.Trim().Replace("（", "(").Replace("）", ")");
+                    if (lblInPayeeName.Text.Replace("（", "(").Replace("）", ")") != name && (name!= "淘宝"&& name != "本部门" &&name != "本部门（含税）" && name != "淘宝(含1.33税)" 
                         && name != "上海圆迈贸易有限公司"))
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('{0}');</script>", "预付款单和支付单 抬头必须一致"));
