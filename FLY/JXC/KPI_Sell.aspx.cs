@@ -171,9 +171,14 @@ namespace VAN_OA.JXC
             contactWhere += string.Format(" and [DateTime]>='{0} 00:00:00'", txtFrom.Text);
             contactWhere += string.Format(" and [DateTime]<='{0} 23:59:59'", txtTo.Text);
 
-            sql += string.Format(" and ((CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59') or (CG_POOrder.PODate>='{2} 00:00:00' and CG_POOrder.PODate<='{3} 23:59:59'))", 
-                txtFrom.Text, txtTo.Text, Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"), Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
-             
+            //sql += string.Format(" and ((CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59') or (CG_POOrder.PODate>='{2} 00:00:00' and CG_POOrder.PODate<='{3} 23:59:59'))", 
+            //    txtFrom.Text, txtTo.Text, Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"), Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
+
+            sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59'",
+               txtFrom.Text, txtTo.Text);
+
+
+
             if (txtGuestName.Text.Trim() != "")
             {
                 sql += string.Format(" and CG_POOrder.GuestName  like '%{0}%'", txtGuestName.Text.Trim());

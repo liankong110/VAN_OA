@@ -347,6 +347,8 @@
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GuestProString" HeaderText="属性" SortExpression="GuestProString"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
+                   <asp:BoundField DataField="potypeString" HeaderText="类别" SortExpression="potypeString"
+                    HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="goodSellTotal" HeaderText="销售额" DataFormatString="{0:n2}"
                     SortExpression="goodSellTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>

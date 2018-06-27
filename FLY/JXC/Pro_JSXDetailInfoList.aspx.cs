@@ -166,6 +166,9 @@ namespace VAN_OA.JXC
                 pOOrderList[i].GoodResultNum = iniNum;
             }
 
+            
+
+
             foreach (var m in pOOrderList)
             {
                 m.KuCunTotal = m.GoodResultNum * m.TempHousePrice;

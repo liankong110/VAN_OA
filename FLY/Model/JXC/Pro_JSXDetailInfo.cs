@@ -24,7 +24,7 @@ namespace VAN_OA.Model.JXC
         {
             get
             {
-                return GoodOutNum * TempHousePrice;
+                return GoodOutNum * avgHousePrice;
             }
         }
         public decimal GoodResultNum { get; set; }
@@ -44,5 +44,14 @@ namespace VAN_OA.Model.JXC
         public decimal KuCunTotal { get; set; }
 
         public decimal TempHousePrice { get; set; }
+        public int Ids { get; set; }
+
+        /// <summary>
+        /// 库存成本
+        /// </summary>
+        public decimal avgHousePrice { get; set; }
+
+
+
     }
 }

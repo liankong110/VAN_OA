@@ -1110,6 +1110,20 @@ group by SellOutOrderId
                                 new Sell_OrderOutHouseBackService().SellOrderBackUpdatePoStatus(txtPONo.Text);
                             }
 
+                            if (ddlPers.Visible == false && ddlResult.Text == "通过")
+                            {
+                                try
+                                {
+                                    //更新库存价格字段
+                                    string sql = string.Format("update UPDATE_SellOutHouse_PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}", order.Id);
+                                    DBHelp.ExeCommand(sql);
+
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
                             if (btnSub.Text == "打印")
                             {

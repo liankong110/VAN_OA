@@ -430,7 +430,7 @@ namespace VAN_OA.JXC
                     fuhao_E = ">";
                 }
             }
-            List<JXC_REPORTTotal> pOOrderList = this.POSer.NEW_GetListArray_Total(sql, having, fuhao, StartTime, fh, fuhao_E, KAO_POType, NO_Kao_POType, PoTypeList);
+            List<JXC_REPORTTotal> pOOrderList = this.POSer.NEW_GetListArray_Total(sql, having, fuhao, StartTime, fh, fuhao_E, KAO_POType, NO_Kao_POType, PoTypeList,Convert.ToInt32(ddlZhangQI.Text));
             if (ddlTrueZhangQI.Text != "-1")
             {
                 if (ddlTrueZhangQI.Text == "1")

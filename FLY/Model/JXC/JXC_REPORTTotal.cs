@@ -152,6 +152,7 @@ namespace VAN_OA.Model.JXC
 
 
         public string potype { get; set; }
+        public string potypeString { get; set; }
 
         public decimal itemTotal { get; set; }
 
@@ -251,7 +252,16 @@ namespace VAN_OA.Model.JXC
         {
             get
             {
-                if (PODate >= QueryDateTime)
+                var tiaojian = false;
+                if (zhangQI == 1 && trueZhangQi >= BaseKeyValue)
+                {
+                    tiaojian = true;
+                }
+                else if (zhangQI == 2 && trueZhangQi > BaseKeyValue)
+                {
+                    tiaojian = true;
+                }
+                if (tiaojian && PODate >= QueryDateTime)
                 {
                     if (PoTypeList != "-10" && (PoTypeList == "-1" || PoTypeList.Contains(potype)))
                     {
@@ -345,5 +355,13 @@ namespace VAN_OA.Model.JXC
         }
 
         public int Id { get; set; }
+
+        public int BaseKeyValue { get; set; }
+        /// <summary>
+        /// 账期条件      
+        /// 1 实际帐期>=帐期截止期
+        /// 2 实际帐期 >帐期截止期      
+        /// </summary>
+        public int zhangQI { get; set; }
     }
 }

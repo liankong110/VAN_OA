@@ -870,6 +870,17 @@ where TB_Good.GoodId={0} and IfSpec=1",model.GooId);
                                 {
                                     new Sell_TuiSunChaService().addTran(POOrders);
                                 }
+
+                                try
+                                {
+                                    //更新库存价格字段
+                                    string sql = string.Format("update UPDATE_SellInHouse_PRICE set TempHousePrice=isnull(GoodAvgPrice,0) where id={0}", order.Id);
+                                    DBHelp.ExeCommand(sql);
+
+                                }
+                                catch (Exception)
+                                {
+                                }
                             }
                             if (ddlSellInList.Text == "2" && ddlPers.Visible == false && ddlResult.SelectedItem.Text == "通过")
                             {

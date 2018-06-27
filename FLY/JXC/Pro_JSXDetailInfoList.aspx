@@ -133,6 +133,8 @@
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="GoodResultNum" HeaderText="结余数" SortExpression="GoodResultNum"
                 ItemStyle-HorizontalAlign="Center" />
+              <asp:BoundField DataField="TempHousePrice" HeaderText="库存单价" SortExpression="TempHousePrice" DataFormatString="{0:n10}"
+                ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="KuCunTotal" HeaderText="库存金额" SortExpression="KuCunTotal" DataFormatString="{0:n2}"
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="HadInvoice" HeaderText="已支付" SortExpression="GoodOutNum" DataFormatString="{0:n2}"

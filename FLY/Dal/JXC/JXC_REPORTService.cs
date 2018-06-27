@@ -656,8 +656,9 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
         public List<Model.JXC.JXC_REPORTTotal> NEW_GetListArray_Total(string strWhere, string having, string fuhao, DateTime StartTime, string compare, string fuhao_E,
-            string KAO_POType, string NO_Kao_POType, string PoTypeList)
+            string KAO_POType, string NO_Kao_POType, string PoTypeList,int zhangQI)
         {
+            var poTypeList = new TB_BasePoTypeService().GetListArray(""); 
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
             StringBuilder strSql = new StringBuilder();
             strSql.Append(" select  SumPOTotal,*" + (compare == "" ? ",0 as KouInvoTotal" : ",WaiInvoTotal as KouInvoTotal") + " from (");
@@ -707,6 +708,8 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                     while (dataReader.Read())
                     {
                         JXC_REPORTTotal model = new JXC_REPORTTotal();
+                        model.zhangQI = zhangQI;
+                        model.BaseKeyValue =Convert.ToInt32(baseKeyModel.TypeValue);
                         model.PoTypeList = PoTypeList;
                         model.QueryDateTime = StartTime;
                         object ojb;
@@ -836,6 +839,8 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         {
                             model.WaiInvoTotal = Convert.ToDecimal(ojb);
                         }
+                        int POType = Convert.ToInt32(dataReader["POType"]);
+                        model.potypeString = poTypeList.Find(t=>t.Id== POType).BasePoType ;
                         model.potype = dataReader["POType"].ToString();
                         list.Add(model);
                     }

@@ -255,6 +255,9 @@ group by RuIds) as TB_Invoice  on TB_Invoice.RuIds=TB_OUT.OrderCheckIds where CA
                         model.GoodResultNum = iniNum;
 
                         model.RuId = Convert.ToInt32(dataReader["RuId"]);
+                        model.Ids = Convert.ToInt32(dataReader["Ids"]);
+                        model.avgHousePrice = Convert.ToDecimal(dataReader["avgHousePrice"]);
+
                         list.Add(model);
                     }
                 }
