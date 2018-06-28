@@ -335,22 +335,22 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                         return false;
                     }
                     //--在创建/编辑 预付单时 判断是否已经有入库记录(包含正在执行的单子)
-                    string checkSql = string.Format(@"select proNo,SupplierName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
-left join TB_Good on TB_Good.GoodId=CAI_OrderChecks.CheckGoodId 
-where Status<>'不通过' and  CaiId in ({0})", ids);//--增加采购订单的ID ( and CaiId=?)
+//                    string checkSql = string.Format(@"select proNo,SupplierName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderChecks.CheckId=CAI_OrderCheck.Id
+//left join TB_Good on TB_Good.GoodId=CAI_OrderChecks.CheckGoodId 
+//where Status<>'不通过' and  CaiId in ({0})", ids);//--增加采购订单的ID ( and CaiId=?)
 
-                    var errorText = new StringBuilder();
-                    DataTable dt = DBHelp.getDataTable(checkSql);
-                    if (dt.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in dt.Rows)
-                        {
-                            errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2}\\n", dr["proNo"], dr["SupplierName"], dr["GoodNo"] + @"\" + dr["GoodName"] + @"\" + dr["GoodTypeSmName"] + @"\" + dr["GoodSpec"]);
-                        }
-                        errorText.Append("数据已经存在入库数据，或正在入库的单子！");
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('" + errorText.ToString() + "');</script>");
-                        return false;
-                    }
+//                    var errorText = new StringBuilder();
+//                    DataTable dt = DBHelp.getDataTable(checkSql);
+//                    if (dt.Rows.Count > 0)
+//                    {
+//                        foreach (DataRow dr in dt.Rows)
+//                        {
+//                            errorText.AppendFormat(" 单号:{0},供应商:{1},商品:{2}\\n", dr["proNo"], dr["SupplierName"], dr["GoodNo"] + @"\" + dr["GoodName"] + @"\" + dr["GoodTypeSmName"] + @"\" + dr["GoodSpec"]);
+//                        }
+//                        errorText.Append("数据已经存在入库数据，或正在入库的单子！");
+//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('" + errorText.ToString() + "');</script>");
+//                        return false;
+//                    }
                 }
 //                if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过" && Request["ReAudit"] != null)
 //                {

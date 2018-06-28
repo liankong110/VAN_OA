@@ -45,7 +45,7 @@ namespace VAN_OA.JXC
 
                 //txtStartTime.Text = (DateTime.Now.Year - 1) + "-1-1";
 
-                txtStartTime.Text = DateTime.Now.AddYears(-1).AddDays(-150).ToString("yyyy-MM-dd");
+                
                 List<TB_BasePoType> basePoTypeList = new TB_BasePoTypeService().GetListArray("");
                 List<TB_BasePoType> basePoTypeList1 = new TB_BasePoTypeService().GetListArray("");
                 cbKaoList.DataSource = basePoTypeList1;
@@ -135,17 +135,17 @@ namespace VAN_OA.JXC
             }
         }
 
-        
-
-        private void Show()
+        public List<KPI_SellModel> KPIList(int Type,out string ErrorMsg)
         {
+            ErrorMsg = "";
             string sql = " ";
             string contactWhere = " where 1=1 ";
             if (txtPONo.Text.Trim() != "")
             {
                 if (CheckPoNO(txtPONo.Text) == false)
                 {
-                    return;
+                    ErrorMsg = "1";
+                    return new List<KPI_SellModel>();
                 }
                 sql += string.Format(" and CG_POOrder.PONo like '%{0}%'", txtPONo.Text.Trim());
             }
@@ -156,29 +156,33 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and CG_POOrder.POName like '%{0}%'", ttxPOName.Text.Trim());
             }
 
-             
+
             if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
-                return;
+                ErrorMsg = "1";
+                return new List<KPI_SellModel>();
             }
-            
+
             if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
-                return;
+                ErrorMsg = "1";
+                return new List<KPI_SellModel>();
             }
             contactWhere += string.Format(" and [DateTime]>='{0} 00:00:00'", txtFrom.Text);
             contactWhere += string.Format(" and [DateTime]<='{0} 23:59:59'", txtTo.Text);
 
-            //sql += string.Format(" and ((CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59') or (CG_POOrder.PODate>='{2} 00:00:00' and CG_POOrder.PODate<='{3} 23:59:59'))", 
-            //    txtFrom.Text, txtTo.Text, Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"), Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
-
-            sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59'",
-               txtFrom.Text, txtTo.Text);
-
-
-
+            if (Type == 1)
+            {
+                sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59'",
+                   txtFrom.Text, txtTo.Text);
+            }
+            if (Type == 2)
+            {
+                sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00' and CG_POOrder.PODate<='{1} 23:59:59'",
+                  Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"), Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
+            }
             if (txtGuestName.Text.Trim() != "")
             {
                 sql += string.Format(" and CG_POOrder.GuestName  like '%{0}%'", txtGuestName.Text.Trim());
@@ -201,16 +205,7 @@ namespace VAN_OA.JXC
             {
                 isColse += " and JieIsSelected=" + ddlJieIsSelected.Text;
             }
-            //if (ViewState["showAll"] != null)
-            //{
-            //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
-            //}
-
-            //if (ddlGuestTypeList.SelectedValue != "全部")
-            //{
-            //    sql += string.Format(" and EXISTS (select id from TB_GuestTrack where MyGuestType='{0}' and TB_GuestTrack.id=CG_POOrder.GuestId )",ddlGuestTypeList.SelectedValue);
-            //}
-
+          
             if (ddlGuestTypeList.SelectedValue != "全部")
             {
                 sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
@@ -221,31 +216,26 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
             }
 
-
-
             if (ddlUser.Text == "-1")//显示所有用户
             {
                 if (cbIsSpecial.Checked)
                 {
                     sql += string.Format(" and IsSpecial=0 {0} ", isColse);
-                     
+
                 }
             }
             else if (ddlUser.Text == "0")//显示部门信息
             {
                 var model = Session["userInfo"] as User;
-               
+
                 if (cbIsSpecial.Checked)
                 {
                     sql += string.Format(" and CG_POOrder.AE in (select LOGINNAME from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') and IsSpecial=0 {1}",
-                         model.LoginIPosition, isColse);
-                   // sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') AND PONO=JXC_REPORT.PONO and IsSpecial=0 {1})", model.LoginIPosition, isColse);
-                }
+                         model.LoginIPosition, isColse);      }
                 else
                 {
                     sql += string.Format(" and CG_POOrder.AE in (select LOGINNAME from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}')  {1}",
                         model.LoginIPosition, isColse);
-                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') AND PONO=JXC_REPORT.PONO and IsSpecial=1 {1})", model.LoginIPosition, isColse);
                 }
             }
             else
@@ -254,24 +244,20 @@ namespace VAN_OA.JXC
                 if (cbIsSpecial.Checked)
                 {
                     sql += string.Format(" and CG_POOrder.AE='{0}' and IsSpecial=0 {1} ", ddlUser.SelectedItem.Text, isColse);
-                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO  and IsSpecial=0 {1})", ddlUser.Text, isColse);
                 }
                 else
                 {
-                    sql += string.Format(" and CG_POOrder.AE='{0}'  {1} ", ddlUser.SelectedItem.Text, isColse);
-                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO  and IsSpecial=1 {1})", ddlUser.Text, isColse);
-
-                }
-                //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO )", ddlUser.Text);
+                    sql += string.Format(" and CG_POOrder.AE='{0}'  {1} ", ddlUser.SelectedItem.Text, isColse);                    
+                } 
+                contactWhere += string.Format(" and Name='{0}'", ddlUser.SelectedItem.Text);
             }
-             if (ddlCompany.Text != "-1")
+            if (ddlCompany.Text != "-1")
             {
                 string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
                 sql += string.Format(" and exists (select id from tb_User where  IFZhui=0 and {0} and CG_POOrder.AE=LOGINNAME)", where);
             }
             if (CheckBox1.Checked || CheckBox2.Checked || CheckBox3.Checked || CheckBox4.Checked)
             {
-
                 sql += " and exists ( select ID from CG_POOrder where PONO=JXC_REPORT.PONO";
                 if (CheckBox1.Checked)
                 {
@@ -289,10 +275,8 @@ namespace VAN_OA.JXC
                 {
                     sql += string.Format(" and POStatue4='{0}'", CheckBox4.Text);
                 }
-
                 sql += ")";
             }
-
 
             string having = " having ";
             if (CheckBox5.Checked && CheckBox6.Checked)
@@ -334,96 +318,104 @@ namespace VAN_OA.JXC
                 fuhao += string.Format(" and maoliTotal {0} (isnull(InvoTotal,0)-isnull(goodTotal,0))", ddlJingLiTotal.Text);
             }
 
-            if (!string.IsNullOrEmpty(txtProProfit.Text) && ddlProProfit.Text!="-1")
+            if (!string.IsNullOrEmpty(txtProProfit.Text) && ddlProProfit.Text != "-1")
             {
                 if (CommHelp.VerifesToNum(txtProProfit.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目净利 格式错误！');</script>");
-                    return;
+                    ErrorMsg = "1";
+                    return new List<KPI_SellModel>();
                 }
                 fuhao += string.Format(" and maoliTotal {0} {1}", ddlProProfit.Text, txtProProfit.Text);
             }
 
-            if (!string.IsNullOrEmpty(txtProTureProfit.Text)&&ddlProTureProfit.Text!="-1")
+            if (!string.IsNullOrEmpty(txtProTureProfit.Text) && ddlProTureProfit.Text != "-1")
             {
                 if (CommHelp.VerifesToNum(txtProTureProfit.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('实际净利 格式错误！');</script>");
-                    return;
+                    ErrorMsg = "1";
+                    return new List<KPI_SellModel>();
                 }
                 fuhao += string.Format(" and InvoTotal-goodTotal {0} {1}", ddlProTureProfit.Text, txtProTureProfit.Text);
             }
-          
+
             string KAO_POType = "";
             string NO_Kao_POType = "";
             string PoTypeList = "";
-            if (cbKaoAll.Checked == false)
+            if (Type == 1)
             {
-                string ids = "";
-                foreach (ListItem item in cbKaoList.Items)
+                //PoTypeList = "-10";
+                //KAO_POType = " and CG_POOrder.POType=-10";
+                //NO_Kao_POType = " 1=1 or ";
+            }
+            if (Type == 2)
+            {
+                if (cbKaoAll.Checked == false)
                 {
-                    if (item.Selected)
+                    string ids = "";
+                    string notids = "";
+                    foreach (ListItem item in cbKaoList.Items)
                     {
-                        ids += item.Value + ",";
+                        if (item.Selected)
+                        {
+                            ids += item.Value + ",";
+                        }
+                        else
+                        {
+                            notids += item.Value + ",";
+                        }
                     }
-                }
-                if (!string.IsNullOrEmpty(ids))
-                {
-                    PoTypeList = ids.Trim(',');
-                    KAO_POType = " and CG_POOrder.POType in (" + ids.Trim(',') + ")";
-                    NO_Kao_POType = " CG_POOrder.POType not in (" + ids.Trim(',') + ") or ";
+                    if (!string.IsNullOrEmpty(ids))
+                    { 
+                        sql+= " and CG_POOrder.POType in (" + ids.Trim(',') + ")"; 
+                    }
+                    if (!string.IsNullOrEmpty(notids))
+                    {
+                        sql += " and CG_POOrder.POType not in (" + notids.Trim(',') + ")";
+                    }
+
                 }
                 else
                 {
-                    PoTypeList = "-10";
-                    KAO_POType = " and CG_POOrder.POType=-10";
-                    NO_Kao_POType = " 1=1 or ";
+                    //PoTypeList = "-1";
                 }
-            }
-            else
-            {
-                PoTypeList = "-1";
-            }
+            } 
 
-            if (!string.IsNullOrEmpty(txtStartTime.Text))
-            {
-                if (CommHelp.VerifesToDateTime(txtStartTime.Text) == false)
-                {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('启用时间 格式错误！');</script>");
-                    return;
-                }
-            }
-            var StartTime = Convert.ToDateTime(txtStartTime.Text);
-               var fh = "";
-               var fuhao_E = "";
-            if (ddlZhangQI.Text != "-1")
-            { 
-                if (ddlZhangQI.Text == "1")
-                {
-                    fh = "<";
-                    fuhao_E = ">=";
-                }
-                if (ddlZhangQI.Text == "2")
-                {
-                    fh = "<=";
-                    fuhao_E = ">";
-                }
-            }
             string zhangQi = "where 1=1 ";
+
+            if (Type == 2)
+            {
+                if (ddlZhangQI.Text != "-1")
+                {
+                    if (ddlZhangQI.Text == "1")
+                    {
+                        zhangQi += string.Format(" and ZhangQi>=120");
+
+                       
+                    }
+                    if (ddlZhangQI.Text == "2")
+                    {
+                        zhangQi += string.Format(" and ZhangQi>120");
+                      
+                    }
+                }
+            }
+            
 
             if (ddlTrueZhangQI.Text != "-1")
             {
                 if (ddlTrueZhangQI.Text == "1")
                 {
-                    zhangQi += string.Format(" and ZhangQi<=30"); 
+                    zhangQi += string.Format(" and ZhangQi<=30");
                 }
                 if (ddlTrueZhangQI.Text == "2")
                 {
-                    zhangQi += string.Format(" and ZhangQi<=60 and ZhangQi>30");                    
+                    zhangQi += string.Format(" and ZhangQi<=60 and ZhangQi>30");
                 }
                 if (ddlTrueZhangQI.Text == "3")
                 {
-                    zhangQi += string.Format(" and ZhangQi<=90 and ZhangQi>60");                   
+                    zhangQi += string.Format(" and ZhangQi<=90 and ZhangQi>60");
                 }
                 if (ddlTrueZhangQI.Text == "4")
                 {
@@ -431,17 +423,70 @@ namespace VAN_OA.JXC
                 }
                 if (ddlTrueZhangQI.Text == "5")
                 {
-                    zhangQi += string.Format(" and ZhangQi>120"); 
+                    zhangQi += string.Format(" and ZhangQi>120");
                 }
             }
+            return this.POSer.KIP_SellReport(sql, having, fuhao,  KAO_POType, NO_Kao_POType, PoTypeList, contactWhere, zhangQi);
+        }
 
+        private void Show()
+        {
 
-            List<KPI_SellModel> pOOrderList = this.POSer.KIP_SellReport(sql, having, fuhao, StartTime, fh, fuhao_E, KAO_POType, NO_Kao_POType, PoTypeList, contactWhere, zhangQi);
-           
-            //AspNetPager1.RecordCount = pOOrderList.Count;
-            //this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
+            string errorMsg = "";
+            List<KPI_SellModel> kpiList = KPIList(1, out errorMsg);
+            if (errorMsg == "-1")
+            {
+                return;
+            }            
+            List<KPI_SellModel> chaoQiList = KPIList(2, out errorMsg);
+            foreach (var model in kpiList)
+            {
+                int chaoQiCount = 0;
+                var fModel = chaoQiList.Find(t => t.AE == model.AE);
+                if (fModel != null)
+                {
+                    model.TimeOutCount = fModel.TimeOutCount;
+                }
+                else
+                {
+                    model.TimeOutCount = chaoQiCount;
+                }
+            }
+            string contactWhere = " where 1=1 ";
 
-            this.gvMain.DataSource = pOOrderList;
+            contactWhere += string.Format(" and [DateTime]>='{0} 00:00:00'", txtFrom.Text);
+            contactWhere += string.Format(" and [DateTime]<='{0} 23:59:59'", txtTo.Text);
+
+            if (ddlUser.Text != "-1" && ddlUser.Text != "0")
+            {
+                contactWhere += string.Format(" and Name='{0}'", ddlUser.SelectedItem.Text);
+            }
+            var contactList = POSer.Kpi_ContactList(contactWhere);
+
+            var aeList = POSer.KPI_AE();
+            foreach(var aeModel in aeList)
+            {
+                var fModel = kpiList.Find(t => t.AE == aeModel.AE);
+                if (fModel != null)
+                {
+                    aeModel.TimeOutCount = fModel.TimeOutCount;
+                    
+                    aeModel.POTotal = fModel.POTotal;
+                    aeModel.SellTotal = fModel.SellTotal;
+                    aeModel.InvoiceTotal = fModel.InvoiceTotal;
+                    aeModel.ProfitTotal = fModel.ProfitTotal;
+                    aeModel.LastProfitTotal = fModel.LastProfitTotal;
+                    aeModel.KP_Percent = fModel.KP_Percent;
+                    aeModel.DK_Percent = fModel.DK_Percent;                    
+                }
+                var cModel = contactList.Find(t => t.AE == aeModel.AE);
+                if (cModel != null)
+                {                    
+                    aeModel.NewContractCount = cModel.NewContractCount;
+                    aeModel.OldContractCount = cModel.OldContractCount; 
+                }
+            }
+            this.gvMain.DataSource = aeList;
             this.gvMain.DataBind(); 
             
         }
@@ -454,7 +499,8 @@ namespace VAN_OA.JXC
             }
             //AspNetPager1.CurrentPageIndex = 1;
 
-            lblDateMess.Text = string.Format("项目日期：{0} 至 {1}",txtFrom.Text,txtTo.Text);
+            lblDateMess.Text = string.Format("项目日期：{0} 至 {1}", Convert.ToDateTime(txtFrom.Text).AddDays(-120).ToString("yyyy-MM-dd"),
+                Convert.ToDateTime(txtTo.Text).AddDays(-120).ToString("yyyy-MM-dd"));
 
             string selectType = "";
             foreach (ListItem item in cbKaoList.Items)

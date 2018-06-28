@@ -183,12 +183,7 @@
 
                 <table style="border: 0px; margin: 0px;">
                     <tr>
-                        <td>启用时间:
-                <asp:TextBox ID="txtStartTime" runat="server"></asp:TextBox>
-                            <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
-                            <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
-                                Format="yyyy-MM-dd" TargetControlID="txtStartTime">
-                            </cc1:CalendarExtender>
+                        <td>
                             考核帐期:<asp:DropDownList ID="ddlZhangQI" runat="server">
                                 <asp:ListItem Text="实际帐期 >帐期截止期 " Value="2"></asp:ListItem>
                                 <asp:ListItem Text="实际帐期>=帐期截止期" Value="1"></asp:ListItem>

@@ -850,9 +850,66 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
         }
 
 
-        public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao, DateTime StartTime, string compare, string fuhao_E,
+        public List<Model.JXC.KPI_SellModel> KPI_AE()
+        {
+            List<Model.JXC.KPI_SellModel> AELIST = new List<KPI_SellModel>();
+            string sql = "SELECT AE FROM CG_POOrder GROUP BY AE ORDER BY AE";
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        KPI_SellModel model = new KPI_SellModel();
+                        model.AE = dataReader["AE"].ToString();
+
+                        AELIST.Add(model);
+                    }
+                }
+            }
+            return AELIST;
+        }
+
+        public List<KPI_SellModel> Kpi_ContactList(string contactWhere)
+        {
+            List<KPI_SellModel> contactList = new List<KPI_SellModel>();
+            string sql = string.Format(" select Name,count(*) AS ContactCount,sum(case when IsNewUnit=1 then 1 else 0 end) as NewCount  from tb_BusContact {0} group by Name", contactWhere);
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        KPI_SellModel model = new KPI_SellModel();
+                        model.AE = dataReader["Name"].ToString();
+                        int ContactCount = 0;
+                        object ojb;
+                        ojb = dataReader["ContactCount"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            ContactCount = (int)ojb;
+                        }
+                        ojb = dataReader["NewCount"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.NewContractCount = (int)ojb;
+                        }
+                        model.OldContractCount = ContactCount - model.NewContractCount;
+                        contactList.Add(model);
+                    }
+                }
+            }
+            return contactList;
+        }
+
+        public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao, 
           string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere,string zhangQiWhere)
         {
+            string compare = "";
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select * from (");
@@ -878,16 +935,17 @@ left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTot
 left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse 
 left join Sell_OrderOutHouses on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO ");
 
-            if (!string.IsNullOrEmpty(compare))
-            {
-                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
-else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
-(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
- where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
- group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
-   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
-                
-            }
+//            if (!string.IsNullOrEmpty(compare))
+//            {
+//                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
+//else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
+//(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
+// where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
+// group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
+//   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, 
+//   StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+
+//            }
             strSql.Append(@" left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) as ntb2 on CG_POOrder.PONo=ntb2.PONo
 where ifzhui=0  and CG_POOrder.Status='通过' ");
 
@@ -904,11 +962,8 @@ where ifzhui=0  and CG_POOrder.Status='通过' ");
             }
 
             strSql.AppendFormat(@" ) AS TEMPTB ) as NewTB 
-LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono ) as AAAAA "+ zhangQiWhere + @") AS BBBB GROUP BY BBBB.AE  )  as SUMPO 
-LEFT JOIN
-(
-    select Name,count(*) AS ContactCount,sum(case when IsNewUnit=1 then 1 else 0 end) as NewCount  from tb_BusContact {0} group by Name
-) AS contact on contact.Name=SUMPO.AE", contactWhere);
+LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as AAAAA "+ zhangQiWhere + @") AS BBBB GROUP BY BBBB.AE  )  as SUMPO 
+", contactWhere);
             strSql.Append(" ORDER BY AE ");
             List<Model.JXC.KPI_SellModel> list = new List<KPI_SellModel>();
             using (SqlConnection conn = DBHelp.getConn())
@@ -923,18 +978,7 @@ LEFT JOIN
                         model.AE = dataReader["AE"].ToString();
 
                         object ojb;
-                        int ContactCount = 0;
-                        ojb = dataReader["ContactCount"];
-                        if (ojb != null && ojb != DBNull.Value)
-                        {
-                            ContactCount = (int)ojb;
-                        }
-                        ojb = dataReader["NewCount"];
-                        if (ojb != null && ojb != DBNull.Value)
-                        {
-                            model.NewContractCount = (int)ojb;
-                        }
-                        model.OldContractCount= ContactCount-model.NewContractCount;
+                       
                         ojb = dataReader["SumPOTotal"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -972,16 +1016,21 @@ LEFT JOIN
                                 model.KP_Percent = SellFPTotal / model.POTotal*100;
                             }
                         }
-
-                        ojb = dataReader["KouInvoTotal"];
-                        if (ojb != null && ojb != DBNull.Value)
+                        if (model.POTotal != 0)
                         {
-                            var WaiInvoTotal = (decimal)ojb;
-                            if (model.POTotal != 0)
-                            {
-                                model.DK_Percent = WaiInvoTotal / model.POTotal*100;
-                            }
+                            model.DK_Percent =model.InvoiceTotal/ model.POTotal*100;
                         }
+
+
+                        //ojb = dataReader["KouInvoTotal"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    var WaiInvoTotal =Convert.ToDecimal(ojb);
+                        //    if (model.POTotal != 0)
+                        //    {
+                        //        model.DK_Percent = WaiInvoTotal / model.POTotal*100;
+                        //    }
+                        //}
                         model.TimeOutCount=Convert.ToInt32(dataReader["PCount"]);
                         list.Add(model);
 
