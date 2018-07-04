@@ -17,6 +17,7 @@ using VAN_OA.Dal.EFrom;
 using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -114,6 +115,10 @@ namespace VAN_OA.ReportForms
             {
                 sql += string.Format(" and tb_FundsUse.state='{0}'", ddlState.Text);
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             List<tb_FundsUse> fundList = this.FundSer.GetFundList(sql);
 
             lblAllTotal.Text = fundList.Sum(t => t.AllTotal).ToString();
@@ -164,7 +169,15 @@ namespace VAN_OA.ReportForms
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!base.IsPostBack)
-            { 
+            {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)

@@ -19,6 +19,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -359,14 +367,18 @@ namespace VAN_OA.JXC
 
                 DiffDate += " or (avgLastPrice is not null and GoodNum is null)) ";
             }
-            string sql = string.Format(@"select  GoodAreaNumber,SellInNums,CG_POOrder.id,CG_POOrder.IsPoFax,CG_POOrder.POName,tb1.PONO,TB1.AE, TB1.GuestName,TB1.GoodId,TB1.GoodNo,TB1.GoodName,TB1.GoodSpec,TB1.avgSellPrice,TB1.AppName, avgLastPrice,POTotal_View.POTotal,CG_POOrder.PODate,CG_POOrder.FPTotal,hadFpTotal,RuTime,GoodSellPrice, DATEDIFF(day,ruTime,getdate()) as diffDate,outProNo,GoodNum from (
-select  GoodAreaNumber,CG_POOrder.PONo,CG_POOrder.AE,CG_POOrder.GuestName,CG_POOrders.GoodId,TB_Good.GoodNo, TB_Good.GoodName,
+            if (ddlModel.Text != "全部")
+            {
+                pono += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
+            string sql = string.Format(@"select  GoodTypeSmName,GoodAreaNumber,SellInNums,CG_POOrder.id,CG_POOrder.IsPoFax,CG_POOrder.POName,tb1.PONO,TB1.AE, TB1.GuestName,TB1.GoodId,TB1.GoodNo,TB1.GoodName,TB1.GoodSpec,TB1.avgSellPrice,TB1.AppName, avgLastPrice,POTotal_View.POTotal,CG_POOrder.PODate,CG_POOrder.FPTotal,hadFpTotal,RuTime,GoodSellPrice, DATEDIFF(day,ruTime,getdate()) as diffDate,outProNo,GoodNum from (
+select  GoodTypeSmName,GoodAreaNumber,CG_POOrder.PONo,CG_POOrder.AE,CG_POOrder.GuestName,CG_POOrders.GoodId,TB_Good.GoodNo, TB_Good.GoodName,
 TB_Good.GoodSpec,avg(SellPrice) avgSellPrice,AppName  from CG_POOrder
 left join CG_POOrders on CG_POOrder.id=CG_POOrders.id
 left join TB_Good on TB_Good.GoodId=CG_POOrders.GoodId
 where  TB_Good.GoodName is not null and Status='通过' " + pono + guestName + FPState + JiaoFu + AE + poTimeWhere + IsSpecial + isFax + isClear + @"  
 group by CG_POOrder.PONo,CG_POOrder.AE,CG_POOrder.GuestName,TB_Good.GoodNo, TB_Good.GoodName,
-TB_Good.GoodSpec,CG_POOrders.GoodId,AppName,GoodAreaNumber
+TB_Good.GoodSpec,CG_POOrders.GoodId,AppName,GoodAreaNumber,GoodTypeSmName
 )as tb1-- 项目基本信息汇总
 
 left join POTotal_View on POTotal_View.PONo=tb1.PONo--查询 项目金额和 已开发票金额

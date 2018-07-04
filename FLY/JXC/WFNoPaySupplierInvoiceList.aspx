@@ -17,6 +17,7 @@
             </td>
             <td colspan="1">
                 <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
             <td>
                 项目名称:

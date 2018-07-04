@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using VAN_OA.Dal.JXC;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -42,6 +43,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -100,6 +109,9 @@ namespace VAN_OA.JXC
             if (txtFromDate.Text != "" || txtToDate.Text != "")
             {
                 string where = "";
+
+               
+
                 if (txtFromDate.Text != "")
                 {
                     if (CommHelp.VerifesToDateTime(txtFromDate.Text) == false)
@@ -234,6 +246,10 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
             if (!string.IsNullOrEmpty(txtNameOrTypeOrSpec.Text))
             {
                 sql += string.Format(" and (GoodSpec like '%{0}%' or GoodName like '%{0}%' or GoodTypeSmName like '%{0}%')", txtNameOrTypeOrSpec.Text);
+            }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and EXISTS (select ID from CG_POOrder where Model='{0}' AND PONO=CAI_OrderOutHouse.PONO) ", ddlModel.Text);
             }
             decimal sumTotal=0;
             List<CAI_OrderOutHouse> pOOrderList = this.POSer.GetListArray(sql,out sumTotal);

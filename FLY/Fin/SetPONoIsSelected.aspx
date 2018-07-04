@@ -88,6 +88,7 @@
                     客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro" BackColor="#7FFF00"
                         DataTextField="GuestProString" Width="50px">
                     </asp:DropDownList>
+                    项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                     到款金额
                     <asp:DropDownList ID="ddlFuHao" runat="server" BackColor="#7FFF00">
                         <asp:ListItem Text=">=" Value=">="></asp:ListItem>

@@ -167,6 +167,7 @@
              <asp:DropDownList ID="ddlAE" runat="server" DataTextField="LoginName"
                     DataValueField="LoginName">
                 </asp:DropDownList>
+                 项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
             </tr>
             <tr> 

@@ -23,7 +23,13 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
-
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
                 var user = new List<Model.User>();
                 var userSer = new Dal.SysUserService();
 
@@ -140,7 +146,10 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and busType='{0}'", ddlPayType.Text);
             }
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             var list = this.electronicInvoiceSer.GetReport(sql,sumWhere);
 
             var countList = list.GroupBy(t => t.busType + t.ProNo).Where(t => t.Count() > 1);

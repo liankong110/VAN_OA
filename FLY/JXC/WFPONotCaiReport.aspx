@@ -64,6 +64,7 @@
                 &nbsp;&nbsp;&nbsp; 供应商:  <asp:TextBox ID="txtSupplier" runat="server" Width="200px"></asp:TextBox>
                   <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
                 <asp:CheckBox ID="cbZero" runat="server" Checked="true" Text="需采数量不为0" />
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
         </tr>
         <tr>

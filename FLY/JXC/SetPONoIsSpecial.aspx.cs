@@ -16,10 +16,12 @@ namespace VAN_OA.JXC
     {
 
         CG_POOrderService POSer = new CG_POOrderService();
+        TB_ModelService modelService = new TB_ModelService();
         List<FpTypeBaseInfo> gooQGooddList = new List<FpTypeBaseInfo>();
         List<TB_BasePoType> _basePoTypeList = new List<TB_BasePoType>();
+        List<TB_Model> _modelList = new List<TB_Model>();
 
-       
+
         protected string GetType(object type)
         {
             if (type.ToString() == "0")
@@ -51,6 +53,15 @@ namespace VAN_OA.JXC
         protected bool IsSpecialEdit()
         {
             if (ViewState["isSpecialEdit"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        protected bool IsModelEdit()
+        {
+            if (ViewState["isModelEdit"] != null)
             {
                 return false;
             }
@@ -108,6 +119,17 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+               
+                _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
+                this.gvModel.DataSource = modelService.GetListArray(""); ;
+                this.gvModel.DataBind();
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -125,6 +147,10 @@ namespace VAN_OA.JXC
                 if (NewShowAll_textName("项目归类", "特殊可编辑") == false)
                 {
                     ViewState["isSpecialEdit"] = false;
+                }
+                if (NewShowAll_textName("项目归类", "项目模型可编辑") == false)
+                {
+                    ViewState["isModelEdit"] = false;
                 }
                 if (NewShowAll_textName("项目归类", "项目类型可编辑") == false)
                 {
@@ -148,7 +174,7 @@ namespace VAN_OA.JXC
                     ViewState["IsJieIsSelected"] = false;
                     btnJieIsSelected.Visible = false;
                 }
-
+                
                 var user = new List<Model.User>();
                 var userSer = new Dal.SysUserService();
 
@@ -232,6 +258,9 @@ namespace VAN_OA.JXC
 
             _basePoTypeList = new TB_BasePoTypeService().GetListArray("");
             _basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });
+
+            _modelList = modelService.GetListArray("");
+            _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "" });
 
             var fpTypeBaseInfoService = new FpTypeBaseInfoService();
             gooQGooddList = fpTypeBaseInfoService.GetListArray("");
@@ -341,7 +370,11 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and POType=" + ddlPOTyle.Text);
             }
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'" ,ddlModel.Text);
+            }
+            
             if (!string.IsNullOrEmpty(txtPoTotal.Text))
             {
                 if (CommHelp.VerifesToNum(txtPoTotal.Text) == false)
@@ -480,6 +513,27 @@ namespace VAN_OA.JXC
                     if (hidPOTypetxt != "-1")
                     {
                         dllPOType.SelectedIndex = _basePoTypeList.FindIndex(t => t.Id.ToString() == hidPOTypetxt);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+                try
+                {
+                    DropDownList ddlModel = (DropDownList)e.Row.FindControl("ddlModel");
+                    ddlModel.DataSource = _modelList;
+                    ddlModel.DataBind();
+                    ddlModel.DataTextField = "ModelName";
+                    ddlModel.DataValueField = "ModelName";
+
+                    var hidModeltxt = ((HiddenField)e.Row.FindControl("hidModeltxt")).Value;
+                    if (hidModeltxt != "-1")
+                    {
+                        ddlModel.SelectedIndex = _modelList.FindIndex(t => t.ModelName== hidModeltxt);
                     }
 
                 }
@@ -631,6 +685,28 @@ SELECT @AllCount;", lblIds.Text);
                 //    var sql = "update CG_POOrder set POType=2 where " + expWhere;
                 //    DBHelp.ExeCommand(sql);
                 //}
+            }
+
+            //项目模型
+            if (ViewState["isModelEdit"] == null)
+            {
+                //保存项目模型信息               
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
+
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("ddlModel"));
+                        objCommand.CommandText = string.Format("update CG_POOrder set Model='{1}' where PONO='{0}'",
+                            lblIds.Text, drp.Text);
+                        objCommand.ExecuteNonQuery();
+
+                    }
+                    conn.Close();
+                }               
             }
 
             if (ViewState["isFaxEdist"] == null)

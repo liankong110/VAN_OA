@@ -95,6 +95,8 @@
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString"  Width="50px">
                 </asp:DropDownList>
+                项目模型:
+                 <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             </td>
         </tr>
@@ -280,6 +282,7 @@
                 <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" SortExpression="INSIDE" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Status" HeaderText="状态" SortExpression="Status" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POTypeString" HeaderText="类型" SortExpression="POTypeString" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="FPTotal" HeaderText="发票" SortExpression="FPTotal" ItemStyle-HorizontalAlign="Left"
                     ItemStyle-Width="40%" ItemStyle-CssClass="item" />
             </Columns>

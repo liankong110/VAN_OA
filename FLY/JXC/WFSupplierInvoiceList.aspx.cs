@@ -45,6 +45,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
                 var dalList = dal.GetListArray("");
                 dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
@@ -189,7 +197,10 @@ select CreateName from TB_SupplierInvoice) AS TB WHERE CreateName<>'ADMIN' ORDER
             {
                 sql += string.Format(" and CaiBusType='{0}'", ddlBusType.SelectedValue);
             }
-
+            if (ddlModel.Text != "全部")
+            { 
+                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and Model='{0}' and CG_POOrder.PONO=TB.PONO ) ", ddlModel.Text);
+            }
             if (ddlIsSpecial.Text != "-1")
             {
                 sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and IsSpecial={0} and CG_POOrder.PONO=TB.PONO ) ", ddlIsSpecial.Text);

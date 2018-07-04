@@ -17,6 +17,7 @@ using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.EFrom;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -138,6 +139,10 @@ namespace VAN_OA.ReportForms
             {
                 sql += " and CG_POOrder.GuestPro=" + ddlGuestProList.Text;
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             if (ddlJieIsSelected.Text != "-1")
             {
                 sql += " and JieIsSelected=" + ddlJieIsSelected.Text;
@@ -216,6 +221,15 @@ select pro_Id from A_ProInfo where pro_Type='用车明细表') and state='通过
         {
             if (!base.IsPostBack)
             {
+
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 DataTable carInfos = DBHelp.getDataTable("select ''as CarNO union select CarNO from TB_CarInfo");
                 ddlCarNo.DataSource = carInfos;
                 ddlCarNo.DataBind();

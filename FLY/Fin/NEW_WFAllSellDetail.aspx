@@ -157,7 +157,7 @@
                         </td>
                         <td> 激励客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString"  Width="50px">
-                </asp:DropDownList></td>
+                </asp:DropDownList>项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList></td>
                     </tr>
                 </table>
             </td>

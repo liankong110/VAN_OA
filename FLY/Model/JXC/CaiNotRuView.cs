@@ -203,6 +203,6 @@ namespace VAN_OA.Model.JXC
 
         public decimal SupplierInvoiceTotal { get { return SupplierInvoicePrice *(CaiGoodSum); } }
 
-       
+        public string GoodTypeSmName { get; internal set; }
     }
 }

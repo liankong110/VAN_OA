@@ -16,7 +16,7 @@
                 项目编号:
             </td>
             <td>
-                <asp:TextBox ID="txtPONo" runat="server" Width="200px"></asp:TextBox>
+                <asp:TextBox ID="txtPONo" runat="server" Width="200px"></asp:TextBox>项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
             <td>
                 客户名称:
@@ -206,7 +206,8 @@
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="GoodNo" HeaderText="商品编码" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" />
             <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left"
+                <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-HorizontalAlign="Left" />
+            <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="10%"
                 DataFormatString="{0:n2}" />
             <asp:BoundField DataField="Num" HeaderText="已采数量" SortExpression="Num" ItemStyle-HorizontalAlign="Right"
                 DataFormatString="{0:n2}" />

@@ -23,6 +23,14 @@ namespace VAN_OA.ReportForms
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -243,6 +251,10 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
             if (ddlIsSpecial.Text != "-1")
             {
                 sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and IsSpecial={0} and CG_POOrder.PONO=vAllCaiOrderList.PONO ) ", ddlIsSpecial.Text);
+            }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and  Model='{0}' and CG_POOrder.PONO=vAllCaiOrderList.PONO ) ", ddlModel.Text);                 
             }
             return sql;
         }

@@ -96,7 +96,10 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
             }
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             if (ddlNoSpecial.Text != "-1")
             {
                 sql += string.Format(" and IsSpecial=" + ddlNoSpecial.Text);
@@ -481,7 +484,13 @@ namespace VAN_OA.JXC
         {
             if (!base.IsPostBack)
             {
-
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
 
                 List<TB_BasePoType> basePoTypeList = new TB_BasePoTypeService().GetListArray("");
                 basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });

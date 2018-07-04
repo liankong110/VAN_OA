@@ -49,6 +49,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -199,7 +207,10 @@ namespace VAN_OA.JXC
             {
                 poWhere +=" and POType="+ddlPOTyle.Text;
             }
-
+            if (ddlModel.Text != "全部")
+            {
+                poWhere += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             if (ddlUser.Text == "-1")//显示所有用户
             {
                 //if (cbIsSpecial.Checked)

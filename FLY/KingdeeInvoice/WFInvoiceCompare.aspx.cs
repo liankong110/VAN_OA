@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using VAN_OA.Dal.KingdeeInvoice;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.KingdeeInvoice
 {
@@ -26,6 +27,15 @@ namespace VAN_OA.KingdeeInvoice
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -162,7 +172,7 @@ namespace VAN_OA.KingdeeInvoice
                 string param = "CG_POOrder.Status='通过'";
                 string temp = "";
                 if (ddlClose.Text != "-1" || ddlIsSelect.Text != "-1" || ddlHanShui.Text != "-1" || cbIsSpecial.Checked || cbJiaoFu.Checked || ddlUser.Text != "-1"
-                    || txtPOFrom.Text != "" || txtPOTo.Text != "" || txtPONo.Text != "" || ddlCompany.Text != "-1")
+                    || txtPOFrom.Text != "" || txtPOTo.Text != "" || txtPONo.Text != "" || ddlCompany.Text != "-1"|| ddlModel.Text != "全部")
                 {
 
                     if (ddlClose.Text != "-1")
@@ -176,6 +186,10 @@ namespace VAN_OA.KingdeeInvoice
                     if (ddlHanShui.Text != "-1")
                     {
                         param += string.Format(" and IsPoFax={0}", ddlHanShui.Text);
+                    }
+                    if (ddlModel.Text != "全部")
+                    {
+                        param += string.Format(" and Model='{0}'", ddlModel.Text);
                     }
                     if (cbIsSpecial.Checked)
                     {

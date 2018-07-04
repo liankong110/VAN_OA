@@ -155,5 +155,6 @@ namespace VAN_OA.Model.JXC
 
         public string Supplier { get; set; }
         public string POName { get; internal set; }
+        public string GoodTypeSmName { get; internal set; }
     }
 }

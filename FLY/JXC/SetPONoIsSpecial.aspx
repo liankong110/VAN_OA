@@ -131,8 +131,8 @@
                 </asp:DropDownList>
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString"  Width="50px">
-                </asp:DropDownList>
-
+                </asp:DropDownList>项目模型:
+                 <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 <br />
                 注：项目金额=0，项目净利=0 ，项目的特殊属性自动在关闭按钮中添加
             </td>
@@ -304,6 +304,15 @@
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="项目模型">
+                <ItemTemplate>
+                    <asp:HiddenField runat="server" ID="hidModeltxt" Value='<%#Eval("Model")%>' />                    
+
+                    <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName"  Enabled="<%# IsModelEdit() %>" runat="server"></asp:DropDownList>
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+            </asp:TemplateField>
+
             <asp:TemplateField HeaderText="项目类别">
                 <ItemTemplate>
                     <asp:HiddenField runat="server" ID="hidPOTypetxt" Value='<%#Eval("POType")%>' />
@@ -330,4 +339,22 @@
         PageSize="10" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
         NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
     </webdiyer:AspNetPager>
+
+    项目模型说明： 
+       <asp:GridView ID="gvModel" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
+           ShowFooter="false" Width="100%" AutoGenerateColumns="False"
+           ShowHeader="false"
+           Style="border-collapse: collapse;">
+           <Columns>
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+           </Columns>
+           <PagerStyle HorizontalAlign="Center" />
+           <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
+           <HeaderStyle CssClass="GV_header" BackColor="#336699" Height="24px" ForeColor="White"
+               HorizontalAlign="Center" />
+           <AlternatingRowStyle CssClass="InfoDetail2" BackColor="#FBFBFB" />
+           <RowStyle CssClass="InfoDetail1" />
+           <FooterStyle BackColor="#D7E8FF" />
+       </asp:GridView>
 </asp:Content>

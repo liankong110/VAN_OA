@@ -10,7 +10,7 @@ using VAN_OA.Dal.JXC;
 using System.Data;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
-
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -21,6 +21,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -81,6 +89,7 @@ namespace VAN_OA.JXC
                         this.gvMain.DataBind();
                     }
                 }
+              
             }
         }
         #region 入库后付款
@@ -200,6 +209,10 @@ namespace VAN_OA.JXC
             else
             {
                 sql += " and  IsHanShui is not null ";               
+            }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
             }
             List<SupplierToInvoiceView> pOOrderList = supplierToInvoiceSer.GetSupplierInvoiceListToNoPay(sql);
             lblActPayTotal.Text = pOOrderList.Sum(t => t.ActPay).ToString();

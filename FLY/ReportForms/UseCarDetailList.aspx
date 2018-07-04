@@ -128,7 +128,9 @@
                             </asp:DropDownList>
                             客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                                 DataTextField="GuestProString" Width="50px">
-                            </asp:DropDownList></td>
+                            </asp:DropDownList>
+                            项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                        </td>
                         <td>
                             <div align="right">
                                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;

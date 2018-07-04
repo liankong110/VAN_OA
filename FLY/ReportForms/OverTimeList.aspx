@@ -56,7 +56,7 @@
                 项目单号：
             </td>
             <td>
-                <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                
             </td>
              <td>

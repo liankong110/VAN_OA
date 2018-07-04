@@ -9,6 +9,7 @@ using VAN_OA.Model.JXC;
 using VAN_OA.Model;
 using System.Text;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -20,6 +21,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
                 var dalList = dal.GetListArray("");
                 dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
@@ -188,7 +197,7 @@ namespace VAN_OA.JXC
                 company = string.Format("and AE IN(select loginName from tb_User where {0})", where1);
             }
             string poNoSql = "";
-            if (ddlGuestTypeList.SelectedValue != "全部"|| ddlIsSpecial.Text != "-1")
+            if (ddlGuestTypeList.SelectedValue != "全部"|| ddlIsSpecial.Text != "-1"|| ddlModel.Text != "全部")
             {
                 poNoSql = " and exists (select id from CG_POOrder where CG_POOrder.pono=NoSellAndCaiGoods.PONO AND IFZhui=0 ";
                 if (ddlGuestTypeList.SelectedValue != "全部")
@@ -198,6 +207,10 @@ namespace VAN_OA.JXC
                 if (ddlIsSpecial.Text != "-1")
                 {
                     poNoSql += string.Format(" and IsSpecial={0} ", ddlIsSpecial.Text);
+                }
+                if (ddlModel.Text != "全部")
+                {
+                    poNoSql += string.Format(" and Model='{0}'", ddlModel.Text);
                 }
                 poNoSql += ")";
             }

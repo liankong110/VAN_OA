@@ -30,6 +30,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -216,10 +224,10 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and TopFPNo like '%{0}%'", txtOldFPNo.Text);
             }
 
-            if (ddlIsSelect.Text != "-1" && ddlIsClose.Text != "-1" && ddlJieIsSelected.Text != "-1" && ddlIsSpecial.Text != "-1")
+            if (ddlIsSelect.Text != "-1" && ddlIsClose.Text != "-1" && ddlJieIsSelected.Text != "-1" && ddlIsSpecial.Text != "-1"&&ddlModel.Text!="全部")
             {
-                sql += string.Format(" and exists(select id from CG_POOrder where Status='通过' and IsClose={0} and IsSelected={1} and JieIsSelected={2} and IsSpecial={3} and CG_POOrder.PONO=Sell_OrderFP.PONO ) ", ddlIsClose.Text, ddlIsSelect.Text, ddlJieIsSelected.Text,
-                    ddlIsSpecial.Text);
+                sql += string.Format(" and exists(select id from CG_POOrder where Status='通过' and IsClose={0} and IsSelected={1} and JieIsSelected={2} and IsSpecial={3} and model={4} and CG_POOrder.PONO=Sell_OrderFP.PONO ) ", ddlIsClose.Text, ddlIsSelect.Text, ddlJieIsSelected.Text,
+                    ddlIsSpecial.Text,ddlModel.Text);
             }
             else
             {
@@ -238,6 +246,10 @@ namespace VAN_OA.JXC
                 if (ddlIsSpecial.Text != "-1")
                 {
                     sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and IsSpecial={0} and CG_POOrder.PONO=Sell_OrderFP.PONO ) ", ddlIsSpecial.Text);
+                }
+                if (ddlModel.Text != "全部")
+                {
+                    sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and model='{0}' and CG_POOrder.PONO=Sell_OrderFP.PONO ) ", ddlModel.Text);
                 }
             }
             if (ddlUser.Text != "-1")

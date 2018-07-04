@@ -130,6 +130,7 @@
             </td>
             <td>
                 <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="350px"></asp:TextBox>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
 
             </td>
         </tr>

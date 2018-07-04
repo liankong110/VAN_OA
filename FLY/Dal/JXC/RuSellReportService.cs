@@ -84,7 +84,7 @@ left join  CAI_POCai on CAI_POOrder.id=CAI_POCai.id where  Status='通过' and p
             //where tb2.PONo is not null ", userId == "" ? "" : string.Format(" and AppName={0}", userId), goodNoWhere,
             //                           guestWhere, ruTimeWhere, poTimeWhere, ponoWhere);
             strSql.AppendFormat(@"select GoodAreaNumber,IsHanShui,PONo,AE,GuestName,NoSellOutGoods_1.GooId,GoodNo,GoodName,GoodSpec,
-GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,ruChuNum
+GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,ruChuNum,GoodTypeSmName
 from 
 [NoSellOutGoods_1]
 left join TB_Good on TB_Good.GoodId=NoSellOutGoods_1.GooId
@@ -121,6 +121,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
         {
             RuSellReport model = new RuSellReport();
             object ojb;
+            model.GoodTypeSmName = dataReader["GoodTypeSmName"].ToString();
             model.PONo = dataReader["PONo"].ToString();
             model.AE = dataReader["AE"].ToString();
             model.GuestName = dataReader["GuestName"].ToString();
@@ -198,7 +199,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
             StringBuilder strSql = new StringBuilder();
 
             strSql.AppendFormat(@"select GoodAreaNumber,caiAvgPrice,hanShui,allCaiNum,kuCaiNum,waiCaiNum,PONo,AE,GuestName,[NoSellAndCaiGoods].GoodId,GoodNo,GoodName,GoodSpec,
-GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum,POName
+GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum,POName,GoodTypeSmName
 from 
 NoSellAndCaiGoods
 left join TB_Good on TB_Good.GoodId=[NoSellAndCaiGoods].GoodId
@@ -249,6 +250,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
         {
             NoSellAndCaiGoods model = new NoSellAndCaiGoods();
             object ojb;
+            model.GoodTypeSmName= dataReader["GoodTypeSmName"].ToString();
             model.PONo = dataReader["PONo"].ToString();
             model.POName= dataReader["POName"].ToString();
             model.AE = dataReader["AE"].ToString();
@@ -392,11 +394,11 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
 
 
 
-        public Hashtable getHT(string AE, string poNo, string company,string special)
+        public Hashtable getHT(string AE, string poNo, string company,string special,string modelwhere)
         {
             Hashtable hs = new Hashtable();
             var sql = string.Format("select NoSellAndCaiGoods.PONo,allCaiNum,kuCaiNum,waiCaiNum,NoSellAndCaiGoods.AE,LastNum,outNum,sellTuiNum,caiTuiNum from NoSellAndCaiGoods ");
-            if (special != "-1")
+            if (special != "-1"|| modelwhere != "全部")
             {
                 sql += "left join CG_POOrder on CG_POOrder.PONo=NoSellAndCaiGoods.PONo and CG_POOrder.IFZhui=0";
             }
@@ -410,6 +412,10 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
             if (special != "-1")
             {
                 sql += string.Format(" and CG_POOrder.IsSpecial="+special);
+            }
+            if (modelwhere != "全部")
+            {
+                sql += string.Format(" and CG_POOrder.Model='{0}'", modelwhere);
             }
             sql += " order by NoSellAndCaiGoods.PONo";
             using (SqlConnection conn = DBHelp.getConn())

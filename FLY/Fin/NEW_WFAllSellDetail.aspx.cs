@@ -34,6 +34,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
                 var proList = guestProBaseInfodal.GetListArray("");
                 proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2 });
@@ -453,6 +461,10 @@ group by AE;
             if (ddlGuestProList.SelectedValue != "-2")
             {
                 GuestProsql = string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+            }
+            if (ddlModel.Text != "全部")
+            {
+                GuestProsql += string.Format(" and Model='{0}'", ddlModel.Text);
             }
             string newSql = string.Format(@"select AE,sum(goodSellTotal) as goodSellTotal,sum(maoliTotal) as maoliTotal,sum(InvoTotal)-sum(goodTotal) as TrueLiRun,sum(SellFPTotal) as SellFPTotal from (
 select CG_POOrder.PONo,  

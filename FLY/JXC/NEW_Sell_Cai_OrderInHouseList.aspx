@@ -102,6 +102,7 @@
                     <asp:ListItem Value="1" Text="选中"></asp:ListItem>
                     <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
                 </asp:DropDownList>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
         </tr>
         <tr>

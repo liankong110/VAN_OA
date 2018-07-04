@@ -72,6 +72,7 @@ namespace VAN_OA.Dal.JXC
         {
             SellFPReport model = new SellFPReport();
             object ojb;
+            model.GoodTypeSmName = dataReader["GoodTypeSmName"].ToString();
             model.PONo = dataReader["PONo"].ToString();
             model.AE = dataReader["AE"].ToString();
             model.GuestName = dataReader["GuestName"].ToString();

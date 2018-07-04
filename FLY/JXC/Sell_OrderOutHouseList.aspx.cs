@@ -16,6 +16,7 @@ using VAN_OA.Dal.JXC;
 using Microsoft.Office.Interop.Excel;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -29,6 +30,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -219,6 +228,10 @@ namespace VAN_OA.JXC
             if (ddlJieIsSelected.Text != "-1")
             {
                 ponoSql += string.Format(" and CG_POOrder.JieIsSelected={0} ", ddlJieIsSelected.Text);
+            }
+            if (ddlModel.Text != "全部")
+            {
+                ponoSql += string.Format(" and CG_POOrder.Model='{0}'", ddlModel.Text);
             }
             if (ddlIsSpecial.Text != "-1")
             {

@@ -17,6 +17,7 @@ using VAN_OA.Dal.EFrom;
 using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -155,6 +156,11 @@ or [RepastRemark] like '%{0}%' or [HotelRemark] like '%{0}%' or [OilRemark] like
 or [PostRemark] like '%{0}%' or Tb_DispatchList.[PoRemark] like '%{0}%' or [OtherRemark] like '%{0}%' or [PostNo] like '%{0}%'
 or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like '%{0}%' or [Post_No] like '%{0}%')", txtKeyWords.Text);
             }
+
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             List<Tb_DispatchList> dispatchList = this.dispatchSer.GetListArrayReport(sql);
 
             lblTotal.Text = dispatchList.Sum(t => t.Total).ToString();
@@ -204,7 +210,15 @@ or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!base.IsPostBack)
-            { 
+            {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)

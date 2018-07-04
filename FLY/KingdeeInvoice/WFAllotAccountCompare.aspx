@@ -110,6 +110,7 @@
                     <asp:ListItem Value="-1">全部</asp:ListItem>
                     <asp:ListItem Value="1">非真实</asp:ListItem>
                 </asp:DropDownList>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 <asp:CheckBox ID="cbIsSpecial" runat="server" Text="不含特殊" Checked="true" />
                 <asp:CheckBox ID="cbJiaoFu" runat="server" Text="已交付" />
                 <asp:CheckBox ID="cbInvoTotalToge" runat="server" Text="不匹配-发票金额合并" Checked="true" />

@@ -189,5 +189,6 @@ namespace VAN_OA.Model.JXC
         {
             get; set;
         }
+        public string GoodTypeSmName { get; internal set; }
     }
 }

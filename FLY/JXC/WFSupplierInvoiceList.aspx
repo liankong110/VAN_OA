@@ -186,6 +186,8 @@
                      <asp:ListItem Value="1" Text="含税"></asp:ListItem>
                      <asp:ListItem Value="0" Text="不含税"></asp:ListItem>
                  </asp:DropDownList>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+
                 实采采价比对：
                  <asp:DropDownList ID="ddlComparePrice" runat="server" Width="150px">
                      <asp:ListItem Value="-1" Text="全部"></asp:ListItem>

@@ -163,7 +163,7 @@
                      <asp:ListItem>&lt;&gt;</asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtOADaoKuanTotal" runat="server" Width="70px"></asp:TextBox>
-
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" Style="float: right" />
                 &nbsp;<asp:Label ID="lblQuanXian" runat="server" Text="" Visible="false"></asp:Label>
                 <asp:Label ID="lblLianJie" runat="server" Text="" Visible="false"></asp:Label>

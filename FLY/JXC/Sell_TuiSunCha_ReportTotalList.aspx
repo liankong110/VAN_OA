@@ -76,6 +76,7 @@
             </td>
             <td>
                 <asp:CheckBox ID="cbIsSpecial" runat="server" Checked="true" />
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
         </tr>
         <tr>

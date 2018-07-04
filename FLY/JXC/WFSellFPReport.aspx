@@ -141,6 +141,8 @@
                 <asp:DropDownList ID="ddlCompany" runat="server" DataTextField="ComName" DataValueField="ComSimpName"
                     Width="200PX">
                 </asp:DropDownList>项目名称： <asp:TextBox ID="txtPOName" runat="server" Width="200px"></asp:TextBox>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+
             </td>
         </tr>
         <tr>         
@@ -238,7 +240,8 @@
                 <%--<asp:BoundField DataField="GoodId" HeaderText="GoodId" SortExpression="GoodId" ItemStyle-HorizontalAlign="Center"  /> --%>
                 <asp:BoundField DataField="GoodNo" HeaderText="商品编号" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" />
                 <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" />
-                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left" />
+                    <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-HorizontalAlign="Left" />
+                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left"  ItemStyle-Width="10%"/>
                 <asp:BoundField DataField="totalNum" HeaderText="销售数量" SortExpression="totalNum"
                     ItemStyle-HorizontalAlign="Right" />
                 <asp:BoundField DataField="SellInNums" HeaderText="销退数量" SortExpression="SellInNums"

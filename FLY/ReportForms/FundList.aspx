@@ -96,6 +96,7 @@
                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="Id"
                     Width="200PX">
                 </asp:DropDownList>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
             <td>
                 请款类型

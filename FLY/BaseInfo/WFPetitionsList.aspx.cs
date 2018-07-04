@@ -169,6 +169,10 @@ namespace VAN_OA.BaseInfo
             {
                 sql += string.Format(" and IsRequire={0}", ddlIsRequire.Text);
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and EXISTS (select ID from CG_POOrder where Model='{0}' AND PONO=Petitions.PONO) ", ddlModel.Text);
+            }
             return sql;
         }
         private void Show()
@@ -299,6 +303,13 @@ namespace VAN_OA.BaseInfo
         {
             if (!base.IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
 
                 if (!NewShowAll_textName("签呈单档案管理", "编辑"))
                 {

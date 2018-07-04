@@ -132,6 +132,6 @@ namespace VAN_OA.Model.JXC
 
         public int IsHanShui { get; set; }
         public string GoodAreaNumber { get; set; }
-
+        public string GoodTypeSmName { get; internal set; }
     }
 }

@@ -156,7 +156,7 @@
                    <%-- <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
                     <asp:ListItem Value="1">零售</asp:ListItem>
                     <asp:ListItem Value="2">工程</asp:ListItem>--%>
-                </asp:DropDownList>   实际帐期:  <asp:DropDownList ID="ddlTrueZhangQI" runat="server">
+                </asp:DropDownList> 项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>  实际帐期:  <asp:DropDownList ID="ddlTrueZhangQI" runat="server">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text="<=30天" Value="1"></asp:ListItem>
                     <asp:ListItem Text="30天<实际帐期<=60天" Value="2"></asp:ListItem>

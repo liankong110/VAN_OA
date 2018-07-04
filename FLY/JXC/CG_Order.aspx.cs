@@ -342,6 +342,7 @@ namespace VAN_OA.JXC
             txtPOName.ReadOnly = true;
             ddlPOTyle.Enabled = false;
             txtPOPayStype.ReadOnly = true;
+            ddlModel.Enabled = false;
             txtPOTotal.ReadOnly = true;
             txtGuestName.ReadOnly = true;
             //txtGuestName.Enabled = false;
@@ -1947,6 +1948,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 cbIsPoFax.Enabled = true;
                 dllFPstye.Enabled = true;
                 ddlPOTyle.Enabled = true;
+                ddlModel.Enabled = true;
             }
             else if (ddlIfZhui.SelectedItem.Value == "1")
             {
@@ -1960,6 +1962,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 ddlPOTyle.Enabled = false;
                 cbIsPoFax.Enabled = false;
                 dllFPstye.Enabled = false;
+                ddlModel.Enabled = false;
             }
             txtPONo.Text = "";
             txtAE.Text = "";
@@ -1992,6 +1995,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 dllFPstye.SelectedItem.Text = model.FpType;
                 Session["Comm_CGPONo"] = null;
                 ddlPOTyle.Text = model.POType.ToString();
+                ddlModel.Text = model.Model;
                 SetColor(model.POType);
             }
         }

@@ -53,6 +53,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 var GoodUnitList = new TB_GoodService().GetAllGoodUnits();
                 ddlGoodUnit.Items.Add("全部");
                 foreach (var unit in GoodUnitList)
@@ -256,7 +264,10 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and CG_POOrder.GuestName  like '%{0}%'", txtGuestName.Text.Trim());
             }
 
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             if (CheckBox1.Checked)
             {
                 sql += string.Format(" and POStatue='{0}'", CheckBox1.Text);
@@ -386,6 +397,7 @@ namespace VAN_OA.JXC
                 }
                 sql +=goodInfo+ ")";
             }
+
             List<CG_POOrder> pOOrderList = this.POSer.GetListArray(sql);
 
             var list = orderSer.GetOrder_ToInvoice_1(string.Format(" exists(select ID from CG_POOrder where CG_POOrder.PONo=Order_ToInvoice_1.PONo and {0})", sql));

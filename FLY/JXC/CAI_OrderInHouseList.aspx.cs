@@ -16,6 +16,7 @@ using VAN_OA.Dal.JXC;
 using Microsoft.Office.Interop.Excel;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -29,6 +30,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 //加载基本信息
                 ddlNumber.Items.Add(new ListItem { Text = "全部", Value = "" });
                 ddlRow.Items.Add(new ListItem { Text = "全部", Value = "" });
@@ -225,6 +234,10 @@ namespace VAN_OA.JXC
             if (ddlIsHanShui.Text == "0")
             {
                 sql += string.Format(" and tb2.IsHanShui<>tb2.allCount");
+            }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and  Model='{0}' and CG_POOrder.PONO=CAI_OrderInHouse.PONO ) ", ddlModel.Text);
             }
             List<CAI_OrderInHouse> pOOrderList = this.POSer.GetListArray(sql);
 

@@ -932,7 +932,7 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
 
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" Order_ToInvoice_1.[POTotal] as InvoTotal,[TuiTotal],TB_BasePoType.BasePoType,POType,GuestPro,GuestType,CG_POOrder.Id,AppName,loginName,CaiGou ,cRemark,fileName,fileType,proNo,GuestId,GuestNo,CG_POOrder.GuestName,AE,INSIDE,CG_POOrder.PONo,CG_POOrder.POName,PODate,CG_POOrder.POTotal,POPayStype ,Status,IFZhui,FPTotal,POStatue,POStatue2,POStatue3,POStatue4,POStatue5,POStatue6,PORemark,IsSpecial,IsPoFax ");
+            strSql.Append(" Model,Order_ToInvoice_1.[POTotal] as InvoTotal,[TuiTotal],TB_BasePoType.BasePoType,POType,GuestPro,GuestType,CG_POOrder.Id,AppName,loginName,CaiGou ,cRemark,fileName,fileType,proNo,GuestId,GuestNo,CG_POOrder.GuestName,AE,INSIDE,CG_POOrder.PONo,CG_POOrder.POName,PODate,CG_POOrder.POTotal,POPayStype ,Status,IFZhui,FPTotal,POStatue,POStatue2,POStatue3,POStatue4,POStatue5,POStatue6,PORemark,IsSpecial,IsPoFax ");
             strSql.Append(" from CG_POOrder left join tb_User on tb_User.id=CG_POOrder.AppName left join TB_BasePoType on TB_BasePoType.id=CG_POOrder.POType ");
             strSql.Append(" left join Order_ToInvoice_1 on Order_ToInvoice_1.PONO=CG_POOrder.PONO ");
             if (strWhere.Trim() != "")
@@ -953,6 +953,7 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
                     {
                         var model = ReaderBind_1(dataReader);
                         object ojb;
+                        model.Model = dataReader["Model"].ToString();
                         ojb = dataReader["FPTotal"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -1186,7 +1187,7 @@ left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_g
         /// <returns></returns>
         public DataTable SetPoSpecial(string where)
         {
-            string sql = @"select SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected  from CG_POOrder";
+            string sql = @"select SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected,Model  from CG_POOrder";
             //sql += " , 1 as isCloseEdist,1 as isSpecialEdit, 1 as isFaxEdist, 1 as isFPTypeEdist from CG_POOrder";
             sql += " left join (select pono,isnull(sum(maoli),0) as maoliTotal from JXC_REPORT group by pono) as REPORT on REPORT.PONo=CG_POOrder.PONo";
             sql += " left join POTotal_SumView on POTotal_SumView.PONO=CG_POOrder.PONO";

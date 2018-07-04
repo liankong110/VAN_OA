@@ -6,13 +6,11 @@
     <table cellpadding="0" cellspacing="0" width="90%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">
-                邮寄文档快递表管理
+            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">邮寄文档快递表管理
             </td>
         </tr>
         <tr>
-            <td>
-                日期:
+            <td>日期:
             </td>
             <td>
                 <asp:TextBox ID="txtFrom" runat="server"></asp:TextBox>
@@ -26,62 +24,58 @@
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
             </td>
-            <td>
-                申请人
+            <td>申请人
             </td>
             <td>
                 <%--<asp:TextBox ID="txtAppName" runat="server"></asp:TextBox>--%>
-                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="LoginName"
+                <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="LoginName"
                     Width="150PX">
                 </asp:DropDownList>
             </td>
         </tr>
         <tr>
-            <td>
-                收件人:
+            <td>收件人:
             </td>
             <td>
                 <asp:TextBox ID="txtToPer" runat="server"></asp:TextBox>
             </td>
-            <td>
-                物流名称:
+            <td>物流名称:
             </td>
             <td>
                 <asp:TextBox ID="txtWuLiu" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
-            <td>
-                单据号:
+            <td>单据号:
             </td>
             <td>
                 <asp:TextBox ID="txtProNo" runat="server"></asp:TextBox>
             </td>
-            <td>
-                邮寄地址:
+            <td>邮寄地址:
             </td>
             <td>
                 <asp:TextBox ID="txtAddress" runat="server"></asp:TextBox>
             </td>
         </tr>
-        <tr> <td>
-                项目编号:
-            </td>
-            <td colspan="3">
+        <tr>
+            <td colspan="4">项目编号:           
                 <asp:TextBox ID="txtPONO" runat="server"></asp:TextBox>公司名称：<asp:DropDownList ID="ddlCompany" runat="server" DataTextField="ComName"
-                  DataValueField="ComSimpName"
-                    Width="200PX"></asp:DropDownList>
+                    DataValueField="ComSimpName"
+                    Width="200PX">
+                </asp:DropDownList>
                 AE：<asp:DropDownList ID="ddlAE" runat="server" DataTextField="LoginName" DataValueField="Id"
                     Width="200PX">
                 </asp:DropDownList>
-            
-                    <div align="right">
-                        <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
-                    </div>
-                </td>
-            </tr>
+                项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+
+                <div align="right">
+                    <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
+                </div>
+            </td>
+        </tr>
     </table>
-    <br>
+    <br />
     <asp:Label ID="lbl" runat="server" Text="总计:" ForeColor="Red"></asp:Label><asp:Label
         ID="lblTotal" runat="server" Text="0"></asp:Label>
     <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
@@ -100,52 +94,40 @@
         <EmptyDataTemplate>
             <table width="100%">
                 <tr style="height: 20px; background-color: #336699; color: White;">
-                    <td>
-                        单据号
+                    <td>单据号
                     </td>
-                    <td>
-                        申请人
+                    <td>申请人
                     </td>
-                    <td>
-                        日期
+                    <td>日期
                     </td>
-                    <td>
-                        邮寄地址
+                    <td>邮寄地址
                     </td>
-                    <td>
-                        收件人
+                    <td>收件人
                     </td>
-                    <td>
-                        电话
+                    <td>电话
                     </td>
-                    <td>
-                        物流名称
+                    <td>物流名称
                     </td>
-                    <td>
-                        物流编号
+                    <td>物流编号
                     </td>
-                    <td>
-                        寄件人
+                    <td>寄件人
                     </td>
-                    <td>
-                        金额
+                    <td>金额
                     </td>
-                    <td>
-                        备注
+                    <td>备注
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="6" align="center" style="height: 80%">
-                        ---暂无数据---
+                    <td colspan="6" align="center" style="height: 80%">---暂无数据---
                     </td>
                 </tr>
             </table>
         </EmptyDataTemplate>
         <Columns>
-        <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
-          
-              <asp:BoundField DataField="ProNo" HeaderText="单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
-              <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
+
+            <asp:BoundField DataField="ProNo" HeaderText="单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="LoginName" HeaderText="申请人" SortExpression="LoginName"
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="AppTime" HeaderText="日期" SortExpression="AppTime" ItemStyle-HorizontalAlign="Center"
@@ -177,3 +159,11 @@
         NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
     </webdiyer:AspNetPager>
 </asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="head">
+    <style type="text/css">
+        .auto-style1 {
+            height: 47px;
+        }
+    </style>
+</asp:Content>
+

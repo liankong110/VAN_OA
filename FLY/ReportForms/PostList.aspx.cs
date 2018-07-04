@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -68,7 +69,10 @@ namespace VAN_OA.ReportForms
                 string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
                 sql += string.Format(" and exists(select id from CG_POOrder where  IFZhui=0 and CG_POOrder.PONo=tb_Post.PONo and AE IN(select LOGINNAME from tb_User where {0}))", where);
             }
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and EXISTS (select ID from CG_POOrder where Model='{0}' AND PONO=tb_Post.PONO) ", ddlModel.Text);
+            }
             if (txtWuLiu.Text != "")
             {
                 sql += string.Format(" and WuliuName like '%{0}%'", txtWuLiu.Text);
@@ -164,6 +168,14 @@ namespace VAN_OA.ReportForms
         {
             if (!base.IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)

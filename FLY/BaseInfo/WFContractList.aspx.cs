@@ -157,6 +157,11 @@ namespace VAN_OA.BaseInfo
             {
                 sql += string.Format(" and Contract_IsRequire={0}", ddlContract_IsRequire.Text);
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and EXISTS (select ID from CG_POOrder where Model='{0}' AND PONO=Contract.PONO) ", ddlModel.Text);
+            }
+
             List<Contract> caiList = this.contractSer.GetListArray(sql);
             lblTotal.Text = caiList.Sum(t => t.Contract_Total).ToString();
             AspNetPager1.RecordCount = caiList.Count;
@@ -201,6 +206,13 @@ namespace VAN_OA.BaseInfo
         {
             if (!base.IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
 
                 if (!NewShowAll_textName("合同档案管理", "编辑"))
                 {

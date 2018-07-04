@@ -27,6 +27,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -197,6 +205,8 @@ namespace VAN_OA.JXC
             {
                 isColse += " and CG_POOrder.POType=" + ddlPOTyle.Text;
             }
+          
+
             if (ddlJieIsSelected.Text != "-1")
             {
                 isColse += " and JieIsSelected=" + ddlJieIsSelected.Text;
@@ -210,7 +220,10 @@ namespace VAN_OA.JXC
             //{
             //    sql += string.Format(" and EXISTS (select id from TB_GuestTrack where MyGuestType='{0}' and TB_GuestTrack.id=CG_POOrder.GuestId )",ddlGuestTypeList.SelectedValue);
             //}
-
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
             if (ddlGuestTypeList.SelectedValue != "全部")
             {
                 sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);

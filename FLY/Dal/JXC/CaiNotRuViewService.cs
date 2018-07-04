@@ -15,7 +15,7 @@ namespace VAN_OA.Dal.JXC
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select SupplierInvoicePrice,GoodAreaNumber,IsHanShui,ProNo,PONo,POName,PODate,POTotal,GuestName,AE,GoodNo,GoodName,GoodSpec,Num,totalOrderNum,lastSupplier,lastPrice,POGoodSum,MinInHouseDate,InHouseSum,CaiGoodSum,GoodNum,GoodAvgPrice ");
+            strSql.Append("select GoodTypeSmName,SupplierInvoicePrice,GoodAreaNumber,IsHanShui,ProNo,PONo,POName,PODate,POTotal,GuestName,AE,GoodNo,GoodName,GoodSpec,Num,totalOrderNum,lastSupplier,lastPrice,POGoodSum,MinInHouseDate,InHouseSum,CaiGoodSum,GoodNum,GoodAvgPrice ");
             strSql.Append(" FROM CaiNotRuView ");
             if (strWhere.Trim() != "")
             {
@@ -53,6 +53,7 @@ namespace VAN_OA.Dal.JXC
         {
             CaiNotRuView model = new CaiNotRuView();
             object ojb;
+            model.GoodTypeSmName = dataReader["GoodTypeSmName"].ToString();
             model.ProNo = dataReader["ProNo"].ToString();
             model.PONo = dataReader["PONo"].ToString();
             model.POName = dataReader["POName"].ToString();

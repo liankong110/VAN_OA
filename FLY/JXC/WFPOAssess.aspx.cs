@@ -14,6 +14,8 @@ using VAN_OA.Dal.JXC;
 using System.Collections;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Dal.KingdeeInvoice;
+using VAN_OA.Model.BaseInfo;
+
 namespace VAN_OA.JXC
 {
     public partial class WFPOAssess : BasePage
@@ -27,6 +29,14 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();
+                var _modelList = modelService.GetListArray("");
+                _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
+                ddlModel.DataSource = _modelList;
+                ddlModel.DataBind();
+                ddlModel.DataTextField = "ModelName";
+                ddlModel.DataValueField = "ModelName";
+
                 TB_CompanyService comSer = new TB_CompanyService();
                 var comList = comSer.GetListArray("");
                 foreach (var m in comList)
@@ -118,14 +128,16 @@ namespace VAN_OA.JXC
                 }
             }
 
+            
+
             ds = DBHelp.getDataSet(GetSql(ddlUser.Text,ddlUser.SelectedItem.Text).ToString());
             if (ddlUser.Text == "-1")
             {
-                noSellAndCaiGoodsList = new RuSellReportService().getHT("",txtPONo.Text.Trim(),ddlCompany.Text,ddlSpecial.Text);
+                noSellAndCaiGoodsList = new RuSellReportService().getHT("",txtPONo.Text.Trim(),ddlCompany.Text,ddlSpecial.Text,ddlModel.Text);
             }
             else
             {
-                noSellAndCaiGoodsList = new RuSellReportService().getHT(ddlUser.SelectedItem.Text, txtPONo.Text.Trim(), ddlCompany.Text, ddlSpecial.Text);
+                noSellAndCaiGoodsList = new RuSellReportService().getHT(ddlUser.SelectedItem.Text, txtPONo.Text.Trim(), ddlCompany.Text, ddlSpecial.Text, ddlModel.Text);
             }
             resut_SellGoodsList = new Model.HashTableModel().HashTableToList(noSellAndCaiGoodsList);
             resut_SellGoodsList.Sort();
@@ -215,6 +227,11 @@ and IsHanShui=1 and SupplierFPNo=''  ";
             {
                 sql += string.Format(" and CG_POOrder.IsSpecial = {0} ", ddlSpecial.Text);
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and CG_POOrder.Model ='{0}' ", ddlModel.Text);
+            }
+
             if (txtYFWDUnit.Text.Trim() != "")
             {
                 sql += string.Format(" and TB_SupplierInvoice.lastSupplier like '%{0}%' ", txtYFWDUnit.Text.Trim());
@@ -273,7 +290,10 @@ and IsHanShui=1 and SupplierFPNo=''  ";
             {
                 specialSql = " and IsSpecial="+ ddlSpecial.Text;
             }
-          
+            if (ddlModel.Text != "全部")
+            {
+                specialSql += string.Format(" and Model ='{0}' ", ddlModel.Text);
+            }
             string sql= string.Format(@"select * from (
 --1.   到款金额>项目金额  ；.不含特殊勾上 ；到款金额合并 勾上 ；.发票状态：所有  查询出来的项目 ------第一个画面
 select newtable1.PONo,CG_POOrder.AE,5 as T
@@ -346,6 +366,10 @@ WHERE Sell_OrderFP.FPNo=TB.FPNo )
             {
                 sql += string.Format(" and exists(select c.id from CG_POOrder c where c.IFZhui=0 and c.PONo=tb.PONo and IsSpecial={0})", ddlSpecial.Text);
             }
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and exists(select c.id from CG_POOrder c where c.IFZhui=0 and c.PONo=tb.PONo and Model='{0}')", ddlModel.Text);               
+            }
             if (!string.IsNullOrEmpty(pono))
             {
                 sql += string.Format(" and pono like '%{0}%'",pono);
@@ -374,16 +398,29 @@ WHERE Sell_OrderFP.FPNo=TB.FPNo )
             {
                 special = "IsSpecial=" + ddlSpecial.Text;
             }
+            if (ddlModel.Text != "全部")
+            {
+                special += string.Format(" and Model ='{0}' ", ddlModel.Text);
+            }
+
             string t1 = "where 1=1 ";
             if (ddlSpecial.Text != "-1")
             {
                 t1 = "where IsSpecial=" + ddlSpecial.Text;
+            }
+            if (ddlModel.Text != "全部")
+            {
+                t1 += string.Format(" and Model ='{0}' ", ddlModel.Text);
             }
             string t2 = "where 1=1 ";
            
             if (ddlSpecial.Text != "-1")
             {
                 t2 = "where IsSpecial=" + ddlSpecial.Text;
+            }
+            if (ddlModel.Text != "全部")
+            {
+                t2 += string.Format(" and Model ='{0}' ", ddlModel.Text);
             }
             //string t3 = "";
             string t4 = "";
@@ -392,6 +429,10 @@ WHERE Sell_OrderFP.FPNo=TB.FPNo )
             if (ddlSpecial.Text != "-1")
             {
                 t5 = "where IsSpecial=" + ddlSpecial.Text;
+            }
+            if (ddlModel.Text != "全部")
+            {
+                t5 += string.Format(" and Model ='{0}' ", ddlModel.Text);
             }
             string t6 = "";
             string t7 = "";
@@ -651,11 +692,11 @@ where getdate()>=dateadd(day,sumJieSuan-30 ,minOutTime) and ISNULL(Total,0) <new
             txtPONo.Text = txtPONo.Text.Trim();
             if (ddlUser.Text == "-1")
             {
-                noSellAndCaiGoodsList = new RuSellReportService().getHT("", txtPONo.Text,ddlCompany.Text,ddlSpecial.Text);
+                noSellAndCaiGoodsList = new RuSellReportService().getHT("", txtPONo.Text,ddlCompany.Text,ddlSpecial.Text, ddlModel.Text);
             }
             else
             {
-                noSellAndCaiGoodsList = new RuSellReportService().getHT(ddlUser.SelectedItem.Text, txtPONo.Text, ddlCompany.Text, ddlSpecial.Text);
+                noSellAndCaiGoodsList = new RuSellReportService().getHT(ddlUser.SelectedItem.Text, txtPONo.Text, ddlCompany.Text, ddlSpecial.Text, ddlModel.Text);
             }
 
             var sellGoodsList = new Model.HashTableModel().HashTableToList(noSellAndCaiGoodsList);

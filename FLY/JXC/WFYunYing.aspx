@@ -175,6 +175,7 @@
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString" Style="left: 0px;">
                 </asp:DropDownList>
+                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <br />
                 <div style="display: inline">
