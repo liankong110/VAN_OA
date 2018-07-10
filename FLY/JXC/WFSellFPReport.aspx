@@ -229,8 +229,8 @@
                 </table>
             </EmptyDataTemplate>
             <Columns>
-                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left"
-                    ItemStyle-Width="5%" />
+                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="70px"
+                     />
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Left"
                     ItemStyle-Width="5%" />
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Left" />
@@ -238,8 +238,8 @@
                     ItemStyle-Width="5%" ItemStyle-HorizontalAlign="Left" />
                     <asp:BoundField DataField="GoodAreaNumber" HeaderText="仓位" SortExpression="GoodAreaNumber" ItemStyle-HorizontalAlign="Center" />
                 <%--<asp:BoundField DataField="GoodId" HeaderText="GoodId" SortExpression="GoodId" ItemStyle-HorizontalAlign="Center"  /> --%>
-                <asp:BoundField DataField="GoodNo" HeaderText="商品编号" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" />
-                <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" />
+                <asp:BoundField DataField="GoodNo" HeaderText="商品编号" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="30"/>
+                <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="5%"/>
                     <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-HorizontalAlign="Left" />
                 <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left"  ItemStyle-Width="10%"/>
                 <asp:BoundField DataField="totalNum" HeaderText="销售数量" SortExpression="totalNum"

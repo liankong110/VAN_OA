@@ -853,7 +853,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
         public List<Model.JXC.KPI_SellModel> KPI_AE()
         {
             List<Model.JXC.KPI_SellModel> AELIST = new List<KPI_SellModel>();
-            string sql = "SELECT AE FROM CG_POOrder GROUP BY AE ORDER BY AE";
+            string sql = "SELECT AE FROM CG_POOrder where AE IN (select loginName from tb_User where loginStatus='在职') GROUP BY AE ORDER BY AE";
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();

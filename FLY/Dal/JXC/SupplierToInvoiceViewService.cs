@@ -990,7 +990,7 @@ CAI_OrderInHouse.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum
 SupplierInvoiceNum,SupplierInvoicePrice,SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierInvoice.CreteTime,IsYuFu,SupplierProNo,IsPayStatus as PayStatus,ActPay,FuShuTotal
  ,CG_POOrder.AE,CG_POOrder.GuestName,RePayClear,CAI_POCai.CaiFpType,CAI_POCai.IsHanShui,
  IsHeBing,TB_SupplierInvoice.CreteTime AS T,SumActPay
-  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro  from 
+  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro,TB_SupplierInfo.Peculiarity   from 
  TB_TempSupplierInvoice  
  left join TB_SupplierInvoices  ON TB_SupplierInvoices.Ids=TB_TempSupplierInvoice.SupplierInvoiceIds     
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_TempSupplierInvoice.SupplierInvoiceId
@@ -1004,6 +1004,7 @@ left join CG_POOrder on CG_POOrder.PONO=CAI_OrderInHouse.PONO and CG_POOrder.Sta
 left join CAI_OrderChecks on CAI_OrderChecks.Ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
 left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
+left join  TB_SupplierInfo on CAI_OrderInHouse.Supplier=TB_SupplierInfo.SupplieSimpeName and TB_SupplierInfo.Status='通过'
 where SupplierAdvanceId=0
 union all
 select BusType as CaiBusType,SupplierAdvanceId,TB_SupplierAdvancePayment.CreateName, '预' as busType,
@@ -1015,7 +1016,7 @@ CAI_OrderInHouse.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum
 SupplierInvoiceNum,SupplierInvoicePrice,SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierAdvancePayment.CreteTime,IsYuFu,SupplierProNo,IsPayStatus as PayStatus,ActPay,FuShuTotal
  ,CG_POOrder.AE,CG_POOrder.GuestName,RePayClear,CAI_POCai.CaiFpType,CAI_POCai.IsHanShui,
  IsHeBing,TB_SupplierAdvancePayment.CreteTime AS T,SumActPay 
-  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro from 
+  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro ,TB_SupplierInfo.Peculiarity from 
  TB_TempSupplierInvoice  
  left join TB_SupplierInvoices  ON TB_SupplierInvoices.Ids=TB_TempSupplierInvoice.SupplierInvoiceIds 
 left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_TempSupplierInvoice.SupplierAdvanceId
@@ -1029,6 +1030,7 @@ left join CG_POOrder on CG_POOrder.PONO=CAI_OrderInHouse.PONO and CG_POOrder.Sta
 left join CAI_OrderChecks on CAI_OrderChecks.Ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
 left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
+left join  TB_SupplierInfo on CAI_OrderInHouse.Supplier=TB_SupplierInfo.SupplieSimpeName and TB_SupplierInfo.Status='通过'
 where SupplierInvoiceId=0
 ) as TB");
             }
@@ -1039,7 +1041,7 @@ select BusType as CaiBusType,TB_SupplierInvoice.CreateName,'支' as busType,TB_S
 CAI_OrderInHouse.ProNo,'' as CaiProNo,RuTime,CAI_OrderInHouse.Supplier,houseName,CAI_OrderInHouse.PONo,CAI_OrderInHouse.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum,supplierTuiGoodNum
 ,GoodPrice,TB_SupplierInvoice.CreateName as DoPer,SupplierFPNo,ChcekProNo,TB_SupplierInvoice.Status,SupplierInvoiceNum,SupplierInvoicePrice,SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierInvoice.CreteTime,IsYuFu,SupplierProNo,IsPayStatus as PayStatus,ActPay,FuShuTotal
  ,CG_POOrder.AE,CG_POOrder.GuestName,RePayClear,CAI_POCai.CaiFpType,CAI_POCai.IsHanShui,IsHeBing,TB_SupplierInvoice.CreteTime AS T,SumActPay 
-  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro  from  TB_SupplierInvoices  
+  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro ,TB_SupplierInfo.Peculiarity  from  TB_SupplierInvoices  
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses  on  TB_SupplierInvoices.RuIds= CAI_OrderInHouses.Ids 
 left join CAI_OrderInHouse  on CAI_OrderInHouses.id=CAI_OrderInHouse.id 
@@ -1051,6 +1053,7 @@ left join CG_POOrder on CG_POOrder.PONO=CAI_OrderInHouse.PONO and CG_POOrder.Sta
 left join CAI_OrderChecks on CAI_OrderChecks.Ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
 left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
+left join  TB_SupplierInfo on CAI_OrderInHouse.Supplier=TB_SupplierInfo.SupplieSimpeName and TB_SupplierInfo.Status='通过'
 ) as TB");
             }
             else
@@ -1060,7 +1063,7 @@ select BusType as CaiBusType,TB_SupplierInvoice.CreateName,'支' as busType,TB_S
 CAI_OrderInHouse.ProNo,'' as CaiProNo,RuTime,CAI_OrderInHouse.Supplier,houseName,CAI_OrderInHouse.PONo,CAI_OrderInHouse.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum,supplierTuiGoodNum
 ,GoodPrice,TB_SupplierInvoice.CreateName as DoPer,SupplierFPNo,ChcekProNo,TB_SupplierInvoice.Status,SupplierInvoiceNum,SupplierInvoicePrice,SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierInvoice.CreteTime,IsYuFu,SupplierProNo,IsPayStatus as PayStatus,ActPay,FuShuTotal
  ,CG_POOrder.AE,CG_POOrder.GuestName,RePayClear,CAI_POCai.CaiFpType,CAI_POCai.IsHanShui,IsHeBing,TB_SupplierInvoice.CreteTime AS T,SumActPay 
-  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro  from  TB_SupplierInvoices  
+  ,CAI_OrderInHouses.CaiLastTruePrice as LastPay,GuestType,GuestPro,TB_SupplierInfo.Peculiarity   from  TB_SupplierInvoices  
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses  on  TB_SupplierInvoices.RuIds= CAI_OrderInHouses.Ids 
 left join CAI_OrderInHouse  on CAI_OrderInHouses.id=CAI_OrderInHouse.id 
@@ -1072,18 +1075,20 @@ left join CG_POOrder on CG_POOrder.PONO=CAI_OrderInHouse.PONO and CG_POOrder.Sta
 left join CAI_OrderChecks on CAI_OrderChecks.Ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
 left join CAI_POOrder on CAI_POOrder.Id=CAI_POCai.Id
+left join  TB_SupplierInfo on CAI_OrderInHouse.Supplier=TB_SupplierInfo.SupplieSimpeName and TB_SupplierInfo.Status='通过'
 union all
 select BusType as CaiBusType,TB_SupplierAdvancePayment.CreateName,'预' as busType,TB_SupplierAdvancePayment.ProNo as InvProNo,TB_SupplierAdvancePayments.Id as payId,TB_SupplierAdvancePayments.Ids as payIds,CAI_POCai.Ids,'' as ProNo,CAI_POOrder.ProNo as CaiProNo,null as RuTime ,lastSupplier as Supplier, '' as houseName,
 CAI_POOrder.PONo,CAI_POOrder.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,Num as GoodNum,0 as supplierTuiGoodNum,
 lastPrice as GoodPrice,TB_SupplierAdvancePayment.CreateName as DoPer,SupplierFPNo,'' as ChcekProNo,TB_SupplierAdvancePayment.Status,SupplierInvoiceNum,SupplierInvoicePrice,
 SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierAdvancePayment.CreteTime,0 as IsYuFu,SupplierProNo,PayStatus,SupplierInvoiceTotal as ActPay,0 as FuShuTotal
 ,CAI_POOrder.AE,CAI_POOrder.GuestName,-1 as RePayClear,CAI_POCai.CaiFpType,CAI_POCai.IsHanShui,-1 as IsHeBing,TB_SupplierAdvancePayment.CreteTime AS T,SumActPay 
-  ,CAI_POCai.LastTruePrice as LastPay,GuestType,GuestPro  from TB_SupplierAdvancePayment 
+  ,CAI_POCai.LastTruePrice as LastPay,GuestType,GuestPro,TB_SupplierInfo.Peculiarity   from TB_SupplierAdvancePayment 
 left join TB_SupplierAdvancePayments on  TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id 
 left join CAI_POCai  on  TB_SupplierAdvancePayments.CaiIds=CAI_POCai.ids
 left join CAI_POOrder  on   CAI_POCai.id=CAI_POOrder.id  
 left join TB_Good on TB_Good.GoodId=CAI_POCai.GoodId 
 left join CG_POOrder on CG_POOrder.PONO=CAI_POOrder.PONO and CG_POOrder.Status='通过' and IFZhui=0
+left join  TB_SupplierInfo on CAI_POCai.lastSupplier=TB_SupplierInfo.SupplieSimpeName and TB_SupplierInfo.Status='通过'
 ) as TB  ");
             }
             if (strWhere.Trim() != "")
@@ -1152,6 +1157,12 @@ left join CG_POOrder on CG_POOrder.PONO=CAI_POOrder.PONO and CG_POOrder.Status='
                         {
                             model.GuestPro =Convert.ToInt32(ojb);
                         }
+                        ojb = dataReader["Peculiarity"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Peculiarity = ojb.ToString();
+                        }
+                        
                         list.Add(model);
                     }
                 }

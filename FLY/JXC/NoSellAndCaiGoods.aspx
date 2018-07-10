@@ -3,7 +3,9 @@
     Title="采库需出清单" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SampleContent">
+  
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
@@ -130,12 +132,12 @@
             </td>
         </tr>
     </table>
-    <asp:Panel ID="Panel1" runat="server" Width="100%">
-        <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
+    <asp:Panel ID="Panel1" runat="server" Width="100%" >
+        <asp:GridView ID="gvMain" runat="server"  PagerSettings-Visible="false"
             Width="100%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
-            OnRowDataBound="gvMain_RowDataBound">
+            OnRowDataBound="gvMain_RowDataBound"  >
             <PagerTemplate>
-                <br />
+                
                 <%--<asp:Label ID="lblPage" runat="server" Text='<%# "第" + (((GridView)Container.NamingContainer).PageIndex + 1)  + "页/共" + (((GridView)Container.NamingContainer).PageCount) + "页" %> '></asp:Label>
             <asp:LinkButton ID="lbnFirst" runat="Server" Text="首页" Enabled='<%# ((GridView)Container.NamingContainer).PageIndex != 0 %>'
                 CommandName="Page" CommandArgument="First"></asp:LinkButton>
@@ -235,15 +237,15 @@
                 HorizontalAlign="Center" />
             <AlternatingRowStyle CssClass="InfoDetail2" BackColor="#FBFBFB" />
             <RowStyle CssClass="InfoDetail1" />
-        </asp:GridView>
-        <webdiyer:AspNetPager ID="AspNetPager1" runat="server" Width="100%" ShowPageIndexBox="Always"
+        </asp:GridView>        
+    </asp:Panel>
+    <webdiyer:AspNetPager ID="AspNetPager1" runat="server" Width="100%" ShowPageIndexBox="Always"
             TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%"
             CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left" ButtonImageAlign="Middle"
             CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"
             PageSize="10" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
             NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
         </webdiyer:AspNetPager>
-    </asp:Panel>
     项目需出库存成本合计：<asp:Label ID="lbltotalNum" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
     入库需出库存成本合计：<asp:Label ID="lblRuChuNum" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
     采库需出库存成本合计：<asp:Label ID="lblCaIKuNum" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
@@ -253,4 +255,6 @@
     入库需出销售总价合计：<asp:Label ID="lblRuChuNum_Sell" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
     采库需出销售总价合计：<asp:Label ID="lblCaIKuNum_Sell" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
     采购需出销售总价合计：<asp:Label ID="lblCaiGouNum_Sell" runat="server" ForeColor="Red" Text="0" Style="margin-right: 10px;"></asp:Label>
+
+      
 </asp:Content>

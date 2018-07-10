@@ -372,6 +372,6 @@ namespace VAN_OA.Model.JXC
         public string GuestType { get; set; }
 
         public int GuestPro { get; set; }
-
+        public string Peculiarity { get; internal set; }
     }
 }

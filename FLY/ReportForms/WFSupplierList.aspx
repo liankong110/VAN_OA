@@ -7,7 +7,8 @@
     <table cellpadding="0" cellspacing="0" width="90%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">供应商归类
+            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">
+                <asp:Label ID="lblTitle" runat="server" Text="供应商归类"></asp:Label>
             </td>
         </tr>
         <tr>
@@ -49,6 +50,14 @@
                     <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
                     <asp:ListItem Value="1" Text="特殊"></asp:ListItem>
                     <asp:ListItem Value="0" Text="不特殊"></asp:ListItem>
+                </asp:DropDownList>
+                  供应商特性 ：
+                  <asp:DropDownList ID="ddlPeculiarity" runat="server">
+                    <asp:ListItem Text="全部" Value="全部"></asp:ListItem>
+                     <asp:ListItem Text="厂家" Value="厂家"></asp:ListItem>
+                     <asp:ListItem Text="代理商" Value="代理商"></asp:ListItem>
+                      <asp:ListItem Text="总代理" Value="总代理"></asp:ListItem>
+                       <asp:ListItem Text="个人" Value="个人"></asp:ListItem>
                 </asp:DropDownList>
             </td>
         </tr>
@@ -187,6 +196,9 @@
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName"
                     ItemStyle-HorizontalAlign="Center" />
+                   <asp:BoundField DataField="Peculiarity" HeaderText="特性" SortExpression="Peculiarity" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="100px">
+                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+            </asp:BoundField>
                 <asp:BoundField DataField="Phone" HeaderText="电话/手机" SortExpression="Phone" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="LikeMan" HeaderText="联系人" SortExpression="LikeMan" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Job" HeaderText="职务" SortExpression="Job" ItemStyle-HorizontalAlign="Center" />

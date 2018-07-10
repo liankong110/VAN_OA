@@ -166,7 +166,16 @@
                 <asp:TextBox ID="txtCaiPrice" runat="server" Width="100PX"></asp:TextBox>
                 含税类型: 
                 <asp:DropDownList ID="dllFPstye" runat="server" DataValueField="Id" DataTextField="FpType">
-                </asp:DropDownList><br />
+                </asp:DropDownList>
+                 供应商特性 ：
+                  <asp:DropDownList ID="ddlPeculiarity" runat="server">
+                    <asp:ListItem Text="全部" Value="全部"></asp:ListItem>
+                     <asp:ListItem Text="厂家" Value="厂家"></asp:ListItem>
+                     <asp:ListItem Text="代理商" Value="代理商"></asp:ListItem>
+                      <asp:ListItem Text="总代理" Value="总代理"></asp:ListItem>
+                       <asp:ListItem Text="个人" Value="个人"></asp:ListItem>
+                </asp:DropDownList>
+                <br />
                 业务类型:
                  <asp:DropDownList ID="ddlBusType" runat="server" Width="160px"
                      AutoPostBack="True" OnSelectedIndexChanged="ddlBusType_SelectedIndexChanged">
@@ -343,6 +352,9 @@
                     DataFormatString="{0:yyyy-MM-dd}" />
                 <asp:BoundField DataField="GuestName" HeaderText="供应商" SortExpression="GuestName"
                     ItemStyle-HorizontalAlign="Center" />
+                   <asp:BoundField DataField="Peculiarity" HeaderText="特性" SortExpression="Peculiarity" ItemStyle-HorizontalAlign="Center"  >
+                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+            </asp:BoundField>
                 <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POGuestName" HeaderText="客户名称" SortExpression="POGuestName"

@@ -160,7 +160,7 @@ namespace VAN_OA.KingdeeInvoice
                 {
                     param += string.Format(" and POStatue2='已交付' ");
                 }
-                if (ddlModel.Text != "-1")
+                if (ddlModel.Text != "全部")
                 {
                     param += string.Format(" and Model='{0}'", ddlModel.Text);
                 }

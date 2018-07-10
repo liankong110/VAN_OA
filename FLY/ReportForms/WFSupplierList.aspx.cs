@@ -98,6 +98,10 @@ namespace VAN_OA.ReportForms
             {
                 sql += string.Format(" and IsSpecial={0} ", ddlSpecial.Text);
             }
+            if (ddlPeculiarity.Text != "全部")
+            {
+                sql += string.Format(" and Peculiarity='{0}'", ddlPeculiarity.Text);
+            }
             sql += string.Format(@" and Status='通过' ");
 
             List<TB_SupplierInfo> SupplierTracks = this.supplierSer.GetListArray(sql);
@@ -194,7 +198,7 @@ namespace VAN_OA.ReportForms
                 }
                 else
                 {
-
+                    lblTitle.Text = "供应商管理";
                     #region 是否有删除功能
                     if (Session["currentUserId"] != null)
                     {

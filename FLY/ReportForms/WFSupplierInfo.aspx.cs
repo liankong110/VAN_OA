@@ -69,6 +69,7 @@ namespace VAN_OA.ReportForms
                     model.Remark = Remark;
                     model.ZhuJi = txtZhuJi.Text;
                     model.IsUse = cbIsUse.Checked;
+                    model.Peculiarity = ddlPeculiarity.Text;
 
                     model.IsSpecial = cbIsSpecial.Checked;
                     if (this.supplierSer.Add(model) > 0)
@@ -89,6 +90,7 @@ namespace VAN_OA.ReportForms
                         this.txtSupplierGong.Text = "";
                         this.txtSupplierBrandNo.Text = "";
                         this.txtSupplierBrandName.Text = "";
+                        ddlPeculiarity.Text = "";
                         txtRemark.Text = "";                       
  
                         this.txtTime.Focus();
@@ -118,6 +120,7 @@ namespace VAN_OA.ReportForms
 
         private void setEnable(bool result)
         {
+            ddlPeculiarity.Enabled = result;
             txtTime.ReadOnly = !result;
             txtSupplierName.ReadOnly = !result;
             txtPhone.ReadOnly = !result;
@@ -198,6 +201,7 @@ namespace VAN_OA.ReportForms
                     model.Id = Convert.ToInt32(base.Request["Id"]);
                     model.IsUse = cbIsUse.Checked;
                     model.IsSpecial = cbIsSpecial.Checked;
+                    model.Peculiarity = ddlPeculiarity.Text;
                     if (this.supplierSer.Update(model))
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('修改成功！');</script>");
@@ -318,6 +322,14 @@ namespace VAN_OA.ReportForms
                 this.txtZhuJi.Focus();
                 return false;
             }
+            
+            if (this.ddlPeculiarity.Text.Trim().Length == 0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请选择供应特性！');</script>");
+                this.ddlPeculiarity.Focus();
+                return false;
+            }
+
             if (ddlResult.Text=="通过"&&(this.ddlCity.Text.Trim().Length == 0))
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('省份城市不能为空！');</script>");
@@ -390,7 +402,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
             cbIsUse.Checked = model.IsUse;
             cbIsSpecial.Checked = model.IsSpecial;
             ddlProvince.Text = model.Province;
-
+            ddlPeculiarity.Text = model.Peculiarity;
             //if (!string.IsNullOrEmpty(model.Province))
             //{
                 Province_CityService proList = new Province_CityService();
@@ -759,6 +771,7 @@ where Status<>'不通过' and ZhuJi='{0}' {1}", txtZhuJi.Text, noSql);
                     model.IsSpecial = cbIsSpecial.Checked;
                     model.City = ddlCity.Text;
                     model.Province = ddlProvince.Text;
+                    model.Peculiarity = ddlPeculiarity.Text;
                     #endregion
                     if (Request["allE_id"] == null)//单据增加
                     {

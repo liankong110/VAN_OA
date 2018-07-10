@@ -228,7 +228,7 @@ namespace VAN_OA.JXC
             }
             if (ddlModel.Text != "全部")
             {
-                isColse += string.Format(" and Model='{0}'", ddlModel.Text);
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
             }
             if (ddlJieIsSelected.Text != "-1")
             {

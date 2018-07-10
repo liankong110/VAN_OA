@@ -71,6 +71,7 @@
             </td>
             <td height="25" width="*" align="left">
                 <asp:DropDownList ID="dllUse" runat="server">
+                     <asp:ListItem></asp:ListItem>
                     <asp:ListItem>货款</asp:ListItem>
                     <asp:ListItem>备用金</asp:ListItem>
                     <asp:ListItem>差旅费</asp:ListItem>

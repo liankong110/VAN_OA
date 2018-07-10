@@ -150,7 +150,11 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and Model='{0}'", ddlModel.Text);
             }
-            var list = this.electronicInvoiceSer.GetReport(sql,sumWhere);
+            if (ddlPeculiarity.Text != "全部")
+            {
+                sql += string.Format(" and Peculiarity='{0}'", ddlPeculiarity.Text);
+            }
+            var list = this.electronicInvoiceSer.GetReport(sql, sumWhere);
 
             var countList = list.GroupBy(t => t.busType + t.ProNo).Where(t => t.Count() > 1);
 
@@ -168,7 +172,7 @@ namespace VAN_OA.JXC
             {
                 return;
             }
-            if (list.Count > 0&&txtProNo.Text.Trim().Length==8)
+            if (list.Count > 0 && txtProNo.Text.Trim().Length == 8)
             {
                 btbPrint.Enabled = true;
                 btnYuLan.Enabled = true;
@@ -224,7 +228,15 @@ namespace VAN_OA.JXC
 
 
 
+
                 var model = e.Row.DataItem as ElectronicInvoice;
+
+                DropDownList dllUse = (DropDownList)e.Row.FindControl("dllUse");
+                if (model.Peculiarity == "个人")
+                {
+                    dllUse.Text = "还款";
+                }
+
                 if (hb.ContainsKey(model.busType + model.ProNo))
                 {
                     ImageButton btnEdit = (ImageButton)e.Row.FindControl("btnEdit");

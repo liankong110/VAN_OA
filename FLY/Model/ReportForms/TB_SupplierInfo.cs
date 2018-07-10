@@ -342,5 +342,9 @@ namespace VAN_OA.Model.ReportForms
 
         public string Province { get; set; }
         public string City { get; set; }
+        /// <summary>
+        /// 供应商特性，下拉框：1.空白 缺省 2.厂家  3.代理商  4.总代理   5.个人
+        /// </summary>
+        public string Peculiarity { get; set; }
     }
 }

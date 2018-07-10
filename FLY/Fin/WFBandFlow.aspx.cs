@@ -66,9 +66,9 @@ namespace VAN_OA.Fin
             }
         }
 
-        private void Show()
+        private List<BankFlow> LoadList(out Dictionary<string, string> queryList)
         {
-            Dictionary<string, string> queryList = new Dictionary<string, string>();
+             queryList = new Dictionary<string, string>();
 
             string sql = "1=1";
             if (txtTransactionReferenceNumber.Text != "")
@@ -82,7 +82,7 @@ namespace VAN_OA.Fin
                 if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('交易日期 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and TransactionDate>='{0} 00:00:00'", txtFrom.Text);
                 queryList.Add("txtFrom", txtFrom.Text);
@@ -93,7 +93,7 @@ namespace VAN_OA.Fin
                 if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('交易日期 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and TransactionDate<='{0} 23:59:59'", txtTo.Text);
                 queryList.Add("txtTo", txtTo.Text);
@@ -110,7 +110,7 @@ namespace VAN_OA.Fin
                 if (CommHelp.VerifesToNum(txtTradeAmountFrom.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('交易金额 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and {1}{0}TradeAmount", ddlTradeAmountFrom.Text, txtTradeAmountFrom.Text);
                 queryList.Add("ddlTradeAmountFrom", ddlTradeAmountFrom.Text);
@@ -121,7 +121,7 @@ namespace VAN_OA.Fin
                 if (CommHelp.VerifesToNum(txtTradeAmountTo.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('交易金额 格式错误！');</script>");
-                    return;
+                    return null;
                 }
                 sql += string.Format(" and TradeAmount{0}{1}", ddlTradeAmountTo.Text, txtTradeAmountTo.Text);
                 queryList.Add("ddlTradeAmountTo", ddlTradeAmountTo.Text);
@@ -164,7 +164,7 @@ namespace VAN_OA.Fin
             {
                 if (CheckProNo(txtProNo.Text) == false)
                 {
-                    return;
+                    return null;
                 }
                 out_Sql += string.Format(" and ProNo ='{0}'", txtProNo.Text.Trim());
                 queryList.Add("txtProNo", txtProNo.Text.Trim());
@@ -219,6 +219,17 @@ namespace VAN_OA.Fin
             ViewState["QuerySql"] = queryList;
             //Session["QuerySql"] = null;
             List<BankFlow> caiList = this.bandFlowSer.GetListArray(sql);
+            return caiList;
+        }
+
+        private void Show()
+        {
+            Dictionary<string, string> queryList = new Dictionary<string, string>();
+            var caiList = LoadList(out queryList);
+            if (caiList == null)
+            {
+                return;
+            }
             AspNetPager1.RecordCount = caiList.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
             this.gvList.DataSource = caiList;
@@ -473,6 +484,48 @@ namespace VAN_OA.Fin
                 Session["QuerySql"] = ViewState["QuerySql"];
             }
             base.Response.Redirect("~/Fin/WFReport.aspx?year=" + ddlYear.Text + "&month=" + ddlMonth.Text);
+        }
+
+        protected void btnExcel_Click(object sender, EventArgs e)
+        {
+            AspNetPager1.CurrentPageIndex = 1;
+            gvList.AllowPaging = false;
+            gvList.Columns[0].Visible = false;
+            gvList.Columns[1].Visible = false; Response.Clear();
+            gvList.HeaderStyle.Height = 20;
+            Show();
+            
+            foreach (GridViewRow dg in this.gvList.Rows)
+            {               
+                dg.Cells[5].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");            
+                dg.Cells[8].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
+                dg.Cells[14].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
+            }
+
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.Charset = "GB2312";
+            Response.AppendHeader("Content-Disposition", "attachment;filename=Band.xls");
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");  //设置输出流为简体中文
+            this.EnableViewState = false;
+            Response.Write("<meta http-equiv=Content-Type content=\"text/html; charset=GB2312\">");
+            System.IO.StringWriter sw = new System.IO.StringWriter();
+            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(sw);
+          
+            gvList.RenderControl(hw);        
+            Response.Write(sw.ToString());
+            Response.End();
+
+            AspNetPager1.CurrentPageIndex = 1;
+            gvList.AllowPaging = true;
+            gvList.Columns[0].Visible = true;
+            gvList.Columns[1].Visible = true;
+            Show();
+
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+
         }
     }
 }

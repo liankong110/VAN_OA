@@ -132,8 +132,8 @@
                     <asp:ListItem Value="-1">全部</asp:ListItem>
                     <asp:ListItem Value="0">开始未完成</asp:ListItem>
                     <asp:ListItem Value="1">未开始</asp:ListItem>
-                      <asp:ListItem Value="2">未完成</asp:ListItem>
-                      <asp:ListItem Value="3">已完成</asp:ListItem>
+                    <asp:ListItem Value="2">未完成</asp:ListItem>
+                    <asp:ListItem Value="3">已完成</asp:ListItem>
                 </asp:DropDownList>
             </td>
         </tr>
@@ -149,10 +149,11 @@
         <tr>
             <td colspan="4" align="right">
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
+                     <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;
                 <asp:Button ID="btnAdd" runat="server" Text="导入Excel" BackColor="Yellow" OnClick="btnAdd_Click" />&nbsp;
                  <asp:Button ID="btnReport" runat="server" Text="银行往来月报表" BackColor="Yellow" OnClick="btnReport_Click" />
                 <asp:DropDownList ID="ddlYear" runat="server"></asp:DropDownList>
-                 <asp:DropDownList ID="ddlMonth" runat="server"></asp:DropDownList>
+                <asp:DropDownList ID="ddlMonth" runat="server"></asp:DropDownList>
             </td>
         </tr>
     </table>

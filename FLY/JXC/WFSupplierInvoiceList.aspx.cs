@@ -523,6 +523,11 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
             {
                 sql += string.Format(" and GuestName like '%{0}%'", txtGuestName.Text.Trim());
             }
+
+            if (ddlPeculiarity.Text != "全部")
+            {
+                sql += string.Format(" and Peculiarity='{0}'", ddlPeculiarity.Text);
+            }
             List<SupplierToInvoiceView> pOOrderList = supplierToInvoiceSer.GetSupplierInvoiceList(sql, ddlZhiFuType.Text);
 
 

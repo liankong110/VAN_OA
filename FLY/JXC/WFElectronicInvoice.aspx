@@ -83,6 +83,14 @@
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
                 </asp:DropDownList>
                 <asp:TextBox ID="txtBigTotal" runat="server" Width="100PX"></asp:TextBox>
+                供应商特性 ：
+                  <asp:DropDownList ID="ddlPeculiarity" runat="server">
+                    <asp:ListItem Text="全部" Value="全部"></asp:ListItem>
+                     <asp:ListItem Text="厂家" Value="厂家"></asp:ListItem>
+                     <asp:ListItem Text="代理商" Value="代理商"></asp:ListItem>
+                      <asp:ListItem Text="总代理" Value="总代理"></asp:ListItem>
+                       <asp:ListItem Text="个人" Value="个人"></asp:ListItem>
+                </asp:DropDownList>
                 </td>
             <td colspan="2">
                 <div align="right">
@@ -172,6 +180,9 @@
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
                <asp:BoundField DataField="SupplieSimpeName" HeaderText="供应商简称" SortExpression="SupplieSimpeName" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="100px">
+                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+            </asp:BoundField>
+               <asp:BoundField DataField="Peculiarity" HeaderText="供应商特性" SortExpression="Peculiarity" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="100px">
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
             <asp:BoundField DataField="SupplierBrandName" HeaderText="开户行" ItemStyle-Width="120" SortExpression="SupplierBrandName" ItemStyle-HorizontalAlign="Center">

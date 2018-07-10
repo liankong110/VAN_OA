@@ -48,6 +48,12 @@ namespace VAN_OA.Fin
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('金额格式错误！');</script>"));
                 return false;
             }
+
+            if (string.IsNullOrEmpty(dllUse.Text))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('请选择用途！');</script>"));
+                return false;
+            }
             return true;
         }
         private ElectronicInvoice GetModel()

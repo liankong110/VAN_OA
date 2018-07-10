@@ -269,6 +269,9 @@ namespace VAN_OA.Dal.ReportForms
             strSql1.Append("City,");
             strSql2.Append("'" + model.City + "',");
 
+            strSql1.Append("Peculiarity,");
+            strSql2.Append("'" + model.Peculiarity + "',");
+
             strSql.Append("insert into TB_SupplierInfo(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
             strSql.Append(")");
@@ -426,7 +429,7 @@ namespace VAN_OA.Dal.ReportForms
                 strSql1.Append("ZhuJi,");
                 strSql2.Append("'" + model.ZhuJi + "',");
             }
-         
+          
 
             string MaxSupplierId = "";
             string sqlSupplierId = string.Format("select  right('0000000000'+(convert(varchar,(convert(int,right(max(SupplierId),4))+1))),4) FROM TB_SupplierInfo;");
@@ -469,6 +472,9 @@ namespace VAN_OA.Dal.ReportForms
             strSql2.Append("'" + model.Province + "',");
             strSql1.Append("City,");
             strSql2.Append("'" + model.City + "',");
+
+            strSql1.Append("Peculiarity,");
+            strSql2.Append("'" + model.Peculiarity + "',");
 
             strSql.Append("insert into TB_SupplierInfo(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
@@ -656,6 +662,9 @@ namespace VAN_OA.Dal.ReportForms
 
             strSql1.Append("City,");
             strSql2.Append("'" + model.City + "',");
+
+            strSql1.Append("Peculiarity,");
+            strSql2.Append("'" + model.Peculiarity + "',");
             //
             string MaxCardNo = "";
             string sql = string.Format("select  right('0000000000'+(convert(varchar,(convert(int,right(max(ProNo),4))+1))),4) FROM TB_SupplierInfo;");
@@ -823,6 +832,7 @@ namespace VAN_OA.Dal.ReportForms
             }
             strSql.Append("Province='" + model.Province + "',");
             strSql.Append("City='" + model.City + "',");
+            strSql.Append("Peculiarity='" + model.Peculiarity + "',");
             // strSql.Append("Status='" + model.Status + "',");
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
@@ -965,6 +975,7 @@ namespace VAN_OA.Dal.ReportForms
             }
             strSql.Append("Province='" + model.Province + "',");
             strSql.Append("City='" + model.City + "',");
+            strSql.Append("Peculiarity='" + model.Peculiarity + "',");
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -993,7 +1004,7 @@ namespace VAN_OA.Dal.ReportForms
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" City,Province,TB_SupplierInfo.Id,Time,SupplierName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,ZhuJi,IsSpecial");
+            strSql.Append(" Peculiarity,City,Province,TB_SupplierInfo.Id,Time,SupplierName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,ZhuJi,IsSpecial");
             strSql.Append(",SupplierId,SupplierAddress,SupplierHttp,SupplierShui,SupplierGong,SupplierBrandNo,SupplierBrandName,Remark ,ProNo");
             strSql.Append(",SupplieSimpeName,Status,MainRange,IsUse");
             strSql.Append(" from TB_SupplierInfo left join tb_User on TB_SupplierInfo.CreateUser=tb_User.ID");          
@@ -1123,7 +1134,7 @@ namespace VAN_OA.Dal.ReportForms
             strSql.Append("select   ");
             //strSql.Append("select TB_SupplierInfo.Id,Time,SupplierName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,loginName ");
             //strSql.Append(" FROM TB_SupplierInfo left join tb_User on TB_SupplierInfo.CreateUser=tb_User.ID");
-            strSql.Append(" City,Province,TB_SupplierInfo.Id,Time,SupplierName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,ZhuJi,IsSpecial ");
+            strSql.Append(" Peculiarity,City,Province,TB_SupplierInfo.Id,Time,SupplierName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,ZhuJi,IsSpecial ");
             strSql.Append(",SupplierId,SupplierAddress,SupplierHttp,SupplierShui,SupplierGong,SupplierBrandNo,SupplierBrandName,Remark ,ProNo");
             strSql.Append(",SupplieSimpeName,Status,MainRange,IsUse");
             strSql.Append(" from TB_SupplierInfo left join tb_User on TB_SupplierInfo.CreateUser=tb_User.ID");
@@ -1306,7 +1317,7 @@ namespace VAN_OA.Dal.ReportForms
 
             model.Province = dataReader["Province"].ToString();
             model.City = dataReader["City"].ToString();
-
+            model.Peculiarity = dataReader["Peculiarity"].ToString();
             return model;
         }
 

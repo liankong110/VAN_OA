@@ -170,6 +170,19 @@
             </td>
         </tr>
         <tr>
+            <td height="25" width="30%" align="right"><font style="color: Red">*</font>供应商特性 ：
+            </td>
+            <td height="25" width="*" align="left" colspan="3">
+                <asp:DropDownList ID="ddlPeculiarity" runat="server">
+                    <asp:ListItem Text="" Value=""></asp:ListItem>
+                     <asp:ListItem Text="厂家" Value="厂家"></asp:ListItem>
+                     <asp:ListItem Text="代理商" Value="代理商"></asp:ListItem>
+                      <asp:ListItem Text="总代理" Value="总代理"></asp:ListItem>
+                       <asp:ListItem Text="个人" Value="个人"></asp:ListItem>
+                </asp:DropDownList>
+            </td>
+        </tr>
+        <tr>
             <td height="25" width="30%" align="right">
                 <asp:Label ID="lblPer" runat="server" Text="下一步审批人："></asp:Label>
             </td>

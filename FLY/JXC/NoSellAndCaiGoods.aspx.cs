@@ -10,6 +10,7 @@ using VAN_OA.Model;
 using System.Text;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
+using System.IO;
 
 namespace VAN_OA.JXC
 {
@@ -59,7 +60,7 @@ namespace VAN_OA.JXC
                     else
                     {
                         user = userSer.getAllUserByPOList();
-                        user.Insert(0, new VAN_OA.Model.User() {LoginName = "全部", Id = -1});
+                        user.Insert(0, new VAN_OA.Model.User() { LoginName = "全部", Id = -1 });
                     }
                     ddlUser.DataSource = user;
                     ddlUser.DataBind();
@@ -81,7 +82,7 @@ namespace VAN_OA.JXC
                     if (Request["PONo1"] != null)
                     {
                         ddlPoType.Text = "2";
-                        txtPONo.Text = Request["PONo1"].ToString();                         
+                        txtPONo.Text = Request["PONo1"].ToString();
                         Show();
                     }
                 }
@@ -97,16 +98,16 @@ namespace VAN_OA.JXC
         public List<Model.JXC.NoSellAndCaiGoods> GetList()
         {
             txtSupplier.Text = txtSupplier.Text.Trim();
-        string userId = "", goodNoWhere = "", guestWhere = "", ruTimeWhere = "", poTimeWhere = "", ponoWhere = "";
+            string userId = "", goodNoWhere = "", guestWhere = "", ruTimeWhere = "", poTimeWhere = "", ponoWhere = "";
 
             string where = "";
             if (txtPONo.Text.Trim() != "")
             {
-                 
+
                 //ponoWhere = string.Format(" and CAI_OrderInHouse.PONo like '%{0}%'", txtPONo.Text);
                 ponoWhere = string.Format(" and PONo like '%{0}%'", txtPONo.Text.Trim());
             }
-            if (ddlPoType.Text=="0")
+            if (ddlPoType.Text == "0")
             {
                 ponoWhere += " and PONo like 'P%'";
             }
@@ -133,10 +134,10 @@ namespace VAN_OA.JXC
                 //var model = Session["userInfo"] as User;
                 //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
             }
-            
+
             else
             {
-                userId =  ddlUser.SelectedItem.Text;
+                userId = ddlUser.SelectedItem.Text;
             }
 
             if (txtFrom.Text != "")
@@ -160,8 +161,8 @@ namespace VAN_OA.JXC
             {
                 poTimeWhere += string.Format(" and minPODate<='{0} 23:59:59'", txtPOTimeTo.Text);
             }
-           
-           
+
+
             if (ddlWeiType.Text == "0")//未开具出库单
             {
                 where += " and NoOutNum is null ";
@@ -197,7 +198,7 @@ namespace VAN_OA.JXC
                 company = string.Format("and AE IN(select loginName from tb_User where {0})", where1);
             }
             string poNoSql = "";
-            if (ddlGuestTypeList.SelectedValue != "全部"|| ddlIsSpecial.Text != "-1"|| ddlModel.Text != "全部")
+            if (ddlGuestTypeList.SelectedValue != "全部" || ddlIsSpecial.Text != "-1" || ddlModel.Text != "全部")
             {
                 poNoSql = " and exists (select id from CG_POOrder where CG_POOrder.pono=NoSellAndCaiGoods.PONO AND IFZhui=0 ";
                 if (ddlGuestTypeList.SelectedValue != "全部")
@@ -214,13 +215,13 @@ namespace VAN_OA.JXC
                 }
                 poNoSql += ")";
             }
-           
+
             var resultList = _dal.GetListNoSellAndCaiGoods(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where, company
-                ,(ddlKCType.Text=="1"?true:false), poNoSql);
+                , (ddlKCType.Text == "1" ? true : false), poNoSql);
 
             if (cbZero.Checked)
             {
-                resultList = resultList.FindAll(t=>t.RuChuNum!=0||t.CaIKuNum!=0||t.CaiGouNum!=0);
+                resultList = resultList.FindAll(t => t.RuChuNum != 0 || t.CaIKuNum != 0 || t.CaiGouNum != 0);
             }
 
             if (cbRuZero.Checked)
@@ -230,19 +231,19 @@ namespace VAN_OA.JXC
 
             if (cbCaiKu.Checked)
             {
-                resultList = resultList.FindAll( t=>t.CaIKuNum != 0);
+                resultList = resultList.FindAll(t => t.CaIKuNum != 0);
             }
 
             if (cbCaiGou.Checked)
             {
-                resultList = resultList.FindAll(t=> t.CaiGouNum != 0);
+                resultList = resultList.FindAll(t => t.CaiGouNum != 0);
             }
 
             if (!string.IsNullOrEmpty(txtSupplier.Text))
             {
                 //resultList = resultList.FindAll(t => t. != 0);
             }
-            lbltotalNum.Text =string.Format("{0:n2}" ,resultList.Sum(t => t.totalNum * t.avgGoodPrice));
+            lbltotalNum.Text = string.Format("{0:n2}", resultList.Sum(t => t.totalNum * t.avgGoodPrice));
             lblRuChuNum.Text = string.Format("{0:n2}", resultList.Sum(t => t.RuChuNum * t.avgGoodPrice));
             lblCaIKuNum.Text = string.Format("{0:n2}", resultList.Sum(t => t.CaIKuNum * t.avgGoodPrice));
             lblCaiGouNum.Text = string.Format("{0:n2}", resultList.Sum(t => t.CaiGouNum * t.avgGoodPrice));
@@ -253,19 +254,19 @@ namespace VAN_OA.JXC
             lblCaiGouNum_Sell.Text = string.Format("{0:n2}", resultList.Sum(t => t.CaiGouNum * t.avgSellPrice));
 
             //供应商进行筛选
-            if (!string.IsNullOrEmpty(txtSupplier.Text)&& resultList.Count>0)
+            if (!string.IsNullOrEmpty(txtSupplier.Text) && resultList.Count > 0)
             {
-                var allSupplier = _dal.GetCaiPoNo("'"+string.Join("','",resultList.GroupBy(t=>t.PONo).Select(t=>t.Key).ToArray()).Trim("','".ToCharArray())+"'",
+                var allSupplier = _dal.GetCaiPoNo("'" + string.Join("','", resultList.GroupBy(t => t.PONo).Select(t => t.Key).ToArray()).Trim("','".ToCharArray()) + "'",
                    string.Join(",", resultList.GroupBy(t => t.GoodId).Select(t => t.Key.ToString()).ToArray()));
                 foreach (var model in resultList)
                 {
                     var tempWform = allSupplier.FindAll(t => t.PONo == model.PONo && t.GoodId == model.GoodId.ToString()).Select(t => t.lastSupplier).Distinct().ToArray();
 
-                    model.Supplier= string.Join(",", tempWform);
+                    model.Supplier = string.Join(",", tempWform);
                 }
                 if (cbPiPei.Checked)
                 {
-                    resultList = resultList.FindAll(t => t.Supplier==txtSupplier.Text);
+                    resultList = resultList.FindAll(t => t.Supplier == txtSupplier.Text);
                 }
                 else
                 {
@@ -307,7 +308,7 @@ namespace VAN_OA.JXC
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('订单时间 格式错误！');</script>");
                     return;
-                }                
+                }
             }
             if (txtPONo.Text.Trim() != "")
             {
@@ -316,21 +317,21 @@ namespace VAN_OA.JXC
                     return;
                 }
             }
-                var list = GetList(); 
+            var list = GetList();
             AspNetPager1.RecordCount = list.Count;
             this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
 
             string goodId = "", pONos = "";
 
             int lastRows = list.Count;
-            if ((gvMain.PageIndex+1) * 10 <= lastRows)
+            if ((gvMain.PageIndex + 1) * 10 <= lastRows)
             {
-                lastRows = (gvMain.PageIndex+1) * 10;
+                lastRows = (gvMain.PageIndex + 1) * 10;
             }
-            for (int i = gvMain.PageIndex  * 10; i < lastRows; i++)
+            for (int i = gvMain.PageIndex * 10; i < lastRows; i++)
             {
-                goodId +=list[i].GoodId +",";
-                pONos += "'"+list[i].PONo + "',";
+                goodId += list[i].GoodId + ",";
+                pONos += "'" + list[i].PONo + "',";
             }
 
             caiPonoList = _dal.GetCaiPoNo(pONos.Trim(','), goodId.Trim(','));
@@ -342,8 +343,8 @@ namespace VAN_OA.JXC
 
         protected string GetlastSupplier(object pono, object goodId)
         {
-            var tempWform = caiPonoList.FindAll(t => t.PONo == pono.ToString() && t.GoodId == goodId.ToString()).Select(t=>t.lastSupplier).Distinct().ToArray();
-           
+            var tempWform = caiPonoList.FindAll(t => t.PONo == pono.ToString() && t.GoodId == goodId.ToString()).Select(t => t.lastSupplier).Distinct().ToArray();
+
 
             return string.Join(",", tempWform);
 
@@ -358,7 +359,7 @@ namespace VAN_OA.JXC
             gvMain.PageIndex = e.NewPageIndex;
             Show();
         }
-
+        int num = 1;
         protected void gvMain_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -375,6 +376,10 @@ namespace VAN_OA.JXC
                 {
                     e.Row.BackColor = System.Drawing.Color.LightGray;
                 }
+
+                e.Row.Attributes.Add("style", "border:1px solid #DCDCDC ");
+
+                num++;
             }
         }
 
@@ -383,7 +388,7 @@ namespace VAN_OA.JXC
         {
             //override VerifyRenderingInServerForm.
         }
-
+        int AllCount = 0;
         protected void Button1_Click(object sender, EventArgs e)
         {
             if (txtPONo.Text.Trim() != "")
@@ -393,40 +398,62 @@ namespace VAN_OA.JXC
                     return;
                 }
             }
-            gvMain.BottomPagerRow.Visible = false;//导出到Excel表后，隐藏分页部分
-            gvMain.AllowPaging = false;//取消分页，便于导出所有数据，不然只能导出当前页面的几条数据
-
-            gvMain.DataSource = GetList();//取消分页后重新绑定数据集,ds为数据集dataset
+            gvMain.AllowPaging = false;
+            var data = GetList();
+            gvMain.DataSource = data;//取消分页后重新绑定数据集,ds为数据集dataset
             gvMain.DataBind();
+            //ExportGridViewForUTF8(gvMain, "NoSellAndCaiGoods.xlsx");
+            toExcel(gvMain);
+            //gvMain.AllowPaging = true;//取消分页，便于导出所有数据，不然只能导出当前页面的几条数据
 
 
-            //DateTime dt = DateTime.Now;//给导出后的Excel表命名，结合表的用途以及系统时间来命名
-            //string filename = dt.Year.ToString() + dt.Month.ToString() + dt.Day.ToString() + dt.Hour.ToString() + dt.Minute.ToString() + dt.Second.ToString();
+        }
 
-            /*如导出的表中有某些列为编号、身份证号之类的纯数字字符串，如不进行处理，则导出的数据会默认为数字，例如原字符串"0010"则会变为数字10，字符串"1245787888"则会变为科学计数法1.236+E9，这样便达不到我们想要的结果，所以需要在导出前对相应列添加格式化的数据类型，以下为格式化为字符串型*/
 
-            //foreach (GridViewRow dg in this.gvMain.Rows)
-            //{
-            //    dg.Cells[0].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
-            //    dg.Cells[5].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
-            //    dg.Cells[6].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
-            //    dg.Cells[8].Attributes.Add("style", "vnd.ms-excel.numberformat: @;");
-            //}
-
-            Response.Clear();
-
-            Response.ContentType = "application/vnd.ms-excel";
+        void toExcel(GridView gv)
+        {
             Response.Charset = "GB2312";
-            Response.AppendHeader("Content-Disposition", "attachment;filename=NoSellAndCaiGoods.xls");
-            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");  //设置输出流为简体中文          
- 
-            System.IO.StringWriter oStringWriter = new System.IO.StringWriter();
-            System.Web.UI.HtmlTextWriter oHtmlTextWriter = new System.Web.UI.HtmlTextWriter(oStringWriter);
-            Panel1.RenderControl(oHtmlTextWriter);//Add the Panel into the output Stream.
-            Response.Write(oStringWriter.ToString());//Output the stream.
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+
+            string fileName = "export.xls";
+            string style = @"<style> .text { mso-number-format:\@; } </script> ";
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            Response.ContentType = "application/excel";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            gv.RenderControl(htw);
+            Response.Write(style);
+            Response.Write(sw.ToString());
+            Response.End();
+        }
+
+        /// <summary>
+        /// 导出方法
+        /// </summary>
+        /// <param name="GridView"></param>
+        /// <param name="filename">保存的文件名称</param>
+        private void ExportGridViewForUTF8(GridView GridView, string filename)
+        {
+
+            string attachment = "attachment; filename=" + filename;
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", attachment);
+
+            Response.Charset = "UTF-8";
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("UTF-8");
+            Response.ContentType = "application/ms-excel";
+            System.IO.StringWriter sw = new System.IO.StringWriter();
+
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            gvMain.RenderControl(htw);
+            
+            Response.Output.Write(sw.ToString());
             Response.Flush();
             Response.End();
-             
+
         }
     }
 }

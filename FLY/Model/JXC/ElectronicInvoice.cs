@@ -25,5 +25,6 @@ namespace VAN_OA.Model.JXC
         public string SupplieSimpeName { get;  set; }
         public string Company { get;  set; }
         public string PFNo { get; set; }
+        public string Peculiarity { get; internal set; }
     }
 }
