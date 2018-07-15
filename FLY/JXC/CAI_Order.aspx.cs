@@ -3361,12 +3361,78 @@ select @caiTotalNum-@checkTotalNum", model.GoodId);
 
 
         }
+
+        private int ExistsSupplier(string name)
+        {
+            string sql = string.Format("select top 1 IsUse from TB_SupplierInfo where  Status='通过' and SupplieSimpeName='{0}'",name);
+            var result= DBHelp.ExeScalar(sql);
+            if (result == null|| result is DBNull)
+            {
+                return -1;
+            }
+            if (!Convert.ToBoolean(result))
+            {
+                return -2;
+            }
+            return 0;
+        }
         protected void btnSave_Click(object sender, EventArgs e)
         {
 
             if (check() == false)
             {
                 return;
+            }
+
+            //判断供应商 是否存在
+            if (txtSupplier.Text != "" && txtSupplier.Text != "库存")
+            {
+                var result = ExistsSupplier(txtSupplier.Text);
+                if (result == -1)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('无此供应商，不能保存！');"), true);
+                    return;
+                }
+                if (result == -2)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('不显示供应商，不能保存！');"), true);
+                    return;
+                }
+            }
+            
+            if (txtSupper2.Text != "" && txtSupper2.Text != "库存")
+            {
+                var result = ExistsSupplier(txtSupper2.Text);
+                if (result == -1)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('无此供应商，不能保存！');"), true);
+                    return;
+                }
+                if (result == -2)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('不显示供应商，不能保存！');"), true);
+                    return;
+                }
+            }
+            if (txtSupper3.Text != "" && txtSupper3.Text != "库存")
+            {
+                var result = ExistsSupplier(txtSupper3.Text);
+                if (result == -1)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('无此供应商，不能保存！');"), true);
+                    return;
+                }
+                if (result == -2)
+                {
+                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a",
+                   string.Format("alert('不显示供应商，不能保存！');"), true);
+                    return;
+                }
             }
             if (ViewState["currentEforms"] != null && ViewState["currentEforms"].ToString() == "0")
             {

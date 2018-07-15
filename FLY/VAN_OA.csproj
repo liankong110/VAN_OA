@@ -208,6 +208,7 @@
     <Content Include="Image\sidebar_header.png" />
     <Content Include="Image\To_Act.gif" />
     <Content Include="Image\up.gif" />
+    <Content Include="JXC\JXCSum_SkilllList.aspx" />
     <Content Include="JXC\JXC_SkilllList.aspx" />
     <Content Include="JXC\KPI_Sell.aspx" />
     <Content Include="JXC\NEW_Sell_Cai_OrderInHouseList.aspx" />
@@ -1373,6 +1374,13 @@
     <Compile Include="JXC\DeleteAllProjectInfo.aspx.designer.cs">
       <DependentUpon>DeleteAllProjectInfo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="JXC\JXCSum_SkilllList.aspx.cs">
+      <DependentUpon>JXCSum_SkilllList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JXC\JXCSum_SkilllList.aspx.designer.cs">
+      <DependentUpon>JXCSum_SkilllList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="JXC\JXC_SkilllList.aspx.cs">
       <DependentUpon>JXC_SkilllList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2101,6 +2109,7 @@
     <Compile Include="Model\JXC\Sell_OrderInHouses.cs" />
     <Compile Include="Model\JXC\Sell_OrderOutHouseView.cs" />
     <Compile Include="Model\JXC\Sell_TuiSunCha.cs" />
+    <Compile Include="Model\JXC\SumSkillTotal.cs" />
     <Compile Include="Model\JXC\SupplierAdvancePaymentsToPay.cs" />
     <Compile Include="Model\JXC\SupplierInvoice_Name.cs" />
     <Compile Include="Model\JXC\SupplierToInvoiceView.cs" />

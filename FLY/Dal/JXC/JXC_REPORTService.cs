@@ -8,6 +8,7 @@ using System.Data;
 using VAN_OA.Model.JXC;
 using VAN_OA.Model.BaseInfo;
 using VAN_OA.Dal.BaseInfo;
+using System.Collections;
 
 namespace VAN_OA.Dal.JXC
 {
@@ -471,6 +472,160 @@ left join
                 }
             }
             return list;
+        }
+
+        /// <summary>
+        /// 被派员工 统计
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="having"></param>
+        /// <param name="fuhao"></param>
+        /// <returns></returns>
+        public List<Model.JXC.SumSkillTotal> GetSumSkill_Total(string strWhere, string having, string fuhao)
+        {
+            TB_BaseSkillService skillSer = new TB_BaseSkillService();
+            var skillList = skillSer.GetListArray("");
+            StringBuilder strSql = new StringBuilder();
+            strSql.AppendFormat(@" select MyPoType,loginName,SUM(SumHours) as SumHours,sum(SumFK) as SumFK,avg(AvgFK) as AvgFK,sum(SumScore) as SumScore,avg(AvgScore) as AvgScore,avg(SumPOTotal) as SumPOTotal,avg(InvoTotal) as InvoTotal from 
+ (
+ select MyPoNo,TB_BaseSkill.MyPoType,tb_User.loginName,sum(NiHours) SumHours,sum(MyValue) as SumFK,AVG(MyValue) as AvgFK,sum(10*MyValue*MyXiShu*XiShu) AS SumScore,AVG(10*MyValue*MyXiShu*XiShu) AS AvgScore from tb_Dispatching
+  left join tb_User on tb_User.ID=tb_Dispatching.OutDispater 
+  left join CG_POOrder on CG_POOrder.PONo=tb_Dispatching.MyPoNo and IFZhui=0
+  left join TB_BaseSkill on TB_BaseSkill.Id=CG_POOrder.POType 
+    where tb_Dispatching.Id in (
+ SELECT allE_id FROM tb_EForm WHERE proId=1 AND state='通过')
+ group by MyPoNo,MyPoType,loginName
+ ) as  Dispatching  
+ inner join 
+ (
+ select allNewTb.PONo,sum(SumPOTotal) as SumPOTotal, sum(InvoTotal) as InvoTotal 
+ from (select  MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, 
+ CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro,  sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, 
+  isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal,  AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,
+  avg(SellFPTotal) as SellFPTotal,CG_POOrder.POType  from CG_POOrder  left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  
+  left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice
+    where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
+	left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses
+on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut
+ on CG_POOrder.PONo=SellOut.PONO 
+ left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) as ntb2 on CG_POOrder.PONo=ntb2.PONo 
+ where ifzhui=0  and CG_POOrder.Status='通过'  {0}
+ GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,
+ MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType {1}) as allNewTb 
+ left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono 
+ group by allNewTb.PONo
+) as SumPorect  on Dispatching.MyPoNo=SumPorect.PONo {2}", strWhere, having, fuhao);
+            strSql.Append(" group by MyPoType,loginName");           
+           
+            List<Model.JXC.SumSkillTotal_Detail> list = new List<Model.JXC.SumSkillTotal_Detail>();
+            Hashtable hashtable = new Hashtable();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        SumSkillTotal_Detail model = new SumSkillTotal_Detail();
+                        object ojb;
+                        model.MyPoType = dataReader["MyPoType"].ToString();
+                        model.loginName = dataReader["loginName"].ToString();
+                        if (!hashtable.ContainsKey(model.loginName))
+                        {
+                            hashtable.Add(model.loginName,null);
+                        }
+                        ojb = dataReader["SumHours"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumHours = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["SumFK"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumFK = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["AvgFK"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.AvgFK = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["SumScore"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumScore = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["AvgScore"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.AvgScore = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["SumPOTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumPOTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["InvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.InvoTotal = Convert.ToDecimal(ojb);
+                        } 
+                        list.Add(model);
+                    }
+                }
+            }
+
+            //逻辑处理
+            List<SumSkillTotal> sumList = new List<SumSkillTotal>();
+            decimal gongScore = list.Where(t=>t.MyPoType == "工程").Sum(t=>t.SumScore);
+            decimal lingScore = list.Where(t => t.MyPoType == "零售").Sum(t => t.SumScore);
+            decimal xiScore = list.Where(t => t.MyPoType == "系统").Sum(t => t.SumScore);
+
+            foreach (string key in hashtable.Keys)
+            {
+                SumSkillTotal model = new SumSkillTotal();
+                var tempList= list.FindAll(t => t.loginName == key); 
+                model.Name = key;
+              
+                model.Hours = tempList.Sum(t => t.SumHours);
+                model.Gong_Value= tempList.Where(t=>t.MyPoType== "工程").Sum(t => t.SumFK);
+                model.Ling_Value = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumFK);
+                model.Xi_Value = tempList.Where(t => t.MyPoType == "系统").Sum(t => t.SumFK);
+                model.AvgValue = tempList.Average(t=>t.AvgFK);
+                model.SumValue= tempList.Average(t => t.SumFK);
+
+
+                model.Gong_Score = tempList.Where(t => t.MyPoType == "工程").Sum(t => t.SumScore);
+                model.Ling_Score = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumScore);
+                model.Xi_Score = tempList.Where(t => t.MyPoType == "系统").Sum(t => t.SumScore);
+                if (gongScore != 0)
+                {
+                    model.Gong_Score_Per = model.Gong_Score / gongScore * 100;
+                }
+                if (lingScore != 0)
+                {
+                    model.Ling_Score_Per = model.Ling_Score / lingScore * 100;
+                }
+                if (xiScore != 0)
+                {
+                    model.Xi_Score_Per = model.Xi_Score / xiScore * 100;
+                }
+                model.AvgScore = tempList.Average(t => t.AvgScore);
+                model.SumScore = tempList.Average(t => t.SumScore);
+                model.CompanyScore = gongScore + lingScore + xiScore;
+                if (model.CompanyScore != 0)
+                {
+                    model.CompanyScore_Per = model.SumScore/ model.CompanyScore * 100;
+                }
+                model.PoTotal = tempList.Sum(t=>t.SumPOTotal);
+                if (model.PoTotal != 0)
+                {
+                    model.DaoKuan_Per = tempList.Sum(t => t.InvoTotal) / model.PoTotal * 100;
+                }
+                sumList.Add(model);
+            }
+
+            return sumList;
         }
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）

@@ -90,24 +90,6 @@ namespace VAN_OA.JXC
                 //{
                 //    ViewState["showAll"] = false;
                 //}
-
-
-                if (Request["PONo"] != null)
-                {
-                    txtPONo.Text = Request["PONo"].ToString();
-                    if (Request["Type"] != null)
-                    {
-                        ddlType.Text = Request["Type"].ToString();
-                    }
-                    Show();
-                }
-
-                if (Request["InvoiceNo"] != null)
-                {
-                    txtFPNo.Text = Request["InvoiceNo"].ToString();
-                    Show();
-                }
-
                 var fpTypeBaseInfoService = new FpTypeBaseInfoService();
                 List<FpTypeBaseInfo> fpTypeList = fpTypeBaseInfoService.GetListArray("");
                 fpTypeList.Insert(0, new FpTypeBaseInfo { FpType = "全部", Id = -1 });
@@ -134,13 +116,34 @@ namespace VAN_OA.JXC
                 ddlGuestProList.DataBind();
                 ddlGuestProList.DataTextField = "GuestProString";
                 ddlGuestProList.DataValueField = "GuestPro";
+
+                if (Request["PONo"] != null)
+                {
+                    txtPONo.Text = Request["PONo"].ToString();
+                    if (Request["Type"] != null)
+                    {
+                        ddlType.Text = Request["Type"].ToString();
+                    }
+                    Show();
+                }
+
+                if (Request["InvoiceNo"] != null)
+                {
+                    txtFPNo.Text = Request["InvoiceNo"].ToString();
+                    Show();
+                }
+
+               
             }
         }
 
 
         private void Show()
         {
-            ddlFPType.Items[ddlFPType.Items.Count - 2].Attributes.Add("style", "background-color: red");
+            if (ddlFPType.Items.Count >= 2)
+            {
+                ddlFPType.Items[ddlFPType.Items.Count - 2].Attributes.Add("style", "background-color: red");
+            }
             string sql = " 1=1 ";
 
             if (txtPONo.Text.Trim() != "")
