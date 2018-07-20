@@ -472,6 +472,15 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.Button btnExcel;
         
         /// <summary>
+        /// lblPaiDateMess 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPaiDateMess;
+        
+        /// <summary>
         /// Panel2 控件。
         /// </summary>
         /// <remarks>
@@ -533,5 +542,32 @@ namespace VAN_OA.JXC {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAvgFKscore;
+        
+        /// <summary>
+        /// lblGong_Socre 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGong_Socre;
+        
+        /// <summary>
+        /// lblLing_Score 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLing_Score;
+        
+        /// <summary>
+        /// lblXi_Score 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblXi_Score;
     }
 }

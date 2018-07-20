@@ -124,18 +124,18 @@ namespace VAN_OA.JXC
                 return false;
             }
 
-            if (Request["ReAudit"] != null&&txtRemark.Text == "")
+            if (Request["ReAudit"] != null && txtRemark.Text == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写修改备注！');</script>");
                 return false;
             }
 
-         
+
 
             if (Request["allE_id"] == null)
             {
 
-                string isFax = string.Format("select top 1  IsPoFax from CG_POOrder where pono='{0}' and IFZhui=0",txtPONo.Text);
+                string isFax = string.Format("select top 1  IsPoFax from CG_POOrder where pono='{0}' and IFZhui=0", txtPONo.Text);
                 if (Convert.ToBoolean(DBHelp.ExeScalar(isFax)) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目信息为不含税项目！');</script>");
@@ -147,7 +147,7 @@ namespace VAN_OA.JXC
                 if (payTotal > 0)
                 {
                     checkSumSql = string.Format("select count(*) from Sell_OrderFP where Status='执行中' and PoNo='{0}'", txtPONo.Text);
-                    if (Convert.ToInt32(DBHelp.ExeScalar(checkSumSql))>0)
+                    if (Convert.ToInt32(DBHelp.ExeScalar(checkSumSql)) > 0)
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('同一项目因为有预付款，且有他项发票流程在进行中，请审批结束后开启本流程！');</script>");
                         return false;
@@ -165,65 +165,50 @@ namespace VAN_OA.JXC
                dllFPstye.Text);
                 int FpLength = Convert.ToInt32(DBHelp.ExeScalar(sqlCheck));
                 if (FpLength != txtFPNo.Text.Trim().Length)
-                { 
-                     base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('发票长度必须为{0}！');</script>",FpLength));
-                     return false;
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format("<script>alert('发票长度必须为{0}！');</script>", FpLength));
+                    return false;
                 }
 
-                string sqlFPNOCheck = string.Format("SELECT count(*) FROM [Sell_OrderFP] where PONo='{0}' and FPNo='{1}' and Status<>'不通过'",txtPONo.Text,txtFPNo.Text.Trim());
-                if (Convert.ToInt32(DBHelp.ExeScalar(sqlFPNOCheck))>0)
+                string sqlFPNOCheck = string.Format("SELECT count(*) FROM [Sell_OrderFP] where PONo='{0}' and FPNo='{1}' and Status<>'不通过'", txtPONo.Text, txtFPNo.Text.Trim());
+                if (Convert.ToInt32(DBHelp.ExeScalar(sqlFPNOCheck)) > 0)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('同一项目重复发票记录！');</script>");
                     return false;
                 }
 
-                string checkFPType = string.Format("select FpType from CG_POOrder WHERE IFZhui=0 and PONo='{0}' AND Status='通过'",txtPONo.Text);
+                string checkFPType = string.Format("select FpType from CG_POOrder WHERE IFZhui=0 and PONo='{0}' AND Status='通过'", txtPONo.Text);
                 if (DBHelp.ExeScalar(checkFPType).ToString() != dllFPstye.Text)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('该发票类型和项目的发票类型不一致！');</script>");
                     return false;
                 }
-//                string sqlFpStyleCheck = string.Format(@"if exists(select id from Sell_OrderFP where pono='{0}' and Status<>'不通过')
-//begin
-//SELECT count(*) FROM [Sell_OrderFP] where PONo='{0}' and FPNoStyle='{1}' and Status<>'不通过'
-//end 
-//else
-//begin
-//select -1
-//end", txtPONo.Text, dllFPstye.Text);
-//                var result =Convert.ToInt32(DBHelp.ExeScalar(sqlFpStyleCheck));
-//                if (result==0)
-//                {
-//                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票编号有误！');</script>");
-//                    return false;
-//                }
+                //                string sqlFpStyleCheck = string.Format(@"if exists(select id from Sell_OrderFP where pono='{0}' and Status<>'不通过')
+                //begin
+                //SELECT count(*) FROM [Sell_OrderFP] where PONo='{0}' and FPNoStyle='{1}' and Status<>'不通过'
+                //end 
+                //else
+                //begin
+                //select -1
+                //end", txtPONo.Text, dllFPstye.Text);
+                //                var result =Convert.ToInt32(DBHelp.ExeScalar(sqlFpStyleCheck));
+                //                if (result==0)
+                //                {
+                //                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票编号有误！');</script>");
+                //                    return false;
+                //                }
                 //新增
                 //如果项目编号 不一样，客户和发票类型 要一致这个条件是基于 填写的发票号一样的情况下
-                var dt = DBHelp.getDataTable(string.Format("SELECT PONO,GuestNAME,FPNoStyle FROM [Sell_OrderFP] where FPNo='{0}' and Status<>'不通过'",txtFPNo.Text.Trim()));
+                var dt = DBHelp.getDataTable(string.Format("SELECT PONO,GuestNAME,FPNoStyle FROM [Sell_OrderFP] where FPNo='{0}' and Status<>'不通过'", txtFPNo.Text.Trim()));
                 foreach (DataRow dr in dt.Rows)
                 {
                     if (dr[1].ToString() != txtSupplier.Text || dr[2].ToString() != dllFPstye.Text)
                     {
-                        
+
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票编号有误！');</script>");
                         return false;
                     }
                 }
-//                string sqlFpStyleCheck = string.Format(@"if exists(select id from Sell_OrderFP where FPNo='{0}' and Status<>'不通过')
-//begin
-//SELECT count(*) FROM [Sell_OrderFP] where GuestNAME='{1}' and FPNoStyle='{2}' and Status<>'不通过' and PONO='{3}' 
-//end 
-//else
-//begin
-//select -1
-//end",txtFPNo.Text,txtSupplier.Text, dllFPstye.Text,txtPONo.Text);
-//                 result = Convert.ToInt32(DBHelp.ExeScalar(sqlFpStyleCheck));
-//                if (result == 0)
-//                {
-//                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票编号有误！');</script>");
-//                    return false;
-//                }
-
 
                 Hashtable ht = new Hashtable();
                 foreach (var model in POOrders)
@@ -236,7 +221,7 @@ namespace VAN_OA.JXC
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],信息重复！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
                         return false;
                     }
-                   
+
                 }
                 //Sell_OrderOutHousesService POSer = new Sell_OrderOutHousesService();
 
@@ -265,6 +250,8 @@ namespace VAN_OA.JXC
                             return false;
                         }
                         POOrders[i].GoodNum = Convert.ToDecimal(txtNum.Text);
+
+
                         POOrders[i].GoodSellPriceTotal = POOrders[i].GoodSellPrice * POOrders[i].GoodNum;
                         POOrders[i].Total = POOrders[i].GoodPrice * POOrders[i].GoodNum;
                         totalJin += POOrders[i].GoodSellPriceTotal;
@@ -278,54 +265,82 @@ namespace VAN_OA.JXC
 
 
                     var model = POOrders[i];
-                    if (model.GoodNum <= 0)
+
+                    if (hfZhengFu.Value == "2")
                     {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],数量必须大于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
-                        return false;
+                        if (model.GoodNum >= 0)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],数量必须小于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
+                            return false;
+                        }
                     }
+                    else
+                    {
+
+                        if (model.GoodNum <= 0)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],数量必须大于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
+                            return false;
+                        }
+                    }
+
                     if (model.GoodPrice < 0)
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],价格必须大于等于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
                         return false;
                     }
-
-                    string sql = string.Format(" ids={0}", model.SellOutOrderId);
-                    List<CG_POOrdersFP> cars = POSer.GetListArrayToFps_Out(sql);
-
-                    if (cars.Count <= 0)
+                    if (hfZhengFu.Value == "1")
                     {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{3}]-商品[{0}]\规格[{1}]\型号[{2}]，该信息不存在！');</script>", model.GoodName, model.GoodSpec, model.Good_Model, txtPONo.Text));
+                        string sql = string.Format(" ids={0}", model.SellOutOrderId);
+                        List<CG_POOrdersFP> cars = POSer.GetListArrayToFps_Out(sql);
+
+                        if (cars.Count <= 0)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{3}]-商品[{0}]\规格[{1}]\型号[{2}]，该信息不存在！');</script>", model.GoodName, model.GoodSpec, model.Good_Model, txtPONo.Text));
+                            return false;
+                        }
+
+                        if (i == gvList.Rows.Count - 1)
+                        {
+                            if (totalJin <= 0)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('销售金额必须大于0！');</script>"));
+                                return false;
+                            }
+                            sql = string.Format(" SellFP_Out_View.PONo='{0}'", txtPONo.Text);
+                            cars = POSer.GetListArrayToFps_Out(sql);
+
+                            if (cars[0].POTotal == 0)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{0}],不允许开发票！');</script>",
+                                      txtPONo.Text));
+
+                                return false;
+                            }
+                            //
+                            if (totalJin > cars[0].WEITotals)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
+                                     cars[0].WEITotals, txtPONo.Text));
+
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+                if (hfZhengFu.Value == "2")
+                {
+                    var allTuiTotal=Convert.ToDecimal( DBHelp.ExeScalar(string.Format("select isnull(sum(TuiTotal),0) from Sell_OrderInHouse where PONo = '{0}'", txtPONo.Text)));
+                    var fpTuiTotal = Convert.ToDecimal(DBHelp.ExeScalar(string.Format("select isnull(sum(Total),0) from Sell_OrderFP where PONo = '{0}' and [ZhengFu]=2", txtPONo.Text)));
+                    if (allTuiTotal+fpTuiTotal < -totalJin)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
+                                     -(allTuiTotal+ fpTuiTotal), txtPONo.Text));
+
                         return false;
                     }
-
-                    if (i == gvList.Rows.Count - 1)
-                    {
-                        if (totalJin <= 0)
-                        {
-                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('销售金额必须大于0！');</script>"));
-                            return false;
-                        }
-                        sql = string.Format(" SellFP_Out_View.PONo='{0}'", txtPONo.Text);
-                        cars = POSer.GetListArrayToFps_Out(sql);
-
-                        if (cars[0].POTotal == 0)
-                        {
-                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{0}],不允许开发票！');</script>",
-                                  txtPONo.Text));
-
-                            return false;
-                        }
-                        //
-                        if (totalJin > cars[0].WEITotals)
-                        {
-                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
-                                 cars[0].WEITotals, txtPONo.Text));
-
-                            return false;
-                        }
-                    }
                 }
-
                 Session["Orders"] = POOrders;
 
             }
@@ -358,7 +373,7 @@ namespace VAN_OA.JXC
                 for (int i = 0; i < gvList.Rows.Count; i++)
                 {
                     TextBox txtCheckPrice1 = gvList.Rows[i].FindControl("txtCheckPrice1") as TextBox;
-                    if (txtCheckPrice1 != null && txtCheckPrice1.Text!="")
+                    if (txtCheckPrice1 != null && txtCheckPrice1.Text != "")
                     {
                         if (CommHelp.VerifesToNum(txtCheckPrice1.Text) == false)
                         {
@@ -391,29 +406,55 @@ namespace VAN_OA.JXC
 
 
                     var model = POOrders[i];
-                    //string sql = string.Format(" ids={0}", model.SellOutOrderId);
-                    //List<CG_POOrdersFP> cars = POSer.GetListArrayToFps(sql);
 
-                    //if (cars.Count <= 0)
-                    //{
-                    //    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{3}]-商品[{0}]\规格[{1}]\型号[{2}]，该信息不存在！');</script>", model.GoodName, model.GoodSpec, model.Good_Model, txtPONo.Text));
-                    //    return false;
-                    //}
-
-                    if (i == gvList.Rows.Count - 1)
+                    if (hfZhengFu.Value == "2")
                     {
-
-                        string sql = string.Format(" SellFP_Out_View.PONo='{0}'", txtPONo.Text);
-                        decimal allWeiTotal = POSer.GetPOOrder_FPTotal_Out(txtPONo.Text, Request["allE_id"]);
-
-                        //
-                       if (totalJin > allWeiTotal)
+                        if (model.GoodNum >= 0)
                         {
-                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
-                                allWeiTotal, txtPONo.Text));
-
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],数量必须小于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
                             return false;
                         }
+                    }
+                    else
+                    {
+
+                        if (model.GoodNum <= 0)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('商品[{0}]\规格[{1}]\型号[{2}],数量必须大于0！');</script>", model.GoodName, model.GoodSpec, model.Good_Model));
+                            return false;
+                        }
+                    }
+
+                    if (hfZhengFu.Value == "1")
+                    {
+                        if (i == gvList.Rows.Count - 1)
+                        {
+
+                            string sql = string.Format(" SellFP_Out_View.PONo='{0}'", txtPONo.Text);
+                            decimal allWeiTotal = POSer.GetPOOrder_FPTotal_Out(txtPONo.Text, Request["allE_id"]);
+
+                            //
+                            if (totalJin > allWeiTotal)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
+                                    allWeiTotal, txtPONo.Text));
+
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                if (hfZhengFu.Value == "2")
+                {
+                    var allTuiTotal = Convert.ToDecimal(DBHelp.ExeScalar(string.Format("select isnull(sum(TuiTotal),0) from Sell_OrderInHouse where PONo = '{0}' ", txtPONo.Text)));
+                    var fpTuiTotal = Convert.ToDecimal(DBHelp.ExeScalar(string.Format("select isnull(sum(Total),0) from Sell_OrderFP where PONo = '{0}' and id<>{1} and [ZhengFu]=2", txtPONo.Text, Request["allE_id"])));
+                    if (allTuiTotal + fpTuiTotal < -totalJin)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('项目[{1}],未开发票金额剩余[{0}]！');</script>",
+                                     -(allTuiTotal + fpTuiTotal), txtPONo.Text));
+
+                        return false;
                     }
                 }
 
@@ -436,7 +477,7 @@ namespace VAN_OA.JXC
             txtPONo.ReadOnly = true;
             txtFPNo.ReadOnly = !result;
             dllFPstye.Enabled = false;
-            
+
         }
 
 
@@ -449,7 +490,7 @@ namespace VAN_OA.JXC
             {
                 FpTypeBaseInfoService fpTypeBaseInfoService = new FpTypeBaseInfoService();
                 List<FpTypeBaseInfo> gooQGooddList = fpTypeBaseInfoService.GetListArray("");
-                gooQGooddList.Insert(0, new FpTypeBaseInfo { FpType="" });
+                gooQGooddList.Insert(0, new FpTypeBaseInfo { FpType = "" });
                 dllFPstye.DataSource = gooQGooddList;
                 dllFPstye.DataBind();
                 dllFPstye.DataTextField = "FpType";
@@ -460,7 +501,7 @@ namespace VAN_OA.JXC
                 lbtnAddFiles.Visible = false;
 
                 gvList.Columns[0].Visible = false;
-              
+
                 gvList.Columns[8].Visible = false;
 
                 gvList.Columns[12].Visible = false;
@@ -493,7 +534,7 @@ namespace VAN_OA.JXC
                         //权限1（销售）
                         lbtnAddFiles.Visible = true;
                         gvList.Columns[0].Visible = true;
-                        
+
 
 
                         gvList.Columns[8].Visible = true;
@@ -584,7 +625,7 @@ namespace VAN_OA.JXC
 
                         ViewState["POOrdersIds"] = "";
 
-                        
+
 
                         var proId = 34;
                         //加载已经审批的数据
@@ -624,15 +665,11 @@ namespace VAN_OA.JXC
 
                         Sell_OrderFPService mainSer = new Sell_OrderFPService();
                         Sell_OrderFP pp = mainSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        hfZhengFu.Value = pp.ZhengFu.ToString();
                         txtName.Text = pp.CreateName;
-
-
                         txtDoPer.Text = pp.DoPer;
-
                         txtRemark.Text = pp.Remark;
                         txtRuTime.Text = pp.RuTime.ToString();
-
-
                         txtRuTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         txtSupplier.Text = pp.GuestName;
                         dllFPstye.Text = pp.FPNoStyle;
@@ -660,7 +697,7 @@ namespace VAN_OA.JXC
 
                         if (pp.TopTotal != 0 && pp.TopFPNo != "")
                         {
-                            lblTopMess.Text = string.Format("原发票：{0}， 金额：{1}",pp.TopFPNo,pp.TopTotal);
+                            lblTopMess.Text = string.Format("原发票：{0}， 金额：{1}", pp.TopFPNo, pp.TopTotal);
                         }
                         if (Request["ReAudit"] != null)
                         {
@@ -735,7 +772,7 @@ namespace VAN_OA.JXC
                             {
                                 ReEdit = true;
 
-                                
+
                             }
                         }
 
@@ -748,12 +785,13 @@ namespace VAN_OA.JXC
 
                         Sell_OrderFPService mainSer = new Sell_OrderFPService();
                         Sell_OrderFP pp = mainSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        hfZhengFu.Value = pp.ZhengFu.ToString();
                         lblHiddGuid.Text = pp.InvoiceNowGuid;
                         lblHiddFpGuid.Text = pp.NowGuid;
                         ViewState["oriModel"] = pp;
-                       
+
                         if (ReEdit && pp != null && pp.NowGuid != "")
-                        { 
+                        {
                             //查询之前修改的数据
                             string sql = string.Format("select * from Sell_OrderFP_History where TempGuid='{0}'", pp.NowGuid);
                             ViewState["Diff"] = DBHelp.getDataTable(sql);
@@ -890,7 +928,8 @@ namespace VAN_OA.JXC
                                             ddlPers.DataValueField = "UserId";
                                         }
 
-                                    } setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
+                                    }
+                                    setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
                                 }
                                 else
                                 {
@@ -905,14 +944,8 @@ namespace VAN_OA.JXC
                                     setEnable(false);
                                 }
                             }
-
                         }
                     }
-
-
-
-
-
                 }
 
             }
@@ -924,7 +957,7 @@ namespace VAN_OA.JXC
             {
                 //查询数据存在不存在
                 string sql = string.Format(" select count(*) from Sell_OrderFPBack where PID={0}", Convert.ToInt32(Request["allE_id"]));
-                if ((int)DBHelp.ExeScalar(sql) ==0)
+                if ((int)DBHelp.ExeScalar(sql) == 0)
                 {
                     var MainId = 0;
                     Sell_OrderFPBack sell_OrderFpBack = new Sell_OrderFPBack();
@@ -965,7 +998,7 @@ namespace VAN_OA.JXC
                 }
                 else
                 {
-                    sql = string.Format("update Sell_OrderFPBack set FPNo='{0}' where PID={1}",txtFPNo.Text.Trim(), Convert.ToInt32(Request["allE_id"]));
+                    sql = string.Format("update Sell_OrderFPBack set FPNo='{0}' where PID={1}", txtFPNo.Text.Trim(), Convert.ToInt32(Request["allE_id"]));
                     DBHelp.ExeScalar(sql);
                 }
             }
@@ -979,15 +1012,10 @@ namespace VAN_OA.JXC
                 btnSub.Enabled = false;
                 if (base.Request["ProId"] != null)
                 {
-
-
                     #region 获取单据基本信息
-
                     Sell_OrderFP order = new Sell_OrderFP();
-
                     int CreatePer = Convert.ToInt32(DBHelp.ExeScalar(string.Format("select ID from tb_User where loginName='{0}'", txtName.Text)));
                     order.CreateUserId = CreatePer;
-
                     order.DoPer = txtDoPer.Text;
                     //order.HouseID = Convert.ToInt32(ddlHouse.SelectedValue);
 
@@ -999,6 +1027,7 @@ namespace VAN_OA.JXC
                     order.POName = txtPOName.Text;
                     order.PONo = txtPONo.Text;
                     order.FPNoStyle = dllFPstye.Text;
+                    order.ZhengFu =Convert.ToInt32(hfZhengFu.Value);
 
                     List<Sell_OrderFPs> POOrders = Session["Orders"] as List<Sell_OrderFPs>;
 
@@ -1035,16 +1064,18 @@ namespace VAN_OA.JXC
 
 
                         int MainId = 0;
-                        
+
                         Sell_OrderFPService POOrderSer = new Sell_OrderFPService();
                         if (POOrderSer.addTran(order, eform, POOrders, out MainId) > 0)
                         {
-
-                            AddFpBack(POOrders);
-                            if (ddlPers.Visible == false)
+                            if (hfZhengFu.Value == "1")
                             {
-                                new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
-                                new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
+                                AddFpBack(POOrders);
+                                if (ddlPers.Visible == false)
+                                {
+                                    new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
+                                    new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
+                                }
                             }
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
 
@@ -1090,7 +1121,7 @@ namespace VAN_OA.JXC
                         if (Request["ReAudit"] != null)
                         {
                             eform.proId = 34;
-                            eform.appTime = DateTime.Now;                            
+                            eform.appTime = DateTime.Now;
                             eform.createTime = DateTime.Now;
                         }
                         tb_EFormService fromSer = new tb_EFormService();
@@ -1177,7 +1208,7 @@ namespace VAN_OA.JXC
                                 }
                             }
 
-                           var    deleteAll = string.Format(@"declare @oldFPNo  varchar(500);declare @oldPONo  varchar(500);
+                            var deleteAll = string.Format(@"declare @oldFPNo  varchar(500);declare @oldPONo  varchar(500);
 select top 1  @oldFPNo=FPNo,@oldPONo=PONo from Sell_OrderFP where id={0}
 update  CG_POOrder set FPTotal=replace( FPTotal, @oldFPNo+'/','')
 where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Request["allE_id"]);
@@ -1185,9 +1216,9 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
                         }
                         bool isBackUpInvoice = false;
 
-                         var sql1 = string.Format("select count(*) from [TB_ToInvoice] where FPId={0} and State<>'不通过'", order.Id);
-                         int invoiceHistory =Convert.ToInt32(DBHelp.ExeScalar(sql1));
-                         if (invoiceHistory > 0)
+                        var sql1 = string.Format("select count(*) from [TB_ToInvoice] where FPId={0} and State<>'不通过'", order.Id);
+                        int invoiceHistory = Convert.ToInt32(DBHelp.ExeScalar(sql1));
+                        if (invoiceHistory > 0)
                         {
                             isBackUpInvoice = true;
 
@@ -1196,77 +1227,79 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
 
                         if (POOrderSer.updateTran(order, eform, forms, POOrders, IDS, isBackUp, isBackUpInvoice))
                         {
-                            AddFpBack(POOrders);
-                            if (ddlPers.Visible == false)
+                            if (hfZhengFu.Value == "1")
                             {
-                                new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
-                                new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
-                                TB_ToInvoiceService invoiceSer = new TB_ToInvoiceService();
-                                //是销售发票的时候才生成，修改时不生成
-                                if (eform.proId== 26 && !string.IsNullOrEmpty(txtZhuanJie.Text) && forms.resultState == "通过")
+                                AddFpBack(POOrders);
+                                if (ddlPers.Visible == false)
                                 {
-                                    invoiceSer.YuPay_CreateInvoice(order, Convert.ToDecimal(txtZhuanJie.Text));
-                                }
-                            }
-                            else if (Request["ReAudit"] != null)    
-                            {
-                                //将原来的状态发票号修改修改
-                                new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
-                                new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
-                            }
-                            //数据进行还原
-                            if (forms.resultState == "不通过" && !string.IsNullOrEmpty(lblHiddFpGuid.Text))
-                            {
-                                if (POOrderSer.updateTran_BakDown(lblHiddFpGuid.Text, order.Id) == false)
-                                {
-                                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票单还原失败！');</script>");
-                                }
-                            }
-
-
-                            //项目编号 ，发票类型，发票号 进行还原
-                            if ( invoiceHistory > 0 && eform.state == "通过")
-                            {
-
-                                if (!string.IsNullOrEmpty(lblHiddGuid.Text))
-                                {
-                                    var noewUserId = Convert.ToInt32(Session["currentUserId"].ToString());
-                                    TB_ToInvoiceService invoiceService = new TB_ToInvoiceService();
-                                    var historyList= invoiceService.GetListArray_History(string.Format(" TempGuid='{0}'", lblHiddGuid.Text));
-                                    foreach (var model in historyList)
+                                    new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
+                                    new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
+                                    TB_ToInvoiceService invoiceSer = new TB_ToInvoiceService();
+                                    //是销售发票的时候才生成，修改时不生成
+                                    if (eform.proId == 26 && !string.IsNullOrEmpty(txtZhuanJie.Text) && forms.resultState == "通过")
                                     {
-                                        //项目编号 ，发票类型，发票号 进行还原
-                                        model.State = "执行中";
-                                        model.PoNo = txtPONo.Text;
-                                        model.PoName = txtPOName.Text;
-                                        model.FPNo = txtFPNo.Text.Trim();
-                                        model.GuestName = txtSupplier.Text;
-                                        model.TempGuid = lblHiddGuid.Text;
-
-                                        eform = new tb_EForm();
-
-                                        eform.toPer = noewUserId;
-
-                                        eform.appPer = noewUserId;
-                                        eform.appTime = DateTime.Now;
-                                        eform.createPer = noewUserId;
-                                        eform.createTime = DateTime.Now;
-                                        eform.proId = 27;//到款单
-                                        eform.state = "执行中";
-                                        tb_EFormService eformSer = new tb_EFormService();
-                                        int ids = 0;
-                                        List<A_Role_User> roleUserList = eformSer.getUsers(0, 27, out ids);
+                                        invoiceSer.YuPay_CreateInvoice(order, Convert.ToDecimal(txtZhuanJie.Text));
+                                    }
+                                }
+                                else if (Request["ReAudit"] != null)
+                                {
+                                    //将原来的状态发票号修改修改
+                                    new CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(txtPONo.Text, eform.state);
+                                    new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(txtPONo.Text);
+                                }
+                                //数据进行还原
+                                if (forms.resultState == "不通过" && !string.IsNullOrEmpty(lblHiddFpGuid.Text))
+                                {
+                                    if (POOrderSer.updateTran_BakDown(lblHiddFpGuid.Text, order.Id) == false)
+                                    {
+                                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票单还原失败！');</script>");
+                                    }
+                                }
 
 
-                                        eform.toProsId = ids;
-                                        if (invoiceService.addTran(model, eform) < 0)
+                                //项目编号 ，发票类型，发票号 进行还原
+                                if (invoiceHistory > 0 && eform.state == "通过")
+                                {
+
+                                    if (!string.IsNullOrEmpty(lblHiddGuid.Text))
+                                    {
+                                        var noewUserId = Convert.ToInt32(Session["currentUserId"].ToString());
+                                        TB_ToInvoiceService invoiceService = new TB_ToInvoiceService();
+                                        var historyList = invoiceService.GetListArray_History(string.Format(" TempGuid='{0}'", lblHiddGuid.Text));
+                                        foreach (var model in historyList)
                                         {
-                                            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('补到款单 失败，请手动补写！');</script>");
+                                            //项目编号 ，发票类型，发票号 进行还原
+                                            model.State = "执行中";
+                                            model.PoNo = txtPONo.Text;
+                                            model.PoName = txtPOName.Text;
+                                            model.FPNo = txtFPNo.Text.Trim();
+                                            model.GuestName = txtSupplier.Text;
+                                            model.TempGuid = lblHiddGuid.Text;
+
+                                            eform = new tb_EForm();
+
+                                            eform.toPer = noewUserId;
+
+                                            eform.appPer = noewUserId;
+                                            eform.appTime = DateTime.Now;
+                                            eform.createPer = noewUserId;
+                                            eform.createTime = DateTime.Now;
+                                            eform.proId = 27;//到款单
+                                            eform.state = "执行中";
+                                            tb_EFormService eformSer = new tb_EFormService();
+                                            int ids = 0;
+                                            List<A_Role_User> roleUserList = eformSer.getUsers(0, 27, out ids);
+
+
+                                            eform.toProsId = ids;
+                                            if (invoiceService.addTran(model, eform) < 0)
+                                            {
+                                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('补到款单 失败，请手动补写！');</script>");
+                                            }
                                         }
                                     }
                                 }
                             }
-
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
                             if (Session["backurl"] != null)
                             {
@@ -1299,9 +1332,10 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
                 if (Session["Sell_OrderOutHousesViewSession"] != null)
                 {
 
-                    List<CG_POOrdersFP> selectedList = Session["Sell_OrderOutHousesViewSession"] as List<CG_POOrdersFP>;                 
+                    List<CG_POOrdersFP> selectedList = Session["Sell_OrderOutHousesViewSession"] as List<CG_POOrdersFP>;
                     if (selectedList.Count > 0)
                     {
+                        hfZhengFu.Value = Session["ZhengFu"].ToString();
                         List<Sell_OrderFPs> POOrders = new List<Sell_OrderFPs>();
                         decimal total = 0;
                         foreach (var model in selectedList)
@@ -1310,37 +1344,62 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
                             fpModel.Good_Model = model.Good_Model;
                             fpModel.GoodName = model.GoodName;
                             fpModel.GoodNo = model.GoodNo;
-                            fpModel.GoodNum = model.Num;
+                            if (hfZhengFu.Value == "1")
+                            {
+                                fpModel.GoodNum = model.Num;
+                                fpModel.GoodSellPriceTotal = model.SellTotal;
+                                fpModel.Total = model.CostTotal;
+                            }
+                            else
+                            {
+                                fpModel.GoodNum = -model.Num;
+                                fpModel.GoodSellPriceTotal = -model.SellTotal;
+                                fpModel.Total = -model.CostTotal;
+                            }
                             fpModel.GoodPrice = model.CostPrice;
-                           // fpModel.GoodRemark = model.GoodRemark;
+                            // fpModel.GoodRemark = model.GoodRemark;
                             fpModel.GoodSellPrice = model.SellPrice;
-                            fpModel.GoodSellPriceTotal = model.SellTotal;
+                          
                             fpModel.GoodSpec = model.GoodSpec;
                             fpModel.GoodTypeSmName = model.GoodTypeSmName;
                             fpModel.GoodUnit = model.GoodUnit;
                             fpModel.GooId = model.GoodId;
                             fpModel.SellOutOrderId = model.Ids;
                             fpModel.SellOutPONO = "";
-                            fpModel.Total = model.CostTotal;
+                        
                             POOrders.Add(fpModel);
-
-                            total += model.SellTotal;
+                            if (hfZhengFu.Value == "1")
+                            {
+                                total += model.SellTotal;
+                            }
+                            else
+                            {
+                                total += -model.SellTotal;
+                            }
+                              
                         }
-
                         txtPOName.Text = selectedList[0].POName;
                         txtPONo.Text = selectedList[0].PONo;
                         txtSupplier.Text = selectedList[0].GuestName;
+                      
 
-                        TB_ToInvoiceService invoiceSer = new TB_ToInvoiceService();                       
-                        var ZhuanPayTotal = invoiceSer.GetPayTotal(txtPONo.Text, total);
-                        txtZhuanJie.Text = "";
-                        if (ZhuanPayTotal > 0)
+                        if (hfZhengFu.Value == "1")
                         {
-                            txtZhuanJie.Text = ZhuanPayTotal.ToString();
+                            TB_ToInvoiceService invoiceSer = new TB_ToInvoiceService();
+                            var ZhuanPayTotal = invoiceSer.GetPayTotal(txtPONo.Text, total);
+                            txtZhuanJie.Text = "";
+                            if (ZhuanPayTotal > 0)
+                            {
+                                txtZhuanJie.Text = ZhuanPayTotal.ToString();
+                            }
                         }
-
+                        else
+                        {
+                            txtZhuanJie.Text = "";
+                        }
                         Session["Orders"] = POOrders;
                         Session["Sell_OrderOutHousesViewSession"] = null;
+                        Session["ZhengFu"] = null;
                         gvList.DataSource = POOrders;
                         gvList.DataBind();
                     }
@@ -1425,8 +1484,8 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
                 setValue(e.Row.FindControl("lblNum") as Label, SumOrders.GoodNum.ToString());//数量                
                 setValue(e.Row.FindControl("lblTotal") as Label, SumOrders.Total.ToString());//成本总额 
                 setValue(e.Row.FindControl("lblTotal1") as Label, SumOrders.GoodSellPriceTotal.ToString());//成本总额 
-   
-                
+
+
             }
 
         }
@@ -1475,7 +1534,7 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
                     POOrders[i].GoodNum = Convert.ToDecimal(txtNum.Text);
                     POOrders[i].GoodSellPriceTotal = POOrders[i].GoodSellPrice * POOrders[i].GoodNum;
                     POOrders[i].Total = POOrders[i].GoodPrice * POOrders[i].GoodNum;
-                     
+
                 }
 
                 TextBox txtGoodRemark = gvList.Rows[i].FindControl("txtGoodRemark") as TextBox;

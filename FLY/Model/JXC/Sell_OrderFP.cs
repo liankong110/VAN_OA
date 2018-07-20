@@ -189,5 +189,9 @@ namespace VAN_OA.Model.JXC
         /// 项目日期
         /// </summary>
         public DateTime PODate { get; set; }
+        /// <summary>
+        /// 1 正 2 负数
+        /// </summary>
+        public int ZhengFu { get; set; }
     }
 }

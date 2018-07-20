@@ -225,7 +225,7 @@
                 <cc1:CalendarExtender ID="CalendarExtender4" PopupButtonID="ImageButton3" runat="server"
                     Format="yyyy-MM-dd" TargetControlID="txtPGTo">
                 </cc1:CalendarExtender>
-                反馈得分: 
+                反馈总得分: 
                 <asp:DropDownList ID="ddlFKDF" runat="server">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
@@ -236,7 +236,7 @@
                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                 </asp:DropDownList>
                 <asp:TextBox ID="txtFKDF" runat="server" Width="80px"></asp:TextBox>
-                综合得分: 
+                综合总得分: 
                 <asp:DropDownList ID="ddlAllScore" runat="server">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
@@ -258,6 +258,7 @@
             </td>
         </tr>
     </table>
+    派工日期:<asp:Label ID="lblPaiDateMess" runat="server" Text=""></asp:Label>
     <asp:Panel ID="Panel2" runat="server" Width="100%" ScrollBars="Horizontal">
         <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid" 
             Width="100%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
@@ -411,4 +412,11 @@
     &nbsp; &nbsp;
     平均反馈得分：<asp:Label ID="lblAvgFKscore" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
+
+      <br />
+    工程综合得分总计：<asp:Label ID="lblGong_Socre" runat="server" Text="0" ForeColor="Red"></asp:Label>
+    &nbsp; &nbsp;
+    零售综合得分总计：<asp:Label ID="lblLing_Score" runat="server" Text="0" ForeColor="Red"></asp:Label>
+    &nbsp; &nbsp;
+     系统综合得分总计：<asp:Label ID="lblXi_Score" runat="server" Text="0" ForeColor="Red"></asp:Label>
 </asp:Content>

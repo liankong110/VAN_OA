@@ -319,6 +319,176 @@ on newtable1.PONo= newtable3.PONo",PONo,fpMailId);
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
+        public List<VAN_OA.Model.JXC.CG_POOrdersFP> GetListArrayToFps_InSell(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT Sell_OrderInHouse.PONo,Sell_OrderInHouse.POName,Sell_OrderInHouse.GuestNAME as Supplier,
+0 as POTotal, 0 as fpTotal,0 as WEITotals,Ids,
+Sell_OrderInHouses.Id,RuTime,TB_Good.GoodName as InvName,GoodNum as Num,TB_Good.GoodUnit as Unit,
+GoodPrice as CostPrice,GoodSellPrice as SellPrice,Sell_OrderInHouses.GooId,GoodNo,GoodName,GoodSpec,GoodModel,
+GoodUnit,GoodTypeSmName from Sell_OrderInHouse  
+left join Sell_OrderInHouses on Sell_OrderInHouses.Id=Sell_OrderInHouse.Id 
+left join TB_Good on TB_Good.GoodId=Sell_OrderInHouses.GooId ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" order by Sell_OrderInHouse.PONo desc ");
+            List<VAN_OA.Model.JXC.CG_POOrdersFP> list = new List<VAN_OA.Model.JXC.CG_POOrdersFP>();
+
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        VAN_OA.Model.JXC.CG_POOrdersFP model = new VAN_OA.Model.JXC.CG_POOrdersFP();
+                        object ojb;
+                        model.PONo = dataReader["PONo"].ToString();
+                        model.POName = dataReader["POName"].ToString();
+
+                        ojb = dataReader["POTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.POTotal = Convert.ToDecimal(ojb);
+                        }
+
+                        ojb = dataReader["fpTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.fpTotal = Convert.ToDecimal(ojb);
+                        }
+
+                        ojb = dataReader["WEITotals"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.WEITotals = Convert.ToDecimal(ojb);
+                        }
+
+                        ojb = dataReader["Ids"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Ids = (int)ojb;
+                        }
+                        ojb = dataReader["Id"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Id = (int)ojb;
+                        }
+                        ojb = dataReader["RuTime"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Time = (DateTime)ojb;
+                        }
+                        model.GuestName = dataReader["Supplier"].ToString();
+                        model.InvName = dataReader["InvName"].ToString();
+                        ojb = dataReader["Num"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Num = (decimal)ojb;
+                        }
+                        model.Unit = dataReader["Unit"].ToString();
+                        ojb = dataReader["CostPrice"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.CostPrice = (decimal)ojb;
+                        }
+
+
+                        model.CostTotal = model.CostPrice * model.Num;
+                        ojb = dataReader["SellPrice"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SellPrice = (decimal)ojb;
+                        }
+
+                        model.SellTotal = model.SellPrice * model.Num;
+                        //ojb = dataReader["OtherCost"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    model.OtherCost = (decimal)ojb;
+                        //}
+
+                        //model.YiLiTotal = model.SellTotal - model.CostTotal - model.OtherCost;
+
+                        //ojb = dataReader["ToTime"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    model.ToTime = (DateTime)ojb;
+                        //}
+                        //ojb = dataReader["Profit"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    model.Profit = (decimal)ojb;
+                        //}
+                        //if (model.SellTotal != 0)
+                        //{
+                        //    model.Profit = model.YiLiTotal / model.SellTotal * 100;
+                        //}
+                        //else if (model.YiLiTotal != 0)
+                        //{
+                        //    model.Profit = -100;
+                        //}
+                        //else
+                        //{
+                        //    model.Profit = 0;
+                        //}
+
+
+                        ojb = dataReader["GooId"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodId = Convert.ToInt32(ojb);
+                        }
+
+                        ojb = dataReader["GoodNo"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodNo = ojb.ToString();
+                        }
+                        ojb = dataReader["GoodName"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodName = ojb.ToString();
+                        }
+                        ojb = dataReader["GoodSpec"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodSpec = ojb.ToString();
+                        }
+
+                        ojb = dataReader["GoodModel"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Good_Model = ojb.ToString();
+                        }
+                        ojb = dataReader["GoodUnit"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodUnit = ojb.ToString();
+                        }
+
+                        ojb = dataReader["GoodTypeSmName"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodTypeSmName = ojb.ToString();
+                        }
+
+
+
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
+        /// <summary>
+        /// 获取所有尚未开发票的项目
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
         public List<VAN_OA.Model.JXC.CG_POOrdersFP> GetListArrayToFps_Out(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();

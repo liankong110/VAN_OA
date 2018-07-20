@@ -128,11 +128,11 @@ namespace VAN_OA.JXC
                     btnExcel.Visible = false;
                 }
 
-             
+
                 string sql = string.Format("select loginName,ID from tb_User where loginIPosition='技术部' AND loginStatus='在职' and loginName<>'';");
 
                 List<User> getUsers = userSer.getUserReportTos(sql);
-                getUsers = getUsers.FindAll(T=>string.IsNullOrEmpty(T.LoginName)==false);
+                getUsers = getUsers.FindAll(T => string.IsNullOrEmpty(T.LoginName) == false);
                 getUsers.Insert(0, new Model.User { Id = -1, LoginName = "全部" });
                 ddlPaiGong.DataSource = getUsers;
                 ddlPaiGong.DataBind();
@@ -171,7 +171,7 @@ namespace VAN_OA.JXC
                 }
             }
             string sql = " ";
-           
+
             if (ddlCompany.Text != "-1")
             {
                 string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
@@ -408,12 +408,12 @@ namespace VAN_OA.JXC
                 }
                 fuhao += string.Format(" and InvoTotal-goodTotal {0} {1}", ddlProTureProfit.Text, txtProTureProfit.Text);
             }
-
+            string paiSql = "";
             if (ddlPaiGong.Text != "-1")
             {
-                fuhao += string.Format(" and OutDispater={0}", ddlPaiGong.Text);
+                paiSql += string.Format(" and OutDispater={0}", ddlPaiGong.Text);
             }
-
+            string mess = "";
             if (txtPGFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtPGFrom.Text) == false)
@@ -421,7 +421,8 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('派工时间 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and DisDate>='{0} 00:00:00'", txtPGFrom.Text);
+                paiSql += string.Format(" and DisDate>='{0} 00:00:00'", txtPGFrom.Text);
+                mess += txtPGFrom.Text+"~";
             }
 
             if (txtPGTo.Text != "")
@@ -431,8 +432,11 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('派工时间 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and DisDate<='{0} 23:59:59'", txtPGTo.Text);
+                paiSql += string.Format(" and DisDate<='{0} 23:59:59'", txtPGTo.Text);
+
+                mess += txtPGTo.Text + "~";
             }
+            lblPaiDateMess.Text = mess;
 
             if (ddlJingLi.Text != "-1" && !string.IsNullOrEmpty(txtJingLi.Text))
             {
@@ -442,7 +446,7 @@ namespace VAN_OA.JXC
                     return;
                 }
             }
-            List<SumSkillTotal> pOOrderList = this.POSer.GetSumSkill_Total(sql, having, fuhao);
+            List<SumSkillTotal> sumSkillTotals = this.POSer.GetSumSkill_Total(sql, having, fuhao, paiSql);
             //if (ddlTrueZhangQI.Text != "-1")
             //{
             //    if (ddlTrueZhangQI.Text == "1")
@@ -493,57 +497,92 @@ namespace VAN_OA.JXC
             //        pOOrderList = pOOrderList.FindAll(t => t.JingLi == jingLi);
             //    }
             //}
+            //反馈得分
+            if (ddlFKDF.Text != "-1" && !string.IsNullOrEmpty(txtFKDF.Text))
+            {
+                if (CommHelp.VerifesToNum(txtFKDF.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('反馈得分 格式错误！');</script>");
+                    return;
+                }
+                fuhao = ddlFKDF.Text;
+                decimal allScore = Convert.ToDecimal(txtFKDF.Text);
+                if (fuhao == ">")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue > allScore);
+                }
+                if (fuhao == "<")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue < allScore);
+                }
+                if (fuhao == ">=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue >= allScore);
+                }
+                if (fuhao == "<=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue <= allScore);
+                }
+                if (fuhao == "=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue == allScore);
+                }
+                if (fuhao == "<>")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumValue == allScore);
+                }
+            }
 
-            //if (ddlAllScore.Text != "-1" && !string.IsNullOrEmpty(txtAllScore.Text))
-            //{
-            //    if (CommHelp.VerifesToNum(txtAllScore.Text) == false)
-            //    {
-            //        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('综合得分 格式错误！');</script>");
-            //        return;
-            //    }
-            //    fuhao = ddlAllScore.Text;
-            //    decimal allScore = Convert.ToDecimal(txtAllScore.Text);
-            //    if (fuhao == ">")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore > allScore);
-            //    }
-            //    if (fuhao == "<")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore < allScore);
-            //    }
-            //    if (fuhao == ">=")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore >= allScore);
-            //    }
-            //    if (fuhao == "<=")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore <= allScore);
-            //    }
-            //    if (fuhao == "=")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore == allScore);
-            //    }
-            //    if (fuhao == "<>")
-            //    {
-            //        pOOrderList = pOOrderList.FindAll(t => t.allScore == allScore);
-            //    }
-            //}
-            //var getAllPONos = pOOrderList.Aggregate("", (current, m) => current + ("'" + m.PONo + "',")).Trim(',');
-            //lblVisAllPONO.Text = getAllPONos;
+            //综合得分
+            if (ddlAllScore.Text != "-1" && !string.IsNullOrEmpty(txtAllScore.Text))
+            {
+                if (CommHelp.VerifesToNum(txtAllScore.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('综合得分 格式错误！');</script>");
+                    return;
+                }
+                fuhao = ddlAllScore.Text;
+                decimal allScore = Convert.ToDecimal(txtAllScore.Text);
+                if (fuhao == ">")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore > allScore);
+                }
+                if (fuhao == "<")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore < allScore);
+                }
+                if (fuhao == ">=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore >= allScore);
+                }
+                if (fuhao == "<=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore <= allScore);
+                }
+                if (fuhao == "=")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore == allScore);
+                }
+                if (fuhao == "<>")
+                {
+                    sumSkillTotals = sumSkillTotals.FindAll(t => t.SumScore == allScore);
+                }
+            }
 
-           
 
-            AspNetPager1.RecordCount = pOOrderList.Count;
+
+            AspNetPager1.RecordCount = sumSkillTotals.Count;
             this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
-
-            this.gvMain.DataSource = pOOrderList;
+            this.gvMain.DataSource = sumSkillTotals;
             this.gvMain.DataBind();
 
-            //pager.TotalCount = pOOrderList.Count;
-            //PagerControl page= gvMain.BottomPagerRow.Cells[0].FindControl("myPage") as PagerControl;
-            //page.TotalCount = pOOrderList.Count;
-            //page.BindData();
-            // AspNetPager1.CustomInfoHTML = "第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录";
+            lblGong_Socre.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t=>t.Gong_Score));
+            lblLing_Score.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.Ling_Score));
+            lblXi_Score.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.Xi_Score));
+            lblAllScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.SumScore));
+            lblFanKuiScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.SumValue));
+            lblAvgScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.AvgScore));
+            lblAvgFKscore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.AvgValue));
 
         }
         protected void btnSelect_Click(object sender, EventArgs e)
@@ -553,13 +592,13 @@ namespace VAN_OA.JXC
         }
         protected void gvList_RowEditing(object sender, GridViewEditEventArgs e)
         {
-           
+
             var id = gvMain.DataKeys[e.NewEditIndex].Value;
-            if (id != null&&id.ToString()!="0")
+            if (id != null && id.ToString() != "0")
             {
                 string url = "/EFrom/Dispatching.aspx?ProId=1&Type=Edit&allE_id=" + id
                 + "&EForm_Id=" + DBHelp.ExeScalar(string.Format("select id from tb_EForm WHERE allE_id={0} AND proId=1", id));
-               
+
 
                 Response.Write(string.Format("<script>window.open('{0}','_blank')</script>", url));
             }
@@ -589,7 +628,7 @@ namespace VAN_OA.JXC
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
-                
+
             }
         }
 

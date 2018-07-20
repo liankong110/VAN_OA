@@ -16,8 +16,6 @@ namespace VAN_OA.Dal.JXC
 {
     public class Sell_OrderFPService
     {
-
-
         public bool updateTran_BakDown(string NowGuid,int id)
         {
             using (SqlConnection conn = DBHelp.getConn())
@@ -408,6 +406,9 @@ namespace VAN_OA.Dal.JXC
             strSql1.Append("ZhuanPayTotal,");
             strSql2.Append("" + model.ZhuanPayTotal + ",");
 
+            strSql1.Append("ZhengFu,");
+            strSql2.Append("" + model.ZhengFu + ",");
+
             strSql.Append("insert into Sell_OrderFP(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
             strSql.Append(")");
@@ -531,7 +532,7 @@ namespace VAN_OA.Dal.JXC
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" ZhuanPayTotal,NowGuid,InvoiceNowGuid,Sell_OrderFP.Id,CreateUserId,CreateTime,RuTime,GuestNAME,DoPer,ProNo,PONo,POName,Remark ,tb_User.loginName as CreateName,Status,FPNo,FPNoStyle,Total,TopFPNo,TopTotal ");
+            strSql.Append(" ZhengFu,ZhuanPayTotal,NowGuid,InvoiceNowGuid,Sell_OrderFP.Id,CreateUserId,CreateTime,RuTime,GuestNAME,DoPer,ProNo,PONo,POName,Remark ,tb_User.loginName as CreateName,Status,FPNo,FPNoStyle,Total,TopFPNo,TopTotal ");
             strSql.Append(" from Sell_OrderFP left join tb_User on tb_User.id=CreateUserId ");
             strSql.Append(" where Sell_OrderFP.Id=" + id + "");
 
@@ -548,6 +549,7 @@ namespace VAN_OA.Dal.JXC
                         model.NowGuid = dataReader["NowGuid"].ToString();
                         model.InvoiceNowGuid = dataReader["InvoiceNowGuid"].ToString();
                         model.ZhuanPayTotal = Convert.ToDecimal(dataReader["ZhuanPayTotal"]);
+                        model.ZhengFu = Convert.ToInt32(dataReader["ZhengFu"]);
                     }
                 }
             }

@@ -481,24 +481,24 @@ left join
         /// <param name="having"></param>
         /// <param name="fuhao"></param>
         /// <returns></returns>
-        public List<Model.JXC.SumSkillTotal> GetSumSkill_Total(string strWhere, string having, string fuhao)
+        public List<Model.JXC.SumSkillTotal> GetSumSkill_Total(string strWhere, string having, string fuhao,string paiSql)
         {
             TB_BaseSkillService skillSer = new TB_BaseSkillService();
             var skillList = skillSer.GetListArray("");
             StringBuilder strSql = new StringBuilder();
-            strSql.AppendFormat(@" select MyPoType,loginName,SUM(SumHours) as SumHours,sum(SumFK) as SumFK,avg(AvgFK) as AvgFK,sum(SumScore) as SumScore,avg(AvgScore) as AvgScore,avg(SumPOTotal) as SumPOTotal,avg(InvoTotal) as InvoTotal from 
+            strSql.AppendFormat(@" select MyPoType,loginName,SUM(SumHours) as SumHours,sum(SumFK) as SumFK,avg(AvgFK) as AvgFK,sum(SumScore) as SumScore,avg(AvgScore) as AvgScore,sum(SumPOTotal) as SumPOTotal,sum(InvoTotal) as InvoTotal,sum(TypeCount) as TypeCount from 
  (
- select MyPoNo,TB_BaseSkill.MyPoType,tb_User.loginName,sum(NiHours) SumHours,sum(MyValue) as SumFK,AVG(MyValue) as AvgFK,sum(10*MyValue*MyXiShu*XiShu) AS SumScore,AVG(10*MyValue*MyXiShu*XiShu) AS AvgScore from tb_Dispatching
+ select COUNT(*) AS TypeCount,MyPoNo,TB_BaseSkill.MyPoType,tb_User.loginName,sum(NiHours) SumHours,sum(MyValue) as SumFK,AVG(MyValue) as AvgFK,sum(10*MyValue*MyXiShu*XiShu) AS SumScore,AVG(10*MyValue*MyXiShu*XiShu) AS AvgScore from tb_Dispatching
   left join tb_User on tb_User.ID=tb_Dispatching.OutDispater 
   left join CG_POOrder on CG_POOrder.PONo=tb_Dispatching.MyPoNo and IFZhui=0
   left join TB_BaseSkill on TB_BaseSkill.Id=CG_POOrder.POType 
     where tb_Dispatching.Id in (
- SELECT allE_id FROM tb_EForm WHERE proId=1 AND state='通过')
+ SELECT allE_id FROM tb_EForm WHERE proId=1 AND state='通过') {3}
  group by MyPoNo,MyPoType,loginName
  ) as  Dispatching  
  inner join 
  (
- select allNewTb.PONo,sum(SumPOTotal) as SumPOTotal, sum(InvoTotal) as InvoTotal 
+ select allNewTb.PONo,SumPOTotal, InvoTotal 
  from (select  MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, 
  CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro,  sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, 
   isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal,  AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,
@@ -513,8 +513,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
  GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,
  MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType {1}) as allNewTb 
  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono 
- group by allNewTb.PONo
-) as SumPorect  on Dispatching.MyPoNo=SumPorect.PONo {2}", strWhere, having, fuhao);
+) as SumPorect  on Dispatching.MyPoNo=SumPorect.PONo {2}", strWhere, having, fuhao, paiSql);
             strSql.Append(" group by MyPoType,loginName");           
            
             List<Model.JXC.SumSkillTotal_Detail> list = new List<Model.JXC.SumSkillTotal_Detail>();
@@ -569,7 +568,13 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.InvoTotal = Convert.ToDecimal(ojb);
-                        } 
+                        }
+                        ojb = dataReader["TypeCount"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.TypeCount = Convert.ToInt32(ojb);
+                        }
+                        
                         list.Add(model);
                     }
                 }
@@ -591,9 +596,13 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 model.Gong_Value= tempList.Where(t=>t.MyPoType== "工程").Sum(t => t.SumFK);
                 model.Ling_Value = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumFK);
                 model.Xi_Value = tempList.Where(t => t.MyPoType == "系统").Sum(t => t.SumFK);
-                model.AvgValue = tempList.Average(t=>t.AvgFK);
-                model.SumValue= tempList.Average(t => t.SumFK);
-
+               
+                model.SumValue= tempList.Sum(t => t.SumFK);
+                var sumCount = tempList.Sum(t => t.TypeCount);
+                if (sumCount != 0)
+                {
+                    model.AvgValue = model.SumValue/ sumCount;
+                } 
 
                 model.Gong_Score = tempList.Where(t => t.MyPoType == "工程").Sum(t => t.SumScore);
                 model.Ling_Score = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumScore);
@@ -610,8 +619,12 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 {
                     model.Xi_Score_Per = model.Xi_Score / xiScore * 100;
                 }
-                model.AvgScore = tempList.Average(t => t.AvgScore);
-                model.SumScore = tempList.Average(t => t.SumScore);
+             
+                model.SumScore = tempList.Sum(t => t.SumScore);               
+                if (sumCount != 0)
+                {
+                    model.AvgScore = model.SumScore / sumCount;
+                }
                 model.CompanyScore = gongScore + lingScore + xiScore;
                 if (model.CompanyScore != 0)
                 {

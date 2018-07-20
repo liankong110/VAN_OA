@@ -128,6 +128,10 @@ namespace VAN_OA.Model.JXC
         /// 到款金额
         /// </summary>
         public decimal InvoTotal { get; set; }
+        /// <summary>
+        /// 总条数
+        /// </summary>
+        public int TypeCount { get; set; }
 
     }
 }

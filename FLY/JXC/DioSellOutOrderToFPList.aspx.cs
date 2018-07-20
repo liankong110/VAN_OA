@@ -18,45 +18,68 @@ namespace VAN_OA.JXC
 
         private void Show()
         {
-            string sql = " 1=1 ";
-
-            if (txtPONo.Text.Trim() != "")
+            string sql = " 1=1 ";      
+            List<CG_POOrdersFP> fpList = new List<CG_POOrdersFP>();
+            if (ddlZhengFu.Text == "1")
             {
-                if (CheckPoNO(txtPONo.Text.Trim()) == false)
+                if (txtPONo.Text.Trim() != "")
                 {
-                    return;
+                    if (CheckPoNO(txtPONo.Text.Trim()) == false)
+                    {
+                        return;
+                    }
+                    sql += string.Format(" and SellFP_Out_View.PONO='{0}'", txtPONo.Text.Trim());
                 }
-                sql += string.Format(" and SellFP_Out_View.PONO='{0}'", txtPONo.Text.Trim());            
-            }
-            if (ttxPOName.Text.Trim() != "")
-            {
-                sql += string.Format(" and Sell_OrderOutHouse.POName like '%{0}%'", ttxPOName.Text.Trim());
-            }
-
-            sql += string.Format(" and Sell_OrderOutHouse.CreateUserId={0} ", Session["currentUserId"]);
-            List<CG_POOrdersFP> cars = this.POSer.GetListArrayToFps_Out(sql);
-
-            var cgIds="";
-            for (int i=gvList.PageIndex*10;i< ((gvList.PageIndex+1)*10);i++)
-            {
-                if (i < cars.Count)
+                if (ttxPOName.Text.Trim() != "")
                 {
-                    cgIds += cars[i].Ids.ToString() + ",";
+                    sql += string.Format(" and Sell_OrderOutHouse.POName like '%{0}%'", ttxPOName.Text.Trim());
+                }
+
+                sql += string.Format(" and Sell_OrderOutHouse.CreateUserId={0} ", Session["currentUserId"]);
+                fpList = this.POSer.GetListArrayToFps_Out(sql);
+            }
+            else
+            {
+                if (txtPONo.Text.Trim() != "")
+                {
+                    if (CheckPoNO(txtPONo.Text.Trim()) == false)
+                    {
+                        return;
+                    }
+                    sql += string.Format(" and Sell_OrderInHouse.PONO='{0}'", txtPONo.Text.Trim());
+                }
+                if (ttxPOName.Text.Trim() != "")
+                {
+                    sql += string.Format(" and Sell_OrderInHouse.POName like '%{0}%'", ttxPOName.Text.Trim());
+                }
+
+                sql += string.Format(" and Sell_OrderInHouse.CreateUserId={0} ", Session["currentUserId"]);
+                fpList = this.POSer.GetListArrayToFps_InSell(sql);
+            }
+            if (ddlZhengFu.Text == "1")
+            {
+                var cgIds = "";
+                for (int i = gvList.PageIndex * 10; i < ((gvList.PageIndex + 1) * 10); i++)
+                {
+                    if (i < fpList.Count)
+                    {
+                        cgIds += fpList[i].Ids.ToString() + ",";
+                    }
+                }
+                if (cgIds.Length > 0)
+                {
+                    cgIds = cgIds.Substring(0, cgIds.Length - 1);
+                }
+                //Label1.Text = "";
+                if (cgIds.Length > 0)
+                {
+                    myDataTable = DBHelp.getDataTable(string.Format("select SellOutOrderId from Sell_OrderFPs where SellOutOrderId in  ({0}) ", cgIds));
+
                 }
             }
-            if (cgIds.Length > 0)
-            {
-                cgIds = cgIds.Substring(0,cgIds.Length-1);
-            }
-            //Label1.Text = "";
-            if (cgIds.Length > 0)
-            {
-                myDataTable = DBHelp.getDataTable(string.Format("select SellOutOrderId from Sell_OrderFPs where SellOutOrderId in  ({0}) ", cgIds));
-
-            }
-            AspNetPager1.RecordCount = cars.Count;
+            AspNetPager1.RecordCount = fpList.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
-            this.gvList.DataSource = cars;
+            this.gvList.DataSource = fpList;
             this.gvList.DataBind();
             
         }
@@ -193,7 +216,15 @@ namespace VAN_OA.JXC
                 {
                     where = where.Substring(0, where.Length - 1) + ")";
 
-                    var allList = this.POSer.GetListArrayToFps_Out(where);
+                    List<VAN_OA.Model.JXC.CG_POOrdersFP> allList = new List<CG_POOrdersFP>();
+                    if (ddlZhengFu.Text == "1")
+                    {
+                        allList=this.POSer.GetListArrayToFps_Out(where);
+                    }
+                    else
+                    {
+                        allList = this.POSer.GetListArrayToFps_InSell(where);
+                    }
                     System.Collections.Hashtable hs = new System.Collections.Hashtable();
                     foreach (var model in allList)
                     { 
@@ -208,10 +239,12 @@ namespace VAN_OA.JXC
                         }
                     }
                     Session["Sell_OrderOutHousesViewSession"] = allList;
+                    Session["ZhengFu"] = ddlZhengFu.Text;
                     Response.Write("<script>window.close();window.opener=null;</script>");
                     return;
                 }
             }
+           
             Response.Write("<script>window.close();window.opener=null;</script>");
 
         }

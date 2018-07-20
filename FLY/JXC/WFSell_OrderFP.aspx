@@ -73,7 +73,7 @@
                     ServiceMethod="GetUserName" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="10"
                     TargetControlID="txtDoPer">
                 </cc1:AutoCompleteExtender>
-                <font style="color: Red">*</font>
+                <font style="color: Red">*</font><asp:HiddenField ID="hfZhengFu" Value="1" runat="server" />
             </td>
         </tr>
         <tr>
