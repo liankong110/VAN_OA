@@ -196,6 +196,20 @@ namespace VAN_OA.Model.JXC
         }
 
         /// <summary>
+        /// 未到比例=（项目金额-到款金额）/项目金额*100，显示加上“%“
+        /// </summary>
+        public string WeiDaoTotal1
+        {
+            get
+            {
+                if (POTotal == 0) { return "0%"; }
+
+                return string.Format("{0:n2}%", (POTotal - Total1) / POTotal * 100);
+
+            }
+        }
+        public decimal Total1 { get; set; }
+        /// <summary>
         /// 到款比例=（项目金额-到款金额）/项目金额*100，显示加上“%“
         /// </summary>
         public string DaoTotal

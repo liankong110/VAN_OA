@@ -112,9 +112,11 @@ left join TB_SupplierAdvancePayment on TB_TempSupplierInvoice.SupplierAdvanceId=
 
 
                 }
-                var allList = new SupplierAdvancePaymentsToPayService().GetListArray(checkIds, caiIds);
+                var paySer=new SupplierAdvancePaymentsToPayService();
+                var allList = paySer.GetListArray(checkIds, caiIds);
                 if (allList.Count > 0)
                 {
+                    List<string>  fpList=paySer.GetFPInfo(caiIds);
                     tb_EForm eform = GetToSupplierInvoice();
 
                     TB_SupplierInvoice model = new TB_SupplierInvoice();
@@ -122,7 +124,9 @@ left join TB_SupplierAdvancePayment on TB_TempSupplierInvoice.SupplierAdvanceId=
                     model.CreteTime = DateTime.Now;
                     model.CreateName = "admin";
                     //model.Remark = "补单";
-
+                    model.FristFPNo = fpList[0];
+                    model.LastFPNo = fpList[1];
+                    model.SecondFPNo = fpList[2];
                     try
                     {
                         Global.log.Info(string.Format("count:" + allList.Count));
@@ -161,6 +165,7 @@ SELECT @allFpNo", supplierAdvancePayments.ids);
                             invoiceModel.SupplierInvoiceTotal = AvgSupplierInvoicePrice * supplierAdvancePayments.CheckNum;
                             invoiceModel.GuestName = supplierName;
                             invoiceModel.ActPay = invoiceModel.SupplierInvoiceTotal;
+                           
                             //                            sql = string.Format(@"select Sum(SupplierInvoiceTotal) as  FuShuTotal from 
                             //TB_SupplierInvoices 
                             //left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.id

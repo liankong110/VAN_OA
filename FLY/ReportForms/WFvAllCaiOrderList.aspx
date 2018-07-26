@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="True" CodeBehind="WFvAllCaiOrderList.aspx.cs"
-    Inherits="VAN_OA.ReportForms.WFvAllCaiOrderList" MasterPageFile="~/DefaultMaster.Master"
+    Inherits="VAN_OA.ReportForms.WFvAllCaiOrderList" MasterPageFile="~/DefaultMaster.Master" EnableEventValidation = "false"
     Title="采购订单列表" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
@@ -163,6 +163,20 @@
                 </asp:DropDownList>
                 <asp:TextBox ID="txtCaiPrice" runat="server" Width="100PX"></asp:TextBox>
                 采购单号：<asp:TextBox ID="txtProNo" runat="server" Width="100PX"></asp:TextBox>
+                <br />
+                忽略项目编号:<asp:TextBox ID="txtPONO1" runat="server" Width="100PX"></asp:TextBox>-<asp:TextBox ID="txtPONO2" runat="server" Width="100PX"></asp:TextBox>
+                -<asp:TextBox ID="txtPONO3" runat="server" Width="100PX"></asp:TextBox>
+                项目单据日期：
+                  <asp:TextBox ID="txtProDateFrom" runat="server"></asp:TextBox>
+                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                -<asp:TextBox ID="txtProDateTo" runat="server"></asp:TextBox>
+                <asp:ImageButton ID="ImageButton4" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                <cc1:CalendarExtender ID="CalendarExtender4" PopupButtonID="ImageButton3" runat="server"
+                    Format="yyyy-MM-dd" TargetControlID="txtProDateFrom">
+                </cc1:CalendarExtender>
+                <cc1:CalendarExtender ID="CalendarExtender5" PopupButtonID="ImageButton4" runat="server"
+                    Format="yyyy-MM-dd" TargetControlID="txtProDateTo">
+                </cc1:CalendarExtender>
             </td>
         </tr>
         <tr>
@@ -170,7 +184,8 @@
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnSave" runat="server" Text=" 保 存 " BackColor="Yellow" OnClick="btnSave_Click" />&nbsp;&nbsp;&nbsp;
-                    <asp:Button ID="btnPrint" runat="server" Text="打印" BackColor="Yellow" OnClick="btnPrint_Click" />
+                    <asp:Button ID="btnPrint" runat="server" Text="打印" BackColor="Yellow" OnClick="btnPrint_Click" />&nbsp;&nbsp;&nbsp;
+                       <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -262,13 +277,18 @@
                         <asp:Label ID="myId" runat="server" Text='<%# Eval("ids") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
+
+               <asp:BoundField DataField="IsHanShui" HeaderText="含税" SortExpression="IsHanShui"
+                    ItemStyle-HorizontalAlign="Center"  Visible="false"/>
+                <asp:BoundField DataField="CaiFpType" HeaderText="发票类型" SortExpression="CaiFpType"
+                    ItemStyle-HorizontalAlign="Center" Visible="false"/>
                 <asp:BoundField DataField="LastTime" HeaderText="审批时间" SortExpression="LastTime"
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="ProNo" HeaderText="采购单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="CaiGou" HeaderText="请购人" SortExpression="CaiGou" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="PONo" HeaderText="项目编码" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
+                <asp:BoundField DataField="PODate" HeaderText="项目单据日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
                     DataFormatString="{0:yyyy-MM-dd}" />
                 <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POPayStype" HeaderText="结算方式" SortExpression="POPayStype"

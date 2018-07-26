@@ -11,6 +11,7 @@ using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace VAN_OA.ReportForms
 {
@@ -44,10 +45,10 @@ namespace VAN_OA.ReportForms
                 var fpTypeBaseInfoService = new FpTypeBaseInfoService();
                 gooQGooddList_1 = fpTypeBaseInfoService.GetListArray("");
                 gooQGooddList_1.Insert(0, new FpTypeBaseInfo() { FpType = "全部" });
-             
+
                 List<VAN_OA.Model.User> user = new List<VAN_OA.Model.User>();
-                VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService(); 
-                if (NewShowAll_textName("采购订单列表2", "查看所有")==false)
+                VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService();
+                if (NewShowAll_textName("采购订单列表2", "查看所有") == false)
                 {
                     ViewState["showAll"] = false;
                     var model = Session["userInfo"] as User;
@@ -61,8 +62,8 @@ namespace VAN_OA.ReportForms
                 ddlUser.DataSource = user;
                 ddlUser.DataBind();
                 ddlUser.DataTextField = "LoginName";
-                ddlUser.DataValueField = "Id"; 
-                if (NewShowAll_textName("采购订单列表2", "禁止含税设置")==false)
+                ddlUser.DataValueField = "Id";
+                if (NewShowAll_textName("采购订单列表2", "禁止含税设置") == false)
                 {
                     gvMain.Columns[0].Visible = false;
                     btnSave.Visible = false;
@@ -72,7 +73,10 @@ namespace VAN_OA.ReportForms
                     gvMain.Columns[1].Visible = false;
                 }
 
-
+                if (NewShowAll_textName("采购订单列表2", "可导出") == false)
+                {
+                    btnExcel.Visible = false;
+                }
 
                 //主单
                 List<vAllCaiOrderList> pOOrderList = new List<vAllCaiOrderList>();
@@ -85,7 +89,7 @@ namespace VAN_OA.ReportForms
                 dllSelectFPstye.DataValueField = "FpType";
                 dllSelectFPstye.DataBind();
                 //
-                
+
             }
         }
 
@@ -100,32 +104,48 @@ namespace VAN_OA.ReportForms
 
             if (txtPONo.Text.Trim() != "")
             {
-                 
+               
                 sql += string.Format(" and PONo like '%{0}%'", txtPONo.Text.Trim());
             }
-
+            string notInPoNo = "";
+            if (txtPONO1.Text.Trim() != "")
+            {
+                notInPoNo += string.Format("'{0}',", txtPONO1.Text.Trim());               
+            }
+            if (txtPONO2.Text.Trim() != "")
+            {
+                notInPoNo += string.Format("'{0}',", txtPONO2.Text.Trim());
+            }
+            if (txtPONO3.Text.Trim() != "")
+            {
+                notInPoNo += string.Format("'{0}',", txtPONO3.Text.Trim());
+            }
+            if (!string.IsNullOrEmpty(notInPoNo))
+            {
+                sql += string.Format(" and PONo not in ({0})", notInPoNo.Trim(','));
+            }
 
             if (ttxPOName.Text.Trim() != "")
             {
                 sql += string.Format(" and POName like '%{0}%'", ttxPOName.Text.Trim());
             }
-
-            //if (txtFrom.Text != "")
-            //{
-            //    sql += string.Format(" and PODate>='{0} 00:00:00'", txtFrom.Text);
-            //}
-
-            //if (txtTo.Text != "")
-            //{
-            //    sql += string.Format(" and PODate<='{0} 23:59:59'", txtTo.Text);
-            //}
+            
+            if (txtProDateFrom.Text != "")
+            {
+                sql += string.Format(" and PODate>='{0} 00:00:00'", txtProDateFrom.Text);
+            }
+            
+            if (txtProDateTo.Text != "")
+            {
+                sql += string.Format(" and PODate<='{0} 23:59:59'", txtProDateTo.Text);
+            }
 
 
             if (txtFrom.Text != "" || txtTo.Text != "")
             {
                 string where = "";
                 if (txtFrom.Text != "")
-                { 
+                {
                     where += string.Format(" and PODate>='{0} 00:00:00'", txtFrom.Text);
                 }
                 if (txtTo.Text != "")
@@ -134,7 +154,7 @@ namespace VAN_OA.ReportForms
                 }
                 sql += string.Format(@" and (EXISTS(SELECT ID FROM CG_POOrder WHERE IFZhui=0 AND CG_POOrder.PONo=vAllCaiOrderList.PONo {0} ) 
 OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PONo=vAllCaiOrderList.PONo {0} ))", where);
-            } 
+            }
 
             if (!string.IsNullOrEmpty(txtAuditDate.Text))
             {
@@ -173,7 +193,7 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 sql += string.Format(" and CaiGou  like '%{0}%'", txtCaiugou.Text);
             }
 
-          
+
             if (ddlUser.Text != "-1")
             {
                 //sql += string.Format(" and (AppName={0} or exists(select id from CG_POOrder where CG_POOrder.PONo=vAllCaiOrderList.PONo and AppName={0}))", ddlUser.Text);
@@ -204,7 +224,7 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
             }
             if (ddlCaiGou.Text == "1")
             {
-                sql += string.Format(" and lastSupplier<>'库存'");                
+                sql += string.Format(" and lastSupplier<>'库存'");
             }
             if (ddlCaiGou.Text == "0")
             {
@@ -245,7 +265,7 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 sql += string.Format(" and lastPrice{0} {1}", ddlCaiPrice.Text, txtCaiPrice.Text.Trim());
             }
             if (!string.IsNullOrEmpty(txtProNo.Text.Trim()))
-            {                
+            {
                 sql += string.Format(" and ProNo like '%{0}%'", txtProNo.Text.Trim());
             }
             if (ddlIsSpecial.Text != "-1")
@@ -254,11 +274,11 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
             }
             if (ddlModel.Text != "全部")
             {
-                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and  Model='{0}' and CG_POOrder.PONO=vAllCaiOrderList.PONO ) ", ddlModel.Text);                 
+                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' and  Model='{0}' and CG_POOrder.PONO=vAllCaiOrderList.PONO ) ", ddlModel.Text);
             }
             return sql;
         }
-        private void Show()
+        private void Show(bool isPage=true)
         {
 
             if (txtFrom.Text != "")
@@ -275,6 +295,23 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
+                    return;
+                }
+            }
+
+            if (txtProDateFrom.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtProDateFrom.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目单据时间 格式错误！');</script>");
+                    return;
+                }
+            }
+            if (txtProDateTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtProDateTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目单据时间 格式错误！');</script>");
                     return;
                 }
             }
@@ -312,6 +349,28 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                     return;
                 }
             }
+
+            if (txtPONO1.Text.Trim() != "")
+            {
+                if (CheckPoNO(txtPONO1.Text.Trim()) == false)
+                {
+                    return;
+                }
+            }
+            if (txtPONO2.Text.Trim() != "")
+            {
+                if (CheckPoNO(txtPONO2.Text.Trim()) == false)
+                {
+                    return;
+                }
+            }
+            if (txtPONO3.Text.Trim() != "")
+            {
+                if (CheckPoNO(txtPONO3.Text.Trim()) == false)
+                {
+                    return;
+                }
+            }
             if (txtPoProNo.Text.Trim() != "")
             {
                 if (CheckProNo(txtPoProNo.Text.Trim()) == false)
@@ -320,10 +379,13 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 }
 
             }
-                PagerDomain page = new PagerDomain();
+            PagerDomain page = new PagerDomain();
+            if (isPage == false) {
+                page.PageSize = 1000000;
+            }
             page.CurrentPageIndex = AspNetPager1.CurrentPageIndex;
-            decimal Total=0;
-            List<vAllCaiOrderList> pOOrderList = this.POSer.GetListArrayAll_Page(GetSql(), page, out Total); 
+            decimal Total = 0;
+            List<vAllCaiOrderList> pOOrderList = this.POSer.GetListArrayAll_Page(GetSql(), page, out Total);
             foreach (var model in pOOrderList)
             {
                 if (model.BusType == "0")
@@ -436,13 +498,13 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
 
                 SumPOCai.YiLiTotal += model.YiLiTotal;
 
-               
+
                 if (!SumPOCai.LastTotal.HasValue)
                 {
                     SumPOCai.LastTotal = 0;
                 }
                 SumPOCai.LastTotal += model.lastPrice * model.Num;
-                
+
                 List<decimal> pricelMax = new List<decimal>();
                 pricelMax.Add(model.SupperPrice);
                 pricelMax.Add(model.SupperPrice1);
@@ -629,13 +691,13 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
                 var sql = "update CAI_POCai set IsHanShui=0 where " + expWhere;
                 DBHelp.ExeCommand(sql);
-              
+
             }
             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
         }
-       
+
         protected void btnPrint_Click(object sender, EventArgs e)
-        { 
+        {
             Session["print"] = GetSql();
             Response.Write("<script>window.open('../JXC/WFCai_OrderPrint.aspx','_blank')</script>");
         }
@@ -653,5 +715,51 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 ddlIsSpecial.Enabled = true;
             }
         }
+
+        protected void btnExcel_Click(object sender, EventArgs e)
+        {        
+            gvMain.AllowPaging = false;
+            gvMain.Columns[0].Visible = false;
+            gvMain.Columns[1].Visible = false;
+            gvMain.Columns[2].Visible = false;
+         
+            gvMain.Columns[4].Visible = true;
+            gvMain.Columns[5].Visible = true;
+            AspNetPager1.CurrentPageIndex = 1;
+            Show(false);
+            toExcel(gvMain);
+            gvMain.AllowPaging = true;       
+            gvMain.Columns[0].Visible = true;
+            gvMain.Columns[1].Visible = true;
+            gvMain.Columns[2].Visible = true;
+            gvMain.Columns[5].Visible = false;
+            gvMain.Columns[4].Visible = false;
+        }
+        void toExcel(GridView gv)
+        {
+            Response.Charset = "GB2312";
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+
+            string fileName = "export.xls";
+            string style = @"<style> .text { mso-number-format:\@; } </script> ";
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            Response.ContentType = "application/excel";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            gv.RenderControl(htw);
+            Response.Write(style);
+            Response.Write(sw.ToString());
+            Response.End();
+        }
+
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            // Confirms that an HtmlForm control is rendered for
+
+            //为了保险期间还可以在这里加入判断条件防止HTML中已经存在该ID
+        }
+
     }
 }

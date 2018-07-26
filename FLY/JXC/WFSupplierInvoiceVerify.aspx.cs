@@ -1138,6 +1138,8 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                         txtRuTime.Text = pp.CreteTime.ToString();
                         txtFristFPNo.Text = pp.FristFPNo;
                         txtSecondFPNo.Text = pp.SecondFPNo;
+
+                       
                         TB_SupplierInvoicesService ordersSer = new TB_SupplierInvoicesService();
                         List<SupplierToInvoiceView> orders = ordersSer.GetListArray(" 1=1 and TB_SupplierInvoices.id=" + Request["allE_id"]);
                         #region  需要设置下SupplierInvoiceDate
@@ -1159,6 +1161,12 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                             {
                                 model.IsHouTuiKui = true;
                             }
+                        }
+                        if (pp.CreateName == "admin")
+                        {
+                            var list=new SupplierAdvancePaymentsToPayService().GetFPInfo_View(ruIds);
+                            txtFristFPNo.Text = list[0];
+                            txtSecondFPNo.Text = list[2];
                         }
                         #endregion
                         if (orders.Count > 0)
@@ -1295,6 +1303,13 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                             {
                                 model.IsHouTuiKui = true;
                             }
+                        }
+
+                        if (pp.CreateName == "admin")
+                        {
+                            var list = new SupplierAdvancePaymentsToPayService().GetFPInfo_View(ruIds);
+                            txtFristFPNo.Text = list[0];
+                            txtSecondFPNo.Text = list[2];
                         }
                         #endregion
 

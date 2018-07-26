@@ -581,8 +581,16 @@ namespace VAN_OA.JXC
             lblXi_Score.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.Xi_Score));
             lblAllScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.SumScore));
             lblFanKuiScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.SumValue));
-            lblAvgScore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.AvgScore));
-            lblAvgFKscore.Text = string.Format("{0:n2}", sumSkillTotals.Sum(t => t.AvgValue));
+
+            decimal AvgScore = 0;
+            decimal AvgValue = 0;
+            if (sumSkillTotals.Count > 0) {
+                AvgScore = sumSkillTotals.Sum(t => t.SumScore) / sumSkillTotals.Count;
+                AvgValue = sumSkillTotals.Sum(t => t.SumValue) / sumSkillTotals.Count;
+
+            }
+            lblAvgScore.Text = string.Format("{0:n2}", AvgScore);
+            lblAvgFKscore.Text = string.Format("{0:n2}", AvgValue);
 
         }
         protected void btnSelect_Click(object sender, EventArgs e)

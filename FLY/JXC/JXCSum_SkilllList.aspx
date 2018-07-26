@@ -340,8 +340,8 @@
                     SortExpression="Gong_Score" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="Ling_Score_Per" HeaderText="工程综合占比" DataFormatString="{0:n2}"
-                    SortExpression="Ling_Score_Per" ItemStyle-HorizontalAlign="Right">
+                <asp:BoundField DataField="Gong_Score_Per" HeaderText="工程综合占比" DataFormatString="{0:n2}"
+                    SortExpression="Gong_Score_Per" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Ling_Score" HeaderText="零售综合得分" DataFormatString="{0:n2}"
@@ -349,7 +349,7 @@
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Ling_Score_Per" HeaderText="零售综合占比" SortExpression="Ling_Score_Per"
-                    DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Xi_Score" HeaderText="系统综合得分" SortExpression="Xi_Score"
@@ -357,7 +357,7 @@
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Xi_Score_Per" HeaderText="系统综合占比" SortExpression="Xi_Score_Per"
-                    DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
 
@@ -374,7 +374,7 @@
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="CompanyScore_Per" HeaderText="综合得分占比" SortExpression="CompanyScore_Per"
-                    ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}">
+                    ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n6}">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PoTotal" HeaderText="项目总金额" SortExpression="PoTotal"

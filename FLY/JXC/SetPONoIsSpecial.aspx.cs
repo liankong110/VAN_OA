@@ -17,10 +17,15 @@ namespace VAN_OA.JXC
 
         CG_POOrderService POSer = new CG_POOrderService();
         TB_ModelService modelService = new TB_ModelService();
+        GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
+        GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
+
         List<FpTypeBaseInfo> gooQGooddList = new List<FpTypeBaseInfo>();
         List<TB_BasePoType> _basePoTypeList = new List<TB_BasePoType>();
         List<TB_Model> _modelList = new List<TB_Model>();
 
+        List<GuestTypeBaseInfo> _guestTypeList = new List<GuestTypeBaseInfo>();
+        List<GuestProBaseInfo> _guestProList = new List<GuestProBaseInfo>();
 
         protected string GetType(object type)
         {
@@ -75,7 +80,23 @@ namespace VAN_OA.JXC
             }
             return true;
         }
+        protected bool IsGuestPro()
+        {
+            if (ViewState["isGuestPro"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
 
+        protected bool IsGuestType()
+        {
+            if (ViewState["isGuestType"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
 
         protected string GetNum(string num)
         {
@@ -174,7 +195,17 @@ namespace VAN_OA.JXC
                     ViewState["IsJieIsSelected"] = false;
                     btnJieIsSelected.Visible = false;
                 }
-                
+
+                if (NewShowAll_textName("项目归类", "客户类型可编辑") == false)
+                {
+                    ViewState["isGuestType"] = false;
+                    btnGuestType.Visible = false;
+                }
+                if (NewShowAll_textName("项目归类", "客户属性可编辑") == false)
+                {
+                    ViewState["isGuestPro"] = false;
+                    btnGuestPro.Visible = false;
+                }
                 var user = new List<Model.User>();
                 var userSer = new Dal.SysUserService();
 
@@ -234,7 +265,9 @@ namespace VAN_OA.JXC
 
                 GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
                 var dalList = dal.GetListArray("");
+                dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "" });
                 dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
+              
                 ddlGuestTypeList.DataSource = dalList;
                 ddlGuestTypeList.DataBind();
                 ddlGuestTypeList.DataTextField = "GuestType";
@@ -242,7 +275,9 @@ namespace VAN_OA.JXC
 
                 GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
                 var proList = guestProBaseInfodal.GetListArray("");
-                proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2 });
+                proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -1 });
+                proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2, });
+             
                 ddlGuestProList.DataSource = proList;
                 ddlGuestProList.DataBind();
                 ddlGuestProList.DataTextField = "GuestProString";
@@ -257,10 +292,18 @@ namespace VAN_OA.JXC
             ddlFPType.Items[ddlFPType.Items.Count - 2].Attributes.Add("style", "background-color: red");
 
             _basePoTypeList = new TB_BasePoTypeService().GetListArray("");
-            _basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });
+            _basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "", Id = -1 });
 
             _modelList = modelService.GetListArray("");
             _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "" });
+
+
+            _guestTypeList = dal.GetListArray("");
+            _guestTypeList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "" });
+
+
+            _guestProList = guestProBaseInfodal.GetListArray("");
+            _guestProList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -1 });
 
             var fpTypeBaseInfoService = new FpTypeBaseInfoService();
             gooQGooddList = fpTypeBaseInfoService.GetListArray("");
@@ -420,12 +463,19 @@ namespace VAN_OA.JXC
             }
 
             if (ddlGuestTypeList.SelectedValue != "全部")
-            {
+            {              
                 sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
             }
             if (ddlGuestProList.SelectedValue != "-2")
             {
-                sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+                if (ddlGuestProList.SelectedValue == "-1")
+                {
+                    sql += string.Format(" and GuestPro not in (0,1,2)");
+                }
+                else
+                {
+                    sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+                }
             }
 
             var dt = this.POSer.SetPoSpecial(sql);
@@ -534,6 +584,48 @@ namespace VAN_OA.JXC
                     if (hidModeltxt != "-1")
                     {
                         ddlModel.SelectedIndex = _modelList.FindIndex(t => t.ModelName== hidModeltxt);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+                try
+                {
+                    DropDownList dllGuestPro = (DropDownList)e.Row.FindControl("dllGuestPro");
+                    dllGuestPro.DataSource =_guestProList;
+                    dllGuestPro.DataBind();
+                    dllGuestPro.DataTextField = "GuestProString";
+                    dllGuestPro.DataValueField = "GuestPro";
+
+                    var hidModeltxt = ((HiddenField)e.Row.FindControl("hidGuestProtxt")).Value;
+                    if (hidModeltxt != "-1")
+                    {
+                        dllGuestPro.SelectedIndex = _guestProList.FindIndex(t => t.GuestPro.ToString() == hidModeltxt);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+                try
+                {
+                    DropDownList dllGuestType = (DropDownList)e.Row.FindControl("dllGuestType");
+                    dllGuestType.DataSource = _guestTypeList;
+                    dllGuestType.DataBind();
+                    dllGuestType.DataTextField = "GuestType";
+                    dllGuestType.DataValueField = "GuestType";
+
+                    var hidGuestTypetxt = ((HiddenField)e.Row.FindControl("hidGuestTypetxt")).Value;
+                    if (hidGuestTypetxt != "-1")
+                    {
+                        dllGuestType.SelectedIndex = _guestTypeList.FindIndex(t => t.GuestType== hidGuestTypetxt);
                     }
 
                 }
@@ -950,6 +1042,57 @@ SELECT @AllCount;", lblIds.Text);
             }
         }
 
+        protected void btnGuestType_Click(object sender, EventArgs e)
+        {
+            if (ViewState["isGuestType"] == null)
+            {
+                //保存客户类型信息               
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
 
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("dllGuestType"));
+                        objCommand.CommandText = string.Format("update CG_POOrder set GuestType='{1}' where PONO='{0}'",
+                            lblIds.Text, drp.Text);
+                        objCommand.ExecuteNonQuery();
+
+                    }
+                    conn.Close();
+                }
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            } 
+            //Show();
+        }
+
+        protected void btnGuestPro_Click(object sender, EventArgs e)
+        {
+            if (ViewState["isGuestPro"] == null)
+            {
+                //保存客户属性信息               
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
+
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        DropDownList drp = ((DropDownList)gvMain.Rows[i].FindControl("dllGuestPro"));
+                        objCommand.CommandText = string.Format("update CG_POOrder set GuestPro={1} where PONO='{0}'",
+                            lblIds.Text, drp.Text);
+                        objCommand.ExecuteNonQuery();
+
+                    }
+                    conn.Close();
+                }
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            }
+            
+            //Show();
+        }
     }
 }

@@ -145,7 +145,10 @@
                     <asp:Button ID="btnIsSelected" runat="server" Text="保存(选中)" BackColor="Yellow" OnClick="btnIsSelected_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnSave" runat="server" Text=" 保 存 " BackColor="Yellow" OnClick="btnSave_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnJieIsSelected" runat="server" Text="保存(结算选中)" BackColor="Yellow"
-                        OnClick="btnJieIsSelected_Click" />&nbsp;&nbsp;&nbsp;
+                        OnClick="btnJieIsSelected_Click" />&nbsp;&nbsp;&nbsp;                        
+                        <asp:Button ID="btnGuestPro" runat="server" Text="保存(客户属性)" BackColor="Yellow"
+                        OnClick="btnGuestPro_Click" />&nbsp;&nbsp;&nbsp;<asp:Button ID="btnGuestType" runat="server" Text="保存(客户类型)" BackColor="Yellow"
+                        OnClick="btnGuestType_Click" />&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -320,6 +323,26 @@
                         DataValueField="Id">
                         <%-- <asp:ListItem Value="1">零售</asp:ListItem>
                     <asp:ListItem Value="2">工程</asp:ListItem>--%>
+                    </asp:DropDownList>
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="客户属性">
+                <ItemTemplate>
+                    <asp:HiddenField runat="server" ID="hidGuestProtxt" Value='<%#Eval("GuestPro")%>' />
+                    <asp:DropDownList ID="dllGuestPro" runat="server" Enabled="<%# IsGuestPro() %>" DataTextField="GuestProString"
+                        DataValueField="GuestPro">                      
+                    </asp:DropDownList>
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="客户类型">
+                <ItemTemplate>
+                    <asp:HiddenField runat="server" ID="hidGuestTypetxt" Value='<%#Eval("GuestType")%>' />
+                    <asp:DropDownList ID="dllGuestType" runat="server" Enabled="<%# IsGuestType() %>" DataTextField="GuestType"
+                        DataValueField="GuestType">                      
                     </asp:DropDownList>
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />

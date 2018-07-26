@@ -37,7 +37,7 @@ namespace VAN_OA.ReportForms
 
             string s = " 1=1 ";
             string s1 = "";
-         
+
             if (txtFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
@@ -78,7 +78,7 @@ namespace VAN_OA.ReportForms
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('订单时间 格式错误！');</script>");
                     return;
                 }
-                sql += string.Format(" and PoDate>='{0} 00:00:00'",txtPoDateFrom.Text);
+                sql += string.Format(" and PoDate>='{0} 00:00:00'", txtPoDateFrom.Text);
 
                 s1 += string.Format(" and PoDate>='{0} 00:00:00'", txtPoDateFrom.Text);
             }
@@ -90,7 +90,7 @@ namespace VAN_OA.ReportForms
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('订单时间 格式错误！');</script>");
                     return;
                 }
-                sql += string.Format(" and PoDate<='{0} 23:59:59'",txtPoDateTo.Text);
+                sql += string.Format(" and PoDate<='{0} 23:59:59'", txtPoDateTo.Text);
                 s1 += string.Format(" and PoDate<='{0} 23:59:59'", txtPoDateTo.Text);
             }
 
@@ -133,9 +133,9 @@ namespace VAN_OA.ReportForms
                     mustContent = true;
                 }
                 sql += string.Format(" and State='{0}'", ddlState.Text);
-                
+
                 s += string.Format(" and State='{0}'", ddlState.Text);
-                
+
             }
             else
             {
@@ -175,7 +175,7 @@ namespace VAN_OA.ReportForms
                 sql2 += " and IsClose=0 ";
             }
 
-            if (ddlNoSpecial.Text!="-1")
+            if (ddlNoSpecial.Text != "-1")
             {
                 sql2 += string.Format(" and IsSpecial=" + ddlNoSpecial.Text);
             }
@@ -196,7 +196,7 @@ namespace VAN_OA.ReportForms
             {
                 s1 += " and ISNULL(Total,0) " + ddlJinECha.Text + "newtable1.POTotal-isnull(TuiTotal,0)";
             }
-             
+
             if (ddlFPState.Text == "2")//未开全票
             {
                 sql += " and (hadFpTotal<>0 and newtable1.POTotal-isnull(TuiTotal,0)>hadFpTotal)  ";
@@ -241,7 +241,7 @@ namespace VAN_OA.ReportForms
 
             }
             // 到款《项目金额
-            if (ddlDiffDays.Enabled && ddlDiffDays.Text != "-1" && ddlJinECha.Text == "<" )
+            if (ddlDiffDays.Enabled && ddlDiffDays.Text != "-1" && ddlJinECha.Text == "<")
             {
                 if (ddlDiffDays.Text == "1")
                 {
@@ -271,7 +271,7 @@ namespace VAN_OA.ReportForms
                 {
                     s1 += " and datediff(d,minOutTime,getdate())>180 ";
                 }
-             
+
             }
             //到款=项目金额 + 到款>=项目金额
             if (ddlDiffDays.Enabled && ddlDiffDays.Text != "-1" && (ddlJinECha.Text == ">=" || ddlJinECha.Text == "=" || ddlJinECha.Text == ">"))
@@ -314,7 +314,7 @@ namespace VAN_OA.ReportForms
             string isClose = "";
             if (ddlPoClose.Text != "-1")
             {
-                isClose += " and IsClose="+ddlPoClose.Text;
+                isClose += " and IsClose=" + ddlPoClose.Text;
             }
 
 
@@ -326,31 +326,31 @@ namespace VAN_OA.ReportForms
             {
                 isClose += " and JieIsSelected=" + ddlJieIsSelected.Text;
             }
-            
+
             if (ddlUser.Text == "-1")//显示所有用户
             {
                 //var model = Session["userInfo"] as User;
                 //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
-            }             
+            }
             else
             {
                 if (ViewState["showAll"] != null)
                 {
-                    sql += string.Format(" and  AE='{0}'", ddlUser.SelectedItem.Text);                  
-                    s1 += string.Format(" and AE='{0}'  ", ddlUser.SelectedItem.Text);   
+                    sql += string.Format(" and  AE='{0}'", ddlUser.SelectedItem.Text);
+                    s1 += string.Format(" and AE='{0}'  ", ddlUser.SelectedItem.Text);
 
                 }
                 else
                 {
-                    sql += string.Format(" and  AE='{0}'", ddlUser.SelectedItem.Text);  
-                    s1 += string.Format(" and AE='{0}'  ", ddlUser.SelectedItem.Text);   
+                    sql += string.Format(" and  AE='{0}'", ddlUser.SelectedItem.Text);
+                    s1 += string.Format(" and AE='{0}'  ", ddlUser.SelectedItem.Text);
                 }
             }
             if (ddlCompany.Text != "-1")
             {
                 string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
                 sql += string.Format(" and newtable1.AppName IN(select id from tb_User where {0})", where);
-                s1 += string.Format(" and AE IN(select loginName from tb_User where {0})  ", where);   
+                s1 += string.Format(" and AE IN(select loginName from tb_User where {0})  ", where);
             }
             string FPTotal = "";
             if (txtFPNo.Text.Trim() != "")
@@ -366,7 +366,7 @@ namespace VAN_OA.ReportForms
                 s += string.Format(" and FPNo like '%{0}%'", txtFPNo.Text.Trim());
 
 
-                FPTotal = string.Format(" and FPTOTAL like '%{0}%'",txtFPNo.Text.Trim());
+                FPTotal = string.Format(" and FPTOTAL like '%{0}%'", txtFPNo.Text.Trim());
             }
 
 
@@ -391,7 +391,7 @@ namespace VAN_OA.ReportForms
                 }
             }
 
-           
+
             if (txtDaoKuanTotal.Text != "")
             {
                 try
@@ -416,26 +416,57 @@ namespace VAN_OA.ReportForms
             List<TB_ToInvoice> cars = new List<TB_ToInvoice>();
             if (cbPOHeBing.Checked)
             {
+                gvList.Columns[gvList.Columns.Count - 3].Visible = false;
+                gvList.Columns[gvList.Columns.Count - 4].Visible = true;
                 cars = this.toInvoSerSer.GetListArrayReport_HeBing(s, s1, sql2, FPTotal, isClose);
             }
             else
             {
+                gvList.Columns[gvList.Columns.Count - 3].Visible = true;
+                gvList.Columns[gvList.Columns.Count - 4].Visible = false;
                 if (ddlBusType.Text != "-1")
                 {
-                    sql += string.Format(" and BusType="+ddlBusType.Text);
+                    sql += string.Format(" and BusType=" + ddlBusType.Text);
                 }
                 cars = this.toInvoSerSer.GetListArrayReport(sql, sql2, isClose);
+
+                if (cars.Count > 0)
+                {                 
+
+                    using (SqlConnection conn = DBHelp.getConn())
+                    {
+                        conn.Open();
+                        for (int i = gvList.PageIndex * 10; i < ((gvList.PageIndex + 1) * 10); i++)
+                        {
+                            if (i < cars.Count)
+                            {
+                           
+                                var model = cars[i];
+                                string strSql = string.Format(@" select isnull(sum(Total), 0) from TB_ToInvoice where PoNo = '{0}' and DaoKuanDate <= '{1}'", 
+                                    model.PoNo,model.DaoKuanDate1);
+                                SqlCommand objCommand = new SqlCommand(strSql, conn);
+                                var ojb = objCommand.ExecuteScalar();
+                                if (ojb != null && ojb != DBNull.Value)
+                                {
+                                    model.Total1 = Convert.ToDecimal(ojb);
+                                }
+                            }
+                        }
+                        conn.Close();
+                    }
+                }
+
             }
 
             if (ddlFPDays.Text != "-1")
             {
                 if (ddlFPDays.Text == "1")
                 {
-                    cars = cars.FindAll(t=>t.FPDays<=30);
+                    cars = cars.FindAll(t => t.FPDays <= 30);
                 }
                 else if (ddlFPDays.Text == "2")
                 {
-                    cars = cars.FindAll(t => t.FPDays <= 60&& t.FPDays > 30);
+                    cars = cars.FindAll(t => t.FPDays <= 60 && t.FPDays > 30);
                 }
                 else if (ddlFPDays.Text == "3")
                 {
@@ -451,10 +482,10 @@ namespace VAN_OA.ReportForms
                 }
                 else if (ddlFPDays.Text == "6")
                 {
-                    cars = cars.FindAll(t =>t.FPDays > 180);
+                    cars = cars.FindAll(t => t.FPDays > 180);
                 }
             }
-            
+
             if (ddlWeiFPDays.Text != "-1")
             {
                 if (ddlWeiFPDays.Text == "1")
@@ -487,7 +518,7 @@ namespace VAN_OA.ReportForms
             decimal AllInvoiceTotal = 0;
             decimal hsWKpTotal = 0;
             foreach (var model in cars)
-            {                
+            {
                 if (!hs.Contains(model.PoNo))
                 {
                     AllPOTotal += model.POTotal;
@@ -527,7 +558,7 @@ namespace VAN_OA.ReportForms
             Show();
         }
 
-      
+
         protected void gvList_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -537,7 +568,7 @@ namespace VAN_OA.ReportForms
                 TB_ToInvoice model = e.Row.DataItem as TB_ToInvoice;
                 if (model != null)
                 {
-                    if (model.POTotal!=0&&model.HadFpTotal == model.POTotal)
+                    if (model.POTotal != 0 && model.HadFpTotal == model.POTotal)
                     {
                         e.Row.BackColor = System.Drawing.Color.Red;
                     }
@@ -548,13 +579,13 @@ namespace VAN_OA.ReportForms
                 }
                 if (model.IsQuanDao)
                 {
-                    var lblDays= e.Row.FindControl("lblDays") as Label;
+                    var lblDays = e.Row.FindControl("lblDays") as Label;
                     lblDays.Font.Underline = true;
                 }
                 if (model.POTotal == model.Total)
                 {
                     var lblFPDays = e.Row.FindControl("lblFPDays") as Label;
-                    lblFPDays.Font.Underline = true;                    
+                    lblFPDays.Font.Underline = true;
                 }
 
                 if (model.FPDate.HasValue)
@@ -621,14 +652,14 @@ namespace VAN_OA.ReportForms
                 List<VAN_OA.Model.User> user = new List<VAN_OA.Model.User>();
                 VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService();
 
-//                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='查看所有'
-//where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='到款单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
-//                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) > 0)
-                if (NewShowAll_textName("到款单列表", "查看所有")==false)
+                //                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='查看所有'
+                //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='到款单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
+                //                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) > 0)
+                if (NewShowAll_textName("到款单列表", "查看所有") == false)
                 {
                     ViewState["showAll"] = false;
                     var model = Session["userInfo"] as User;
-                    user.Insert(0, model);                   
+                    user.Insert(0, model);
                 }
                 else
                 {
@@ -636,10 +667,10 @@ namespace VAN_OA.ReportForms
                     user.Insert(0, new VAN_OA.Model.User() { LoginName = "全部", Id = -1 });
                 }
 
-//                sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='不能编辑'
-//where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='到款单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
-//                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
-                if (NewShowAll_textName("到款单列表", "不能编辑")==false)
+                //                sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='不能编辑'
+                //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='到款单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
+                //                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
+                if (NewShowAll_textName("到款单列表", "不能编辑") == false)
                 {
                     gvList.Columns[0].Visible = false;
                 }
@@ -653,7 +684,7 @@ namespace VAN_OA.ReportForms
 
                 if (Request["ishebing"] != null)
                 {
-                    cbPOHeBing.Checked = true;                 
+                    cbPOHeBing.Checked = true;
                 }
                 if (Request["PONo"] != null)
                 {
@@ -755,15 +786,15 @@ namespace VAN_OA.ReportForms
         {
             //if (ddlJinECha.Text != "-1")
             //{
-                ddlDiffDays.Enabled = true;
+            ddlDiffDays.Enabled = true;
             //}
             //else
             //{
             //    ddlDiffDays.Enabled = false;
             //}
-            
+
         }
-        
+
         protected void cbPOHeBing_CheckedChanged(object sender, EventArgs e)
         {
             if (cbPOHeBing.Checked)

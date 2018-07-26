@@ -99,5 +99,109 @@ and CAI_OrderChecks.Ids in ({1}) ", caiIds,checkIds);
             }
             return model;
         }
+
+        public List<string> GetFPInfo(string caiIds)
+        {
+            List<string> fpList = new List<string>();
+            string sql = string.Format(@"select  FristFPNo,LastFPNo,SecondFPNo  from 
+TB_SupplierAdvancePayments 
+left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.id
+where status='通过' and CaiIds in ({0}) and LastFPNo<>''
+group by FristFPNo,LastFPNo,SecondFPNo",caiIds);
+
+            string FristFPNo = "";
+            string LastFPNo = "";
+            string SecondFPNo = "";
+            try
+            {
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = new SqlCommand(sql, conn);
+                    using (SqlDataReader objReader = objCommand.ExecuteReader())
+                    {
+                        while (objReader.Read())
+                        {
+                            var aa = objReader["FristFPNo"].ToString();
+                            var bb = objReader["LastFPNo"].ToString();
+                            var cc = objReader["SecondFPNo"].ToString();
+
+                            if (aa != "")
+                            {
+                                FristFPNo += aa + "/";
+                            }
+                            if (bb != "")
+                            {
+                                LastFPNo += bb + "/";
+                            }
+                            if (cc != "")
+                            {
+                                SecondFPNo += cc + "/";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            { 
+            }
+            fpList.Add(FristFPNo.TrimEnd('/'));
+            fpList.Add(LastFPNo.TrimEnd('/'));
+            fpList.Add(SecondFPNo.TrimEnd('/'));
+            return fpList;
+        }
+
+
+        public List<string> GetFPInfo_View(string ruIds)
+        {
+            List<string> fpList = new List<string>();
+            string sql = string.Format(@"select  FristFPNo,LastFPNo,SecondFPNo  from 
+TB_SupplierAdvancePayments 
+left join TB_SupplierAdvancePayment on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.id
+where status='通过' and CaiIds in (select CaiId from CAI_OrderChecks where Ids in (
+select OrderCheckIds from CAI_OrderInHouses where Ids in ({0}))) and LastFPNo<>''
+group by FristFPNo,LastFPNo,SecondFPNo", ruIds);
+
+            string FristFPNo = "";
+            string LastFPNo = "";
+            string SecondFPNo = "";
+            try
+            {
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = new SqlCommand(sql, conn);
+                    using (SqlDataReader objReader = objCommand.ExecuteReader())
+                    {
+                        while (objReader.Read())
+                        {
+                            var aa = objReader["FristFPNo"].ToString();
+                            var bb = objReader["LastFPNo"].ToString();
+                            var cc = objReader["SecondFPNo"].ToString();
+
+                            if (aa != "")
+                            {
+                                FristFPNo += aa + "/";
+                            }
+                            if (bb != "")
+                            {
+                                LastFPNo += bb + "/";
+                            }
+                            if (cc != "")
+                            {
+                                SecondFPNo += cc + "/";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            fpList.Add(FristFPNo.TrimEnd('/'));
+            fpList.Add(LastFPNo.TrimEnd('/'));
+            fpList.Add(SecondFPNo.TrimEnd('/'));
+            return fpList;
+        }
     }
 }

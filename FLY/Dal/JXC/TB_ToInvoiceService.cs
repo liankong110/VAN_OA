@@ -464,7 +464,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
             {
                 strSql.Append(" where " + strWhere);
             }
-            strSql.Append(" order by newtable1.PONo desc,ProNo desc");
+            strSql.Append(" order by newtable1.PONo desc,DaoKuanDate desc,ProNo desc");
             List<TB_ToInvoice> list = new List<TB_ToInvoice>();
 
             using (SqlConnection conn = DBHelp.getConn())

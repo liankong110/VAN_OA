@@ -207,7 +207,8 @@
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString" Style="left: 0px;">
                 </asp:DropDownList>
-                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
 
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -344,7 +345,7 @@
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="FPDate" HeaderText="开票日期" SortExpression="FPDate"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
-                  <asp:TemplateField HeaderText="未开票天数">
+                <asp:TemplateField HeaderText="未开票天数">
                     <ItemTemplate>
                         <asp:Label ID="lblWeiFPDays" runat="server" Text='<% #Eval("WeiFPDays") %>'></asp:Label>
                     </ItemTemplate>
@@ -360,10 +361,11 @@
                 <asp:BoundField DataField="ProNo" HeaderText="单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="DaoKuanDate1" HeaderText="到款日期" SortExpression="DaoKuanDate1"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
-                <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center"  DataFormatString="{0:n2}"/>
-                <asp:BoundField DataField="Total" HeaderText="到款金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center"  DataFormatString="{0:n2}"/>
-                   <asp:BoundField DataField="DaoTotal" HeaderText="到款比例" SortExpression="DaoTotal" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
+                <asp:BoundField DataField="Total" HeaderText="到款金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
+                <asp:BoundField DataField="DaoTotal" HeaderText="到款比例" SortExpression="DaoTotal" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="WeiDaoTotal" HeaderText="未到比例" SortExpression="WeiDaoTotal" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="WeiDaoTotal1" HeaderText="未到比例" SortExpression="WeiDaoTotal1" Visible="false" ItemStyle-HorizontalAlign="Center" />
 
                 <%--      <asp:BoundField DataField="Days" HeaderText="天数" SortExpression="Days" ItemStyle-HorizontalAlign="Center" />--%>
 
@@ -436,8 +438,14 @@
                     {
                         DataRow dr = dt.Rows[index];
                         index++;
+                        decimal total = Convert.ToDecimal(dr[2]);
+                        string style = "";
+                        if (total < 0)
+                        {
+                            style = "color:blue;";
+                        }
             %>
-            <td><%= string.Format("{0}：{1}-{2}",dr[0],dr[1],dr[2])%></td>
+            <td style="<%= style%>"><%= string.Format("{0}：{1}-{2}",dr[0],dr[1],total)%></td>
 
             <%
                 }

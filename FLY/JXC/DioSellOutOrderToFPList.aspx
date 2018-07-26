@@ -55,15 +55,21 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="4">
-                        <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
-                        <div align="right">
-                            <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
+                    <td colspan="4" >  
+                        
+                        
+                         备注：发票正负 用于选择 正常发票填写--正数  红冲发票填写--负数，数量和金额和发票一样即可。
+                       
+                        
+                        <asp:Label ID="Label1" runat="server" Text=""  ></asp:Label>
+                      
+                            <asp:Button ID="btnSelect" runat="server" style="margin-left:160px;" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                         <asp:Button ID="Button1" runat="server" Text=" 确定 " BackColor="Yellow" OnClick="Button1_Click" />
-                        </div>
+                         
                     </td>
                 </tr>
             </table>
+           
             <asp:Panel ID="Panel1" runat="server" ScrollBars="Both" Width="100%" Height="100%">
                 <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
                     DataKeyNames="Id" Width="160%" AutoGenerateColumns="False" OnRowEditing="gvList_RowEditing"
