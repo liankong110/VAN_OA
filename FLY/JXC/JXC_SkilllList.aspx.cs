@@ -138,6 +138,7 @@ namespace VAN_OA.JXC
                 List<User> getUsers = userSer.getUserReportTos(sql);
                 getUsers = getUsers.FindAll(T=>string.IsNullOrEmpty(T.LoginName)==false);
                 getUsers.Insert(0, new Model.User { Id = -1, LoginName = "全部" });
+                getUsers.Add(new User { Id = -1000, LoginName = "其他" });
                 ddlPaiGong.DataSource = getUsers;
                 ddlPaiGong.DataBind();
 
@@ -415,7 +416,24 @@ namespace VAN_OA.JXC
 
             if (ddlPaiGong.Text != "-1")
             {
-                fuhao += string.Format(" and OutDispater={0}", ddlPaiGong.Text);
+                //fuhao += string.Format(" and OutDispater={0}", ddlPaiGong.Text);
+
+                if (ddlPaiGong.Text != "-1000")
+                {
+                    fuhao += string.Format(" and OutDispater={0}", ddlPaiGong.Text);
+                }
+                else
+                {
+                    string userIds = "";
+                    foreach (ListItem item in ddlPaiGong.Items)
+                    {
+                        if (item.Value != "-1" && item.Value != "-1000")
+                        {
+                            userIds += string.Format("{0},", item.Value);
+                        }
+                    }
+                    fuhao += string.Format(" and OutDispater not in ({0})", userIds.Trim(','));
+                }
             }
 
             if (txtPGFrom.Text != "")

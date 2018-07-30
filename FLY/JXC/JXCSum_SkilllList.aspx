@@ -353,7 +353,7 @@
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Xi_Score" HeaderText="系统综合得分" SortExpression="Xi_Score"
-                    ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n0}">
+                    ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Xi_Score_Per" HeaderText="系统综合占比" SortExpression="Xi_Score_Per"
