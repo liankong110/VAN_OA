@@ -128,6 +128,7 @@
         </tr>
     </table>
     <br />
+    注：淡红色背景的项表示有滞留库存，即非订单采购库存
     <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
         DataKeyNames="GoodId" Width="100%" AutoGenerateColumns="False" AllowPaging="true"
         PageSize="20" OnPageIndexChanging="gvList_PageIndexChanging" OnDataBinding="gvList_DataBinding"
@@ -195,6 +196,8 @@
             <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="GoodNum" HeaderText="库存数量" SortExpression="GoodNum" ItemStyle-HorizontalAlign="Center"
                 DataFormatString="{0:n4}" />
+                  <asp:BoundField DataField="SumKuXuCai" HeaderText="采购需出" SortExpression="SumKuXuCai" />
+              <asp:BoundField DataField="ZhiLiuKuCun" HeaderText="滞留库存" SortExpression="ZhiLiuKuCun" />
             <asp:BoundField DataField="GoodPrice" HeaderText="均价" SortExpression="GoodPrice"
                 ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n4}" />
             <asp:BoundField DataField="GoodTotal" HeaderText="金额" SortExpression="GoodTotal"

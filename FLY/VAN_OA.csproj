@@ -228,6 +228,7 @@
     <Content Include="JXC\DioSimpPOList.aspx" />
     <Content Include="JXC\NewWFSell_OrderOutHousePrint.aspx" />
     <Content Include="KingdeeInvoice\WFAllotAccountCompare.aspx" />
+    <Content Include="KingdeeInvoice\WFPayableList.aspx" />
     <Content Include="KingdeeInvoice\WFOAInvoiceList.aspx" />
     <Content Include="mian.css" />
     <Content Include="MyExcels\AddExcel.aspx" />
@@ -767,6 +768,7 @@
     <Compile Include="Dal\JXC\TB_SupplierAdvancePaymentService.cs" />
     <Compile Include="Dal\JXC\TB_SupplierAdvancePaymentsService.cs" />
     <Compile Include="Dal\KingdeeInvoice\InvoiceReportService.cs" />
+    <Compile Include="Dal\KingdeeInvoice\PayableService.cs" />
     <Compile Include="Dal\KingdeeInvoice\InvoiceService.cs" />
     <Compile Include="Dal\MyExcelService.cs" />
     <Compile Include="Dal\OA\tb_AttachmentService.cs" />
@@ -1963,6 +1965,13 @@
     <Compile Include="KingdeeInvoice\WFInvoiceCompare.aspx.designer.cs">
       <DependentUpon>WFInvoiceCompare.aspx</DependentUpon>
     </Compile>
+    <Compile Include="KingdeeInvoice\WFPayableList.aspx.cs">
+      <DependentUpon>WFPayableList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="KingdeeInvoice\WFPayableList.aspx.designer.cs">
+      <DependentUpon>WFPayableList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="KingdeeInvoice\WFInvoiceList.aspx.cs">
       <DependentUpon>WFInvoiceList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2136,6 +2145,7 @@
     <Compile Include="Model\JXC\View_AllEform.cs" />
     <Compile Include="Model\JXC\NoSellAndCaiGoods.cs" />
     <Compile Include="Model\JXC\PONotCaiView.cs" />
+    <Compile Include="Model\KingdeeInvoice\Payable.cs" />
     <Compile Include="Model\KingdeeInvoice\Invoice.cs" />
     <Compile Include="Model\KingdeeInvoice\InvoiceReport.cs" />
     <Compile Include="Model\KingdeeInvoice\AccountReport.cs" />

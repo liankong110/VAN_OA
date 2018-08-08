@@ -369,6 +369,7 @@
                 <asp:FileUpload ID="fuAttach" runat="server" Width="400px" />
                 <br />
                 <br />
+                说明：淡红色背景的项表示有滞留库存，即非订单采购库存
                 <asp:GridView ID="gvCai" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
                     DataKeyNames="Ids" ShowFooter="true" Width="100%" AutoGenerateColumns="False"
                     OnRowDataBound="gvCai_RowDataBound" OnRowDeleting="gvCai_RowDeleting" OnRowEditing="gvCai_RowEditing"

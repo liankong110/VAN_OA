@@ -137,12 +137,19 @@ namespace VAN_OA.JXC
             }
 
             var models=goodsSer.GetListArray(" GoodId=" + goodId);
+            var nums=goodsSer.GetGoodNum(goodId);
+            lblGoodNum.Text = nums[0].ToString();
+            lblCaiKuNum.Text= nums[1].ToString();
+            lblZhiLiuNum.Text = (nums[0]- nums[1]).ToString();
+            
             if (models.Count == 1)
             {
                 lblGoodAreaNumber.Text = models[0].GoodAreaNumber;
                 //名称\小类\规格
                 lblGoodInfo.Text = models[0].GoodName + @"\" + models[0].GoodTypeSmName + @"\" + models[0].GoodSpec;
             }
+            //显示当前库存：XX,采库需 出: YY ，滞留库存：XX - YY
+
             DateTime fromDate=string.IsNullOrEmpty(txtFrom.Text)?Convert.ToDateTime("2000-1-1"):Convert.ToDateTime(txtFrom.Text);
             DateTime toDate = string.IsNullOrEmpty(txtTo.Text) ? Convert.ToDateTime("2036-1-1") : Convert.ToDateTime(txtTo.Text);
 

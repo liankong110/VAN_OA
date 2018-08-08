@@ -324,7 +324,7 @@ isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOu
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append(@"select AllOutTotal, HadInvoice,GoodTotal,GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,GoodNo,GoodName,GoodSpec,GoodModel,
-GoodUnit,GoodTypeSmName,houseName FROM TB_HouseGoods left join TB_Good on TB_Good.GoodId=TB_HouseGoods.GoodId 
+GoodUnit,GoodTypeSmName,houseName,SumKuXuCai FROM TB_HouseGoods left join TB_Good on TB_Good.GoodId=TB_HouseGoods.GoodId 
  left join TB_HouseInfo on TB_HouseInfo.id=HouseId left join (select GooId,--支付单价/实采金额 *采购单价
 sum(SupplierInvoiceTotal) as HadInvoice, 
 sum(GoodNum*GoodPrice) as GoodTotal ,-sum(OutTotal) as AllOutTotal
@@ -352,7 +352,8 @@ select OrderCheckIds,SUM(GoodPrice*GoodNum) AS OutTotal from CAI_OrderOutHouse l
 where Status='通过' GROUP BY OrderCheckIds
 ) as caiOut ON caiOut.OrderCheckIds=CAI_OrderInHouses.Ids
 where status='通过'
-group by GooId) as Invoice on Invoice.GooId=TB_HouseGoods.GoodId ");
+group by GooId) as Invoice on Invoice.GooId=TB_HouseGoods.GoodId 
+left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_HouseGoods.GoodId ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -397,6 +398,13 @@ group by GooId) as Invoice on Invoice.GooId=TB_HouseGoods.GoodId ");
                          
                         //入库的未支付+退货的未支付 2个逻辑要分开处理
                         model.NoInvoice = GoodTotal + AllOutTotal - model.HadInvoice;
+
+                        ojb = dataReader["SumKuXuCai"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumKuXuCai = Convert.ToDecimal(ojb);
+                        }
+
                         list.Add(model);
                         i++;
                     }

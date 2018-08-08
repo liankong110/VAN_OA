@@ -240,5 +240,24 @@ namespace VAN_OA.Model.JXC
         /// 最便宜的询价
         /// </summary>
         public decimal CheapPrice { get; set; }
+
+        /// <summary>
+        /// 库存数量
+        /// </summary>
+        public decimal GoodNum { get; set; }
+        /// <summary>
+        /// 采库需出数
+        /// </summary>
+        public decimal SumKuXuCai { get; set; }
+        /// <summary>
+        /// 滞留库存=库存数量-采库需出数
+        /// </summary>
+        public decimal ZhiLiuKuCun
+        {
+            get
+            {
+                return GoodNum - SumKuXuCai;
+            }
+        }
     }
 }

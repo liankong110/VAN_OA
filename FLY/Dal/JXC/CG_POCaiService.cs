@@ -350,9 +350,11 @@ namespace VAN_OA.Dal.JXC
             //strSql.Append("select Ids,Id,CaiTime,Supplier,SupperPrice,UpdateUser,Idea,Supplier1,SupperPrice1,Supplier2,SupperPrice2,GuestName,InvName,Num,FinPrice1,FinPrice2,FinPrice3");
             //strSql.Append(" FROM CG_POCai ");
             strSql.Append("select   ");
-            strSql.Append(" Ids,CG_POCai.Id,CaiTime,Supplier,SupperPrice,UpdateUser,Idea,Supplier1,SupperPrice1,Supplier2,SupperPrice2,GuestName,InvName,Num ,FinPrice1,FinPrice2,FinPrice3 ,CG_POCai.GoodId,GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName");
+            strSql.Append(@" Ids,CG_POCai.Id,CaiTime,Supplier,SupperPrice,UpdateUser,Idea,Supplier1,SupperPrice1,Supplier2,SupperPrice2,GuestName,InvName,Num ,
+FinPrice1,FinPrice2,FinPrice3 ,CG_POCai.GoodId,GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,CaiKuXuNumView.SumKuXuCai,TB_HouseGoods.housegoodnum");
             strSql.Append(" from CG_POCai left join TB_Good on TB_Good.GoodId=CG_POCai.GoodId ");
-          
+            strSql.Append(@" left join CaiKuXuNumView on CaiKuXuNumView.GoodId=CG_POCai.GoodId
+left join (select goodid,sum(goodnum) as housegoodnum from TB_HouseGoods group by goodid ) as TB_HouseGoods on TB_HouseGoods.goodid=CG_POCai.GoodId");
 
             if (strWhere.Trim() != "")
             {
@@ -368,7 +370,19 @@ namespace VAN_OA.Dal.JXC
                 {
                     while (dataReader.Read())
                     {
-                        list.Add(ReaderBind(dataReader));
+                        var model = ReaderBind(dataReader);
+                        object ojb;
+                        ojb = dataReader["SumKuXuCai"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumKuXuCai =Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["housegoodnum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GoodNum = Convert.ToDecimal(ojb);
+                        }
+                        list.Add(model);
                     }
                 }
             }

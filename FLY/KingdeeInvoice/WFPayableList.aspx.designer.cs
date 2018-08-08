@@ -7,10 +7,10 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace VAN_OA.JXC {
+namespace VAN_OA.KingdeeInvoice {
     
     
-    public partial class Pro_JSXDetailInfoList {
+    public partial class WFPayableList {
         
         /// <summary>
         /// txtFrom 控件。
@@ -67,67 +67,157 @@ namespace VAN_OA.JXC {
         protected global::AjaxControlToolkit.CalendarExtender CalendarExtender2;
         
         /// <summary>
-        /// ddlHouse 控件。
+        /// txtSupplierName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlHouse;
+        protected global::System.Web.UI.WebControls.TextBox txtSupplierName;
         
         /// <summary>
-        /// txtGoodNo 控件。
+        /// txtInvoiceNo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGoodNo;
+        protected global::System.Web.UI.WebControls.TextBox txtInvoiceNo;
         
         /// <summary>
-        /// txtPONO 控件。
+        /// cbInvoiceNo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPONO;
+        protected global::System.Web.UI.WebControls.CheckBox cbInvoiceNo;
         
         /// <summary>
-        /// txtInvName 控件。
+        /// ddlInvTotal 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtInvName;
+        protected global::System.Web.UI.WebControls.DropDownList ddlInvTotal;
         
         /// <summary>
-        /// AutoCompleteExtender2 控件。
+        /// txtInvoice 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::AjaxControlToolkit.AutoCompleteExtender AutoCompleteExtender2;
+        protected global::System.Web.UI.WebControls.TextBox txtInvoice;
         
         /// <summary>
-        /// txtProNO 控件。
+        /// ddlDaoZhang 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtProNO;
+        protected global::System.Web.UI.WebControls.DropDownList ddlDaoZhang;
         
         /// <summary>
-        /// Label1 控件。
+        /// ddlIsorder 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlIsorder;
+        
+        /// <summary>
+        /// ddlIsDeleted 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlIsDeleted;
+        
+        /// <summary>
+        /// ddlDaoKuanTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDaoKuanTotal;
+        
+        /// <summary>
+        /// txtDaoKuanTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDaoKuanTotal;
+        
+        /// <summary>
+        /// ddlEQTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEQTotal;
+        
+        /// <summary>
+        /// txtBillDateFrom 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBillDateFrom;
+        
+        /// <summary>
+        /// ImageButton2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton ImageButton2;
+        
+        /// <summary>
+        /// txtBillDateTo 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBillDateTo;
+        
+        /// <summary>
+        /// ImageButton3 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton ImageButton3;
+        
+        /// <summary>
+        /// CalendarExtender3 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender CalendarExtender3;
+        
+        /// <summary>
+        /// CalendarExtender4 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender CalendarExtender4;
         
         /// <summary>
         /// btnSelect 控件。
@@ -139,58 +229,40 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.Button btnSelect;
         
         /// <summary>
-        /// lblGoodAreaNumber 控件。
+        /// btnIsSelected 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodAreaNumber;
+        protected global::System.Web.UI.WebControls.Button btnIsSelected;
         
         /// <summary>
-        /// lblGoodInfo 控件。
+        /// btnDeleted 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodInfo;
+        protected global::System.Web.UI.WebControls.Button btnDeleted;
         
         /// <summary>
-        /// lblGoodNum 控件。
+        /// btnClear 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodNum;
+        protected global::System.Web.UI.WebControls.Button btnClear;
         
         /// <summary>
-        /// lblCaiKuNum 控件。
+        /// gvList 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCaiKuNum;
-        
-        /// <summary>
-        /// lblZhiLiuNum 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblZhiLiuNum;
-        
-        /// <summary>
-        /// gvMain 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvMain;
+        protected global::System.Web.UI.WebControls.GridView gvList;
         
         /// <summary>
         /// AspNetPager1 控件。
@@ -202,75 +274,93 @@ namespace VAN_OA.JXC {
         protected global::Wuqi.Webdiyer.AspNetPager AspNetPager1;
         
         /// <summary>
-        /// lblHadInvoice 控件。
+        /// Label3 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblHadInvoice;
+        protected global::System.Web.UI.WebControls.Label Label3;
         
         /// <summary>
-        /// lblNoInvoice 控件。
+        /// lblAllTotal 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNoInvoice;
+        protected global::System.Web.UI.WebControls.Label lblAllTotal;
         
         /// <summary>
-        /// lblGoodInNum 控件。
+        /// Label1 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodInNum;
+        protected global::System.Web.UI.WebControls.Label Label1;
         
         /// <summary>
-        /// lbllblGoodInNumTotal 控件。
+        /// lblDaoTotal 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbllblGoodInNumTotal;
+        protected global::System.Web.UI.WebControls.Label lblDaoTotal;
         
         /// <summary>
-        /// lblGoodOutNum 控件。
+        /// Label4 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodOutNum;
+        protected global::System.Web.UI.WebControls.Label Label4;
         
         /// <summary>
-        /// lblGoodOutNumTotal 控件。
+        /// lblDaoKuanBLTotal 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodOutNumTotal;
+        protected global::System.Web.UI.WebControls.Label lblDaoKuanBLTotal;
         
         /// <summary>
-        /// lblGoodResultNum 控件。
+        /// Label2 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGoodResultNum;
+        protected global::System.Web.UI.WebControls.Label Label2;
         
         /// <summary>
-        /// LBLHouseTotal 控件。
+        /// lblWeiDaoTotal 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LBLHouseTotal;
+        protected global::System.Web.UI.WebControls.Label lblWeiDaoTotal;
+        
+        /// <summary>
+        /// Label5 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label5;
+        
+        /// <summary>
+        /// lblWeiDaoKuanBLTotal 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWeiDaoKuanBLTotal;
     }
 }

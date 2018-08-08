@@ -136,6 +136,8 @@
         </tr>
     </table>
     说明：A：二楼仓库 B：一楼西仓库和一楼公共区域   C：一楼东仓库 D: 3层阁楼仓库 E:二楼公共区域 F：一楼机房 G:三楼公共区域  H：三楼会议室
+    <br />
+     注：淡红色背景的项表示有滞留库存，即非订单采购库存
     <br/>
     <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"  DataKeyNames="GoodId"
          Width="100%" AutoGenerateColumns="False" OnRowDataBound="gvList_RowDataBound" OnRowEditing="gvList_RowEditing"
@@ -215,6 +217,9 @@
                     <asp:Label ID="lblNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
                 </FooterTemplate>
             </asp:TemplateField>
+              <asp:BoundField DataField="SumKuXuCai" HeaderText="采购需出" SortExpression="SumKuXuCai" />
+              <asp:BoundField DataField="ZhiLiuKuCun" HeaderText="滞留库存" SortExpression="ZhiLiuKuCun" />
+
             <asp:TemplateField HeaderText="均价">
                 <ItemTemplate>
                     <asp:Label ID="lblCheckPrice" runat="server" Text='<%# GetValue(Eval("GoodAvgPrice")) %>'></asp:Label>

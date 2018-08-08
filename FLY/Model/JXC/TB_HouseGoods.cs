@@ -10,7 +10,7 @@ namespace VAN_OA.Model.JXC
     /// TB_HouseGoods:实体类(属性说明自动提取数据库字段的描述信息)
     /// </summary>
     [Serializable]
-    public partial class TB_HouseGoods:GoodModel
+    public partial class TB_HouseGoods : GoodModel
     {
         public TB_HouseGoods()
         { }
@@ -92,12 +92,12 @@ namespace VAN_OA.Model.JXC
         /// 原项目商品价格
         /// </summary>
         public decimal POGoodPrice { get; set; }
-     
-		 /// <summary>
+
+        /// <summary>
         /// 仓位
         /// </summary>
-        public string GoodAreaNumber { get; set; } 
- 
+        public string GoodAreaNumber { get; set; }
+
 
         #region   这里有个重要的问题是 商品期初如果没有，后来有入库，需要显示在内， 商品期初如果有库存，后来全出完了，也要显示在内，只有一种情况不用显示：期初为0,入库为0，出库为0，期末为0 ，这种情况才不用显示！！！！
         /// <summary>
@@ -111,7 +111,7 @@ namespace VAN_OA.Model.JXC
         /// <summary>
         /// 本期出库为这段时间仓库里的该商品的出库数
         /// </summary>
-        public decimal OutNums { get; set; } 
+        public decimal OutNums { get; set; }
         #endregion
 
 
@@ -119,6 +119,21 @@ namespace VAN_OA.Model.JXC
 
         public decimal HadInvoice { get; set; }
         public decimal NoInvoice { get; set; }
+
+        /// <summary>
+        /// 采库需出数
+        /// </summary>
+        public decimal SumKuXuCai { get; set; }
+        /// <summary>
+        /// 滞留库存=库存数量-采库需出数
+        /// </summary>
+        public decimal ZhiLiuKuCun
+        {
+            get
+            {
+                return GoodNum - SumKuXuCai;
+            }
+        }
 
     }
 }

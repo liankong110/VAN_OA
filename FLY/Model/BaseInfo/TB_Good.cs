@@ -181,7 +181,20 @@ namespace VAN_OA.Model.BaseInfo
         /// </summary>
         public decimal HadInvoice { get; set; }
 
-        
+        /// <summary>
+        /// 采库需出数
+        /// </summary>
+        public decimal SumKuXuCai { get; set; }
+        /// <summary>
+        /// 滞留库存=库存数量-采库需出数
+        /// </summary>
+        public decimal ZhiLiuKuCun
+        {
+            get
+            {
+                return GoodNum - SumKuXuCai;
+            }
+        }
 
     }
 }

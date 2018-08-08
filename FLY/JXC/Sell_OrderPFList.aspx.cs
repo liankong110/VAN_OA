@@ -317,7 +317,7 @@ namespace VAN_OA.JXC
                 {
                     where += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
                 }
-                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' {0} and CG_POOrder.PONO=Sell_OrderFP.PONO ) ", where);
+                sql += string.Format("and exists(select id from CG_POOrder where Status='通过' {0} and CG_POOrder.PONO=Sell_OrderFP.PONO and IFZhui=0) ", where);
             }
             List<Sell_OrderFP> pOOrderList = this.POSer.GetListArray(sql);
 

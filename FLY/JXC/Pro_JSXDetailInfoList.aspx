@@ -79,6 +79,9 @@
 
     仓位:<asp:Label ID="lblGoodAreaNumber" runat="server" Text=""></asp:Label>
     &nbsp;&nbsp;&nbsp;&nbsp;名称\小类\规格：<asp:Label ID="lblGoodInfo" runat="server" Text=""></asp:Label>
+    &nbsp;&nbsp;&nbsp;&nbsp;当前库存：<asp:Label ID="lblGoodNum" runat="server" Text=""></asp:Label>
+    &nbsp;&nbsp;&nbsp;&nbsp;采购需出：<asp:Label ID="lblCaiKuNum" runat="server" Text=""></asp:Label>
+    &nbsp;&nbsp;&nbsp;&nbsp;滞留库存：<asp:Label ID="lblZhiLiuNum" runat="server" Text=""></asp:Label>
     <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid" PageSize="40"
         Width="100%" AllowPaging="true" AutoGenerateColumns="False" OnRowDataBound="gvMain_RowDataBound">
         <EmptyDataTemplate>

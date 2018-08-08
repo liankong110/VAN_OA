@@ -8,6 +8,7 @@ using VAN_OA.Model.JXC;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
 using VAN_OA.Dal.EFrom;
+using System.Drawing;
 
 namespace VAN_OA.JXC
 {
@@ -289,6 +290,11 @@ namespace VAN_OA.JXC
                 if (btnEdit != null && ViewState["codeUpdate"] == null)
                 {
                     btnEdit.Enabled = false;
+                }
+
+                if (model.GoodNum > model.SumKuXuCai)
+                {
+                    e.Row.BackColor = ColorTranslator.FromHtml("#FFF0F5");
                 }
                 //if (btnEdit != null)
                 //{

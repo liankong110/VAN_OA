@@ -429,13 +429,13 @@ namespace VAN_OA.JXC
             if (!IsPostBack)
             {
                 TB_ModelService modelService = new TB_ModelService();
-                var modelList=modelService.GetListArray("");
+                var modelList = modelService.GetListArray("");
                 modelList.Insert(0, new TB_Model { Id = -1, ModelName = "" });
                 ddlModel.DataSource = modelList;
                 ddlModel.DataBind();
                 ddlModel.DataTextField = "ModelName";
-                ddlModel.DataValueField = "ModelName";              
-                
+                ddlModel.DataValueField = "ModelName";
+
                 this.gvModel.DataSource = modelService.GetListArray(""); ;
                 this.gvModel.DataBind();
 
@@ -788,7 +788,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                         ViewState["Cais"] = caiList;
                         ViewState["CaisCount"] = caiList.Count;
 
-                       
+
 
                         ViewState["Orders"] = orders;
 
@@ -1494,7 +1494,12 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 totals.Add(model.Total2);
                 totals.Add(model.Total3);
                 var minTotal = totals.Min();
-              
+
+                if (model.GoodNum > model.SumKuXuCai)
+                {
+                    e.Row.Cells[2].BackColor = ColorTranslator.FromHtml("#FFF0F5");
+                    e.Row.Cells[3].BackColor = ColorTranslator.FromHtml("#FFF0F5");
+                }
                 if (model.Total1 == minTotal)
                 {
                     model.CheapPrice = model.SupperPrice ?? 0;// (minTotal ?? 0);
@@ -1532,7 +1537,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 }
 
                 IniProfit = IniProfit + (model.IniProfit ?? 0);
-                SumSellTotal = SumSellTotal+(model.Num ?? 0) * model.SellPrice;
+                SumSellTotal = SumSellTotal + (model.Num ?? 0) * model.SellPrice;
 
                 setValue(e.Row.FindControl("lblIniProfit") as Label, NumHelp.FormatFour(model.IniProfit).ToString());//数量
                 //(e.Row.FindControl("lblCaiLiRun") as Label).BackColor = ColorTranslator.FromHtml("#D7E8FF");
@@ -1554,7 +1559,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 else
                 {
                     setValue(e.Row.FindControl("lblCaiLiRun") as Label, NumHelp.FormatFour(0).ToString());//数量
-                }                
+                }
             }
         }
 
@@ -1743,10 +1748,44 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
 
 
             txtSupplier.Text = model.Supplier;
+            //如果该商品当前库存数字大于采库需出的数
+            //字，界面点编辑后，采购供应商1的地方，库存CheckBox自动打钩，采购价格显示库存
+            //均价。采购供应商1的输入框自动灰掉，采购供应商2和采购供应商3的输入框及库存
+            //CHECKBOX自动灰掉。
 
-            SetKuCunValueEnabled(cbKuCun1,txtSupplier, txtSupperPrice, txtTotal1);
-            SetKuCunValueEnabled(cbKuCun2,txtSupper2, txtPrice2, txtTotal2);
-            SetKuCunValueEnabled(cbKuCun3,txtSupper3, txtPrice3, txtTotal3);
+            if (ViewState["RoleCount"] != null && ViewState["RoleCount"].ToString() == "0")
+            {
+                if (model.GoodNum > model.SumKuXuCai)
+                {
+                    txtSupplier.Text = "库存";
+                    decimal num = 0;
+                    var GoodAvgPrice = GetHouseGoodPrice(out num);
+                    txtSupperPrice.Text = GoodAvgPrice.ToString();
+
+                    txtSupplier.Enabled = false;
+                    txtSupper2.Enabled = false;
+                    txtSupper3.Enabled = false;
+
+                    cbKuCun1.Enabled = false;
+                    cbKuCun2.Enabled = false;
+                    cbKuCun3.Enabled = false;
+                }
+                else
+                {
+                    txtSupplier.Enabled = true;
+                    txtSupper2.Enabled = true;
+                    txtSupper3.Enabled = true;
+
+                    cbKuCun1.Enabled = true;
+                    cbKuCun2.Enabled = true;
+                    cbKuCun3.Enabled = true;
+                }
+            }
+
+
+            SetKuCunValueEnabled(cbKuCun1, txtSupplier, txtSupperPrice, txtTotal1);
+            SetKuCunValueEnabled(cbKuCun2, txtSupper2, txtPrice2, txtTotal2);
+            SetKuCunValueEnabled(cbKuCun3, txtSupper3, txtPrice3, txtTotal3);
 
             //if (ViewState["EformsCount"] != null)
             //{
@@ -2069,7 +2108,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                     SupperPrice.Enabled = false;
                     txtTotal.Enabled = false;
                     Supplier.Text = "库存";
-                    
+
                     txtSupperPrice.Text = GoodAvgPrice.ToString();
                     txtTotal.Text = (Convert.ToDecimal(txtNum.Text) * GoodAvgPrice).ToString();
                 }

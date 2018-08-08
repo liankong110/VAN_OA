@@ -10,8 +10,7 @@ using System.Data;
 using Microsoft.Office.Interop.Excel;
 using VAN_OA.Dal.EFrom;
 using System.Text;
-
-
+using System.Drawing;
 
 namespace VAN_OA.BaseInfo
 {
@@ -32,9 +31,6 @@ namespace VAN_OA.BaseInfo
 
         private void ShowAll()
         {
-
-          
-
             List<TB_Good> pos = this.goodSer.GetListArray("");
             foreach (var m in pos)
             {
@@ -249,6 +245,11 @@ namespace VAN_OA.BaseInfo
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
+                TB_Good model = e.Row.DataItem as TB_Good;
+                if (model.GoodNum > model.SumKuXuCai)
+                {
+                    e.Row.BackColor = ColorTranslator.FromHtml("#FFF0F5");
+                }
             }
         }
 

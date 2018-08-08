@@ -643,6 +643,49 @@ namespace VAN_OA.Dal.BaseInfo
             return list;
         }
 
+        /// <summary>
+        /// 获取显示当前库存：XX,采库需出:YY ，滞留库存：XX-YY
+        /// </summary>
+        /// <param name="goodId"></param>
+        /// <returns></returns>
+        public List<decimal> GetGoodNum(int goodId)
+        {
+            List<decimal> nums = new List<decimal>();
+            string sql = string.Format(@"select GoodNum,SumKuXuCai from TB_HouseGoods INNER join CaiKuXuNumView 
+on CaiKuXuNumView.GoodId=TB_HouseGoods.goodId
+WHERE TB_HouseGoods.goodId={0}",goodId);
+            List<VAN_OA.Model.BaseInfo.TB_Good> list = new List<VAN_OA.Model.BaseInfo.TB_Good>();
+            decimal GoodNum = 0;
+            decimal SumKuXuCai = 0;
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader objReader = objCommand.ExecuteReader())
+                {
+                    if (objReader.Read())
+                    {
+                        var ojb = objReader["GoodNum"];
+                      
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            GoodNum = (decimal)ojb;
+                        }
+                       
+                        ojb = objReader["SumKuXuCai"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            SumKuXuCai = (decimal)ojb;
+                        }
+                       
+                    }
+                }
+            }
+            nums.Add(GoodNum);
+            nums.Add(SumKuXuCai);
+            return nums;
+        }
+
 
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
@@ -691,7 +734,7 @@ where Status='通过' GROUP BY OrderCheckIds
 ) as caiOut ON caiOut.OrderCheckIds=CAI_OrderInHouses.Ids
 where status='通过' 
 group by CAI_OrderInHouses.GooId
- ) AS Invoice on Invoice.GooId=Temp.GoodId");
+ ) AS Invoice on Invoice.GooId=Temp.GoodId  left join CaiKuXuNumView on CaiKuXuNumView.GoodId=Temp.GoodId ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -728,8 +771,12 @@ group by CAI_OrderInHouses.GooId
                         {
                             model.HadInvoice = (decimal)ojb;
                         }
-                         
-                        
+
+                        ojb = objReader["SumKuXuCai"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumKuXuCai = Convert.ToDecimal(ojb);
+                        }
                         list.Add(model);
                     }
                 }
