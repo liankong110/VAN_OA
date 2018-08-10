@@ -229,6 +229,27 @@ namespace VAN_OA.JXC
             {              
                 sql += string.Format(" and GoodAreaNumber=''");                
             }
+
+            if (txtCaiKuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtCaiKuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('采购需出格式出错！');</script>");
+                    return;
+                }
+                sql += string.Format("and isnull(SumKuXuCai,0){0}{1}", ddlCaiKuNum.Text, txtCaiKuNum.Text);
+            }
+
+            if (txtZhiLiuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtZhiLiuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('滞留库存格式出错！');</script>");
+                    return;
+                }
+                sql += string.Format("and (isnull(GoodNum,0)-isnull(SumKuXuCai,0)){0}{1}", ddlZhiLiuNum.Text, txtZhiLiuNum.Text);
+            }
+
             List<TB_HouseGoods> gooQGooddList = this.houseSer.GetListArrayToInvoice(sql);
 
             lblHadInvoice.Text = string.Format("{0:n2}", gooQGooddList.Sum(t => t.HadInvoice));

@@ -61,10 +61,8 @@
             </td>
         </tr>
         <tr>
-            <td>
-                商品均价:
-            </td>
-            <td colspan="3">
+            <td colspan="4">
+                商品均价:             
                 <asp:DropDownList ID="ddlPrice" runat="server">
                     <asp:ListItem Text=">=" Value=">=" ></asp:ListItem>
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
@@ -124,6 +122,38 @@
                     <asp:ListItem Value="1">不包含期初期末均为零</asp:ListItem>
                         <asp:ListItem Value="2">不包含期末为零</asp:ListItem>
                 </asp:DropDownList>
+                <br />
+                  库存数量:
+                <asp:DropDownList ID="ddlFuHao" runat="server">
+                <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                <asp:TextBox ID="txtNum" runat="server" Width="100px"></asp:TextBox>
+
+                   采购需出：
+                <asp:DropDownList ID="ddlCaiKuNum" runat="server">
+                   <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                  <asp:TextBox ID="txtCaiKuNum" runat="server" Width="100px"></asp:TextBox>
+                滞留库存：
+                <asp:DropDownList ID="ddlZhiLiuNum" runat="server">
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                   <asp:TextBox ID="txtZhiLiuNum" runat="server" Width="100px"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -133,7 +163,10 @@
             </td>
         </tr>
     </table>
-    <br>
+    <br/>
+    说明：A：二楼仓库 B：一楼西仓库和一楼公共区域 C：一楼东仓库 D: 3层阁楼仓库 E:二楼公共区域 F：一楼机房 G:三楼公共区域 H：三楼会议室
+      <br />
+                         注：淡红色背景的项表示有滞留库存，即非订单采购库存
      <asp:Panel ID="Panel1" runat="server" Width="100%" ScrollBars="Both">
     <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid" AllowPaging="true"  OnPageIndexChanging="gvList_PageIndexChanging"
         DataKeyNames="Id" Width="100%" AutoGenerateColumns="False" OnRowDataBound="gvList_RowDataBound"  PageSize="50"
@@ -222,6 +255,9 @@
                     <asp:Label ID="lblTotal" runat="server" Text='<%# GetValue(Eval("Total")) %>'></asp:Label>
                 </FooterTemplate>
             </asp:TemplateField>
+             <asp:BoundField DataField="GoodNum" HeaderText="现有库存" SortExpression="GoodNum" />
+              <asp:BoundField DataField="SumKuXuCai" HeaderText="采购需出" SortExpression="SumKuXuCai" />
+              <asp:BoundField DataField="ZhiLiuKuCun" HeaderText="滞留库存" SortExpression="ZhiLiuKuCun" />
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />

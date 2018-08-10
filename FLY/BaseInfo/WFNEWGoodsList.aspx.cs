@@ -85,6 +85,36 @@ namespace VAN_OA.BaseInfo
         private string GetSql()
         {
             string sql = " 1=1 ";
+            if (txtGoodNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtGoodNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('库存数量格式出错！');</script>");
+                    return "";
+                }
+                sql += string.Format("and isnull(GoodNum,0){0}{1}",ddlGoodNum.Text,txtGoodNum.Text);
+            }
+
+            if (txtCaiKuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtCaiKuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('采购需出格式出错！');</script>");
+                    return "";
+                }
+                sql += string.Format("and isnull(SumKuXuCai,0){0}{1}", ddlCaiKuNum.Text, txtCaiKuNum.Text);
+            }
+            
+            if (txtZhiLiuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtZhiLiuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('滞留库存格式出错！');</script>");
+                    return "";
+                }
+                sql += string.Format("and (isnull(GoodNum,0)-isnull(SumKuXuCai,0)){0}{1}", ddlZhiLiuNum.Text, txtZhiLiuNum.Text);
+            }
+
             if (ddlSpecial.Text != "-1")
             {
                 sql += " and IfSpec=" + ddlSpecial.Text;
@@ -133,7 +163,7 @@ namespace VAN_OA.BaseInfo
                     return "";
                 }
 
-                sql += string.Format(" and GoodId={0}", goodId);
+                sql += string.Format(" and Temp.GoodId={0}", goodId);
 
             }
 

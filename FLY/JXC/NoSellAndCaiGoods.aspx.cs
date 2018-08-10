@@ -215,7 +215,11 @@ namespace VAN_OA.JXC
                 }
                 poNoSql += ")";
             }
-
+            //无KC
+            if (ddlKCType.Text == "2")
+            {
+                ponoWhere += string.Format(" and PONO LIKE 'P%'");
+            }
             var resultList = _dal.GetListNoSellAndCaiGoods(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where, company
                 , (ddlKCType.Text == "1" ? true : false), poNoSql);
 

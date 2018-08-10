@@ -121,6 +121,7 @@
                  <asp:DropDownList ID="ddlKCType" runat="server">
                      <asp:ListItem Value="1" Text="精简"></asp:ListItem>
                      <asp:ListItem Value="0" Text="正常"></asp:ListItem>
+                        <asp:ListItem Value="2" Text="无KC"></asp:ListItem>
                  </asp:DropDownList>
                 供应商简称：
                 <asp:TextBox ID="txtSupplier" runat="server" Width="150px"></asp:TextBox>

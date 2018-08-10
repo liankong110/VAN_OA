@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using VAN_OA.Model.JXC;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
+using System.Drawing;
 
 namespace VAN_OA.JXC
 {
@@ -108,7 +109,35 @@ namespace VAN_OA.JXC
                     return "-1";
                 }
             }
+            if (txtCaiKuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtCaiKuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('采购需出格式出错！');</script>");
+                    return "-1";
+                }
+                sql += string.Format("and isnull(SumKuXuCai,0){0}{1}", ddlCaiKuNum.Text, txtCaiKuNum.Text);
+            }
 
+            if (txtZhiLiuNum.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtZhiLiuNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('滞留库存格式出错！');</script>");
+                    return "-1";
+                }
+                sql += string.Format("and (isnull(GoodNum,0)-isnull(SumKuXuCai,0)){0}{1}", ddlZhiLiuNum.Text, txtZhiLiuNum.Text);
+            }
+
+            if (!string.IsNullOrEmpty(txtNum.Text))
+            {
+                if (CommHelp.VerifesToNum(txtNum.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('库存格式出错！');</script>");
+                    return "-1";
+                }
+                sql += string.Format(" and GoodNum{0}{1}", ddlFuHao.SelectedItem.Text, txtNum.Text);
+            }
 
             if (txtZhuJi.Text != "")
             {
@@ -239,7 +268,10 @@ namespace VAN_OA.JXC
                 TB_HouseGoods model = e.Row.DataItem as TB_HouseGoods;
                 SumOrders.GoodNum += model.GoodNum;
                 SumOrders.Total += model.Total;
-
+                if (model.GoodNum > model.SumKuXuCai)
+                {
+                    e.Row.BackColor = ColorTranslator.FromHtml("#FFF0F5");
+                }
 
             }
             ImageButton btnEdit = e.Row.FindControl("btnEdit") as ImageButton;
@@ -255,7 +287,7 @@ namespace VAN_OA.JXC
             {
                 setValue(e.Row.FindControl("lblGoodName") as Label, "合计");//合计
                 setValue(e.Row.FindControl("lblNum") as Label, SumOrders.GoodNum.ToString());//数量                
-                setValue(e.Row.FindControl("lblTotal") as Label, SumOrders.Total.ToString());//成本总额    
+                setValue(e.Row.FindControl("lblTotal") as Label,string.Format("{0:n4}", SumOrders.Total));//成本总额    
             }
         }
 

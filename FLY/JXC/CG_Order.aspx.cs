@@ -1787,6 +1787,31 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
             SetKuCunValueEnabled(cbKuCun2, txtSupper2, txtPrice2, txtTotal2);
             SetKuCunValueEnabled(cbKuCun3, txtSupper3, txtPrice3, txtTotal3);
 
+
+            if (ViewState["RoleCount"] != null && ViewState["RoleCount"].ToString() == "0")
+            {
+                if (model.GoodNum > model.SumKuXuCai)
+                {                    
+
+                    txtSupplier.Enabled = false;
+                    txtSupper2.Enabled = false;
+                    txtSupper3.Enabled = false;
+
+                    cbKuCun1.Enabled = false;
+                    cbKuCun2.Enabled = false;
+                    cbKuCun3.Enabled = false;
+                }
+                else
+                {
+                    txtSupplier.Enabled = true;
+                    txtSupper2.Enabled = true;
+                    txtSupper3.Enabled = true;
+
+                    cbKuCun1.Enabled = true;
+                    cbKuCun2.Enabled = true;
+                    cbKuCun3.Enabled = true;
+                }
+            }
             //if (ViewState["EformsCount"] != null)
             //{
             //    if (ViewState["EformsCount"].ToString() == "2")
@@ -1888,6 +1913,8 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                     s.GoodSpec = model.GoodSpec;
                     s.GoodTypeSmName = model.GoodTypeSmName;
                     s.GoodUnit = model.GoodUnit;
+                    s.GoodNum = model.GoodNum;
+                    s.SumKuXuCai = model.SumKuXuCai;
                     newSche.IfUpdate = true;
                     POOrders[index] = newSche;
                     ViewState["Cais"] = POOrders;

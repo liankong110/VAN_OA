@@ -71,17 +71,16 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td colspan="4">
                 商品均价:
-            </td>
-            <td colspan="3">
+            
                 <asp:DropDownList ID="ddlPrice" runat="server">
                     <asp:ListItem Text=">=" Value=">=" ></asp:ListItem>
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
                     <asp:ListItem Text="=" Value="="></asp:ListItem>
                 </asp:DropDownList>
-                <asp:TextBox ID="txtGoodAvgPrice" runat="server" Width="200px"></asp:TextBox>
+                <asp:TextBox ID="txtGoodAvgPrice" runat="server" Width="100px"></asp:TextBox>
                     仓位:   <asp:DropDownList ID="ddlArea" runat="server">
                     <asp:ListItem Value="">全部</asp:ListItem>
                     <asp:ListItem Value="A">A</asp:ListItem>
@@ -119,14 +118,37 @@
                 </asp:DropDownList>
                 <asp:CheckBox ID="cbEmpty" runat="server" Text="仓位空白" AutoPostBack="True" 
                     oncheckedchanged="cbEmpty_CheckedChanged" />
-                    数量:
+                    库存数量:
                 <asp:DropDownList ID="ddlFuHao" runat="server">
-                <asp:ListItem>>=</asp:ListItem>
-                <asp:ListItem><</asp:ListItem>
-                  <asp:ListItem>></asp:ListItem>
-                    <asp:ListItem>=</asp:ListItem>
+                <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                 </asp:DropDownList>
-                <asp:TextBox ID="txtNum" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtNum" runat="server" Width="100px"></asp:TextBox>
+
+                   采购需出：
+                <asp:DropDownList ID="ddlCaiKuNum" runat="server">
+                   <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                  <asp:TextBox ID="txtCaiKuNum" runat="server" Width="100px"></asp:TextBox>
+                滞留库存：
+                <asp:DropDownList ID="ddlZhiLiuNum" runat="server">
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                   <asp:TextBox ID="txtZhiLiuNum" runat="server" Width="100px"></asp:TextBox>
             </td>
         </tr>
         <tr>

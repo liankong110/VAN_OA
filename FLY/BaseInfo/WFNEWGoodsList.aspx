@@ -65,16 +65,14 @@
             </td>
         </tr>
         <tr>
-            <td>商品均价:
-            </td>
-            <td colspan="3">
+            <td colspan="4">商品均价:           
                 <asp:DropDownList ID="ddlPrice" runat="server">
                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
                     <asp:ListItem Text="=" Value="="></asp:ListItem>
                 </asp:DropDownList>
-                <asp:TextBox ID="txtGoodAvgPrice" runat="server" Width="200px"></asp:TextBox>
+                <asp:TextBox ID="txtGoodAvgPrice" runat="server" Width="100px"></asp:TextBox>
                 仓位:
                 <asp:DropDownList ID="ddlArea" runat="server">
                     <asp:ListItem Value="">全部</asp:ListItem>
@@ -118,6 +116,36 @@
                      <asp:ListItem Text="不通过" Value="不通过"></asp:ListItem>
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                  </asp:DropDownList>
+                库存数量：
+                <asp:DropDownList ID="ddlGoodNum" runat="server">
+                   <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                     <asp:TextBox ID="txtGoodNum" runat="server" Width="100px"></asp:TextBox>
+                采购需出：
+                <asp:DropDownList ID="ddlCaiKuNum" runat="server">
+                   <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                  <asp:TextBox ID="txtCaiKuNum" runat="server" Width="100px"></asp:TextBox>
+                滞留库存：
+                <asp:DropDownList ID="ddlZhiLiuNum" runat="server">
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                </asp:DropDownList>
+                   <asp:TextBox ID="txtZhiLiuNum" runat="server" Width="100px"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -196,8 +224,8 @@
             <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="GoodNum" HeaderText="库存数量" SortExpression="GoodNum" ItemStyle-HorizontalAlign="Center"
                 DataFormatString="{0:n4}" />
-                  <asp:BoundField DataField="SumKuXuCai" HeaderText="采购需出" SortExpression="SumKuXuCai" />
-              <asp:BoundField DataField="ZhiLiuKuCun" HeaderText="滞留库存" SortExpression="ZhiLiuKuCun" />
+            <asp:BoundField DataField="SumKuXuCai" HeaderText="采购需出" SortExpression="SumKuXuCai" />
+            <asp:BoundField DataField="ZhiLiuKuCun" HeaderText="滞留库存" SortExpression="ZhiLiuKuCun" />
             <asp:BoundField DataField="GoodPrice" HeaderText="均价" SortExpression="GoodPrice"
                 ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n4}" />
             <asp:BoundField DataField="GoodTotal" HeaderText="金额" SortExpression="GoodTotal"
@@ -227,5 +255,5 @@
     </webdiyer:AspNetPager>
     已支付合计：<asp:Label ID="lblHadInvoice" runat="server" Text="0" ForeColor="Red" Style="margin-right: 20px"></asp:Label>
     未支付合计：<asp:Label ID="lblNoInvoice" runat="server" Text="0" ForeColor="Red" Style="margin-right: 20px"></asp:Label>
-     库存总金额合计：<asp:Label ID="lblHouseTotal" runat="server" Text="0" ForeColor="Red" Style="margin-right: 20px"></asp:Label>
+    库存总金额合计：<asp:Label ID="lblHouseTotal" runat="server" Text="0" ForeColor="Red" Style="margin-right: 20px"></asp:Label>
 </asp:Content>

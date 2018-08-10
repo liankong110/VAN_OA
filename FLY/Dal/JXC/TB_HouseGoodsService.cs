@@ -155,8 +155,8 @@ namespace VAN_OA.Dal.JXC
             StringBuilder strSql = new StringBuilder();
             strSql.AppendFormat(@"select GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,
 GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,houseName,SellOutNums as OutNums,CaiInNums as InNums,
-isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOutNums1,0) as Nums
- FROM TB_Good left join TB_HouseGoods on TB_Good.GoodId=TB_HouseGoods.GoodId 
+isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOutNums1,0) as Nums ,SumKuXuCai
+ FROM TB_Good left join TB_HouseGoods on TB_Good.GoodId=TB_HouseGoods.GoodId
   left join TB_HouseInfo on TB_HouseInfo.id=HouseId
   left join (
   select GooId,ISNULL(sum(GoodNum),0) as SellOutNums from Sell_OrderOutHouse
@@ -192,7 +192,8 @@ isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOu
     select GooId,ISNULL(sum(GoodNum),0)as CaiOutNums1 from CAI_OrderOutHouse
    left join CAI_OrderOutHouses on CAI_OrderOutHouse.Id=CAI_OrderOutHouses.id
   where Status='通过' and RuTime<'{0}'  
-  group by CAI_OrderOutHouses.GooId) as CaiOutTB on CaiOutTB.GooId=TB_Good.GoodId", fromDate,endDate);
+  group by CAI_OrderOutHouses.GooId) as CaiOutTB on CaiOutTB.GooId=TB_Good.GoodId
+left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId", fromDate,endDate);
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" WHERE " + strWhere);
@@ -224,7 +225,12 @@ isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOu
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.OutNums = (decimal)ojb;
-                        }                        
+                        }
+                        ojb = dataReader["SumKuXuCai"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumKuXuCai = Convert.ToDecimal(ojb);
+                        }
                         list.Add(model);
                     }
                 }
