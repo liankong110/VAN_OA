@@ -125,7 +125,7 @@ namespace VAN_OA.KingdeeInvoice
             List<InvoiceReport> invoiceList = new List<InvoiceReport>();
             if (isSelect)
             {
-                string sql = " where Sell_OrderFP.Status='通过' ";
+                string sql = " where Sell_OrderFP.Status='通过'  and  Sell_OrderFP.FPNo<>'' ";
 
                 string sql_1 = "where 1=1 ";
 

@@ -126,6 +126,12 @@
                 供应商简称：
                 <asp:TextBox ID="txtSupplier" runat="server" Width="150px"></asp:TextBox>
                 <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
+                 直发:
+                <asp:DropDownList ID="ddlZhifa" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="直发"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="不直发"></asp:ListItem>
+                </asp:DropDownList>
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="Button1" runat="server" Text="导出EXCEL" BackColor="Yellow" OnClick="Button1_Click" />
@@ -133,9 +139,9 @@
             </td>
         </tr>
     </table>
-    <asp:Panel ID="Panel1" runat="server" Width="100%" >
+    <asp:Panel ID="Panel1" runat="server" Width="100%" ScrollBars="Horizontal" >
         <asp:GridView ID="gvMain" runat="server"  PagerSettings-Visible="false"
-            Width="100%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
+            Width="130%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
             OnRowDataBound="gvMain_RowDataBound"  >
             <PagerTemplate>
                 
@@ -210,6 +216,7 @@
                     ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
                 <asp:BoundField DataField="RuChuNum" HeaderText="入库需出" SortExpression="RuChuNum"
                     ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
+                  <asp:BoundField DataField="ZHIFA" HeaderText="直发" SortExpression="ZHIFA" ItemStyle-HorizontalAlign="Left" />
                 <asp:BoundField DataField="CaIKuNum" HeaderText="采库需出" SortExpression="CaIKuNum"
                     ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
                 <asp:BoundField DataField="CaiGouNum" HeaderText="采购需出" SortExpression="CaiGouNum"

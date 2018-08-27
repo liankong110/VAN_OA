@@ -98,6 +98,7 @@
                     <asp:ListItem Value="0" Text="不含税"></asp:ListItem>
                 </asp:DropDownList>
                 项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+            备注： <asp:TextBox ID="txtRemark" runat="server"></asp:TextBox>
             </td>
             <td colspan="2">
                 <div align="right">

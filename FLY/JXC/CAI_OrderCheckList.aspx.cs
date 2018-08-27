@@ -99,6 +99,10 @@ namespace VAN_OA.JXC
             //if (txtPONo.Text != "" || ttxPOName.Text != "" || txtSupplier.Text!="")
             //{
             //    sql += " and exists(select ids from CAI_OrderChecks where 1=1 ";
+            if (txtRemark.Text.Trim() != "")
+            {
+                sql += string.Format(" and CheckRemark like '%{0}%' ", txtRemark.Text.Trim());
+            }
             if (txtPONo.Text.Trim() != "")
             {
                 if (CheckPoNO(txtPONo.Text.Trim()) == false)

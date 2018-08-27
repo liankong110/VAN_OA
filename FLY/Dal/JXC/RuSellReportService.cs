@@ -199,7 +199,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
             StringBuilder strSql = new StringBuilder();
 
             strSql.AppendFormat(@"select GoodAreaNumber,caiAvgPrice,hanShui,allCaiNum,kuCaiNum,waiCaiNum,PONo,AE,GuestName,[NoSellAndCaiGoods].GoodId,GoodNo,GoodName,GoodSpec,
-GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum,POName,GoodTypeSmName
+GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sellTuiNum,caiTuiNum,POName,GoodTypeSmName,ZHIFA
 from 
 NoSellAndCaiGoods
 left join TB_Good on TB_Good.GoodId=[NoSellAndCaiGoods].GoodId
@@ -220,7 +220,11 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
                     {
                         var model = ReaderBindNoSellAndCaiGoods(dataReader);
                         model.GoodAreaNumber = dataReader["GoodAreaNumber"].ToString();
-
+                        var ojb = dataReader["ZHIFA"];
+                        if (ojb != null && ojb != DBNull.Value&&Convert.ToInt32( ojb)>0)
+                        {
+                            model.ZHIFA = "直发";
+                        }
                         if (isJingjian&&model.PONo.StartsWith("KC"))
                         {
                             if (!sh.ContainsKey(model.GoodId))

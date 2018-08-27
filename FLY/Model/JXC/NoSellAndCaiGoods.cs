@@ -156,5 +156,9 @@ namespace VAN_OA.Model.JXC
         public string Supplier { get; set; }
         public string POName { get; internal set; }
         public string GoodTypeSmName { get; internal set; }
+        /// <summary>
+        /// 如该项目该商品的采购检验单 中的备注 含有直发 两个字（去空格），这列就显示 直发，不含有直发 两个字（去空格），这列就不显示
+        /// </summary>
+        public string ZHIFA { get; set; }
     }
 }

@@ -101,6 +101,7 @@ namespace VAN_OA.JXC
             string userId = "", goodNoWhere = "", guestWhere = "", ruTimeWhere = "", poTimeWhere = "", ponoWhere = "";
 
             string where = "";
+          
             if (txtPONo.Text.Trim() != "")
             {
 
@@ -222,7 +223,14 @@ namespace VAN_OA.JXC
             }
             var resultList = _dal.GetListNoSellAndCaiGoods(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where, company
                 , (ddlKCType.Text == "1" ? true : false), poNoSql);
-
+            if (ddlZhifa.Text == "0")
+            {
+                resultList = resultList.FindAll(t=>string.IsNullOrEmpty(t.ZHIFA));
+            }
+            if (ddlZhifa.Text == "1")
+            {
+                resultList = resultList.FindAll(t => !string.IsNullOrEmpty(t.ZHIFA));
+            }
             if (cbZero.Checked)
             {
                 resultList = resultList.FindAll(t => t.RuChuNum != 0 || t.CaIKuNum != 0 || t.CaiGouNum != 0);

@@ -22,7 +22,7 @@ namespace VAN_OA.Dal.KingdeeInvoice
         public List<InvoiceReport> GetAllInvoiceReports(string GuestName, string InvoiceNo, string InvTotal,
             string InvTotalEqu, string InvoFormDate, string InvToDate,
             string where, string compareType, bool isInvoTotalToge, string Isorder, bool cbZhengShu, string pono = "", string isXiaozhang="-1",string param="",
-            string temp="")
+            string temp="",bool cbIsSpecial=false)
         {
             List<InvoiceReport> allInvoiceData = new List<InvoiceReport>();
             string strSql = "";
@@ -109,7 +109,7 @@ namespace VAN_OA.Dal.KingdeeInvoice
 InvoiceNumber, invoice.GuestName,invoice.Total,CreateDate
  from Sell_OrderFP full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate from 
-"+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice as invoice {0} ) as invoice 
+"+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice as invoice {0}  AND InvoiceNumber<>'') as invoice 
 on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total ))
 left join  CG_POOrder on  CG_POOrder.PONO=Sell_OrderFP.PONO  and ifzhui=0 ",  k_Sql);
 
@@ -128,7 +128,11 @@ INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON
 WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
           
                 }
-                strSql += string.Format("and ({0} and {1} or InvoiceNumber is not null)", where.Replace(" where",""), param);
+                strSql += string.Format("and (({0} and {1}) or InvoiceNumber is not null )", where.Replace(" where",""), param);
+                if (cbIsSpecial == false)
+                {
+
+                }
                 strSql += " order by Sell_OrderFP.FPNo desc,InvoiceNumber desc  ";
             }
             if (compareType == "1")//匹配
