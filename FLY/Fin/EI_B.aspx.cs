@@ -69,6 +69,7 @@ namespace VAN_OA.Fin
             model.Person = dllPerson.SelectedItem.Text;
             model.Use = dllUse.SelectedItem.Text;
             model.Company = dllCompany.SelectedItem.Text;
+            model.SupplieSimpeName = hfSimpName.Value;
             Session["ElectronicInvoice"] = model;
             return model;
         }
@@ -106,7 +107,7 @@ namespace VAN_OA.Fin
             {
                 TB_SupplierInfoService supplierSer = new TB_SupplierInfoService();
 
-                var supplierList = supplierSer.GetListArray(string.Format(" SupplierName='{0}'", txtSupplierName.Text));
+                var supplierList = supplierSer.GetListArray(string.Format(" SupplierName='{0}' and Status='通过'  and IsUse=1 ", txtSupplierName.Text));
                 if (supplierList.Count > 0)
                 {
                     
@@ -115,7 +116,7 @@ namespace VAN_OA.Fin
                     txtBrandNo.Text = supplierModel.SupplierBrandNo;
                     txtCity.Text = supplierModel.City;
                     txtProvice.Text = supplierModel.Province;
-
+                    hfSimpName.Value = supplierModel.SupplieSimpeName;
                     if (supplierModel.City.Contains("苏州") || supplierModel.City.Contains("太仓") || supplierModel.City.Contains("相城")
                    || supplierModel.City.Contains("吴中") || supplierModel.City.Contains("张家港")
                    || supplierModel.City.Contains("常熟") || supplierModel.City.Contains("昆山"))

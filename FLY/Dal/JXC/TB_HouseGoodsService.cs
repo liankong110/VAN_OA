@@ -200,6 +200,7 @@ left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId", fromDate,endD
             }
             List<VAN_OA.Model.JXC.TB_HouseGoods> list = new List<VAN_OA.Model.JXC.TB_HouseGoods>();
 
+           
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();
@@ -231,6 +232,7 @@ left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId", fromDate,endD
                         {
                             model.SumKuXuCai = Convert.ToDecimal(ojb);
                         }
+                     
                         list.Add(model);
                     }
                 }

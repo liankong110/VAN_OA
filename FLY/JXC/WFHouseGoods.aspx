@@ -1,5 +1,5 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WFHouseGoods.aspx.cs" Inherits="VAN_OA.JXC.WFHouseGoods"
-    MasterPageFile="~/DefaultMaster.Master" Title="商品档案" %>
+    MasterPageFile="~/DefaultMaster.Master" Title="商品档案"  EnableEventValidation="false" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="SampleContent" runat="server">
@@ -154,6 +154,7 @@
         <tr>
             <td colspan="4" align="right">
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
+                  <asp:Button ID="btnExcel" runat="server" Text="导出" BackColor="Yellow" OnClick="btnExcel_Click" />
             </td>
         </tr>
     </table>

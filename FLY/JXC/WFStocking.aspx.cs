@@ -136,7 +136,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('库存格式出错！');</script>");
                     return "-1";
                 }
-                sql += string.Format(" and GoodNum{0}{1}", ddlFuHao.SelectedItem.Text, txtNum.Text);
+                sql += string.Format(" and isnull(GoodNum,0){0}{1}", ddlFuHao.SelectedItem.Text, txtNum.Text);
             }
 
             if (txtZhuJi.Text != "")
@@ -242,6 +242,13 @@ namespace VAN_OA.JXC
                 {
                     gooQGooddList = gooQGooddList.FindAll(t => !(t.GoodNum == 0));
                 }
+                int NO = 1;
+                foreach (var m in gooQGooddList)
+                {
+                    m.No = NO;
+                    NO++;
+                }
+
 
                 AspNetPager1.RecordCount = gooQGooddList.Count;
                 this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;

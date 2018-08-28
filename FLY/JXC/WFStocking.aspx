@@ -216,6 +216,7 @@
             <br />           
         </PagerTemplate>
         <Columns>
+              <asp:BoundField DataField="No" HeaderText="Ðò" SortExpression="No" />
             <asp:BoundField DataField="HouseName" HeaderText="²Ö¿â" SortExpression="HouseName" />
              <asp:BoundField DataField="GoodAreaNumber" HeaderText="²ÖÎ»" SortExpression="GoodAreaNumber" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="GoodNo" HeaderText="±àÂë" SortExpression="GoodNo" />

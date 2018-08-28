@@ -18,6 +18,7 @@
                     ServiceMethod="GetFullSuplierList" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="10"
                     TargetControlID="txtSupplierName">
                 </cc1:AutoCompleteExtender>
+                <asp:HiddenField ID="hfSimpName" runat="server" />
             </td>
         </tr>
         <tr>

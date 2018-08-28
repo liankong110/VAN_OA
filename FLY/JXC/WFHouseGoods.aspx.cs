@@ -76,7 +76,14 @@ namespace VAN_OA.JXC
                 {
                     ViewState["codeUpdate"] = true;
                 }
-                
+                if (NewShowAll_textName("库存查询", "可导出"))
+                {
+                    btnExcel.Visible = true;
+                }
+                else
+                {
+                    btnExcel.Visible = false;
+                }
             }
 
         }
@@ -124,9 +131,9 @@ namespace VAN_OA.JXC
             if (txtZhuJi.Text != "")
             {
                 //string goodName = txtZhuJi.Text.Replace(@"\", ",");
-              
+
                 string[] allList = txtZhuJi.Text.Split('\\');
-                if (allList.Length !=7)
+                if (allList.Length != 7)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('商品格式不正确！');</script>");
                     return;
@@ -226,8 +233,8 @@ namespace VAN_OA.JXC
                 }
             }
             else
-            {              
-                sql += string.Format(" and GoodAreaNumber=''");                
+            {
+                sql += string.Format(" and GoodAreaNumber=''");
             }
 
             if (txtCaiKuNum.Text != "")
@@ -323,7 +330,7 @@ namespace VAN_OA.JXC
                 //    btnEdit.Attributes.Add("onclick", val);
                 //}
             }
-          
+
 
             // 合计
             if (e.Row.RowType == DataControlRowType.Footer)
@@ -387,5 +394,33 @@ namespace VAN_OA.JXC
                 ddlRow.Enabled = true;
             }
         }
+
+        public string xlfile = "库存查询.xls";
+        protected void btnExcel_Click(object sender, EventArgs e)
+        {
+            gvList.AllowPaging = false;
+            Show();
+            Response.Clear();
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.Charset = "GB2312";
+            Response.AppendHeader("Content-Disposition", "attachment;filename=" + xlfile);
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");  //设置输出流为简体中文
+            this.EnableViewState = false;
+            Response.Write("<meta http-equiv=Content-Type content=\"text/html; charset=GB2312\">");
+            System.IO.StringWriter sw = new System.IO.StringWriter();
+            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(sw);
+            gvList.RenderControl(hw);
+
+            Response.Write(sw.ToString());
+            Response.End();
+
+            gvList.AllowPaging = true;
+
+
+
+
+        }
+        public override void VerifyRenderingInServerForm(Control control)
+        { }
     }
 }
