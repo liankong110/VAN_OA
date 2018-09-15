@@ -22,5 +22,28 @@ namespace VAN_OA.Model.KingdeeInvoice
         public Payable()
         { }
         public string SupplierName { get; set; }
+
+        /// <summary>
+        /// 0是未到账,1是全到帐 2是为未全到帐
+        /// </summary>
+        public override string IsAccountString
+        {
+            get
+            {
+                if (IsAccount == 0)
+                {
+                    return "未付款";
+                }
+                if (IsAccount == 1)
+                {
+                    return "全付款";
+                }
+                if (IsAccount == 2)
+                {
+                    return "未全付款";
+                }
+                return "";
+            }
+        }
     }
 }

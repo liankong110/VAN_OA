@@ -651,9 +651,9 @@ namespace VAN_OA.Dal.BaseInfo
         public List<decimal> GetGoodNum(int goodId)
         {
             List<decimal> nums = new List<decimal>();
-            string sql = string.Format(@"select GoodNum,SumKuXuCai from TB_HouseGoods INNER join CaiKuXuNumView 
+            string sql = string.Format(@"select GoodNum,SumKuXuCai from TB_HouseGoods Full join CaiKuXuNumView 
 on CaiKuXuNumView.GoodId=TB_HouseGoods.goodId
-WHERE TB_HouseGoods.goodId={0}",goodId);
+WHERE TB_HouseGoods.goodId={0}", goodId);
             List<VAN_OA.Model.BaseInfo.TB_Good> list = new List<VAN_OA.Model.BaseInfo.TB_Good>();
             decimal GoodNum = 0;
             decimal SumKuXuCai = 0;

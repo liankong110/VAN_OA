@@ -10,14 +10,18 @@ using VAN_OA.Dal.KingdeeInvoice;
 using VAN_OA.Model.KingdeeInvoice;
 using System.Data.SqlClient;
 using System.Data;
-
-
+using System.Text;
 
 namespace VAN_OA.KingdeeInvoice
 {
     public partial class WFPayableList : BasePage
     {
         PayableService _payableSer = new PayableService();
+
+        public string GetValue(object num)
+        {
+            return string.Format("{0:n2}", num);
+        }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
             AspNetPager1.CurrentPageIndex = 1;
@@ -227,7 +231,7 @@ namespace VAN_OA.KingdeeInvoice
                 if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "Isorder可编辑") == false)
                 {
                     ViewState["cbIsIsorder"] = false;
-                    btnIsSelected.Visible = false;
+                  
                     gvList.Columns[2].Visible = false;
                 }
                 if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "删除标记") == false)
@@ -236,7 +240,11 @@ namespace VAN_OA.KingdeeInvoice
                     btnDeleted.Visible = false;
                 }
 
-                
+                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "Isorder可编辑") == false &&
+                  VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "可编辑") == false)
+                {
+                    btnIsSelected.Visible = false;
+                }
                 if (Request["InvoiceNo"] != null)
                 {
                     txtInvoiceNo.Text = Request["InvoiceNo"].ToString();
@@ -286,6 +294,29 @@ namespace VAN_OA.KingdeeInvoice
 
         protected void btnIsSelected_Click(object sender, EventArgs e)
         {
+            if (btnEdit.Text == "取消编辑")
+            {
+                StringBuilder where = new StringBuilder();
+                for (int i = 0; i < this.gvList.Rows.Count; i++)
+                {
+                    Label lblIds = (gvList.Rows[i].FindControl("Id")) as Label;
+                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditGuestName")) as TextBox;
+                    TextBox EditReceived = (gvList.Rows[i].FindControl("EditReceived")) as TextBox;
+                    if (CommHelp.VerifesToNum(EditReceived.Text) == false)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('到款金额格式错误！');</script>");
+                        return;
+                    }
+                    where.AppendFormat("update KIS.[KingdeeInvoice].[dbo].[Payable] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+                    where.AppendFormat("update [KingdeeInvoice].[dbo].[Payable] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+
+                }
+                if (where.ToString() != "")
+                {
+                    DBHelp.ExeCommand(where.ToString());
+                }
+            }
+
             if (ViewState["cbIsIsorder"] == null)
             {
                 string where = " Id  in (";
@@ -433,6 +464,37 @@ SELECT ID,[GuestName]
                 }
                 
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                Show();
+            }
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (btnEdit.Text == "编辑")
+            {
+                btnEdit.Text = "取消编辑";
+                gvList.Columns[5].Visible = false;
+                gvList.Columns[6].Visible = true;
+                gvList.Columns[13].Visible = false;
+                gvList.Columns[14].Visible = true;
+                for (int i = 0; i < this.gvList.Rows.Count; i++)
+                {
+                    Label GuestName = (gvList.Rows[i].FindControl("SupplierName")) as Label;
+                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditSupplierName")) as TextBox;
+                    EditGuestName.Text = GuestName.Text;
+
+                    Label Received = (gvList.Rows[i].FindControl("Received")) as Label;
+                    TextBox EditReceived = (gvList.Rows[i].FindControl("EditReceived")) as TextBox;
+                    EditReceived.Text = Received.Text;
+                }
+            }
+            else
+            {
+                btnEdit.Text = "编辑";
+                gvList.Columns[5].Visible = true;
+                gvList.Columns[6].Visible = false;
+                gvList.Columns[13].Visible = true;
+                gvList.Columns[14].Visible = false;
                 Show();
             }
         }

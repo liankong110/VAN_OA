@@ -403,7 +403,8 @@ namespace VAN_OA.JXC
             Response.Clear();
             Response.ContentType = "application/vnd.ms-excel";
             Response.Charset = "GB2312";
-            Response.AppendHeader("Content-Disposition", "attachment;filename=" + xlfile);
+            //Response.AppendHeader("Content-Disposition", "attachment;filename=" + xlfile);
+            Response.AppendHeader("Content-Disposition", "attachment;filename=\"" + HttpUtility.UrlEncode(xlfile, System.Text.Encoding.UTF8) + "\"");
             Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");  //设置输出流为简体中文
             this.EnableViewState = false;
             Response.Write("<meta http-equiv=Content-Type content=\"text/html; charset=GB2312\">");

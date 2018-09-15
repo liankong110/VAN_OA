@@ -50,12 +50,22 @@ namespace VAN_OA.Dal.KingdeeInvoice
         public List<VAN_OA.Model.KingdeeInvoice.Payable> GetListArray(string strWhere,string invoiceServer)
         {           
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select Isorder,Id,SupplierName,InvoiceNumber,Total,CreateDate,IsAccount,Received,BillDate,FPNoStyle ");
+            strSql.Append("select Isorder,Id,SupplierName,InvoiceNumber,Total,CreateDate,IsAccount,Received,BillDate,CaiFpType ");
             strSql.Append(" FROM " + invoiceServer + "[KingdeeInvoice].[dbo].[Payable] ");
             strSql.Append(@" left join
 (
-select FPNo,FPNoStyle from Sell_OrderFP where status='通过' group By FPNo,FPNoStyle
-) AS TB ON TB.FPNo=[Payable].InvoiceNumber ");
+selecT SupplierFPNo,CaiFpType FROM TB_SupplierInvoice
+LEFT JOIN TB_SupplierInvoices ON TB_SupplierInvoice.Id=TB_SupplierInvoices.Id
+left join CAI_OrderInHouses on CAI_OrderInHouses.Ids=TB_SupplierInvoices.RuIds
+left join CAI_OrderChecks on CAI_OrderChecks.ids=CAI_OrderInHouses.OrderCheckIds
+left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
+where Status='通过' and IsYuFu=0
+UNION 
+selecT SupplierFPNo,CaiFpType FROM TB_SupplierAdvancePayment
+LEFT JOIN TB_SupplierAdvancePayments ON TB_SupplierAdvancePayment.Id=TB_SupplierAdvancePayments.Ids
+left join CAI_POCai on CAI_POCai.Ids=TB_SupplierAdvancePayments.CaiIds
+where Status='通过'
+) AS TB ON TB.SupplierFPNo=[Payable].InvoiceNumber ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -132,7 +142,7 @@ select FPNo,FPNoStyle from Sell_OrderFP where status='通过' group By FPNo,FPNo
             {
                 model.BillDate =Convert.ToDateTime( ojb);
             }
-            ojb = dataReader["FPNoStyle"];
+            ojb = dataReader["CaiFpType"];
             if (ojb != null && ojb != DBNull.Value)
             {
                 model.FPNoStyle = Convert.ToString(ojb);

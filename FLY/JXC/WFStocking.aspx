@@ -235,6 +235,7 @@
              <asp:BoundField DataField="Nums" HeaderText="期初数量" SortExpression="Nums" />
               <asp:BoundField DataField="InNums" HeaderText="本期入库" SortExpression="InNums" />
                <asp:BoundField DataField="OutNums" HeaderText="本期出库" SortExpression="OutNums" />
+              <asp:BoundField DataField="QiMoNum" HeaderText="期末结余" SortExpression="QiMoNum" />
             <asp:TemplateField HeaderText="本期结余">
                 <ItemTemplate>
                     <asp:Label ID="lblNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>

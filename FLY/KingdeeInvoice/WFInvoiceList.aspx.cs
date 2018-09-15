@@ -10,14 +10,18 @@ using VAN_OA.Dal.KingdeeInvoice;
 using VAN_OA.Model.KingdeeInvoice;
 using System.Data.SqlClient;
 using System.Data;
-
-
+using System.Text;
 
 namespace VAN_OA.KingdeeInvoice
 {
     public partial class WFInvoiceList : BasePage
     {
         InvoiceService invoiceSer = new InvoiceService();
+
+        public string GetValue(object num)
+        {
+            return string.Format("{0:n2}", num);
+        }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
             AspNetPager1.CurrentPageIndex = 1;
@@ -39,7 +43,7 @@ namespace VAN_OA.KingdeeInvoice
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('时间 格式错误！');</script>");
                     return;
                 }
-                 
+
                 sql += string.Format(" and CreateDate>='{0} 00:00:00'", txtFrom.Text);
             }
 
@@ -52,7 +56,7 @@ namespace VAN_OA.KingdeeInvoice
                 }
                 sql += string.Format(" and CreateDate<='{0} 23:59:59'", txtTo.Text);
             }
-            
+
             if (txtBillDateFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtBillDateFrom.Text) == false)
@@ -63,7 +67,7 @@ namespace VAN_OA.KingdeeInvoice
 
                 sql += string.Format(" and BillDate>='{0} 00:00:00'", txtBillDateFrom.Text);
             }
-            
+
             if (txtBillDateTo.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtBillDateTo.Text) == false)
@@ -128,12 +132,12 @@ namespace VAN_OA.KingdeeInvoice
             {
                 sql += " and IsDeleted=1";
                 invoiceServer = "KIS.";
-               
+
             }
-          
+
             if (ddlEQTotal.Text != "-1")
             {
-                sql += string.Format(" AND Received{0}Total",ddlEQTotal.Text);
+                sql += string.Format(" AND Received{0}Total", ddlEQTotal.Text);
             }
             List<Invoice> invoiceList = new List<Invoice>();
             //全部
@@ -148,7 +152,7 @@ namespace VAN_OA.KingdeeInvoice
             {
                 invoiceList = this.invoiceSer.GetListArray(sql, invoiceServer);
             }
-           
+
             AspNetPager1.RecordCount = invoiceList.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
 
@@ -158,8 +162,8 @@ namespace VAN_OA.KingdeeInvoice
             var sumReceived = invoiceList.Sum(t => t.Received);
             if (sumTotal != 0)
             {
-                lblDaoKuanBLTotal.Text =string.Format("{0:n2}", sumReceived/ sumTotal*100);
-                lblWeiDaoKuanBLTotal.Text = string.Format("{0:n2}", (sumTotal-sumReceived)/ sumTotal*100);
+                lblDaoKuanBLTotal.Text = string.Format("{0:n2}", sumReceived / sumTotal * 100);
+                lblWeiDaoKuanBLTotal.Text = string.Format("{0:n2}", (sumTotal - sumReceived) / sumTotal * 100);
             }
             else
             {
@@ -168,7 +172,7 @@ namespace VAN_OA.KingdeeInvoice
             }
             lblAllTotal.Text = sumTotal.ToString();
             lblDaoTotal.Text = sumReceived.ToString();
-            lblWeiDaoTotal.Text = (invoiceList.Sum(t => t.Total)- invoiceList.Sum(t => t.Received)).ToString();
+            lblWeiDaoTotal.Text = (invoiceList.Sum(t => t.Total) - invoiceList.Sum(t => t.Received)).ToString();
         }
 
         protected void gvList_DataBinding(object sender, EventArgs e)
@@ -187,6 +191,17 @@ namespace VAN_OA.KingdeeInvoice
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
+                Label Total = (e.Row.FindControl("Total")) as Label;
+                TextBox EditReceived = (e.Row.FindControl("EditReceived")) as TextBox;
+                Label DaoKuanBL = (e.Row.FindControl("DaoKuanBL")) as Label;
+                Label NoReceived = (e.Row.FindControl("NoReceived")) as Label;
+                Label WeiDaoKuanBL = (e.Row.FindControl("WeiDaoKuanBL")) as Label;
+
+
+                EditReceived.Attributes.Add("onblur", string.Format("GetNoReceived('{0}','{1}','{2}','{3}','{4}')",
+                    EditReceived.ClientID, Total.Text, DaoKuanBL.ClientID, NoReceived.ClientID, WeiDaoKuanBL.ClientID));
+
+
             }
         }
 
@@ -224,19 +239,28 @@ namespace VAN_OA.KingdeeInvoice
                 //                sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='Isorder可编辑'
                 //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='金蝶发票清单') and sys_Object.AutoID is not null", Session["currentUserId"]);
 
-                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶发票清单", Session["currentUserId"], "Isorder可编辑") == false)
+                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "Isorder可编辑") == false)
                 {
                     ViewState["cbIsIsorder"] = false;
-                    btnIsSelected.Visible = false;
                     gvList.Columns[2].Visible = false;
                 }
-                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶发票清单", Session["currentUserId"], "删除标记") == false)
+
+                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "删除标记") == false)
                 {
                     ViewState["cbIsDeleted"] = false;
                     btnDeleted.Visible = false;
                 }
 
-                
+                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "可编辑") == false)
+                {
+                    btnEdit.Visible = false;
+                }
+                if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "Isorder可编辑") == false &&
+                    VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "可编辑") == false)
+                {
+                    btnIsSelected.Visible = false;
+                }
+
                 if (Request["InvoiceNo"] != null)
                 {
                     txtInvoiceNo.Text = Request["InvoiceNo"].ToString();
@@ -286,6 +310,28 @@ namespace VAN_OA.KingdeeInvoice
 
         protected void btnIsSelected_Click(object sender, EventArgs e)
         {
+            if (btnEdit.Text == "取消编辑")
+            {
+                StringBuilder where = new StringBuilder();
+                for (int i = 0; i < this.gvList.Rows.Count; i++)
+                {
+                    Label lblIds = (gvList.Rows[i].FindControl("Id")) as Label;
+                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditGuestName")) as TextBox;
+                    TextBox EditReceived = (gvList.Rows[i].FindControl("EditReceived")) as TextBox;
+                    if (CommHelp.VerifesToNum(EditReceived.Text) == false)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('到款金额格式错误！');</script>");
+                        return;
+                    }
+                    where.AppendFormat("update KIS.[KingdeeInvoice].[dbo].[Invoice] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+                    where.AppendFormat("update [KingdeeInvoice].[dbo].[Invoice] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+
+                }
+                if (where.ToString() != "")
+                {
+                    DBHelp.ExeCommand(where.ToString());
+                }
+            }
             if (ViewState["cbIsIsorder"] == null)
             {
                 string where = " Id  in (";
@@ -311,7 +357,6 @@ namespace VAN_OA.KingdeeInvoice
                     var sql = "update KIS.[KingdeeInvoice].[dbo].[Invoice] set Isorder=1 where " + where;
                     sql += ";update [KingdeeInvoice].[dbo].[Invoice] set Isorder=1 where " + where;
                     DBHelp.ExeCommand(sql);
-                    //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
 
                 if (expWhere != " Id  in (")
@@ -320,12 +365,12 @@ namespace VAN_OA.KingdeeInvoice
                     var sql = "update KIS.[KingdeeInvoice].[dbo].[Invoice] set Isorder=null where " + expWhere;
                     sql += ";update [KingdeeInvoice].[dbo].[Invoice] set Isorder=null where " + expWhere;
                     DBHelp.ExeCommand(sql);
-                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+
                 }
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
             }
-            //AspNetPager1.CurrentPageIndex = 1;
-            //Show();
+
+
         }
 
         protected void btnClear_Click(object sender, EventArgs e)
@@ -400,7 +445,7 @@ having COUNT(*)>1");
                     where = where.Substring(0, where.Length - 1) + ")";
                     var sql = "update KIS.[KingdeeInvoice].[dbo].[Invoice] set IsDeleted=1 where " + where;
                     sql += ";delete [KingdeeInvoice].[dbo].[Invoice]  where " + where;
-                    DBHelp.ExeCommand(sql);                   
+                    DBHelp.ExeCommand(sql);
                     //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
 
@@ -408,10 +453,10 @@ having COUNT(*)>1");
                 if (expWhere != " Id  in (")
                 {
                     expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
-                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Invoice] set IsDeleted=0 where " + expWhere;                   
+                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Invoice] set IsDeleted=0 where " + expWhere;
                     DBHelp.ExeCommand(sql);
 
-                    string batchSql =string.Format(@"
+                    string batchSql = string.Format(@"
 INSERT INTO KingdeeInvoice.[dbo].[Invoice]
            (ID,[GuestName]
            ,[InvoiceNumber]
@@ -431,8 +476,39 @@ SELECT ID,[GuestName]
                     DBHelp.ExeCommand(batchSql);
                     // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
-                
+
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                Show();
+            }
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (btnEdit.Text == "编辑")
+            {
+                btnEdit.Text = "取消编辑";
+                gvList.Columns[5].Visible = false;
+                gvList.Columns[6].Visible = true;
+                gvList.Columns[13].Visible = false;
+                gvList.Columns[14].Visible = true;
+                for (int i = 0; i < this.gvList.Rows.Count; i++)
+                {
+                    Label GuestName = (gvList.Rows[i].FindControl("GuestName")) as Label;
+                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditGuestName")) as TextBox;
+                    EditGuestName.Text = GuestName.Text;
+
+                    Label Received = (gvList.Rows[i].FindControl("Received")) as Label;
+                    TextBox EditReceived = (gvList.Rows[i].FindControl("EditReceived")) as TextBox;
+                    EditReceived.Text = Received.Text;
+                }
+            }
+            else
+            {
+                btnEdit.Text = "编辑";
+                gvList.Columns[5].Visible = true;
+                gvList.Columns[6].Visible = false;
+                gvList.Columns[13].Visible = true;
+                gvList.Columns[14].Visible = false;
                 Show();
             }
         }

@@ -7,7 +7,7 @@
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="4" style="height: 20px; background-color: #336699; color: White;">金蝶发票清单
+            <td colspan="4" style="height: 20px; background-color: #336699; color: White;">金蝶应收发票清单
             </td>
         </tr>
         <tr>
@@ -124,6 +124,8 @@
                <asp:Button ID="btnIsSelected" runat="server" Text="保存" BackColor="Yellow" OnClick="btnIsSelected_Click" />&nbsp;&nbsp;&nbsp;
                 <asp:Button ID="btnDeleted" runat="server" Text="保存(删除)" BackColor="Yellow" OnClick="btnDeleted_Click" />&nbsp;&nbsp;&nbsp;
                   <asp:Button ID="btnClear" runat="server" Text="自动清理" BackColor="Yellow" OnClick="btnClear_Click" />&nbsp;&nbsp;&nbsp;
+
+                 <asp:Button ID="btnEdit" runat="server" Text="编辑" BackColor="Yellow" OnClick="btnEdit_Click" />&nbsp;&nbsp;&nbsp;
             </td>
         </tr>
     </table>
@@ -200,7 +202,6 @@
                 </ItemTemplate>
             </asp:TemplateField>
 
-
             <asp:TemplateField HeaderText="Isorder ">
 
                 <ItemTemplate>
@@ -209,17 +210,62 @@
                 <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
 
-            <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName" ItemStyle-HorizontalAlign="Center" />
+          
+
+           <asp:TemplateField  HeaderText="客户名称">
+                <ItemTemplate>
+                    <asp:Label ID="GuestName" runat="server" Text='<%# Eval("GuestName") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="客户名称" Visible="false">
+                <ItemTemplate>
+                    <asp:TextBox ID="EditGuestName" runat="server" Text='<% #Eval("GuestName") %>' Width="100%"></asp:TextBox>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:BoundField DataField="InvoiceNumber" HeaderText="发票号码" SortExpression="InvoiceNumber" ItemStyle-HorizontalAlign="Center" />
-              <asp:BoundField DataField="FPNoStyle" HeaderText="发票类型" SortExpression="FPNoStyle" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="Total" HeaderText="金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="FPNoStyle" HeaderText="发票类型" SortExpression="FPNoStyle" ItemStyle-HorizontalAlign="Center" />
+            <%--<asp:BoundField DataField="Total" HeaderText="金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" />--%>
+              <asp:TemplateField  HeaderText="未到款金额">
+                <ItemTemplate>
+                    <asp:Label ID="Total" runat="server" Text='<%# Eval("Total") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:BoundField DataField="CreateDate" HeaderText="开具日期" SortExpression="CreateDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
             <asp:BoundField DataField="BillDate" HeaderText="发票日期" SortExpression="BillDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
             <asp:BoundField DataField="IsAccountString" HeaderText="到账否" SortExpression="IsAccountString" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="Received" HeaderText="到款金额" SortExpression="Received" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="DaoKuanBL" HeaderText="到款比例" SortExpression="DaoKuanBL" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
+            <%--<asp:BoundField DataField="Received" HeaderText="到款金额" SortExpression="Received" ItemStyle-HorizontalAlign="Center" />--%>
+            <asp:TemplateField  HeaderText="到款金额">
+                <ItemTemplate>
+                    <asp:Label ID="Received" runat="server" Text='<%# Eval("Received") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="到款金额" Visible="false" ItemStyle-Width="100px">
+                <ItemTemplate>
+                    <asp:TextBox ID="EditReceived" runat="server" Text='<% #Eval("Received") %>' Width="100%"></asp:TextBox>
+                </ItemTemplate>
+            </asp:TemplateField>
+            
+            <asp:TemplateField  HeaderText="到款比例">
+                <ItemTemplate>
+                    <asp:Label ID="DaoKuanBL" runat="server" Text='<%# GetValue(Eval("DaoKuanBL")) %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+              <asp:TemplateField  HeaderText="未到款金额">
+                <ItemTemplate>
+                    <asp:Label ID="NoReceived" runat="server" Text='<%# Eval("NoReceived") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+              <asp:TemplateField  HeaderText="未到款比例">
+                <ItemTemplate>
+                    <asp:Label ID="WeiDaoKuanBL" runat="server" Text='<%# GetValue(Eval("WeiDaoKuanBL")) %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+              
+<%--            <asp:BoundField DataField="DaoKuanBL" HeaderText="到款比例" SortExpression="DaoKuanBL" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="NoReceived" HeaderText="未到款金额" SortExpression="Received" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="WeiDaoKuanBL" HeaderText="未到款比例" SortExpression="WeiDaoKuanBL" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="WeiDaoKuanBL" HeaderText="未到款比例" SortExpression="WeiDaoKuanBL" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />--%>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#336699" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -251,4 +297,23 @@
      <asp:Label ID="Label5" runat="server" Text="未到款合计比例:"></asp:Label>
     <asp:Label ID="lblWeiDaoKuanBLTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
+    <script type="text/javascript">
+
+        function GetNoReceived(ReceivedId, Total, DaoKuanBL, NoReceived, WeiDaoKuanBL) {
+
+            //alert(document.getElementById(ReceivedId).value);
+            if (document.getElementById(ReceivedId).value != "") {
+                var receivedTotal = parseFloat(document.getElementById(ReceivedId).value);
+                var NoReceivedTotal = Total - receivedTotal;
+
+                document.getElementById(NoReceived).innerHTML = NoReceivedTotal;
+                document.getElementById(WeiDaoKuanBL).innerHTML = (NoReceivedTotal / Total*100).toFixed(2);
+                document.getElementById(DaoKuanBL).innerHTML = (receivedTotal / Total*100).toFixed(2); 
+
+               
+
+            }
+             
+        }
+    </script>
 </asp:Content>

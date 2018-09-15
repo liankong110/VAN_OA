@@ -135,7 +135,9 @@ namespace VAN_OA.Model.JXC
             }
         }
 
-        
-         
+        /// <summary>
+        /// 期末库存
+        /// </summary>
+         public decimal QiMoNum { get; set; }
     }
 }

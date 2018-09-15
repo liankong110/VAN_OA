@@ -80,7 +80,7 @@ namespace VAN_OA.Model.KingdeeInvoice
         /// <summary>
         /// 0是未到账,1是全到帐 2是为未全到帐
         /// </summary>
-        public string IsAccountString
+        public virtual string IsAccountString
         {
             get
             {

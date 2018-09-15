@@ -544,7 +544,7 @@ left join
 (
 select PONo, MIN(RuTime) as minRuTime from Sell_OrderOutHouse where Status='通过' group by PONo
 ) as FP on FP.PONo=tb1.PONo
-where  hadFpTotal is not null and isnull(InvoiceTotal,0)<POTotal_View.POTotal and minRuTime is not null " + t4 + "", (selectUserId == "-1" ? "" : "and AppName=" + selectUserId), POTotal_View);
+where  hadFpTotal is not null and hadFpTotal<POTotal_View.POTotal and isnull(InvoiceTotal,0)<POTotal_View.POTotal and minRuTime is not null " + t4 + "", (selectUserId == "-1" ? "" : "and AppName=" + selectUserId), POTotal_View);
 
        
             //--   采购未检验清单----需要显示每个AE 的列表 项目编号。

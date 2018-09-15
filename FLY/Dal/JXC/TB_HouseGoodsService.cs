@@ -155,7 +155,7 @@ namespace VAN_OA.Dal.JXC
             StringBuilder strSql = new StringBuilder();
             strSql.AppendFormat(@"select GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,
 GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,houseName,SellOutNums as OutNums,CaiInNums as InNums,
-isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOutNums1,0) as Nums ,SumKuXuCai
+isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOutNums1,0) as Nums ,SumKuXuCai,QiMoNum
  FROM TB_Good left join TB_HouseGoods on TB_Good.GoodId=TB_HouseGoods.GoodId
   left join TB_HouseInfo on TB_HouseInfo.id=HouseId
   left join (
@@ -193,7 +193,26 @@ isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOu
    left join CAI_OrderOutHouses on CAI_OrderOutHouse.Id=CAI_OrderOutHouses.id
   where Status='通过' and RuTime<'{0}'  
   group by CAI_OrderOutHouses.GooId) as CaiOutTB on CaiOutTB.GooId=TB_Good.GoodId
-left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId", fromDate,endDate);
+left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId
+left join 
+(
+select GooId,sum(Nums) as QiMoNum from (
+select GooId,ISNULL(sum(GoodNum),0) as Nums from CAI_OrderInHouse left join CAI_OrderInHouses on CAI_OrderInHouse.Id=CAI_OrderInHouses.Id  where status='通过'
+ and RuTime<='{1} 23:59:59' group by GooId
+union all
+--退货
+select GooId,-ISNULL(sum(GoodNum),0) as Nums from CAI_OrderOutHouse left join CAI_OrderOutHouses on CAI_OrderOutHouse.Id=CAI_OrderOutHouses.Id  where status='通过'
+and RuTime<='{1} 23:59:59'  group by GooId
+union all
+--销售出库
+select GooId,-ISNULL(sum(GoodNum),0) as Nums from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id  where status='通过'
+ and RuTime<='{1} 23:59:59'  group by GooId
+union all
+--销售退货
+select GooId,ISNULL(sum(GoodNum),0) as Nums from Sell_OrderInHouse left join Sell_OrderInHouses on Sell_OrderInHouse.Id=Sell_OrderInHouses.Id  where status='通过'
+ and RuTime<='{1} 23:59:59' group by GooId
+) as CaiOutInfo group by GooId
+) as CaiOutInfoView on CaiOutInfoView.GooId=TB_Good.GoodId", fromDate,endDate);
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" WHERE " + strWhere);
@@ -232,7 +251,11 @@ left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_Good.GoodId", fromDate,endD
                         {
                             model.SumKuXuCai = Convert.ToDecimal(ojb);
                         }
-                     
+                        ojb = dataReader["QiMoNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.QiMoNum = Convert.ToDecimal(ojb);
+                        }
                         list.Add(model);
                     }
                 }
