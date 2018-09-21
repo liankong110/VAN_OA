@@ -519,6 +519,10 @@ namespace VAN_OA.JXC
 
                 if (base.Request["ProId"] != null)
                 {
+                    if (Request["ProId"].ToString() == "37")
+                    {
+                        lblDelete.Visible = true;
+                    }
                     //加载基本数据
                     VAN_OA.Model.User use = Session["userInfo"] as VAN_OA.Model.User;
                     txtName.Text = use.LoginName;
@@ -735,6 +739,115 @@ namespace VAN_OA.JXC
 
                         }
                     }
+                    else if (Request["IsDelete"] != null)//提交删除信息
+                    {
+
+                        lblDelete.Visible = true;
+                        ViewState["POOrdersIds"] = "";
+
+                        var proId = 37;
+                        //加载已经审批的数据
+                        tb_EFormsService eformsSer = new tb_EFormsService();
+                        List<VAN_OA.Model.EFrom.tb_EForms> eforms = eformsSer.GetListArray(string.Format(" e_Id in (select id from tb_EForm where proId={0} and allE_id={1})",
+                            Convert.ToInt32(proId), Convert.ToInt32(Request["allE_id"])));
+                        if (eforms.Count > 0)
+                        {
+                            string mess = @"<table cellpadding='0' cellspacing='0' width='100%' bordercolorlight='#999999' bordercolordark='#FFFFFF' border='1' ><tr><td colspan='6' style=' height:20px; background-color:#336699; color:White;'>流程图</td></tr>";
+
+
+                            for (int i = 0; i < eforms.Count; i++)
+                            {
+                                string per = "";
+                                if (eforms[i].consignor != null && eforms[i].consignor != 0)
+                                {
+                                    per = eforms[i].Consignor_Name + "(委托人：" + eforms[i].Audper_Name + ")";
+                                }
+                                else
+                                {
+                                    per = eforms[i].Audper_Name;
+                                }
+                                mess += string.Format("<tr><td align='center'>第{0}步</td><td>序号{0}：{1}</td><td><span style='color:red;'>{2}</span>[<span style='color:blue;'>{3} {4}</span>]<br/>意见：{5}</td></tr>",
+                                    i + 1, eforms[i].RoleName
+, per, eforms[i].resultState, eforms[i].doTime, eforms[i].idea);
+                            }
+                            mess += "</table>";
+                            lblMess.Text = mess;
+                        }
+
+                        ViewState["EformsCount"] = eforms.Count;
+
+                        #region  加载 请假单数据
+
+                        Sell_OrderFPService mainSer = new Sell_OrderFPService();
+                        Sell_OrderFP pp = mainSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        hfZhengFu.Value = pp.ZhengFu.ToString();
+                        txtName.Text = pp.CreateName;
+                        txtDoPer.Text = pp.DoPer;
+                        txtRemark.Text = pp.Remark;
+                        txtRuTime.Text = pp.RuTime.ToString();
+                        txtRuTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        txtSupplier.Text = pp.GuestName;
+                        dllFPstye.Text = pp.FPNoStyle;
+                        //ddlHouse.Text = pp.HouseID.ToString();
+
+                        txtFPNo.Text = pp.FPNo;
+                        txtPOName.Text = pp.POName;
+                        txtPONo.Text = pp.PONo;
+                        if (pp.ProNo != null)
+                            lblProNo.Text = pp.ProNo;
+
+                        if (pp.ZhuanPayTotal > 0)
+                        {
+                            txtZhuanJie.Text = pp.ZhuanPayTotal.ToString();
+                        }
+                        Sell_OrderFPsService ordersSer = new Sell_OrderFPsService();
+                        List<Sell_OrderFPs> orders = ordersSer.GetListArray(" 1=1 and Sell_OrderFPs.id=" + Request["allE_id"]);
+                        Session["Orders"] = orders;
+                        ViewState["OrdersCount"] = orders.Count;
+
+                        gvList.DataSource = orders;
+                        gvList.DataBind();
+
+                        #endregion
+
+                        if (pp.TopTotal != 0 && pp.TopFPNo != "")
+                        {
+                            lblTopMess.Text = string.Format("原发票：{0}， 金额：{1}", pp.TopFPNo, pp.TopTotal);
+                        }
+                        if (Request["ReAudit"] != null)
+                        {
+                            lblTopFPNo.Text = pp.FPNo;
+                            lblTopTotal.Text = pp.Total.ToString();
+                        }
+                        if (eformSer.ifHasNodes(Convert.ToInt32(Request["ProId"])))
+                        {
+                            //获取审批人
+                            int pro_IDs = 0;
+                            int ids = 0;
+                            List<A_Role_User> roleUserList = eformSer.getFristNodeUsers(Convert.ToInt32(Session["currentUserId"].ToString()), proId, out ids);
+
+                            ViewState["ids"] = ids;
+                            if (roleUserList != null)
+                            {
+                                ddlPers.DataSource = roleUserList;
+                                ddlPers.DataBind();
+                                ddlPers.DataTextField = "UserName";
+                                ddlPers.DataValueField = "UserId";
+
+                            }
+                            else
+                            {
+                                lblPer.Visible = false;
+                                ddlPers.Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            lblPer.Visible = false;
+                            ddlPers.Visible = false;
+                        }
+                        setEnable(false);
+                    }
                     else//单据审批
                     {
 
@@ -748,8 +861,7 @@ namespace VAN_OA.JXC
                         if (eforms.Count > 0)
                         {
                             string mess = @"<table cellpadding='0' cellspacing='0' width='100%' bordercolorlight='#999999' bordercolordark='#FFFFFF' border='1' ><tr><td colspan='6' style=' height:20px; background-color:#336699; color:White;'>流程图</td></tr>";
-
-
+                            
                             for (int i = 0; i < eforms.Count; i++)
                             {
                                 string per = "";
@@ -1097,13 +1209,12 @@ namespace VAN_OA.JXC
                     else//审核
                     {
 
-                        if (Request["ReAudit"] != null)
+                        if (Request["ReAudit"] != null|| Request["IsDelete"] != null)
                         {
                             Sell_OrderFPService POSer = new Sell_OrderFPService();
                             var model = POSer.GetModel(Convert.ToInt32(Request["allE_id"]));
                             if (Session["currentUserId"].ToString() != model.CreateUserId.ToString())
                             {
-
                                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('必须由原单据申请人 重新发起，其他人不能重新提交编辑！');</script>");
                                 return;
                             }
@@ -1135,7 +1246,7 @@ namespace VAN_OA.JXC
                             forms.audPer = Convert.ToInt32(Session["currentUserId"]);
                             forms.consignor = 0;
                         }
-                        if (Request["ReAudit"] == null)
+                        if (Request["ReAudit"] == null&&Request["IsDelete"] ==null)
                         {
                             if (fromSer.ifAudiPerAndCon(Convert.ToInt32(Session["currentUserId"]), Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])) == false)
                             {
@@ -1224,10 +1335,38 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", Requ
 
                             order.InvoiceNowGuid = lblHiddGuid.Text;
                         }
+                        //发票删除
+                        if (eform.proId == 37 && ddlResult.Text == "通过")
+                        {
+                            string check = string.Format("select count(*) from TB_ToInvoice  where FPId={0} AND State<>'不通过'", order.Id);
+                            if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('有到款记录，请先删除到款！');</script>");
+                                return;
+                            }
+                            check = string.Format(" select count(*) from TB_ToInvoice where FPNo = '{0}'  AND State<>'不通过'", order.FPNo);
+                            if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('有到款记录，请先删除到款！');</script>");
+                                return;
+                            }
 
+                        }
+                        //提交IsDelete  //判断之前有没有申请过此单据
+                        if (eform.proId == 37 && Request["IsDelete"] != null
+                            &&Convert.ToInt32(DBHelp.ExeScalar(string.Format("select count(*) from tb_EForm where allE_id={0} and proId=37", order.Id)))==0)
+                        {
+                            tb_EFormService eformSer = new tb_EFormService();
+                            eform.appTime = DateTime.Now;                          
+                            eform.createTime = DateTime.Now;                           
+                            eform.createPer = Convert.ToInt32(Session["currentUserId"].ToString());                            
+                            eform.E_No =lblProNo.Text;                           
+                            eform.id= eformSer.Add(eform);
+                        }
                         if (POOrderSer.updateTran(order, eform, forms, POOrders, IDS, isBackUp, isBackUpInvoice))
                         {
-                            if (hfZhengFu.Value == "1")
+                            //当为销售发票删除单时 跳过
+                            if (hfZhengFu.Value == "1"&&eform.proId!=37)
                             {
                                 AddFpBack(POOrders);
                                 if (ddlPers.Visible == false)

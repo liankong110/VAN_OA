@@ -59,12 +59,7 @@ LEFT JOIN TB_SupplierInvoices ON TB_SupplierInvoice.Id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses on CAI_OrderInHouses.Ids=TB_SupplierInvoices.RuIds
 left join CAI_OrderChecks on CAI_OrderChecks.ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
-where Status='通过' and IsYuFu=0
-UNION 
-selecT SupplierFPNo,CaiFpType FROM TB_SupplierAdvancePayment
-LEFT JOIN TB_SupplierAdvancePayments ON TB_SupplierAdvancePayment.Id=TB_SupplierAdvancePayments.Ids
-left join CAI_POCai on CAI_POCai.Ids=TB_SupplierAdvancePayments.CaiIds
-where Status='通过'
+where Status='通过' group by SupplierFPNo,CaiFpType
 ) AS TB ON TB.SupplierFPNo=[Payable].InvoiceNumber ");
             if (strWhere.Trim() != "")
             {

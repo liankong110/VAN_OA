@@ -16,7 +16,7 @@ namespace VAN_OA.Dal.JXC
 {
     public class Sell_OrderFPService
     {
-        public bool updateTran_BakDown(string NowGuid,int id)
+        public bool updateTran_BakDown(string NowGuid, int id)
         {
             using (SqlConnection conn = DBHelp.getConn())
             {
@@ -30,7 +30,7 @@ namespace VAN_OA.Dal.JXC
 
 
                 BackUpFPInfoService backUpSer = new BackUpFPInfoService();
-                backUpSer.BackDown(NowGuid, id, objCommand,out model,out orders);
+                backUpSer.BackDown(NowGuid, id, objCommand, out model, out orders);
 
 
                 if (model.Id > 0)
@@ -115,133 +115,209 @@ namespace VAN_OA.Dal.JXC
         }
 
 
-        public bool updateTran(VAN_OA.Model.JXC.Sell_OrderFP model, VAN_OA.Model.EFrom.tb_EForm eform, 
-            tb_EForms forms, List<Sell_OrderFPs> orders, string IDS,bool isBackUp,bool isBackUpInvoice)
+        public bool updateTran(VAN_OA.Model.JXC.Sell_OrderFP model, VAN_OA.Model.EFrom.tb_EForm eform,
+            tb_EForms forms, List<Sell_OrderFPs> orders, string IDS, bool isBackUp, bool isBackUpInvoice)
         {
-            using (SqlConnection conn = DBHelp.getConn())
+            //判断是否是删除 -销售发票删除
+            if (eform.proId == 37)
             {
-                conn.Open();
-                SqlTransaction tan = conn.BeginTransaction();
-                SqlCommand objCommand = conn.CreateCommand();
-                objCommand.Transaction = tan;
-
-                string backUpPoNos = "";               
-                if (isBackUp)                             
+                using (SqlConnection conn = DBHelp.getConn())
                 {
-                    BackUpFPInfoService backUpSer = new BackUpFPInfoService();
-                    backUpPoNos=backUpSer.BackUp(model.Id, objCommand);
-                }
-                //最后进行 删除 到款单 ，以及发票签回单& 备份 
-                if (isBackUpInvoice && eform.state == "通过")
-                {
-                    BackUpFPInfoService backUpSer = new BackUpFPInfoService();
-                    backUpPoNos = backUpSer.BackUpOthers(model.Id, objCommand,model.InvoiceNowGuid);
-                }
-                //CG_POOrdersService OrdersSer = new CG_POOrdersService();
-                //CG_POCaiService CaiSer = new CG_POCaiService();
-                try
-                {
-
-                    decimal total = 0;
-                    foreach (var m in orders)
+                    conn.Open();
+                    SqlTransaction tan = conn.BeginTransaction();
+                    SqlCommand objCommand = conn.CreateCommand();
+                    objCommand.Transaction = tan;
+                    try
                     {
-                        total += m.GoodSellPriceTotal;
+                        objCommand.Parameters.Clear();
+                        model.Status = eform.state;
+                        if (eform.state == "不通过")
+                        {
+                            model.Status = "通过";
+                        }
+                        UpdateToDelete(model, objCommand);
+                        tb_EFormService eformSer = new tb_EFormService();
+                        eformSer.Update(eform, objCommand, isBackUp);
+                        tb_EFormsService eformsSer = new tb_EFormsService();
+                        eformsSer.Add(forms, objCommand);
+
+                        if (eform.state == "通过")
+                        {
+                            //删除发票签回单（如果有）
+                            string deleteFPBack = string.Format("delete tb_EForms where e_Id in (select id from tb_EForm where proId=29 and allE_id in (select id from Sell_OrderFPBack where PId={0}));", model.Id);
+                            deleteFPBack += string.Format("delete tb_EForm where proId=29 and allE_id in (select id from Sell_OrderFPBack where PId={0});", model.Id);
+                            deleteFPBack += string.Format("delete Sell_OrderFPBacks  where Id in (select id from Sell_OrderFPBack where PId={0});delete Sell_OrderFPBack  where PId={0};", model.Id);
+
+                            objCommand.CommandText = deleteFPBack;
+                            objCommand.ExecuteNonQuery();
+
+                            //删除发票删除单
+                            string deleteFPDelete = string.Format("delete tb_EForms where e_Id in (select id from tb_EForm where proId in (26,34,37) and allE_id={0});", model.Id);
+                            deleteFPDelete += string.Format("delete tb_EForm where proId in (26,34,37) and allE_id={0};", model.Id);
+                            objCommand.CommandText = deleteFPDelete;
+                            objCommand.ExecuteNonQuery();
+
+                            //删除发票单
+                            string DeleteAll = string.Format(@"declare @oldFPNo  varchar(500);declare @oldPONo  varchar(500);
+select top 1  @oldFPNo=FPNo,@oldPONo=PONo from Sell_OrderFP where id={0}
+update  CG_POOrder set FPTotal=replace( FPTotal, @oldFPNo+'/','')
+where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", model.Id);
+
+                            Dal.EFrom.tb_EFormService efromSer = new VAN_OA.Dal.EFrom.tb_EFormService();
+                            //var efromModel = efromSer.GetModel(Convert.ToInt32(model.Id));
+                            //if (efromModel.state == "通过")
+                            //{
+                                DeleteAll += "update CG_POOrder set POStatue3='' where PONo=@oldPONo;";
+                            //}
+
+                            DeleteAll += string.Format("delete from Sell_OrderFP where id={0};delete from Sell_OrderFPs where id={0}; ", model.Id);
+
+                            objCommand.CommandText = DeleteAll;
+                            objCommand.ExecuteNonQuery();
+
+                           
+                        }
+                        tan.Commit();
+                   
                     }
-                    model.Total = total;
-                    System.Collections.Hashtable hs = new System.Collections.Hashtable();
-                    objCommand.Parameters.Clear();
-                    model.Status = eform.state;
-                    Update(model, objCommand);
-                    tb_EFormService eformSer = new tb_EFormService();
-                    eformSer.Update(eform, objCommand, isBackUp);
-                    tb_EFormsService eformsSer = new tb_EFormsService();
-                    eformsSer.Add(forms, objCommand);
-                    TB_HouseGoodsService houseGoodsSer = new TB_HouseGoodsService();
-                    Sell_OrderFPsService OrdersSer = new Sell_OrderFPsService();
+                    catch (Exception)
+                    {
+                        tan.Rollback();
+                        return false;
+                    }
+                }
+                if (eform.state == "通过")
+                {
+                    new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(model.PONo);
+                    new VAN_OA.Dal.JXC.CG_POOrdersService().GetListArrayToFpsAndUpdatePoStatue(model.PONo, "通过");
+                }
+            }
+            else
+            {
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlTransaction tan = conn.BeginTransaction();
+                    SqlCommand objCommand = conn.CreateCommand();
+                    objCommand.Transaction = tan;
+
+                    string backUpPoNos = "";
                     if (isBackUp)
                     {
-                        //删除之前的数据
-                        objCommand.CommandText = string.Format("delete from Sell_OrderFPs where id=" + model.Id);
-                        objCommand.ExecuteNonQuery();
+                        BackUpFPInfoService backUpSer = new BackUpFPInfoService();
+                        backUpPoNos = backUpSer.BackUp(model.Id, objCommand);
+                    }
+                    //最后进行 删除 到款单 ，以及发票签回单& 备份 
+                    if (isBackUpInvoice && eform.state == "通过")
+                    {
+                        BackUpFPInfoService backUpSer = new BackUpFPInfoService();
+                        backUpPoNos = backUpSer.BackUpOthers(model.Id, objCommand, model.InvoiceNowGuid);
+                    }
+                    //CG_POOrdersService OrdersSer = new CG_POOrdersService();
+                    //CG_POCaiService CaiSer = new CG_POCaiService();
+                    try
+                    {
 
-                        for (int i = 0; i < orders.Count; i++)
+                        decimal total = 0;
+                        foreach (var m in orders)
                         {
-                            orders[i].id = model.Id;
-                            OrdersSer.Add(orders[i], objCommand);
+                            total += m.GoodSellPriceTotal;
+                        }
+                        model.Total = total;
+                        System.Collections.Hashtable hs = new System.Collections.Hashtable();
+                        objCommand.Parameters.Clear();
+                        model.Status = eform.state;
+                        Update(model, objCommand);
+                        tb_EFormService eformSer = new tb_EFormService();
+                        eformSer.Update(eform, objCommand, isBackUp);
+                        tb_EFormsService eformsSer = new tb_EFormsService();
+                        eformsSer.Add(forms, objCommand);
+                        TB_HouseGoodsService houseGoodsSer = new TB_HouseGoodsService();
+                        Sell_OrderFPsService OrdersSer = new Sell_OrderFPsService();
+                        if (isBackUp)
+                        {
+                            //删除之前的数据
+                            objCommand.CommandText = string.Format("delete from Sell_OrderFPs where id=" + model.Id);
+                            objCommand.ExecuteNonQuery();
 
-                            if (eform.state == "通过")
+                            for (int i = 0; i < orders.Count; i++)
                             {
-                                if (!hs.Contains(orders[i].SellOutOrderId))
+                                orders[i].id = model.Id;
+                                OrdersSer.Add(orders[i], objCommand);
+
+                                if (eform.state == "通过")
                                 {
-                                    hs.Add(orders[i].SellOutOrderId, null);
+                                    if (!hs.Contains(orders[i].SellOutOrderId))
+                                    {
+                                        hs.Add(orders[i].SellOutOrderId, null);
+                                    }
                                 }
                             }
                         }
-                    }
 
 
-                    //foreach (var key in hs.Keys)
-                    //{
-                    //    //更改销售订单的发票号
-                    //    string sql = string.Format("update Sell_OrderOutHouse set FPNo=FPNo+'{0}/' where ProNo='{1}'", model.FPNo, key);
-                    //    objCommand.CommandText = sql;
-                    //    objCommand.ExecuteNonQuery();
-                    if (eform.state == "通过")
-                    {
-                        //更改项目订单的发票号
-                        string sql = string.Format("update CG_POOrder set FPTotal=isnull(FPTotal,'')+'{0}/' where PONo='{1}' and ifzhui=0 ", model.FPNo, model.PONo);
-                        objCommand.CommandText = sql;
-                        objCommand.ExecuteNonQuery();
-                    }
-                    //}
-
-                    //for (int i = 0; i < orders.Count; i++)
-                    //{
-                    //    orders[i].Id = model.Id;
-                    //    //if (orders[i].IfUpdate == true && orders[i].Ids != 0)
-                    //    //{
-
-                    //        OrdersSer.Update(orders[i], objCommand);
-
-                    //    //}
-                    //    //else if (orders[i].Ids == 0)
-                    //    //{
-                    //    //    OrdersSer.Add(orders[i], objCommand);
-
-                    //    //}
-                    //}
-                    //if (IDS != "")
-                    //{
-                    //    IDS  = IDS.Substring(0, IDS.Length - 1);
-                    //    OrdersSer.DeleteByIds(IDS, objCommand);
-                    //}
-
-
-                    tan.Commit();
-
-
-                    if (backUpPoNos != "")
-                    {
-                        foreach (string pono in backUpPoNos.Split(','))
+                        //foreach (var key in hs.Keys)
+                        //{
+                        //    //更改销售订单的发票号
+                        //    string sql = string.Format("update Sell_OrderOutHouse set FPNo=FPNo+'{0}/' where ProNo='{1}'", model.FPNo, key);
+                        //    objCommand.CommandText = sql;
+                        //    objCommand.ExecuteNonQuery();
+                        if (eform.state == "通过")
                         {
-                            if (!string.IsNullOrEmpty(pono))
+                            //更改项目订单的发票号
+                            string sql = string.Format("update CG_POOrder set FPTotal=isnull(FPTotal,'')+'{0}/' where PONo='{1}' and ifzhui=0 ", model.FPNo, model.PONo);
+                            objCommand.CommandText = sql;
+                            objCommand.ExecuteNonQuery();
+                        }
+                        //}
+
+                        //for (int i = 0; i < orders.Count; i++)
+                        //{
+                        //    orders[i].Id = model.Id;
+                        //    //if (orders[i].IfUpdate == true && orders[i].Ids != 0)
+                        //    //{
+
+                        //        OrdersSer.Update(orders[i], objCommand);
+
+                        //    //}
+                        //    //else if (orders[i].Ids == 0)
+                        //    //{
+                        //    //    OrdersSer.Add(orders[i], objCommand);
+
+                        //    //}
+                        //}
+                        //if (IDS != "")
+                        //{
+                        //    IDS  = IDS.Substring(0, IDS.Length - 1);
+                        //    OrdersSer.DeleteByIds(IDS, objCommand);
+                        //}
+
+
+                        tan.Commit();
+
+
+                        if (backUpPoNos != "")
+                        {
+                            foreach (string pono in backUpPoNos.Split(','))
                             {
-                                new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(pono);
-                                new CG_POOrderService().GetOrder_ToInvoiceAndUpdatePoStatus(pono);
+                                if (!string.IsNullOrEmpty(pono))
+                                {
+                                    new Sell_OrderFPBackService().SellFPOrderBackUpdatePoStatus(pono);
+                                    new CG_POOrderService().GetOrder_ToInvoiceAndUpdatePoStatus(pono);
+                                }
                             }
                         }
+
                     }
-                   
-                }
-                catch (Exception)
-                {
-                    tan.Rollback();
-                    return false;
+                    catch (Exception)
+                    {
+                        tan.Rollback();
+                        return false;
+
+                    }
 
                 }
-
             }
-
             return true;
         }
         public int addTran(VAN_OA.Model.JXC.Sell_OrderFP model, VAN_OA.Model.EFrom.tb_EForm eform, List<Sell_OrderFPs> orders, out int MainId)
@@ -510,9 +586,26 @@ namespace VAN_OA.Dal.JXC
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
             objCommand.CommandText = strSql.ToString();
-          int i=  objCommand.ExecuteNonQuery();
+            int i = objCommand.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void UpdateToDelete(VAN_OA.Model.JXC.Sell_OrderFP model, SqlCommand objCommand)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update Sell_OrderFP set ");
+            if (model.Status != null)
+            {
+                strSql.Append("Status='" + model.Status + "',");
+            }
+            int n = strSql.ToString().LastIndexOf(",");
+            strSql.Remove(n, 1);
+            strSql.Append(" where Id=" + model.Id + "");
+            objCommand.CommandText = strSql.ToString();
+            int i = objCommand.ExecuteNonQuery();
+        }
         /// <summary>
         /// 删除一条数据
         /// </summary>
@@ -656,18 +749,18 @@ left join CG_POOrder on CG_POOrder.PONo=Sell_OrderFP.PONo and IFZhui=0    where 
                         {
                             model.Id = (int)ojb;
                         }
-                        
+
                         ojb = dataReader["CreateTime"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.CreateTime = (DateTime)ojb;
                         }
-                       
+
                         model.GuestName = dataReader["GuestNAME"].ToString();
 
                         model.POName = dataReader["PONAME"].ToString();
                         model.PODate = Convert.ToDateTime(dataReader["PODate"]);
-                       
+
                         model.PONo = dataReader["PONo"].ToString();
 
                         ojb = dataReader["loginName"];
@@ -676,12 +769,12 @@ left join CG_POOrder on CG_POOrder.PONo=Sell_OrderFP.PONo and IFZhui=0    where 
                             model.CreateName = ojb.ToString();
                         }
 
-                      
+
                         ojb = dataReader["FPNo"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.FPNo = ojb.ToString();
-                        }                        
+                        }
                         ojb = dataReader["Total"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -701,7 +794,7 @@ left join CG_POOrder on CG_POOrder.PONo=Sell_OrderFP.PONo and IFZhui=0    where 
                             {
                                 model.Isorder = true;
                             }
-                        }  
+                        }
                         list.Add(model);
                     }
                 }
@@ -764,7 +857,7 @@ where Sell_OrderFP.Status='通过' and (Total>newtable.sumTotal or newtable.sumT
                 {
                     while (dataReader.Read())
                     {
-                        list.Add( dataReader["PONo"].ToString());
+                        list.Add(dataReader["PONo"].ToString());
                     }
                 }
             }

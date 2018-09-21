@@ -58,6 +58,25 @@ namespace VAN_OA.Dal.EFrom
             return MaxCardNo;
         }
 
+        public string GetMaxE_No()
+        {
+            string MaxCardNo = "";
+            string sql = string.Format("select  right('0000000000'+(convert(varchar,(convert(int,right(max(e_No),4))+1))),4) FROM  tb_EForm where proId=37 AND e_No like '{0}%';",
+                 DateTime.Now.Year);
+           
+            object objMax = DBHelp.ExeScalar(sql);
+            if (objMax != null && objMax.ToString() != "")
+            {
+                MaxCardNo = DateTime.Now.Year.ToString() + objMax.ToString();
+            }
+            else
+            {
+                MaxCardNo = DateTime.Now.Year.ToString() + "0001";
+            }
+
+            return MaxCardNo;
+        }
+
         public string GetAllE_No(string tableName,string ziduan, SqlCommand objCommand)
         {
             string MaxCardNo = "";
@@ -608,7 +627,7 @@ else begin update CG_POOrder set POStatue6='{1}' where PONo=@oldPONo end", CG_PO
                 url = "~/JXC/WFCAI_OrderOutHouse.aspx?ProId=" + proId + "&allE_id=" + allE_id + "&EForm_Id=" + EForm_Id;
             }
 
-            if (type == "销售发票"||type == "销售发票修改")
+            if (type == "销售发票"||type == "销售发票修改"|| type == "销售发票删除")
             {
                 url = "~/JXC/WFSell_OrderFP.aspx?ProId=" + proId + "&allE_id=" + allE_id + "&EForm_Id=" + EForm_Id;
             }
@@ -633,7 +652,7 @@ else begin update CG_POOrder set POStatue6='{1}' where PONo=@oldPONo end", CG_PO
             {
                 url = "~/JXC/WFSupplierAdvancePaymentVerify.aspx?ProId=" + proId + "&allE_id=" + allE_id + "&EForm_Id=" + EForm_Id;
             }
-
+             
             return url;
         }
 
@@ -1491,6 +1510,45 @@ order by a_Index desc ", loginID, pro_Id);
             objCommand.CommandText = strSql.ToString();
             int result;
             object obj = objCommand.ExecuteScalar();
+            if (!int.TryParse(obj.ToString(), out result))
+            {
+                return 0;
+            }
+            return result;
+        }
+
+        public int Add(VAN_OA.Model.EFrom.tb_EForm model)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into tb_EForm(");
+            strSql.Append("proId,createPer,createTime,appPer,appTime,state,allE_id,toPer,toProsId,e_No,e_Remark,e_lastTime");
+            strSql.Append(")");
+            strSql.Append(" values (");
+            strSql.Append("" + model.proId + ",");
+            strSql.Append("" + model.createPer + ",");
+            strSql.Append("'" + model.createTime + "',");
+            strSql.Append("" + model.appPer + ",");
+            strSql.Append("'" + model.appTime + "',");
+            strSql.Append("'" + model.state + "',");
+            strSql.Append("" + model.allE_id + ",");
+            strSql.Append("" + model.toPer + ",");
+            strSql.Append("" + model.toProsId + ",");
+            strSql.Append("'" + model.E_No + "',");
+            strSql.Append("'" + model.E_Remark + "',");
+            if (model.E_LastTime == null)
+            {
+                strSql.Append("null");
+            }
+            else
+            {
+                strSql.Append("'" + model.E_LastTime + "'");
+            }
+
+            strSql.Append(")");
+            strSql.Append(";select @@IDENTITY");           
+            int result;
+            object obj =DBHelp.ExeScalar(strSql.ToString());
             if (!int.TryParse(obj.ToString(), out result))
             {
                 return 0;

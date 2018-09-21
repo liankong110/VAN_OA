@@ -211,6 +211,13 @@
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" Width="30px" />
             </asp:TemplateField>
+             <asp:TemplateField HeaderText="">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lbtnDelete" runat="server" CommandName="Del" CommandArgument='<% #Eval("Id")%>'
+                        OnClientClick='return confirm( "确定要删除吗？") '>删除</asp:LinkButton>
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" Width="30px" />
+            </asp:TemplateField>
             <asp:BoundField DataField="ProNo" HeaderText="单据号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="RuTime" HeaderText="日期" SortExpression="RuTime" ItemStyle-HorizontalAlign="Center"
                 DataFormatString="{0:yyyy-MM-dd}" />

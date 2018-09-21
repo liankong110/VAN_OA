@@ -85,7 +85,10 @@ namespace VAN_OA.JXC
                 {
                     gvMain.Columns[0].Visible = false;
                 }
-
+                if (NewShowAll_textName("销售发票列表", "删除") == false)
+                {
+                    gvMain.Columns[2].Visible = false;
+                }
                 //if (VAN_OA.JXC.SysObj.IfShowAll(SysObj.Sell_OrderPFList, Session["currentUserId"]) == false)
                 //{
                 //    ViewState["showAll"] = false;
@@ -433,7 +436,6 @@ namespace VAN_OA.JXC
             }
             else if (e.CommandName == "ReEdit")
             {
-
                 //是否是此单据的申请人
                 var model = POSer.GetModel(Convert.ToInt32(e.CommandArgument));
 
@@ -477,11 +479,68 @@ namespace VAN_OA.JXC
                 string efromId = string.Format("select id from tb_EForm where alle_id={0} and proId=(select pro_Id from A_ProInfo where pro_Type='{1}')", e.CommandArgument, type);
                 string url = "~/JXC/WFSell_OrderFP.aspx?ProId=" + DBHelp.ExeScalar(sql) + "&allE_id=" + e.CommandArgument + "&EForm_Id=" + DBHelp.ExeScalar(efromId) + "&&ReAudit=true";
                 Response.Redirect(url);
+            }
+            else if (e.CommandName == "Del")
+            {
+                //是否是此单据的申请人
+                var model = POSer.GetModel(Convert.ToInt32(e.CommandArgument));
 
+                if (Session["currentUserId"].ToString() != model.CreateUserId.ToString())
+                {
 
-                //没有做过检验单
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('必须由原单据申请人 重新发起，其他人不能重新提交编辑！');</script>");
+                    return;
+                }
 
+                //首先单子要先通过               
 
+                if (model != null && model.Status == "执行中")
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('此单据还在执行中不能编辑！');</script>");
+                    return;
+                }
+                string check = string.Format("select count(*) from TB_ToInvoice  where FPId={0}  AND State<>'不通过'", model.Id);
+                if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('有到款记录，请先删除到款！');</script>");
+                    return;
+                }
+
+                check = string.Format(" select count(*) from TB_ToInvoice where FPNo = '{0}'  AND State<>'不通过'", model.FPNo);
+                if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('有到款记录，请先删除到款！');</script>");
+                    return;
+                }
+
+                //string check = string.Format("select  count(*) from Sell_OrderFPBack  where FPNo in ( select FPNo from Sell_OrderFP where id={0})", model.Id);
+                //if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                //{
+                //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('发票签回单需要删除！');</script>");
+                //    return;
+                //}
+
+                // check = string.Format("select count(*) from TB_ToInvoice  where FPId={0}", model.Id);
+                //if (Convert.ToInt32(DBHelp.ExeScalar(check)) > 0)
+                //{
+                //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('此单据已经被用款单使用！');</script>");
+                //    return;
+                //}
+                string type = "销售发票";
+                if (model.NowGuid != "")
+                {
+                    type = "销售发票修改";
+                }
+                string sql = string.Format("select pro_Id from A_ProInfo where pro_Type='{0}'", type);
+                string efromId = string.Format("select id from tb_EForm where alle_id={0} and proId=(select pro_Id from A_ProInfo where pro_Type='{1}')", e.CommandArgument, type);
+                var id = DBHelp.ExeScalar(efromId).ToString();
+                var aa =DBHelp.ExeScalar(string.Format("select top 1 id from tb_EForm where allE_id={0} and proId=37", model.Id));
+                if(aa!=null&&aa!=DBNull.Value)
+                {
+                    id = aa.ToString();
+                }
+                string url = "~/JXC/WFSell_OrderFP.aspx?ProId=37&allE_id=" + e.CommandArgument + "&EForm_Id=" + id + "&&IsDelete=true";
+                Response.Redirect(url);
             }
         }
 

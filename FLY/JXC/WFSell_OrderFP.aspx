@@ -27,7 +27,7 @@
         border="1">
         <tr>
             <td colspan="4" style="height: 20px; background-color: #336699; color: White;">
-                销售发票-<asp:Label ID="lblProNo" runat="server" Text=""></asp:Label>
+                销售发票<asp:Label ID="lblDelete" runat="server" Text="删除" ForeColor="Red" Visible="false"></asp:Label>-<asp:Label ID="lblProNo" runat="server" Text=""></asp:Label>
 
                  <asp:Label ID="lbl12" runat="server" Text="预付款结转" ForeColor="Red"></asp:Label>
                   <asp:TextBox  ID="txtZhuanJie" runat="server" Enabled="false" Width="200px"></asp:TextBox>

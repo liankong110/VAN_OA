@@ -22,7 +22,7 @@ namespace VAN_OA.EFrom
 {
     public partial class MyEForms : BasePage
     {
-        protected List<string> EFormNames = new List<string> {"项目订单","采购订单","采购订单检验","采购入库","采购退货","供应商付款单","供应商付款单（预付单转支付单）","供应商预付款单","销售出库","销售退货" }; 
+        protected List<string> EFormNames = new List<string> {"项目订单","采购订单","采购订单检验","采购入库","采购退货","供应商付款单","供应商付款单（预付单转支付单）","供应商预付款单","销售出库","销售退货","销售发票","销售发票修改","销售发票删除" }; 
         protected string GetDemo(object allE_id, object proId)
         {
             var tempWform = allAllWform.FindAll(t => t.Id == (int)allE_id && t.myProId == (int)proId);
