@@ -1149,7 +1149,8 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
 
                                 if (order.fileNo != null && fileExtension != "")
                                 {
-                                    string qizhui = System.Web.HttpContext.Current.Request.MapPath("PO/") + file + "_" + MainId;
+                                    //string qizhui = System.Web.HttpContext.Current.Request.MapPath("PO/") + file + "_" + MainId;
+                                    string qizhui = System.Web.HttpContext.Current.Request.MapPath("PO/") + MainId;
                                     postedFile.SaveAs(qizhui + fileExtension);
 
                                 }
@@ -1930,10 +1931,21 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
         protected void lblAttName_Click(object sender, EventArgs e)
         {
             string url = System.Web.HttpContext.Current.Request.MapPath("PO/") + lblAttName_Vis.Text;
-            down1(lblAttName.Text, url);
+            if (down1(lblAttName.Text, url) == false)
+            {
+                url = System.Web.HttpContext.Current.Request.MapPath("PO/") + lblAttName_Vis.Text.Substring(lblAttName_Vis.Text.IndexOf('_') + 1);
+                if (down1(lblAttName.Text, url)==false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('文件不存在！');</script>");
+                    return;
+                }
+            }
+
+          
+
         }
 
-        private void down1(string fileName, string url)
+        private bool down1(string fileName, string url)
         {
             if (System.IO.File.Exists(url) == false)
             {
@@ -1956,8 +1968,8 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 }
                 catch (Exception)
                 {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('文件不存在！');</script>");
-                    return;
+                  
+                    return false;
                 }
 
             }
@@ -1984,6 +1996,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 }
                 Response.Close();
             }
+            return true;
 
 
         }

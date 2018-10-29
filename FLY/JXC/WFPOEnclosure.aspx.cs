@@ -87,8 +87,22 @@ Status<>'不通过'",Request["PONo"]);
                 string id= e.CommandArgument.ToString().Substring(0,e.CommandArgument.ToString().IndexOf('_'));
                 string fileName = e.CommandArgument.ToString().Substring(e.CommandArgument.ToString().IndexOf('_')+1);
                 string url = System.Web.HttpContext.Current.Request.MapPath("PO/") +
-                  fileName.Substring(0, fileName.LastIndexOf('.')) + "_" + id + fileName.Substring(fileName.LastIndexOf('.')); ;
-                down1(fileName, url);
+                  fileName.Substring(0, fileName.LastIndexOf('.')) + "_" + id + fileName.Substring(fileName.LastIndexOf('.'));
+
+                if (System.IO.File.Exists(url))
+                {
+                    down1(fileName, url);
+                    return;
+                }
+                url = System.Web.HttpContext.Current.Request.MapPath("PO/") + id + fileName.Substring(fileName.LastIndexOf('.'));
+                if (System.IO.File.Exists(url))
+                {
+                    down1(fileName, url);
+                    return;
+                }
+
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('文件不存在！');</script>");
+
             }
         }
 
@@ -143,6 +157,7 @@ Status<>'不通过'",Request["PONo"]);
             string fileName="",fileType="";          
             HttpPostedFile postedFile = null;
             string file = "";
+            string fileExtension = "";
             for (int iFile = 0; iFile < files.Count; iFile++)
             {
                 ///'检查文件扩展名字
@@ -152,7 +167,8 @@ Status<>'不通过'",Request["PONo"]);
                 if (fileName != "")
                 {
                     //order.fileName = fileName;
-                    //fileExtension = System.IO.Path.GetExtension(fileName);
+                    fileExtension = System.IO.Path.GetExtension(fileName);
+
                     fileType = postedFile.ContentType.ToString();//文件类型
                     //order.fileType = fileType;
                     System.IO.Stream streamFile = postedFile.InputStream;//建立数据流对象
@@ -168,6 +184,11 @@ Status<>'不通过'",Request["PONo"]);
             {
                 string sql = string.Format("update CG_POOrder set fileName='{0}',fileType='{1}' where prono='{2}'", fileName,fileType,ddlProList.SelectedItem.Value);
                 DBHelp.ExeCommand(sql);
+
+
+                string qizhui = System.Web.HttpContext.Current.Request.MapPath("PO/") + DBHelp.ExeScalar(string.Format("select ID FROM CG_POOrder where proNO='{0}'", ddlProList.SelectedItem.Value));
+                postedFile.SaveAs(qizhui + fileExtension);
+
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
             }
             Show();
