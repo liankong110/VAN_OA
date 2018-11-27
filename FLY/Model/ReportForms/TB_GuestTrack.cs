@@ -435,5 +435,10 @@ namespace VAN_OA.Model.ReportForms
         /// 客户简称
         /// </summary>
         public string SimpGuestName { get; set; }
+
+        /// <summary>
+        /// 是否是新季度的客户
+        /// </summary>
+        public string IsAddGuest { get; set; }
     }
 }

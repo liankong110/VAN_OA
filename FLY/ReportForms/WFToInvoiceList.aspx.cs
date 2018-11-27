@@ -436,7 +436,7 @@ namespace VAN_OA.ReportForms
                     using (SqlConnection conn = DBHelp.getConn())
                     {
                         conn.Open();
-                        for (int i = gvList.PageIndex * 10; i < ((gvList.PageIndex + 1) * 10); i++)
+                        for (int i = (AspNetPager1.CurrentPageIndex -1)* 10; i < ((AspNetPager1.CurrentPageIndex) * 10); i++)
                         {
                             if (i < cars.Count)
                             {

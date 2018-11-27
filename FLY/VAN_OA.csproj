@@ -148,6 +148,8 @@
     <Content Include="Fin\NEW_WFAllSellDetail.aspx" />
     <Content Include="Fin\WFBandFlow.aspx" />
     <Content Include="Fin\WFAddBandFlow.aspx" />
+    <Content Include="Fin\WFAEPromiseTotal.aspx" />
+    <Content Include="Fin\WFAEPromiseTotalList.aspx" />
     <Content Include="Fin\WFOut_BankFlow.aspx" />
     <Content Include="Fin\WFIn_BankFlow.aspx" />
     <Content Include="Fin\WFJieSuanType.aspx" />
@@ -156,7 +158,6 @@
     <Content Include="Image\a.gif" />
     <Content Include="Image\AJAX.gif" />
     <Content Include="Image\atchm.gif" />
-    <Content Include="Image\BankBill.png" />
     <Content Include="Image\BankBill1.png" />
     <Content Include="Image\bg-main.png" />
     <Content Include="Image\bg-menu-main.png" />
@@ -209,6 +210,7 @@
     <Content Include="Image\To_Act.gif" />
     <Content Include="Image\up.gif" />
     <Content Include="JXC\JXCSum_SkilllList.aspx" />
+    <Content Include="JXC\JXC_YuShouKuanTotal.aspx" />
     <Content Include="JXC\JXC_SkilllList.aspx" />
     <Content Include="JXC\KPI_Sell.aspx" />
     <Content Include="JXC\NEW_Sell_Cai_OrderInHouseList.aspx" />
@@ -718,6 +720,7 @@
     <Compile Include="Dal\EFrom\tb_ToolsAppService.cs" />
     <Compile Include="Dal\EFrom\TB_UseCarDetailService.cs" />
     <Compile Include="Dal\EFrom\tb_UseCarService.cs" />
+    <Compile Include="Dal\Fin\AEPromiseTotalService.cs" />
     <Compile Include="Dal\Fin\FIN_CommCostService.cs" />
     <Compile Include="Dal\Fin\FIN_SpecCostService.cs" />
     <Compile Include="Dal\Fin\BandFlowService.cs" />
@@ -1271,6 +1274,20 @@
     <Compile Include="Fin\WFAddBandFlow.aspx.designer.cs">
       <DependentUpon>WFAddBandFlow.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Fin\WFAEPromiseTotal.aspx.cs">
+      <DependentUpon>WFAEPromiseTotal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Fin\WFAEPromiseTotal.aspx.designer.cs">
+      <DependentUpon>WFAEPromiseTotal.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Fin\WFAEPromiseTotalList.aspx.cs">
+      <DependentUpon>WFAEPromiseTotalList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Fin\WFAEPromiseTotalList.aspx.designer.cs">
+      <DependentUpon>WFAEPromiseTotalList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Fin\WFOut_BankFlow.aspx.cs">
       <DependentUpon>WFOut_BankFlow.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1382,6 +1399,13 @@
     </Compile>
     <Compile Include="JXC\JXCSum_SkilllList.aspx.designer.cs">
       <DependentUpon>JXCSum_SkilllList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JXC\JXC_YuShouKuanTotal.aspx.cs">
+      <DependentUpon>JXC_YuShouKuanTotal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JXC\JXC_YuShouKuanTotal.aspx.designer.cs">
+      <DependentUpon>JXC_YuShouKuanTotal.aspx</DependentUpon>
     </Compile>
     <Compile Include="JXC\JXC_SkilllList.aspx.cs">
       <DependentUpon>JXC_SkilllList.aspx</DependentUpon>
@@ -2076,6 +2100,7 @@
     <Compile Include="Model\EFrom\tb_UseCar.cs" />
     <Compile Include="Model\EFrom\TB_UseCarDetail.cs" />
     <Compile Include="Model\EFrom\TB_UseCarDetailReport.cs" />
+    <Compile Include="Model\Fin\AEPromiseTotal.cs" />
     <Compile Include="Model\Fin\BankFlow.cs" />
     <Compile Include="Model\Fin\FIN_CommCost.cs" />
     <Compile Include="Model\Fin\FIN_SpecCost.cs" />
@@ -2888,7 +2913,6 @@
     <Content Include="BaseInfo\CompanyList.aspx" />
     <Content Include="BaseInfo\WFCompanyInfo.aspx" />
     <Content Include="bin\AjaxControlToolkit.dll" />
-    <Content Include="bin\AjaxControlToolkit.pdb" />
     <Content Include="CmdAttachment.aspx" />
     <Content Include="CopyRight.ascx" />
     <Content Include="DatabaseCmd.aspx" />
@@ -3176,6 +3200,8 @@
     <None Include="My97DatePicker\skin\whyGreen\vssver2.scc" />
     <None Include="My97DatePicker\vssver2.scc" />
     <None Include="My97DatePicker\使用说明%28必读%29\vssver2.scc" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\配置文件1.pubxml" />
     <None Include="ReportForms\WordModel\QP.doc" />
     <Content Include="Scripts\webuploader-0.1.5\README.md" />
     <Content Include="Scripts\jquery-1.10.2\jquery插件库.url" />

@@ -481,7 +481,7 @@ left join
         /// <param name="having"></param>
         /// <param name="fuhao"></param>
         /// <returns></returns>
-        public List<Model.JXC.SumSkillTotal> GetSumSkill_Total(string strWhere, string having, string fuhao,string paiSql)
+        public List<Model.JXC.SumSkillTotal> GetSumSkill_Total(string strWhere, string having, string fuhao, string paiSql)
         {
             TB_BaseSkillService skillSer = new TB_BaseSkillService();
             var skillList = skillSer.GetListArray("");
@@ -514,8 +514,8 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
  MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType {1}) as allNewTb 
  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono 
 ) as SumPorect  on Dispatching.MyPoNo=SumPorect.PONo {2}", strWhere, having, fuhao, paiSql);
-            strSql.Append(" group by MyPoType,loginName");           
-           
+            strSql.Append(" group by MyPoType,loginName");
+
             List<Model.JXC.SumSkillTotal_Detail> list = new List<Model.JXC.SumSkillTotal_Detail>();
             Hashtable hashtable = new Hashtable();
             using (SqlConnection conn = DBHelp.getConn())
@@ -532,7 +532,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                         model.loginName = dataReader["loginName"].ToString();
                         if (!hashtable.ContainsKey(model.loginName))
                         {
-                            hashtable.Add(model.loginName,null);
+                            hashtable.Add(model.loginName, null);
                         }
                         ojb = dataReader["SumHours"];
                         if (ojb != null && ojb != DBNull.Value)
@@ -574,7 +574,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                         {
                             model.TypeCount = Convert.ToInt32(ojb);
                         }
-                        
+
                         list.Add(model);
                     }
                 }
@@ -582,27 +582,27 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
 
             //逻辑处理
             List<SumSkillTotal> sumList = new List<SumSkillTotal>();
-            decimal gongScore = list.Where(t=>t.MyPoType == "工程").Sum(t=>t.SumScore);
+            decimal gongScore = list.Where(t => t.MyPoType == "工程").Sum(t => t.SumScore);
             decimal lingScore = list.Where(t => t.MyPoType == "零售").Sum(t => t.SumScore);
             decimal xiScore = list.Where(t => t.MyPoType == "系统").Sum(t => t.SumScore);
 
             foreach (string key in hashtable.Keys)
             {
                 SumSkillTotal model = new SumSkillTotal();
-                var tempList= list.FindAll(t => t.loginName == key); 
+                var tempList = list.FindAll(t => t.loginName == key);
                 model.Name = key;
-              
+
                 model.Hours = tempList.Sum(t => t.SumHours);
-                model.Gong_Value= tempList.Where(t=>t.MyPoType== "工程").Sum(t => t.SumFK);
+                model.Gong_Value = tempList.Where(t => t.MyPoType == "工程").Sum(t => t.SumFK);
                 model.Ling_Value = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumFK);
                 model.Xi_Value = tempList.Where(t => t.MyPoType == "系统").Sum(t => t.SumFK);
-               
-                model.SumValue= tempList.Sum(t => t.SumFK);
+
+                model.SumValue = tempList.Sum(t => t.SumFK);
                 var sumCount = tempList.Sum(t => t.TypeCount);
                 if (sumCount != 0)
                 {
-                    model.AvgValue = model.SumValue/ sumCount;
-                } 
+                    model.AvgValue = model.SumValue / sumCount;
+                }
 
                 model.Gong_Score = tempList.Where(t => t.MyPoType == "工程").Sum(t => t.SumScore);
                 model.Ling_Score = tempList.Where(t => t.MyPoType == "零售").Sum(t => t.SumScore);
@@ -619,8 +619,8 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 {
                     model.Xi_Score_Per = model.Xi_Score / xiScore * 100;
                 }
-             
-                model.SumScore = tempList.Sum(t => t.SumScore);               
+
+                model.SumScore = tempList.Sum(t => t.SumScore);
                 if (sumCount != 0)
                 {
                     model.AvgScore = model.SumScore / sumCount;
@@ -628,9 +628,9 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 model.CompanyScore = gongScore + lingScore + xiScore;
                 if (model.CompanyScore != 0)
                 {
-                    model.CompanyScore_Per = model.SumScore/ model.CompanyScore * 100;
+                    model.CompanyScore_Per = model.SumScore / model.CompanyScore * 100;
                 }
-                model.PoTotal = tempList.Sum(t=>t.SumPOTotal);
+                model.PoTotal = tempList.Sum(t => t.SumPOTotal);
                 if (model.PoTotal != 0)
                 {
                     model.DaoKuan_Per = tempList.Sum(t => t.InvoTotal) / model.PoTotal * 100;
@@ -820,13 +820,510 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
             }
             return list;
         }
+
+        public List<InvoiceSimpDetail> GetInvoiceSimpDetailList()
+        {
+            List<InvoiceSimpDetail> list = new List<InvoiceSimpDetail>();
+            string sql = string.Format(@"select DaoKuanDate,TB_ToInvoice.PONo from TB_ToInvoice left join
+CG_POOrder on TB_ToInvoice.PoNo=CG_POOrder.PONo and IFZhui=0 where  Model='模型7' 
+and BusType=0 and TB_ToInvoice.State='通过' order by DaoKuanDate");
+
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var model = new InvoiceSimpDetail();
+                        model.PONO = dataReader["PONo"].ToString();
+                        model.DaoKuanDate = Convert.ToDateTime(dataReader["DaoKuanDate"]);
+                        list.Add(model);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// 获得数据列表（比DataSet效率高，推荐使用）
+        /// </summary>
+        public List<Model.JXC.JXC_REPORTTotal> YuShouKuan_GetListArray_Total(string strWhere, string having, string fuhao)
+        {
+            List<InvoiceSimpDetail> invSimpDetailList = GetInvoiceSimpDetailList();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(" select  SumPOTotal,* from (");
+            strSql.Append("select DaOKuanCount,MinDaoKuanDate, MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
+            strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
+            strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
+            //strSql.Append(" ZhangQi as trueZhangQi,AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal  from CG_POOrder ");
+            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,Model  from CG_POOrder ");
+
+            strSql.Append(" left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo ");
+            strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal,min(DaoKuanDate)  as MinDaoKuanDate,sum(case WHEN BUSTYPE=0 THEN 1 ELSE 0 end) AS DaOKuanCount from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
+            strSql.Append(@" left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses
+on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO");
+
+            strSql.Append(" left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) as ntb2 on CG_POOrder.PONo=ntb2.PONo");
+            strSql.Append(" where ifzhui=0  and CG_POOrder.Status='通过'");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(strWhere);
+            }
+
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model ,MinDaoKuanDate,DaOKuanCount ");
+
+            if (having != "")
+            {
+                strSql.Append(having);
+            }
+            strSql.Append(@" ) as allNewTb left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono 
+left Join 
+(
+select PONo,max(BillDate) as BillDate
+from [KingdeeInvoice].dbo.Invoice as inv left join Sell_OrderFP  on inv.InvoiceNumber=Sell_OrderFP.FPNo
+where BillDate>'1900-1-1' and Status='通过' group by PONo
+) as KisBill on KisBill.PONo=allNewTb.PONo
+left join
+(
+ select PONo,count(*) AS BillCount FROM
+ (
+ select PONo,BillDate
+from [KingdeeInvoice].dbo.Invoice as inv left join Sell_OrderFP  on inv.InvoiceNumber=Sell_OrderFP.FPNo
+where BillDate>'1900-1-1' and Status='通过' group by PONo,BillDate
+) as TB GROUP BY PONo
+) as tb_BillCount on tb_BillCount.PONO=allNewTb.PONo
+left join V_ModelZQ on V_ModelZQ.Model=allNewTb.model and V_ModelZQ.GuestName=allNewTb.GuestName
+LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
+" + fuhao);
+            strSql.Append(" ORDER BY  allNewTb.PONo DESC ");
+            List<Model.JXC.JXC_REPORTTotal> list = new List<Model.JXC.JXC_REPORTTotal>();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        JXC_REPORTTotal model = new JXC_REPORTTotal();
+                        object ojb;
+                        model.PONo = dataReader["PONo"].ToString();
+                        model.POName = dataReader["POName"].ToString();
+                        ojb = dataReader["PODate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.PODate = (DateTime)ojb;
+                        }
+                        model.GuestName = dataReader["GuestName"].ToString();
+                        ojb = dataReader["goodSellTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.goodSellTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["goodTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.goodTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["maoliTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.maoliTotal = (decimal)ojb;
+                        }
+                        model.FPTotal = dataReader["FPTotal"].ToString();
+                        ojb = dataReader["ZhangQiTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ZhangQiTotal = (decimal)ojb;
+                        }
+                        //ojb = dataReader["trueZhangQi"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    //model.trueZhangQi =Convert.ToDecimal( ojb);
+                        //}
+
+                        //===
+
+                        ojb = dataReader["SumPOTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumPOTotal = (decimal)ojb;
+                        }
+                        var MinDaoKuanDate = ojb = dataReader["MinDaoKuanDate"];
+                        var MaxDaoKuanDate = ojb = dataReader["MaxDaoKuanDate"];
+                        var MinOutDate = ojb = dataReader["MinOutDate"];
+
+
+                        if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                        {
+                            model.MaxDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate);
+                        }
+                        if (MinOutDate != null && MinOutDate != DBNull.Value)
+                        {
+                            var minOutTime = Convert.ToDateTime(ojb);
+                            TimeSpan ts = (Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")) - Convert.ToDateTime(minOutTime.ToString("yyyy-MM-dd")));
+                            model.trueZhangQi = ts.Days;
+                        }
+                        ojb = dataReader["InvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.InvoiceTotal = (decimal)ojb;
+                        }
+                        if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value
+                            && MinOutDate != null && MinOutDate != DBNull.Value && model.SumPOTotal <= model.InvoiceTotal)
+                        {
+                            TimeSpan ts = Convert.ToDateTime(Convert.ToDateTime(MaxDaoKuanDate).ToString("yyyy-MM-dd")) - Convert.ToDateTime(Convert.ToDateTime(MinOutDate).ToString("yyyy-MM-dd"));
+                            //model.trueZhangQi = ts.Days + 1;
+                            model.trueZhangQi = ts.Days;
+                        }
+
+                        //在到款单列表（见第二画面），出库单已经开具的情况下，如果项目金额=0，则 不管到款金额合并 是否打勾，该项目的天数 一律显示0,表示不需要到款。
+                        //这个逻辑 也需要在 销售业绩帐期考核、销售报表汇总、项目费用汇总统计  的 天数或实际到款期 中 同步修改
+                        if (model.SumPOTotal == 0)
+                        {
+                            model.trueZhangQi = 0;
+                        }
+
+                        //===
+                        model.AE = dataReader["AE"].ToString();
+                        model.INSIDE = dataReader["INSIDE"].ToString();
+                        ojb = dataReader["AEPer"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.AEPer = (decimal)ojb;
+                        }
+                        ojb = dataReader["INSIDEPer"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.INSIDEPer = (decimal)ojb;
+                        }
+
+
+                        ojb = dataReader["SellFPTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SellFPTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["IsClose"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.IsClose = (bool)ojb;
+                        }
+                        ojb = dataReader["GuestType"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GuestType = ojb.ToString();
+                            model.GuestType = model.GuestType.Replace("用户", "");
+                        }
+
+                        ojb = dataReader["GuestPro"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb);
+
+                        }
+                        ojb = dataReader["MinDaoKuanTime_ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinDaoKuanTime_ZQ = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["MinBillDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinBillDate = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["MinFPTime"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinFPTime = Convert.ToDateTime(ojb);
+                        }
+
+
+                        model.TrueLiRun = model.InvoiceTotal - model.goodTotal;
+
+                        model.AETotal = model.AEPer * model.maoliTotal / 100;
+                        model.InsidTotal = model.INSIDEPer * model.maoliTotal / 100;
+
+
+
+
+                        //ojb = dataReader["allSellTotal"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    model.AllSellTotal = (decimal)ojb;
+                        //}
+
+                        if (model.SumPOTotal == model.InvoiceTotal)
+                        {
+                            model.IsQuanDao = true;
+                        }
+
+                        //预收账款系统 
+                        //最近开票日
+                        //计算开票日
+                        //最近开票日按发票号取值金蝶发票清单中的新字段发票日期， 最近开票日如<=当月的25日，计算开票日=当月的30日（如2月份，就是最后一天）, 
+                        //最近开票日如 > 当月的25日, 计算开票日 = 下个月的30日（如2月份，就是最后一天）, 如无最近开票日，计算开票日也空，最近开票日的右面增加一列计算开票日；
+                        ojb = dataReader["BillDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.BillDate = Convert.ToDateTime(ojb);
+
+                            if (model.BillDate.Value.Day <= 25)
+                            {
+                                model.JSKaiPiaoDate = Convert.ToDateTime(model.BillDate.Value.Year + "-" + model.BillDate.Value.Month + "-1").AddMonths(1).AddDays(-1);
+                            }
+                            else
+                            {
+                                model.JSKaiPiaoDate = Convert.ToDateTime(model.BillDate.Value.Year + "-" + model.BillDate.Value.Month + "-1").AddMonths(2).AddDays(-1);
+                            }
+                        }
+                        //经验账期
+                        ojb = dataReader["AVG_ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Avg_ZQ = Convert.ToInt32(ojb);
+                        }
+                        ojb = dataReader["ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ZQ = Convert.ToInt32(ojb);
+                        }
+                        ojb = dataReader["DaoKuanDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SecondDaoKuanDate = Convert.ToDateTime(ojb);
+                        }
+
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = Convert.ToString(ojb);
+                        }
+
+
+
+                        if (model.SellFPTotal - model.InvoiceTotal != 0)
+                        {
+                            //模型1 ,模型2,模型4 的计算如下
+                            //预估到款日=计算开票日+经验账期（如尚无开票日，预估到款日也空白）；如发票额-实到账=0，预估到款日为空。
+                            if (model.Model == "模型1" || model.Model == "模型2" || model.Model == "模型4")
+                            {
+                                if (model.BillDate != null && model.MinBillDate != null)
+                                {
+                                    model.YuGuDaoKuanDate = model.MinBillDate.Value.AddDays(model.Avg_ZQ);
+                                    model.DaoKuanNumber = 1;
+                                }
+                            }
+
+                            // 模型4：预估到款日=最近开票日+经验账期（如尚无最近开票日，预估到款日也空白）；如发票额-实到账=0，预估到款日为空。
+                            if (model.Model == "模型4")
+                            {
+                                if (model.BillDate != null)
+                                {
+                                    model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                }
+                            }
+                            // 这里的开票顺序即是预估到款顺序，只需判断当前开票是首次还是第几次，原则上，上一次开票是必须到款了我们才可能开下一次发票的。只需在金蝶发票清单中 判断下最近开票日是第几次的发票日期，就得出是第几次预估到款。
+                            ojb = dataReader["BillCount"];
+                            if ((model.Model == "模型2" || model.Model == "模型4") && model.BillDate != null && ojb != null && ojb != DBNull.Value)
+                            {
+                                model.DaoKuanNumber = Convert.ToInt32(ojb);
+                            }
+                        }
+                        else
+                        {
+                            // 这里的开票顺序即是预估到款顺序，只需判断当前开票是首次还是第几次，原则上，上一次开票是必须到款了我们才可能开下一次发票的。只需在金蝶发票清单中 判断下最近开票日是第几次的发票日期，就得出是第几次预估到款。
+                            ojb = dataReader["BillCount"];
+                            if ((model.Model == "模型8") && model.BillDate != null && ojb != null && ojb != DBNull.Value)
+                            {
+                                model.DaoKuanNumber = Convert.ToInt32(ojb);
+                            }
+                        }
+                        //模型3
+                        //第一次预估到款日=项目日期+经验账期，
+                        //第二次预估到款日 = 最近开票日 + 经验账期（如尚无最近开票日，预估到款日也空白），
+                        //第三次预估到款日 = 最近的发票实际到款日 + 1年；如发票额 - 实到账 = 0，预估到款日为空;
+                        //第一次预估到款日的判定条件是尚无到款记录。第二次预估到款日的判定条件是 有一次发票记录且5%< 到款总比例 <= 50 %。第三次预估到款日的判定条件是50 %< 到款总比例 <= 95 %。
+
+                        if (model.Model == "模型3")
+                        {
+                            if (model.SellFPTotal - model.InvoiceTotal == 0 && model.SellFPTotal == 0)
+                            {
+                                model.YuGuDaoKuanDate = model.PODate.AddDays(model.Avg_ZQ);
+                                model.DaoKuanNumber = 1;
+                            }
+                            else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.05) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.5))
+                            {
+                                if (model.SellFPTotal - model.InvoiceTotal != 0 && model.BillDate != null)
+                                {
+                                    model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                    model.DaoKuanNumber = 2;
+                                }
+                            }
+                            else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.5) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.95))
+                            {
+                                if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                                {
+                                    model.YuGuDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate).AddYears(1);
+                                    model.DaoKuanNumber = 3;
+                                }
+                            }
+                        }
+
+                        //模型5
+                        //第一次预估到款日=最近开票日+经验账期（如尚无最近开票日，预估到款日也空白），第二次预估到款日=最近的发票实际到款日+1年；如发票额-实到账=0，预估到款日为空
+                        //第一次预估到款日的判定条件是尚无到款记录。第二次预估到款日的判定条件是有一次发票记录且70 %< 到款总比例 <= 95 %。
+                        if (model.SellFPTotal - model.InvoiceTotal != 0 && model.Model == "模型5")
+                        {
+                            if (model.InvoiceTotal == 0 && model.BillDate != null)
+                            {
+                                model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                model.DaoKuanNumber = 1;
+                            }
+                            else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.7) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.95))
+                            {
+                                if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                                {
+                                    model.YuGuDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate).AddYears(1);
+                                    model.DaoKuanNumber = 2;
+                                }
+                            }
+                        }
+
+                        //模型6
+                        //第一次预估到款日 = 项目日期 + 经验账期，
+                        //第二次预估到款日 = 最近开票日 + 经验账期（如尚无最近开票日，预估到款日也空白），
+                        //第三次预估到款日 = 第1次发票实际到款日 + 项目订单的计划完工天数 + 经验账期，
+                        //第四次预估到款期 = 最近的发票实际到款日 + 半年，
+                        //第五次预估到款期 = 最近的发票实际到款日 + 1年；如发票额 - 实到账 = 0，预估到款日为空
+                        //第一次预估到款日的判定条件是尚无到款记录。
+                        //第二次预估到款日的判定条件是有一次发票记录且5 %< 到款总比例 <= 25 %。
+                        //第三次预估到款日的判定条件是有1次发票记录且 < 25 % 到款总比例 <= 50 %。
+                        //第四次预估到款日的判定条件是有1次发票记录且50 %< 到款总比例 <= 70 %。
+                        //第五次预估到款日的判定条件是仅有1次发票记录且70 %< 到款总比例 <= 90 %。
+                        if (model.Model == "模型6")
+                        {
+                            if (model.SellFPTotal - model.InvoiceTotal == 0 && model.SellFPTotal == 0)
+                            {
+                                model.YuGuDaoKuanDate = model.PODate.AddDays(model.Avg_ZQ);
+                                model.DaoKuanNumber = 1;
+                            }
+                            else
+                            {
+                                if (model.DaoKuanLv.Value > Convert.ToDecimal(0.05) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.25))
+                                {
+                                    if (model.BillDate != null)
+                                    {
+                                        model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                        model.DaoKuanNumber = 2;
+                                    }
+                                }
+                                else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.25) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.5))
+                                {
+                                    //这里有问题 需要待商量
+                                    //项目订单的计划完工天数 缺省你按 10
+                                    if (MinDaoKuanDate != null && MinDaoKuanDate != DBNull.Value)
+                                    {
+                                        model.YuGuDaoKuanDate = Convert.ToDateTime(MinDaoKuanDate).AddDays(model.Avg_ZQ + 10);
+                                        model.DaoKuanNumber = 3;
+                                    }
+                                }
+                                else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.5) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.7))
+                                {
+                                    if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                                    {
+                                        model.YuGuDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate).AddMonths(6);
+                                        model.DaoKuanNumber = 4;
+                                    }
+                                }
+                                else if (model.DaoKuanLv.Value > Convert.ToDecimal(0.7) && model.DaoKuanLv.Value <= Convert.ToDecimal(0.9))
+                                {
+                                    if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                                    {
+                                        model.YuGuDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate).AddYears(1);
+                                        model.DaoKuanNumber = 5;
+                                    }
+                                }
+
+                            }
+                        }
+
+                        //模型7
+                        //第一次预估到款日=最近开票日+经验账期（如尚无最近开票日，预估到款日也空白），
+                        //第N次预估到款日 = 最近的发票实际到款日 + 1个月；如发票额 - 实到账 = 0，预估到款日为空
+                        // 第一次预估到款日的判定条件是尚无到款记录。第N次预估到款日的判定条件是0 < 到款总比例 < 100 %。
+                        if (model.SellFPTotal - model.InvoiceTotal != 0 && model.Model == "模型7")
+                        {
+                            if (model.InvoiceTotal == 0)
+                            {
+                                if (model.BillDate != null)
+                                {
+                                    model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                    model.DaoKuanNumber = 1;
+                                }
+                            }
+                            else if (model.DaoKuanLv.Value > 0 && model.DaoKuanLv.Value <= 1)
+                            {
+                                if (MaxDaoKuanDate != null && MaxDaoKuanDate != DBNull.Value)
+                                {
+                                    model.YuGuDaoKuanDate = Convert.ToDateTime(MaxDaoKuanDate).AddMonths(1);
+                                    //这里只开1次发票，只需判断之前到款几次即可。                                     
+                                    //如 到款单列表 没有首次发票到款日或 有首次发票实际到款日+30天后的第一次发票到款记录是否有，没有的话 当前就是第二次预估到款日；
+                                    //有的话，这个第一次发票到款日+30天后的第一次发票到款是否有，没有话2+1；继续循环。
+
+                                    if (model.MinDaoKuanTime_ZQ != null)
+                                    {
+                                        model.DaoKuanNumber = 2;
+                                        var result = invSimpDetailList.FindAll(t => t.DaoKuanDate >= model.MinDaoKuanTime_ZQ.Value.AddDays(30));
+                                        if (result.Count > 0)
+                                        {
+                                            var fristDate = result[0].DaoKuanDate;
+                                            model.DaoKuanNumber = 3;
+                                            while (result.Count > 0)
+                                            {
+                                                result = result.FindAll(t => t.DaoKuanDate >= fristDate.AddDays(30));
+                                                if (result.Count > 0)
+                                                {
+                                                    fristDate = result[0].DaoKuanDate;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                        //模型8
+                        //第一次预估到款日=最近开票日+经验账期（如尚无开票日，预估到款日也空白），
+                        //第2 - 4次预估到款日 = 最近开票日 + 经验账期（如尚无开票日，预估到款日也空白）；
+                        //如发票额 - 实到账 = 0，预估到款日为空
+                        if (model.Model == "模型8")
+                        {
+                            if (model.BillDate != null)
+                            {
+                                model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                            }
+                        }
+
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
         public List<Model.JXC.JXC_REPORTTotal> NEW_GetListArray_Total(string strWhere, string having, string fuhao, DateTime StartTime, string compare, string fuhao_E,
-            string KAO_POType, string NO_Kao_POType, string PoTypeList,int zhangQI)
+            string KAO_POType, string NO_Kao_POType, string PoTypeList, int zhangQI)
         {
-            var poTypeList = new TB_BasePoTypeService().GetListArray(""); 
+            var poTypeList = new TB_BasePoTypeService().GetListArray("");
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
             StringBuilder strSql = new StringBuilder();
             strSql.Append(" select  SumPOTotal,*" + (compare == "" ? ",0 as KouInvoTotal" : ",WaiInvoTotal as KouInvoTotal") + " from (");
@@ -877,7 +1374,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                     {
                         JXC_REPORTTotal model = new JXC_REPORTTotal();
                         model.zhangQI = zhangQI;
-                        model.BaseKeyValue =Convert.ToInt32(baseKeyModel.TypeValue);
+                        model.BaseKeyValue = Convert.ToInt32(baseKeyModel.TypeValue);
                         model.PoTypeList = PoTypeList;
                         model.QueryDateTime = StartTime;
                         object ojb;
@@ -1008,7 +1505,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                             model.WaiInvoTotal = Convert.ToDecimal(ojb);
                         }
                         int POType = Convert.ToInt32(dataReader["POType"]);
-                        model.potypeString = poTypeList.Find(t=>t.Id== POType).BasePoType ;
+                        model.potypeString = poTypeList.Find(t => t.Id == POType).BasePoType;
                         model.potype = dataReader["POType"].ToString();
                         list.Add(model);
                     }
@@ -1074,8 +1571,8 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
             return contactList;
         }
 
-        public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao, 
-          string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere,string zhangQiWhere)
+        public List<Model.JXC.KPI_SellModel> KIP_SellReport(string strWhere, string having, string fuhao,
+          string KAO_POType, string NO_Kao_POType, string PoTypeList, string contactWhere, string zhangQiWhere)
         {
             string compare = "";
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
@@ -1103,17 +1600,17 @@ left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTot
 left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse 
 left join Sell_OrderOutHouses on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO ");
 
-//            if (!string.IsNullOrEmpty(compare))
-//            {
-//                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
-//else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
-//(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
-// where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
-// group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
-//   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, 
-//   StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+            //            if (!string.IsNullOrEmpty(compare))
+            //            {
+            //                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
+            //else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
+            //(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
+            // where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
+            // group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
+            //   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, 
+            //   StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
 
-//            }
+            //            }
             strSql.Append(@" left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) as ntb2 on CG_POOrder.PONo=ntb2.PONo
 where ifzhui=0  and CG_POOrder.Status='通过' ");
 
@@ -1130,7 +1627,7 @@ where ifzhui=0  and CG_POOrder.Status='通过' ");
             }
 
             strSql.AppendFormat(@" ) AS TEMPTB ) as NewTB 
-LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as AAAAA "+ zhangQiWhere + @") AS BBBB GROUP BY BBBB.AE  )  as SUMPO 
+LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as AAAAA " + zhangQiWhere + @") AS BBBB GROUP BY BBBB.AE  )  as SUMPO 
 ", contactWhere);
             strSql.Append(" ORDER BY AE ");
             List<Model.JXC.KPI_SellModel> list = new List<KPI_SellModel>();
@@ -1146,7 +1643,7 @@ LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as
                         model.AE = dataReader["AE"].ToString();
 
                         object ojb;
-                       
+
                         ojb = dataReader["SumPOTotal"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -1179,14 +1676,14 @@ LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             var SellFPTotal = (decimal)ojb;
-                            if (model.POTotal!=0)
+                            if (model.POTotal != 0)
                             {
-                                model.KP_Percent = SellFPTotal / model.POTotal*100;
+                                model.KP_Percent = SellFPTotal / model.POTotal * 100;
                             }
                         }
                         if (model.POTotal != 0)
                         {
-                            model.DK_Percent =model.InvoiceTotal/ model.POTotal*100;
+                            model.DK_Percent = model.InvoiceTotal / model.POTotal * 100;
                         }
 
 
@@ -1199,7 +1696,7 @@ LEFT JOIN POTotal_SumView on  NewTB.PONo=POTotal_SumView.pono " + fuhao + " ) as
                         //        model.DK_Percent = WaiInvoTotal / model.POTotal*100;
                         //    }
                         //}
-                        model.TimeOutCount=Convert.ToInt32(dataReader["PCount"]);
+                        model.TimeOutCount = Convert.ToInt32(dataReader["PCount"]);
                         list.Add(model);
 
                     }

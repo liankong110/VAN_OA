@@ -203,7 +203,7 @@ GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sel
 from 
 NoSellAndCaiGoods
 left join TB_Good on TB_Good.GoodId=[NoSellAndCaiGoods].GoodId
-left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6} {7} order by PONo desc " + where,
+left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6} {7} " + where+ " order by PONo desc ",
                                                                                                      userId == "" ? "" : string.Format(" and AE='{0}'", userId)
                                                                                                     , goodNoWhere,
                          guestWhere, ruTimeWhere, poTimeWhere, ponoWhere, company, poNoSql);

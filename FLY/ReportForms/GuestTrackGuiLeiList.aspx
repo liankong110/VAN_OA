@@ -7,13 +7,11 @@
     <table cellpadding="0" cellspacing="0" width="90%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">
-                客户归类
+            <td colspan="8" style="height: 20px; background-color: #336699; color: White;">客户归类
             </td>
         </tr>
         <tr>
-            <td>
-                登记日期:
+            <td>登记日期:
             </td>
             <td>
                 <asp:TextBox ID="txtFrom" runat="server"></asp:TextBox>
@@ -27,40 +25,33 @@
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
             </td>
-            <td>
-                客户名称
+            <td>客户名称
             </td>
             <td>
-                <asp:TextBox ID="txtGuestName" runat="server" ></asp:TextBox>
+                <asp:TextBox ID="txtGuestName" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
-            <td>
-                AE:
+            <td>AE:
             </td>
             <td>
-                <asp:DropDownList ID="ddlAE" runat="server" DataTextField="LoginName" DataValueField="Id"
-                  >
+                <asp:DropDownList ID="ddlAE" runat="server" DataTextField="LoginName" DataValueField="Id">
                 </asp:DropDownList>
             </td>
-            <td>
-                INSIDE:
+            <td>INSIDE:
             </td>
             <td>
-                <asp:DropDownList ID="ddlINSIDE" runat="server" DataTextField="LoginName" DataValueField="Id"
-                  >
+                <asp:DropDownList ID="ddlINSIDE" runat="server" DataTextField="LoginName" DataValueField="Id">
                 </asp:DropDownList>
             </td>
         </tr>
         <tr>
-            <td>
-                单据号:
+            <td>单据号:
             </td>
             <td>
                 <asp:TextBox ID="txtProNo" runat="server"></asp:TextBox>
             </td>
-            <td>
-                季度:
+            <td>季度:
             </td>
             <td>
                 <asp:DropDownList ID="ddlSelectYears" runat="server">
@@ -75,39 +66,62 @@
             </td>
         </tr>
 
-         <tr>
-            <td colspan="4">
-                特殊: <asp:DropDownList ID="ddlSpecial" runat="server">
+        <tr>
+            <td colspan="4">特殊:
+                <asp:DropDownList ID="ddlSpecial" runat="server">
                     <asp:ListItem Value="-1">全部</asp:ListItem>
                     <asp:ListItem Value="1">特殊</asp:ListItem>
-                    <asp:ListItem Value="0">非特殊</asp:ListItem>                   
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
                 </asp:DropDownList>
-                客户类型 :  <asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
+                客户类型 : 
+                <asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
                     DataTextField="GuestType">
                 </asp:DropDownList>
-                客户属性 :  <asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro" DataTextField="GuestProString" style="left:0px;">
+                客户属性 : 
+                <asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro" DataTextField="GuestProString" Style="left: 0px;">
                 </asp:DropDownList>
-                联系人 : <asp:TextBox ID="txtLikeMan" runat="server" ></asp:TextBox>
-                电话/手机: <asp:TextBox ID="txtPhone" runat="server"></asp:TextBox>
-            </td>             
-            </tr>
+                联系人 :
+                <asp:TextBox ID="txtLikeMan" runat="server" Width="50px"></asp:TextBox>
+                电话/手机:
+                <asp:TextBox ID="txtPhone" runat="server" Width="100px"></asp:TextBox>
+                  客户新增:
+                    <asp:DropDownList ID="dllAddGuest" runat="server">
+                        <asp:ListItem Value="-1">全部</asp:ListItem>
+                        <asp:ListItem Value="1">新增</asp:ListItem>
+                        <asp:ListItem Value="2">原有</asp:ListItem>
+                    </asp:DropDownList>
+                      客户类型变化:
+                    <asp:DropDownList ID="ddlDiffMyGuestType" runat="server">
+                        <asp:ListItem Value="-1">全部</asp:ListItem>
+                        <asp:ListItem Value="1">变化</asp:ListItem>
+                        <asp:ListItem Value="2">不变</asp:ListItem>
+                    </asp:DropDownList>
+                      客户属性变化:
+                    <asp:DropDownList ID="dllDiffMyGuestPro" runat="server">
+                        <asp:ListItem Value="-1">全部</asp:ListItem>
+                        <asp:ListItem Value="1">变化</asp:ListItem>
+                        <asp:ListItem Value="2">不变</asp:ListItem>
+                    </asp:DropDownList>
+            </td>
+        </tr>
         <tr>
             <td colspan="4">
                 <div align="right">
+                  
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />
                     &nbsp;
                     <br />
                     <asp:Button ID="btnSpecial" runat="server" Text=" 保 存(特殊) " BackColor="Yellow" OnClick="btnSpecial_Click" />
-                
-                     <asp:Button ID="btnGuestType" runat="server" Text=" 保 存(类型) " 
-                        BackColor="Yellow" onclick="btnGuestType_Click"  />
-                          <asp:Button ID="btnCopyGuestType" runat="server" Text="同步客户类型" 
-                        BackColor="Yellow" onclick="btnCopyGuestType_Click"  />
-                        
-                          <asp:Button ID="btnSaveGuestPro" runat="server" Text=" 保 存(属性) " 
-                        BackColor="Yellow" onclick="btnSaveGuestPro_Click"  />
-                         <asp:Button ID="btnCopyGuestPro" runat="server" Text="同步客户属性" 
-                        BackColor="Yellow" onclick="btnCopyGuestPro_Click"  />
+
+                    <asp:Button ID="btnGuestType" runat="server" Text=" 保 存(类型) "
+                        BackColor="Yellow" OnClick="btnGuestType_Click" />
+                    <asp:Button ID="btnCopyGuestType" runat="server" Text="同步客户类型"
+                        BackColor="Yellow" OnClick="btnCopyGuestType_Click" />
+
+                    <asp:Button ID="btnSaveGuestPro" runat="server" Text=" 保 存(属性) "
+                        BackColor="Yellow" OnClick="btnSaveGuestPro_Click" />
+                    <asp:Button ID="btnCopyGuestPro" runat="server" Text="同步客户属性"
+                        BackColor="Yellow" OnClick="btnCopyGuestPro_Click" />
                 </div>
             </td>
         </tr>
@@ -120,7 +134,7 @@
             OnRowEditing="gvList_RowEditing" OnRowDataBound="gvList_RowDataBound">
             <PagerTemplate>
                 <br />
-              <%--  <asp:Label ID="lblPage" runat="server" Text='<%# "第" + (((GridView)Container.NamingContainer).PageIndex + 1)  + "页/共" + (((GridView)Container.NamingContainer).PageCount) + "页" %> '></asp:Label>
+                <%--  <asp:Label ID="lblPage" runat="server" Text='<%# "第" + (((GridView)Container.NamingContainer).PageIndex + 1)  + "页/共" + (((GridView)Container.NamingContainer).PageCount) + "页" %> '></asp:Label>
                 <asp:LinkButton ID="lbnFirst" runat="Server" Text="首页" Enabled='<%# ((GridView)Container.NamingContainer).PageIndex != 0 %>'
                     CommandName="Page" CommandArgument="First"></asp:LinkButton>
                 <asp:LinkButton ID="lbnPrev" runat="server" Text="上一页" Enabled='<%# ((GridView)Container.NamingContainer).PageIndex != 0 %>'
@@ -134,96 +148,70 @@
             <EmptyDataTemplate>
                 <table width="100%">
                     <tr style="height: 20px; background-color: #336699; color: White;">
-                        <td>
-                            AE
+                        <td>AE
                         </td>
-                        <td>
-                            %
+                        <td>%
                         </td>
-                        <td>
-                            INSIDE
+                        <td>INSIDE
                         </td>
-                        <td>
-                            %
+                        <td>%
                         </td>
-                        <td>
-                            单据号
+                        <td>单据号
                         </td>
-                        <td>
-                            日期
+                        <td>日期
                         </td>
-                        <td>
-                            客户名称
+                        <td>客户名称
                         </td>
-                        <td>
-                            电话/手机
+                        <td>电话/手机
                         </td>
-                        <td>
-                            联系人
+                        <td>联系人
                         </td>
-                        <td>
-                            职务
+                        <td>职务
                         </td>
-                        <td>
-                            传真或邮箱
+                        <td>传真或邮箱
                         </td>
-                        <td>
-                            是否留资料
+                        <td>是否留资料
                         </td>
-                        <td>
-                            QQ/MSN联系
+                        <td>QQ/MSN联系
                         </td>
-                        <td>
-                            客户ID
+                        <td>客户ID
                         </td>
-                        <td>
-                            联系人地址
+                        <td>联系人地址
                         </td>
-                        <td>
-                            联系人网址
+                        <td>联系人网址
                         </td>
-                        <td>
-                            客户税务登记号
+                        <td>客户税务登记号
                         </td>
-                        <td>
-                            客户工商注册号
+                        <td>客户工商注册号
                         </td>
-                        <td>
-                            银行账号
+                        <td>银行账号
                         </td>
-                        <td>
-                            开户行
+                        <td>开户行
                         </td>
-                        <td>
-                            上季度销售额
+                        <td>上季度销售额
                         </td>
-                        <td>
-                            上季度利润
+                        <td>上季度利润
                         </td>
-                        <td>
-                            上季度收款期/天
+                        <td>上季度收款期/天
                         </td>
-                        <td>
-                            年
+                        <td>年
                         </td>
-                        <td>
-                            季度
+                        <td>季度
                         </td>
-                        <td>
-                            备注
+                        <td>备注
                         </td>
-                        <td>
-                            INSIDE备注
+                        <td>INSIDE备注
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6" align="center" style="height: 80%">
-                            ---暂无数据---
+                        <td colspan="6" align="center" style="height: 80%">---暂无数据---
                         </td>
                     </tr>
                 </table>
             </EmptyDataTemplate>
             <Columns>
+                   <asp:BoundField DataField="IsAddGuest" HeaderText="新增" SortExpression="IsAddGuest" ItemStyle-HorizontalAlign="Center" />
+
                 <asp:TemplateField HeaderText="特殊">
                     <ItemTemplate>
                         <asp:CheckBox ID="cbIsSpecial" runat="server" Checked='<% #Eval("IsSpecial") %>' />
@@ -244,23 +232,23 @@
                 <asp:BoundField DataField="Time" HeaderText="登记日期" SortExpression="Time" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
                     ItemStyle-HorizontalAlign="Center" />
-                       <asp:TemplateField HeaderText="客户类型">
-                <ItemTemplate>
-                    <asp:HiddenField runat="server" ID="hidtxt" Value='<%#Eval("MyGuestType")%>' />
-                    <asp:DropDownList ID="dllMyGuestType" runat="server" DataValueField="GuestType" DataTextField="GuestType">
-                    </asp:DropDownList>
-                </ItemTemplate>
-                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
-            </asp:TemplateField>
-             <asp:TemplateField HeaderText="客户属性">
-                <ItemTemplate>
-                    <asp:HiddenField runat="server" ID="hidMyGuestProTxt" Value='<%#Eval("MyGuestPro")%>' />
-                    <asp:DropDownList ID="dllMyGuestPro" runat="server" DataValueField="GuestPro" DataTextField="GuestProString">
-                    </asp:DropDownList>
-                </ItemTemplate>
-                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
-            </asp:TemplateField>
-            
+                <asp:TemplateField HeaderText="客户类型">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hidtxt" Value='<%#Eval("MyGuestType")%>' />
+                        <asp:DropDownList ID="dllMyGuestType" runat="server" DataValueField="GuestType" DataTextField="GuestType">
+                        </asp:DropDownList>
+                    </ItemTemplate>
+                    <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="客户属性">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hidMyGuestProTxt" Value='<%#Eval("MyGuestPro")%>' />
+                        <asp:DropDownList ID="dllMyGuestPro" runat="server" DataValueField="GuestPro" DataTextField="GuestProString">
+                        </asp:DropDownList>
+                    </ItemTemplate>
+                    <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+                </asp:TemplateField>
+
                 <asp:BoundField DataField="Phone" HeaderText="电话/手机" SortExpression="Phone" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="LikeMan" HeaderText="联系人" SortExpression="LikeMan" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Job" HeaderText="职务" SortExpression="Job" ItemStyle-HorizontalAlign="Center" />
@@ -304,9 +292,9 @@
             <RowStyle CssClass="InfoDetail1" />
         </asp:GridView>
         <webdiyer:AspNetPager ID="AspNetPager1" runat="server" Width="100%" ShowPageIndexBox="Always"
-            TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%" CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left"   ButtonImageAlign="Middle"  CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"
-        PageSize="10" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
+            TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%" CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left" ButtonImageAlign="Middle" CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"
+            PageSize="10" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
             NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
-        </webdiyer:AspNetPager> 
+        </webdiyer:AspNetPager>
     </asp:Panel>
 </asp:Content>

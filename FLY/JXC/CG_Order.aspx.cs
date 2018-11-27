@@ -1933,7 +1933,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
             string url = System.Web.HttpContext.Current.Request.MapPath("PO/") + lblAttName_Vis.Text;
             if (down1(lblAttName.Text, url) == false)
             {
-                url = System.Web.HttpContext.Current.Request.MapPath("PO/") + lblAttName_Vis.Text.Substring(lblAttName_Vis.Text.IndexOf('_') + 1);
+                url = System.Web.HttpContext.Current.Request.MapPath("PO/") + lblAttName_Vis.Text.Substring(lblAttName_Vis.Text.LastIndexOf('_') + 1);
                 if (down1(lblAttName.Text, url)==false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('文件不存在！');</script>");

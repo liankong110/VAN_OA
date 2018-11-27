@@ -363,5 +363,79 @@ namespace VAN_OA.Model.JXC
         /// 2 实际帐期 >帐期截止期      
         /// </summary>
         public int zhangQI { get; set; }
+
+
+        /// <summary>
+        /// 最近开票日
+        /// </summary>
+        public DateTime? BillDate { get; set; }
+        /// <summary>
+        /// 计算开票日
+        /// </summary>
+        public DateTime? JSKaiPiaoDate { get; set; }
+
+        /// <summary>
+        /// 经验账期
+        /// </summary>
+        public int Avg_ZQ { get; set; }
+
+        /// <summary>
+        /// 模型
+        /// </summary>
+        public string Model { get; set; }
+
+        /// <summary>
+        /// 预估到款日
+        /// </summary>
+        public DateTime? YuGuDaoKuanDate { get; set; }
+
+        /// <summary>
+        /// 预估到款 （= 发票额-实到账）
+        /// </summary>
+        public decimal YuGuDaoKuanTotal
+        {
+            get
+            {
+                return SellFPTotal - InvoiceTotal;
+            }
+        }
+
+        /// <summary>
+        /// 实际到款日
+        /// </summary>
+        public DateTime? MaxDaoKuanDate { get; set; }
+
+        /// <summary>
+        /// 实际账期
+        /// </summary>
+        public int ZQ { get; set; }
+
+        /// <summary>
+        /// 第一次到款日期
+        /// </summary>
+        public DateTime? MinDaoKuanTime_ZQ{get;set;}
+
+        /// <summary>
+        /// 第一次到款日期
+        /// </summary>
+        public DateTime? MinBillDate { get; set; }
+
+        public DateTime? MinFPTime { get; set; }
+        /// <summary>
+        /// 第二次到款
+        /// </summary>
+        public DateTime? SecondDaoKuanDate { get; set; }
+
+        /// <summary>
+        /// 到款次数 --第几次到款
+        /// </summary>
+        public int? DaoKuanNumber { get; set; }
+    }
+
+    public class InvoiceSimpDetail
+    {
+        public DateTime DaoKuanDate { get; set; }
+
+        public string PONO { get; set; }
     }
 }

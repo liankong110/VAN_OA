@@ -2008,7 +2008,7 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
                         {
                             model.GuestAddress = ojb.ToString();
                         }
-                        
+
                         list.Add(model);
                     }
                 }
@@ -2051,6 +2051,146 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
                     while (objReader.Read())
                     {
                         list.Add(ReaderBind(objReader));
+                    }
+                }
+            }
+            return list;
+        }
+
+
+        public List<int> GetCurrentZhangQi()
+        {
+            List<int> keyValues = new List<int>();
+            int month = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+          
+            if (1 <= month && month <= 3)
+            {
+                keyValues.Add(1);
+                keyValues.Add(year);
+
+                keyValues.Add(4);
+                keyValues.Add(year - 1);
+            }
+            else if (4 <= month && month <= 6)
+            {
+                keyValues.Add(2);
+                keyValues.Add(year);             
+                keyValues.Add(1);
+                keyValues.Add(year);
+            }
+            else if (7 <= month && month <= 9)
+            {
+                keyValues.Add(3);
+                keyValues.Add(year);
+                keyValues.Add(2);
+                keyValues.Add(year);
+            }
+            else if (10 <= month && month <= 12)
+            {
+                keyValues.Add(4);
+                keyValues.Add(year);
+                keyValues.Add(3);
+                keyValues.Add(year);
+            }
+
+            return keyValues;
+        }
+
+        public List<VAN_OA.Model.ReportForms.TB_GuestTrack> GetListArrayGuilei(string strWhere, string dllAddGuest, string ddlDiffMyGuestType, string dllDiffMyGuestPro)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select   ");
+            //strSql.Append("select TB_GuestTrack.Id,Time,GuestName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,loginName ");
+            //strSql.Append(" FROM TB_GuestTrack left join tb_User on TB_GuestTrack.CreateUser=tb_User.ID");
+            strSql.Append(" SimpGuestName,MyGuestPro,MyGuestType,TB_GuestTrack.Id,Time,GuestName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,YearNo,QuartNo,AEPer,INSIDEPer,IsSpecial,AA.ID as AddId ");
+            strSql.Append(",GuestId,GuestAddress,GuestHttp,GuestShui,GuestGong,GuestBrandNo,GuestBrandName,AE,INSIDE,GuestTotal,GuestLiRun,GuestDays,Remark ,ProNo");
+            strSql.Append(",AEUser.loginName as AEloginName,INSIDEUser.loginName as INSIDEloginName,INSIDERemark");
+            strSql.Append(" from TB_GuestTrack left join tb_User on TB_GuestTrack.CreateUser=tb_User.ID");
+            strSql.Append(" left join tb_User as AEUser on TB_GuestTrack.AE=AEUser.ID");
+            strSql.Append(" left join tb_User as INSIDEUser on TB_GuestTrack.INSIDE=INSIDEUser.ID");
+            List<int> zhangqi = GetCurrentZhangQi();
+            strSql.AppendFormat(@" left join (
+select A.Id from 
+(SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{0}' and YearNo='{1}') AS A 
+LEFT JOIN (SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
+where A.SimpGuestName IS NULL
+) AS AA on AA.ID=TB_GuestTrack.ID", zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            //选 新增时，当前季度新增的客户（上季度没有的）将被筛选出来；
+            if (dllAddGuest == "1")
+            {
+                strSql.AppendFormat(@" and  AA.ID>0");
+            }
+            //选原有，本季度有的客户，上季度也有的客户将被筛选出来；
+            if (dllAddGuest == "2")
+            {
+                strSql.AppendFormat(@" and  AA.ID is null");
+            }
+            //当前季度客户类型 和 上季度 不同的，将被筛选出来
+            if (ddlDiffMyGuestType == "1")
+            {
+                strSql.AppendFormat(@" and TB_GuestTrack.ID in (select A.ID from 
+(SELECT ID,SimpGuestName,MyGuestType FROM TB_GuestTrack where  QuartNo='{0}' and YearNo='{1}') AS A 
+left JOIN (SELECT ID,SimpGuestName,MyGuestType FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
+where A.MyGuestType<> isnull(b.MyGuestType,''))"
+, zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
+            }
+            //选不变时，当前季度客户类型 和 上季度 相同的，将被筛选出来
+            if (ddlDiffMyGuestType == "2")
+            {
+                strSql.AppendFormat(@" and TB_GuestTrack.ID in (select A.ID from 
+(SELECT ID,SimpGuestName,MyGuestType FROM TB_GuestTrack where  QuartNo='{0}' and YearNo='{1}') AS A 
+left JOIN (SELECT ID,SimpGuestName,MyGuestType FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
+where A.MyGuestType=b.MyGuestType)"
+, zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
+            }
+
+            //当前季度客户属性 和 上季度 不同的，将被筛选出来
+            if (dllDiffMyGuestPro == "1")
+            {
+                strSql.AppendFormat(@" and TB_GuestTrack.ID in (select A.ID from 
+(SELECT ID,SimpGuestName,MyGuestPro FROM TB_GuestTrack where  QuartNo='{0}' and YearNo='{1}') AS A 
+left JOIN (SELECT ID,SimpGuestName,MyGuestPro FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
+where A.MyGuestPro<> isnull(b.MyGuestPro,''))"
+, zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
+            }
+            //选不变时，当前季度客户属性 和 上季度 相同的，将被筛选出来
+            if (dllDiffMyGuestPro == "2")
+            {
+                strSql.AppendFormat(@" and TB_GuestTrack.ID in (select A.ID from 
+(SELECT ID,SimpGuestName,MyGuestPro FROM TB_GuestTrack where  QuartNo='{0}' and YearNo='{1}') AS A 
+left JOIN (SELECT ID,SimpGuestName,MyGuestPro FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
+where A.MyGuestPro=b.MyGuestPro)"
+, zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
+            }
+
+            strSql.Append(" order by  Time desc");
+            List<VAN_OA.Model.ReportForms.TB_GuestTrack> list = new List<VAN_OA.Model.ReportForms.TB_GuestTrack>();
+
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader objReader = objCommand.ExecuteReader())
+                {
+                    while (objReader.Read())
+                    {
+                        var model = ReaderBind(objReader);
+                        var ojb = objReader["AddId"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.IsAddGuest = "是";
+                        }
+                        else
+                        {
+                            model.IsAddGuest = "否";
+                        }
+                        list.Add(model);
                     }
                 }
             }
@@ -2101,7 +2241,7 @@ where TB_GuestTrack.id not in (select allE_id from tb_EForm where proId =17) ");
                     {
                         VAN_OA.Model.ReportForms.TB_GuestTrack model = new VAN_OA.Model.ReportForms.TB_GuestTrack();
                         object ojb;
-                     
+
                         ojb = dataReader["Time"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -2121,7 +2261,7 @@ where TB_GuestTrack.id not in (select allE_id from tb_EForm where proId =17) ");
                             model.INSIDEName = ojb.ToString();
                         }
 
-                     
+
 
                         try
                         {

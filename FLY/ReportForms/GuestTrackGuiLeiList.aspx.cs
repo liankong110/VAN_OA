@@ -33,7 +33,7 @@ namespace VAN_OA.ReportForms
         private List<string> allGuestTypes = new List<string>();
 
         List<VAN_OA.Model.BaseInfo.GuestProBaseInfo> GetGuestProListArray;
-        private List<string> allGuestPros = new List<string>(); 
+        private List<string> allGuestPros = new List<string>();
 
         private void Show()
         {
@@ -127,7 +127,7 @@ namespace VAN_OA.ReportForms
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') and state='通过') or TB_GuestTrack.id not in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
 
-            List<TB_GuestTrack> GuestTracks = this.GuestTrackSer.GetListArray(sql);
+            List<TB_GuestTrack> GuestTracks = this.GuestTrackSer.GetListArrayGuilei(sql, dllAddGuest.Text, ddlDiffMyGuestType.Text, dllDiffMyGuestPro.Text);
             AspNetPager1.RecordCount = GuestTracks.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
             Session[Query] = QGuestTrack;
@@ -165,10 +165,10 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
                 try
                 {
                     var hidTxt = ((HiddenField)e.Row.FindControl("hidtxt")).Value;
-                    drp.SelectedIndex = allGuestTypes.IndexOf(hidTxt);   
+                    drp.SelectedIndex = allGuestTypes.IndexOf(hidTxt);
                 }
                 catch (Exception)
-                {}
+                { }
 
 
                 DropDownList guestProDrp = (DropDownList)e.Row.FindControl("dllMyGuestPro");
@@ -181,7 +181,7 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
                 {
                     var hidMyGuestProTxt = ((HiddenField)e.Row.FindControl("hidMyGuestProTxt")).Value;
                     guestProDrp.SelectedIndex = allGuestPros.IndexOf(hidMyGuestProTxt);
-                    
+
                 }
                 catch (Exception)
                 { }
@@ -279,7 +279,7 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
                 ddlGuestTypeList.DataBind();
                 ddlGuestTypeList.DataTextField = "GuestType";
                 ddlGuestTypeList.DataValueField = "GuestType";
-                ddlGuestTypeList.Items.Insert(0, new ListItem {  Text="全部", Value="-1"});
+                ddlGuestTypeList.Items.Insert(0, new ListItem { Text = "全部", Value = "-1" });
 
                 GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
 
@@ -380,7 +380,7 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
         {
             using (SqlConnection conn = DBHelp.getConn())
             {
-                
+
                 conn.Open();
                 SqlCommand objCommand = conn.CreateCommand();
                 for (int i = 0; i < this.gvList.Rows.Count; i++)
