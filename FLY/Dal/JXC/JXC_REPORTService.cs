@@ -1081,6 +1081,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                                 model.JSKaiPiaoDate = Convert.ToDateTime(model.BillDate.Value.Year + "-" + model.BillDate.Value.Month + "-1").AddMonths(2).AddDays(-1);
                             }
                         }
+
                         //经验账期
                         ojb = dataReader["AVG_ZQ"];
                         if (ojb != null && ojb != DBNull.Value)
@@ -1103,11 +1104,23 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         {
                             model.Model = Convert.ToString(ojb);
                         }
-
-
+                        if (model.Model == "模型0" && model.BillDate != null && model.MinBillDate != null)
+                        {
+                            model.JSKaiPiaoDate = Convert.ToDateTime(model.BillDate.Value.Year + "-" + model.BillDate.Value.Month + "-1").AddMonths(1).AddDays(-1);
+                            //model.MinBillDate = model.JSKaiPiaoDate;
+                        }
+                       
 
                         if (model.SellFPTotal - model.InvoiceTotal != 0)
                         {
+                            if (model.Model == "模型0")
+                            {
+                                if (model.BillDate != null)
+                                {
+                                    model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
+                                }
+                                model.DaoKuanNumber = 1;
+                            }
                             //模型1 ,模型2,模型4 的计算如下
                             //预估到款日=计算开票日+经验账期（如尚无开票日，预估到款日也空白）；如发票额-实到账=0，预估到款日为空。
                             if (model.Model == "模型1" || model.Model == "模型2" || model.Model == "模型4")
@@ -1207,7 +1220,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         //第五次预估到款日的判定条件是仅有1次发票记录且70 %< 到款总比例 <= 90 %。
                         if (model.Model == "模型6")
                         {
-                            if (model.SellFPTotal - model.InvoiceTotal == 0 && model.SellFPTotal == 0)
+                            if (model.InvoiceTotal == 0)
                             {
                                 model.YuGuDaoKuanDate = model.PODate.AddDays(model.Avg_ZQ);
                                 model.DaoKuanNumber = 1;
@@ -1304,10 +1317,17 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         //如发票额 - 实到账 = 0，预估到款日为空
                         if (model.Model == "模型8")
                         {
-                            if (model.BillDate != null)
+                            if (model.SellFPTotal - model.InvoiceTotal != 0 && model.BillDate != null)
                             {
                                 model.YuGuDaoKuanDate = model.BillDate.Value.AddDays(model.Avg_ZQ);
                             }
+                        }
+
+                        //所有预付到款日期为空时，预付到款=0
+                        if (model.YuGuDaoKuanDate != null)
+                        {
+                            model.YuGuDaoKuanTotal = model.SellFPTotal - model.InvoiceTotal;
+                            model.YuGuDaoKuanDate = model.YuGuDaoKuanDate.Value.Date;
                         }
 
                         list.Add(model);

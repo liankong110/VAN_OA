@@ -29,5 +29,29 @@ namespace VAN_OA.Model.Fin
         public decimal ActualAddGuestProfit { get; set; }
 
 
+        public decimal BaiPromiseSellTotal
+        {
+            get
+            {
+                if (PromiseSellTotal != 0)
+                {
+                    return ActualPromiseSellTotal / PromiseSellTotal;
+                }
+                return 0;
+            }
+        }
+
+        public decimal BaiPromiseProfit
+        {
+            get
+            {
+                if (PromiseProfit != 0)
+                {
+                    return ActualPromiseProfit / PromiseProfit;
+                }
+                return 0;
+            }
+        }
+
     }
 }

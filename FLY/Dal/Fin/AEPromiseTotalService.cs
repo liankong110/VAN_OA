@@ -290,17 +290,123 @@ namespace VAN_OA.Dal.Fin
             if (ojb != null && ojb != DBNull.Value)
             {
                 model.Id = (int)ojb;
+                model.AE = dataReader["AE"].ToString();
+                model.YearNo = Convert.ToInt32(dataReader["YearNo"]);
+                model.PromiseSellTotal = Convert.ToDecimal(dataReader["PromiseSellTotal"]);
+                model.PromiseProfit = Convert.ToDecimal(dataReader["PromiseProfit"]);
+                model.AddGuestProfit = Convert.ToDecimal(dataReader["AddGuestProfit"]);
+                model.AddGuetSellTotal = Convert.ToDecimal(dataReader["AddGuetSellTotal"]);
             }
-            model.AE = dataReader["AE"].ToString();
-            model.YearNo = Convert.ToInt32(dataReader["YearNo"]);
-            model.PromiseSellTotal = Convert.ToDecimal(dataReader["PromiseSellTotal"]);
-            model.PromiseProfit = Convert.ToDecimal(dataReader["PromiseProfit"]);
-            model.AddGuestProfit = Convert.ToDecimal(dataReader["AddGuestProfit"]);
-            model.AddGuetSellTotal = Convert.ToDecimal(dataReader["AddGuetSellTotal"]);
+          
 
             return model;
         }
 
+
+        /// <summary>
+        /// 获得数据列表（比DataSet效率高，推荐使用）
+        /// </summary>
+        public List<VAN_OA.Model.Fin.AEPromiseTotal> GetListArrayReport(string strWhere,string year,string promiseSql)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.AppendFormat(@" select comname, AEPromiseTotal.Id,YearNo,TB.AE,Department,PromiseSellTotal,PromiseProfit,AddGuetSellTotal,AddGuestProfit,goodSellTotal,InvoTotal,goodTotal,
+new_goodSellTotal, new_InvoTotal, new_goodTotal from(
+select AE,SUM(goodSellTotal) AS goodSellTotal,SUM(InvoTotal) AS InvoTotal,SUM(goodTotal) AS goodTotal from (
+select  sum(goodSellTotal) as goodSellTotal, isnull(avg(InvoTotal), 0) as InvoTotal, sum(goodTotal) + sum(t_goodTotalChas) as goodTotal, AE
+from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo = JXC_REPORT.PONo
+left
+join (select PoNo, SUM(Total) as InvoTotal from TB_ToInvoice  where TB_ToInvoice.state = '通过' group by PoNo) as newtable1
+on CG_POOrder.PONo = newtable1.PONo
+where ifzhui = 0  and CG_POOrder.Status = '通过'  and year(CG_POOrder.PODate)={0} and IsSpecial = 0
+ GROUP BY  AE ,CG_POOrder.PONo) AS ALLTB GROUP BY AE ) AS TB
+  LEFT JOIN
+  (
+select AE,SUM(new_goodSellTotal) AS new_goodSellTotal,SUM(new_InvoTotal) AS new_InvoTotal,SUM(new_goodTotal) AS new_goodTotal from (
+select sum(goodSellTotal) as new_goodSellTotal,isnull(avg(InvoTotal), 0) as new_InvoTotal,sum(goodTotal) + sum(t_goodTotalChas) as new_goodTotal, AE
+  from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo = JXC_REPORT.PONo
+left join(select PoNo, SUM(Total) as InvoTotal from TB_ToInvoice  where TB_ToInvoice.state = '通过' group by PoNo) as newtable1
+on CG_POOrder.PONo = newtable1.PONo
+where ifzhui = 0  and CG_POOrder.Status = '通过'  and year(CG_POOrder.PODate)={0} and IsSpecial = 0
+and GuestPro = 1
+  GROUP BY  AE,CG_POOrder.PONo ) AS NEWTB GROUP BY AE  ) AS TB2 ON TB.AE = TB2.AE
+  left join (select *from AEPromiseTotal where {1}) as AEPromiseTotal on AEPromiseTotal.AE = TB.AE 
+  left join tb_User on tb_User.loginName=TB.AE 
+left join TB_Company on TB_Company.ComCode=tb_User.CompanyCode", year, promiseSql);
+           
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+
+            strSql.Append(" order by TB.AE desc");
+            List<VAN_OA.Model.Fin.AEPromiseTotal> list = new List<VAN_OA.Model.Fin.AEPromiseTotal>();
+
+            int i = 1;
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader objReader = objCommand.ExecuteReader())
+                {
+                    while (objReader.Read())
+                    {
+                        var model = ReaderBind(objReader);
+
+                        object ojb;
+                        
+                        decimal invoTotal = 0;
+                        decimal goodTotal = 0;
+                       
+                        decimal new_invoTotal = 0;
+                        decimal new_goodTotal = 0;
+
+                        model.AE = objReader["AE"].ToString();
+                        ojb = objReader["goodSellTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ActualPromiseSellTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["invoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            invoTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["goodTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            goodTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["new_goodSellTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ActualAddGuetSellTotal = Convert.ToDecimal(ojb);
+                        }
+                       
+                        ojb = objReader["new_goodTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            new_goodTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["new_InvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            new_invoTotal = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["comname"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Company = Convert.ToString(ojb);
+                        }
+                        model.ActualPromiseProfit = invoTotal - goodTotal;
+                        model.ActualAddGuestProfit = new_invoTotal - new_goodTotal;
+                        model.NO = i++;
+                        model.YearNo = Convert.ToInt32(year);
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
 
 
     }

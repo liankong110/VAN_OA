@@ -188,6 +188,7 @@
                 <cc1:CalendarExtender ID="CalendarExtender6" PopupButtonID="ImageButton5" runat="server"
                     Format="yyyy-MM-dd" TargetControlID="txtBillDateTo">
                 </cc1:CalendarExtender>
+                <asp:CheckBox ID="cbWuKaiPiaoRi" runat="server"  Text="无最近开票日" AutoPostBack="True" OnCheckedChanged="cbWuKaiPiaoRi_CheckedChanged"/>
                   <br />
                 最近计算开票日:
                  <asp:TextBox ID="txtJSKaiPiaoDate" runat="server" Width="70px"></asp:TextBox>
@@ -209,7 +210,7 @@
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                  </asp:DropDownList>
-                <asp:TextBox ID="txtAvg_ZQ" runat="server" Width="80px"></asp:TextBox>
+                <asp:TextBox ID="txtAvg_ZQ" runat="server" Width="40px"></asp:TextBox>
 
                 最近实际到款日:
                   <asp:TextBox ID="txtShiJiDate" runat="server" Width="70px"></asp:TextBox>
@@ -233,8 +234,9 @@
                        <asp:ListItem Text="<=" Value="<="></asp:ListItem>
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                      <asp:ListItem Text="无" Value="无"></asp:ListItem>
                  </asp:DropDownList>
-                <asp:TextBox ID="txtDaoKuanNumber" runat="server" Width="80px"></asp:TextBox>
+                <asp:TextBox ID="txtDaoKuanNumber" runat="server" Width="40px"></asp:TextBox>
 
                 预估到款日期：
                   <asp:DropDownList ID="ddlYuGuDaoKuan_1" runat="server">
@@ -243,6 +245,7 @@
                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                       <asp:ListItem Text="无" Value="无"></asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtYuGuDaoKuan_1" runat="server" Width="80px"></asp:TextBox>
                      <asp:ImageButton ID="ImageButton10" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
@@ -311,7 +314,7 @@
             <td colspan="4">
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
-                    <%--<asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;--%>
+                    <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -552,4 +555,23 @@
      开票率：<asp:Label ID="lblAllFaPiaoLv" runat="server" Text="0" ForeColor="Red"></asp:Label>%  &nbsp; &nbsp;
       <br />
     预估到款合计:<asp:Label ID="lblYuGuDaoKuanTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
+      <br />  <br />
+    <br />
+    项目模型说明： 
+       <asp:GridView ID="gvModel" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
+           ShowFooter="false" Width="100%" AutoGenerateColumns="False"
+           ShowHeader="false"
+           Style="border-collapse: collapse;">
+           <Columns>
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+           </Columns>
+           <PagerStyle HorizontalAlign="Center" />
+           <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
+           <HeaderStyle CssClass="GV_header" BackColor="#336699" Height="24px" ForeColor="White"
+               HorizontalAlign="Center" />
+           <AlternatingRowStyle CssClass="InfoDetail2" BackColor="#FBFBFB" />
+           <RowStyle CssClass="InfoDetail1" />
+           <FooterStyle BackColor="#D7E8FF" />
+       </asp:GridView>
 </asp:Content>

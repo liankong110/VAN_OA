@@ -20,6 +20,25 @@ namespace VAN_OA.Dal.EFrom
 {
     public class tb_EFormService
     {
+        public string GetAllE_NoByGoods(string tableName)
+        {
+            string MaxCardNo = "";
+            string sql = string.Format("select  right('0000000000'+(convert(varchar,(convert(int,right(max(GoodProNo),4))+1))),4) FROM  {0} where GoodProNo like '{1}%';",
+                tableName, DateTime.Now.Year);
+
+            object objMax = DBHelp.ExeScalar(sql);
+            if (objMax != null && objMax.ToString() != "")
+            {
+                MaxCardNo = DateTime.Now.Year.ToString() + objMax.ToString();
+            }
+            else
+            {
+                MaxCardNo = DateTime.Now.Year.ToString() + "0001";
+            }
+
+            return MaxCardNo;
+        }
+
         public string GetAllE_No(string tableName)
         {
             string MaxCardNo = "";

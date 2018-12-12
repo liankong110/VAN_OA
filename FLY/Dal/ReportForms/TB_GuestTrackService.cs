@@ -2058,13 +2058,16 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
         }
 
 
-        public List<int> GetCurrentZhangQi()
+        public List<int> GetCurrentZhangQi(string ddlSelectYears, string ddlJidu)
         {
+            int year = Convert.ToInt32(ddlSelectYears);
+            int jidu = Convert.ToInt32(ddlJidu);
+
+
             List<int> keyValues = new List<int>();
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
-          
-            if (1 <= month && month <= 3)
+            
+
+            if (jidu == 1)
             {
                 keyValues.Add(1);
                 keyValues.Add(year);
@@ -2072,21 +2075,21 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
                 keyValues.Add(4);
                 keyValues.Add(year - 1);
             }
-            else if (4 <= month && month <= 6)
+            else if (jidu==2)
             {
                 keyValues.Add(2);
-                keyValues.Add(year);             
+                keyValues.Add(year);
                 keyValues.Add(1);
                 keyValues.Add(year);
             }
-            else if (7 <= month && month <= 9)
+            else if (jidu==3)
             {
                 keyValues.Add(3);
                 keyValues.Add(year);
                 keyValues.Add(2);
                 keyValues.Add(year);
             }
-            else if (10 <= month && month <= 12)
+            else if (jidu==4)
             {
                 keyValues.Add(4);
                 keyValues.Add(year);
@@ -2097,7 +2100,8 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
             return keyValues;
         }
 
-        public List<VAN_OA.Model.ReportForms.TB_GuestTrack> GetListArrayGuilei(string strWhere, string dllAddGuest, string ddlDiffMyGuestType, string dllDiffMyGuestPro)
+        public List<VAN_OA.Model.ReportForms.TB_GuestTrack> GetListArrayGuilei(string strWhere, string dllAddGuest, string ddlDiffMyGuestType, string dllDiffMyGuestPro
+            , string ddlSelectYears, string ddlJidu)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
@@ -2109,12 +2113,12 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
             strSql.Append(" from TB_GuestTrack left join tb_User on TB_GuestTrack.CreateUser=tb_User.ID");
             strSql.Append(" left join tb_User as AEUser on TB_GuestTrack.AE=AEUser.ID");
             strSql.Append(" left join tb_User as INSIDEUser on TB_GuestTrack.INSIDE=INSIDEUser.ID");
-            List<int> zhangqi = GetCurrentZhangQi();
+            List<int> zhangqi = GetCurrentZhangQi(ddlSelectYears, ddlJidu);
             strSql.AppendFormat(@" left join (
 select A.Id from 
 (SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{0}' and YearNo='{1}') AS A 
 LEFT JOIN (SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
-where A.SimpGuestName IS NULL
+where B.SimpGuestName IS NULL
 ) AS AA on AA.ID=TB_GuestTrack.ID", zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
 
             if (strWhere.Trim() != "")

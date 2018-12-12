@@ -17,6 +17,7 @@ using VAN_OA.Dal.JXC;
 using VAN_OA.Model;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
+using System.IO;
 
 namespace VAN_OA.JXC
 {
@@ -27,8 +28,13 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                TB_ModelService modelService = new TB_ModelService();              
+
+                this.gvModel.DataSource = modelService.GetListArray(""); ;
+                this.gvModel.DataBind();
+
                 txtYuGuDaoKuan_1.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                TB_ModelService modelService = new TB_ModelService();
+               
                 var _modelList = modelService.GetListArray("");
                 _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
                 ddlModel.DataSource = _modelList;
@@ -119,17 +125,14 @@ namespace VAN_OA.JXC
                 ddlUser.DataTextField = "LoginName";
                 ddlUser.DataValueField = "Id";
 
-                //                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='可导出'
-                //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='销售报表汇总') and sys_Object.AutoID is not null", Session["currentUserId"]);
-                //                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
-                //if (NewShowAll_textName("销售报表汇总", "可导出"))
-                //{
-                //    btnExcel.Visible = true;
-                //}
-                //else
-                //{
-                //    btnExcel.Visible = false;
-                //}
+                if (NewShowAll_textName("项目预收账款系统", "可导出"))
+                {
+                    btnExcel.Visible = true;
+                }
+                else
+                {
+                    btnExcel.Visible = false;
+                }
 
                 if (Request["PONo"] != null)
                 {
@@ -437,6 +440,10 @@ namespace VAN_OA.JXC
                 }
                 fuhao += string.Format(" and BillDate<='{0} 23:59:59'", txtBillDateTo.Text);
             }
+            if (cbWuKaiPiaoRi.Checked)
+            {
+                fuhao += string.Format(" and BillDate is null");
+            }
             //计算开票日
             if (txtJSKaiPiaoDate.Text != "")
             {
@@ -474,7 +481,7 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and MaxDaoKuanDate<='{0} 23:59:59'", txtShiJiDateTo.Text);
             }
             //经验账期
-            if (txtAvg_ZQ.Text != "")
+            if (ddlAvg_ZQ.Text != "-1")
             {
                 if (CommHelp.VerifesToNum(txtAvg_ZQ.Text) == false)
                 {
@@ -486,13 +493,13 @@ namespace VAN_OA.JXC
 
             //预估位序
             if (txtDaoKuanNumber.Text != "")
-            {   
+            {
                 if (CommHelp.VerifesToNum(txtDaoKuanNumber.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估位序 格式错误！');</script>");
                     return;
                 }
-               
+
             }
             //预估到款
             if (txtYuGuDaoKuan.Text != "")
@@ -560,6 +567,10 @@ namespace VAN_OA.JXC
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber != daoKuanNumber);
                 }
+                if (ddlDaoKuanNumber.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber ==null);
+                }
             }
 
             //预计到款
@@ -595,7 +606,16 @@ namespace VAN_OA.JXC
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate == daoKuanDate);
                 }
+                if (ddlYuGuDaoKuan_1.Text == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate != daoKuanDate);
+                }
+                if (ddlYuGuDaoKuan_1.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate == null);
+                }
             }
+
 
 
             //计算开票日
@@ -760,10 +780,20 @@ namespace VAN_OA.JXC
                     var lblDays = e.Row.FindControl("lblDays") as Label;
                     lblDays.Font.Underline = true;
                 }
-                if (m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now)
+                if (m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
                 {
                     e.Row.BackColor = System.Drawing.Color.Khaki;
                 }
+
+                //在模型8中我们发现最近开票日之后的到款已完全到款，这时候预估到款=0，我们的DELAY判定需要修正一下，按如下：
+                //预估到款日这列的日期，如 < 今天的日期且预估到款金额 > 0，说明这个项目付款有DELAY，请帮我把整个这一行的背景设置成土黄色。按此修正
+                if (m.Model == "模型8"&& m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now&&m.YuGuDaoKuanTotal>0)
+                {
+                    e.Row.BackColor = System.Drawing.Color.Khaki;
+                }
+
+
+
             }
         }
 
@@ -798,41 +828,57 @@ namespace VAN_OA.JXC
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
-
-            if (lblVisAllPONO.Text == "")
-            {
-                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('无信息可以导出！');</script>");
-
-                return;
-            }
-            var strSql = new StringBuilder();
-            strSql.Append("select JXC_REPORT.PONo as '项目编号',CG_POOrder.POName as '项目名称',JXC_REPORT.ProNo as '单号',PODate as '项目日期',Supplier as '客户名称',RuTime as '出库日期',");
-            strSql.Append(" goodInfo as '销售内容',GoodNum as '数量',GoodSellPrice as '出货单价',goodSellTotal as '销售额',GoodPrice as '单价成本',");
-            strSql.Append(" goodTotal as '总成本',t_GoodNums as '成本确认价',t_GoodTotalChas as '损失差额',maoli as '毛利润额',FPTotal as '发票号码' ");
-            strSql.Append(" FROM JXC_REPORT ");
-            strSql.AppendFormat(" left join CG_POOrder on JXC_REPORT.PONo=CG_POOrder.PONo and CG_POOrder.IFZhui=0 where JXC_REPORT.PONo in ({0}) order by JXC_REPORT.PONo ", lblVisAllPONO.Text);
+            gvMain.AllowPaging = false;
+            Show();
+            toExcel();
+            gvMain.AllowPaging = false;
+        }
 
 
 
-            System.Data.DataTable dt = DBHelp.getDataTable(strSql.ToString());
-            GridView gvOrders = new GridView();
-            gvOrders.RowDataBound += gvExvel_RowDataBound;
-            Response.Clear();
-            Response.ContentType = "application/vnd.ms-excel";
+        void toExcel()
+        {
             Response.Charset = "GB2312";
-            Response.AppendHeader("Content-Disposition", "attachment;filename=SellInfo.xls");
-            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");  //设置输出流为简体中文
-            this.EnableViewState = false;
-            Response.Write("<meta http-equiv=Content-Type content=\"text/html; charset=GB2312\">");
-            System.IO.StringWriter sw = new System.IO.StringWriter();
-            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(sw);
-            gvOrders.AllowPaging = false;
-            gvOrders.AllowSorting = false;
-            gvOrders.DataSource = dt;
-            gvOrders.DataBind();
-            gvOrders.RenderControl(hw);
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+
+            string fileName = "export.xls";
+            string style = @"<style> .text { mso-number-format:\@; } </script> ";
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            Response.ContentType = "application/excel";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            this.gvMain.RenderControl(htw);
+            Response.Write(style);
             Response.Write(sw.ToString());
             Response.End();
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            // Confirms that an HtmlForm control is rendered for
+
+            //为了保险期间还可以在这里加入判断条件防止HTML中已经存在该ID
+        }
+
+        protected void cbWuKaiPiaoRi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbWuKaiPiaoRi.Checked)
+            {
+                txtBillDate.Text = "";
+                txtBillDateTo.Text = "";
+                txtBillDate.Enabled = false;
+                txtBillDateTo.Enabled = false;
+                ImageButton4.Enabled = false;
+                ImageButton5.Enabled = false;
+            }
+            else
+            {
+                txtBillDate.Enabled = true;
+                txtBillDateTo.Enabled = true;
+                ImageButton4.Enabled = true;
+                ImageButton5.Enabled = true;
+            }
         }
     }
 }

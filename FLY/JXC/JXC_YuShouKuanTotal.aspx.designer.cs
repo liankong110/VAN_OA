@@ -346,6 +346,15 @@ namespace VAN_OA.JXC {
         protected global::AjaxControlToolkit.CalendarExtender CalendarExtender6;
         
         /// <summary>
+        /// cbWuKaiPiaoRi 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbWuKaiPiaoRi;
+        
+        /// <summary>
         /// txtJSKaiPiaoDate 控件。
         /// </summary>
         /// <remarks>
@@ -670,6 +679,15 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.Button btnSelect;
         
         /// <summary>
+        /// btnExcel 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnExcel;
+        
+        /// <summary>
         /// Panel2 控件。
         /// </summary>
         /// <remarks>
@@ -839,5 +857,14 @@ namespace VAN_OA.JXC {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblYuGuDaoKuanTotal;
+        
+        /// <summary>
+        /// gvModel 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvModel;
     }
 }

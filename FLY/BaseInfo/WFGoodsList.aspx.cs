@@ -249,12 +249,12 @@ namespace VAN_OA.BaseInfo
             object proId = DBHelp.ExeScalar(sql);
             if ((eformIdObj is DBNull) || eformIdObj == null)
             {
-                sql = "select ProNo from TB_Good where GoodId=" + gvList.DataKeys[e.NewEditIndex].Value;
+                sql = "select GoodProNo as ProNo from TB_Good where GoodId=" + gvList.DataKeys[e.NewEditIndex].Value;
                 var proNo = DBHelp.ExeScalar(sql);
                 string strProNo = "";
                 if (proNo is DBNull || proNo == null || proNo.ToString() == "")
                 {
-                    strProNo = new tb_EFormService().GetAllE_No("TB_Good");
+                    strProNo = new tb_EFormService().GetAllE_NoByGoods("TB_Good");
                     DBHelp.ExeCommand(string.Format(" update TB_Good set GoodProNo='{0}',GoodStatus='通过' where GoodId={1}", strProNo, gvList.DataKeys[e.NewEditIndex].Value));
                 }
                 else

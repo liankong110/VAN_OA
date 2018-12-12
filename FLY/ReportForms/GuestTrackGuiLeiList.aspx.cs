@@ -127,7 +127,8 @@ namespace VAN_OA.ReportForms
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') and state='通过') or TB_GuestTrack.id not in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
 
-            List<TB_GuestTrack> GuestTracks = this.GuestTrackSer.GetListArrayGuilei(sql, dllAddGuest.Text, ddlDiffMyGuestType.Text, dllDiffMyGuestPro.Text);
+            List<TB_GuestTrack> GuestTracks = this.GuestTrackSer.GetListArrayGuilei(sql, dllAddGuest.Text, ddlDiffMyGuestType.Text, dllDiffMyGuestPro.Text,
+                ddlSelectYears.Text, ddlJidu.Text);
             AspNetPager1.RecordCount = GuestTracks.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
             Session[Query] = QGuestTrack;

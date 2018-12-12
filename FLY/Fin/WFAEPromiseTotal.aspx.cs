@@ -153,7 +153,7 @@ namespace VAN_OA.Fin
                 {
                     ddlYear.Items.Add(new ListItem { Value = i.ToString(), Text = i.ToString() });
                 }
-                ddlYear.SelectedValue = (DateTime.Now.Year - 1).ToString();
+                ddlYear.SelectedValue = (DateTime.Now.Year).ToString();
 
                 VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService();
                 List<VAN_OA.Model.User> user = userSer.getAllUserByPOList("");
@@ -168,8 +168,8 @@ namespace VAN_OA.Fin
                     AEPromiseTotal model = this.aEPromiseTotalService.GetModel(Convert.ToInt32(base.Request["Id"]));
                     ddlUser.Text = model.AE;
                     ddlYear.Text = model.YearNo.ToString();
-                    txtAddGuestProfit.Text = model.ActualAddGuestProfit.ToString();
-                    txtAddGuetSellTotal.Text = model.ActualAddGuetSellTotal.ToString();
+                    txtAddGuestProfit.Text = model.AddGuestProfit.ToString();
+                    txtAddGuetSellTotal.Text = model.AddGuetSellTotal.ToString();
                     txtPromiseProfit.Text = model.PromiseProfit.ToString();
                     txtPromiseSellTotal.Text = model.PromiseSellTotal.ToString();
 

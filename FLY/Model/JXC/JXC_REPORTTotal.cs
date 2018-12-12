@@ -394,10 +394,8 @@ namespace VAN_OA.Model.JXC
         /// </summary>
         public decimal YuGuDaoKuanTotal
         {
-            get
-            {
-                return SellFPTotal - InvoiceTotal;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -413,7 +411,7 @@ namespace VAN_OA.Model.JXC
         /// <summary>
         /// 第一次到款日期
         /// </summary>
-        public DateTime? MinDaoKuanTime_ZQ{get;set;}
+        public DateTime? MinDaoKuanTime_ZQ { get; set; }
 
         /// <summary>
         /// 第一次到款日期

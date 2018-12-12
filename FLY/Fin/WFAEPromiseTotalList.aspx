@@ -6,7 +6,7 @@
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="2" style="height: 20px; background-color: #336699; color: White;">销售指标
+            <td colspan="6" style="height: 20px; background-color: #336699; color: White;">销售指标
             </td>
         </tr>
         <tr>
@@ -33,9 +33,9 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" align="right">
+            <td colspan="6" align="right">
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
-                <asp:Button ID="btnAdd" runat="server" Text="添加项公交卡" BackColor="Yellow" OnClick="btnAdd_Click" />
+                <asp:Button ID="btnAdd" runat="server" Text="添加销售指标" BackColor="Yellow" OnClick="btnAdd_Click" />
             </td>
         </tr>
     </table>
@@ -90,18 +90,28 @@
                 </ItemTemplate>
                 <ItemStyle HorizontalAlign="Center" Width="50px" />
             </asp:TemplateField>
-
+              <asp:TemplateField HeaderText="删除">
+                <ItemTemplate>
+                    <asp:ImageButton ID="btnDel" runat="server" ImageUrl="~/Image/IconDelete.gif" AlternateText="删除"
+                        CommandName="Delete" OnClientClick='return confirm( "确定删除吗？") ' />
+                </ItemTemplate>
+                <ItemStyle HorizontalAlign="Center" Width="50px" />
+            </asp:TemplateField>
             <asp:BoundField DataField="Company" HeaderText="公司名称" SortExpression="Company" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="YearNo" HeaderText="年份" SortExpression="YearNo" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="PromiseSellTotal" HeaderText="承诺销售额指标" SortExpression="PromiseSellTotal" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="ActualPromiseSellTotal" HeaderText="实际完成销售额指标" SortExpression="ActualPromiseSellTotal" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="PromiseProfit" HeaderText="承诺利润" SortExpression="PromiseProfit" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="ActualPromiseProfit" HeaderText="实际完成利润" SortExpression="ActualPromiseProfit" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="AddGuetSellTotal" HeaderText="利润达成率" SortExpression="AddGuetSellTotal" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="ActualAddGuetSellTotal" HeaderText="新客户承诺销售额" SortExpression="ActualAddGuetSellTotal" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="AddGuestProfit" HeaderText="新客户承诺利润" SortExpression="AddGuestProfit" ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="ActualAddGuestProfit" HeaderText="新客户实际利润" SortExpression="ActualAddGuestProfit" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="PromiseSellTotal" HeaderText="承诺销售额指标" SortExpression="PromiseSellTotal"  DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="ActualPromiseSellTotal" HeaderText="实际完成销售额指标" SortExpression="ActualPromiseSellTotal" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center" />
+              <asp:BoundField DataField="BaiPromiseSellTotal" HeaderText="销售额达成率" DataFormatString="{0:n2}" SortExpression="BaiPromiseSellTotal" ItemStyle-HorizontalAlign="Center" />
+
+            <asp:BoundField DataField="PromiseProfit" HeaderText="承诺利润" DataFormatString="{0:n2}" SortExpression="PromiseProfit" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="ActualPromiseProfit" HeaderText="实际完成利润" DataFormatString="{0:n2}" SortExpression="ActualPromiseProfit" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="BaiPromiseProfit" HeaderText="利润达成率" DataFormatString="{0:n2}" SortExpression="BaiPromiseProfit" ItemStyle-HorizontalAlign="Center" />
+
+            <asp:BoundField DataField="AddGuetSellTotal" HeaderText="新客户承诺销售额" DataFormatString="{0:n2}" SortExpression="AddGuetSellTotal" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="ActualAddGuetSellTotal" HeaderText="新客户实际销售额" DataFormatString="{0:n2}" SortExpression="ActualAddGuetSellTotal" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="AddGuestProfit" HeaderText="新客户承诺利润" DataFormatString="{0:n2}" SortExpression="AddGuestProfit" ItemStyle-HorizontalAlign="Center" />
+            <asp:BoundField DataField="ActualAddGuestProfit" HeaderText="新客户实际利润" DataFormatString="{0:n2}" SortExpression="ActualAddGuestProfit" ItemStyle-HorizontalAlign="Center" />
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#336699" Font-Bold="True" ForeColor="White" Font-Size="12px" />
