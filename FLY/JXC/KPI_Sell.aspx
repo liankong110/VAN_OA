@@ -270,25 +270,25 @@
                     ItemStyle-HorizontalAlign="Right" />
                 <asp:BoundField DataField="OldContractCount" HeaderText="老客户拜访次数" SortExpression="OldContractCount"
                     ItemStyle-HorizontalAlign="Right" />
-                <asp:BoundField DataField="POTotal" HeaderText="项目金额" DataFormatString="{0:n6}"
+                <asp:BoundField DataField="POTotal" HeaderText="项目金额" DataFormatString="{0:n2}"
                     SortExpression="POTotal" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="SellTotal" HeaderText="销售总金额" DataFormatString="{0:n6}"
+                <asp:BoundField DataField="SellTotal" HeaderText="销售总金额" DataFormatString="{0:n2}"
                     SortExpression="SellTotal" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="InvoiceTotal" HeaderText="到账总金额" DataFormatString="{0:n6}"
+                <asp:BoundField DataField="InvoiceTotal" HeaderText="到账总金额" DataFormatString="{0:n2}"
                     SortExpression="InvoiceTotal" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="ProfitTotal" HeaderText="项目总利润" DataFormatString="{0:n6}"
+                <asp:BoundField DataField="ProfitTotal" HeaderText="项目总利润" DataFormatString="{0:n2}"
                     SortExpression="ProfitTotal" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
 
                 <asp:BoundField DataField="LastProfitTotal" HeaderText="实际总利润" SortExpression="LastProfitTotal"
-                    DataFormatString="{0:n6}" ItemStyle-HorizontalAlign="Right">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right">
                     <ItemStyle HorizontalAlign="Right"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="KP_Percent" HeaderText="开票率%" SortExpression="KP_Percent"

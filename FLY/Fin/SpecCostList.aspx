@@ -48,12 +48,29 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4" align="right">
+            <td colspan="4">
+                <div >
+                        <div style="display:inline-block;">
+                项目财务成本账期:<asp:TextBox ID="txtZhangQi" runat="server" Width="50"></asp:TextBox>天
+                财务成本测算点:<asp:TextBox ID="txtCeSuanDian" runat="server" Width="50"></asp:TextBox>
+                财务成本月利率:<asp:TextBox ID="txtMonthLiLv" runat="server" Width="50"></asp:TextBox>
+                项目类别：    <asp:CheckBox ID="cbAll" runat="server" Text="全部" AutoPostBack="true" OnCheckedChanged="cbAll_CheckedChanged" />
+                            </div>
+
+                     <div style="display:inline-block;">
+                  <asp:CheckBoxList ID="cbListPoType" CssClass="ckblstEffect" runat="server" DataTextField="BasePoType"
+                                DataValueField="Id" RepeatDirection="Horizontal">
+                            </asp:CheckBoxList>
+             </div>
+                          <div style="display:inline-block;">
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " Enabled="false" BackColor="Yellow"
                     OnClick="btnSelect_Click" />&nbsp;
                 <asp:Button ID="btnSave" runat="server" Text="保存" BackColor="Yellow" Enabled="false"
                     OnClick="btnSave_Click" />&nbsp;
                 <asp:Button ID="Button1" runat="server" Text="返回" BackColor="Yellow" OnClick="Button1_Click" />
+                               </div>
+                </div>
+
             </td>
         </tr>
     </table>
@@ -86,7 +103,7 @@
                 当月值
             </td>
             <td style="width: 20%;">
-                系统值
+                系统值(<asp:Label ID="lblYear" runat="server" Text=""></asp:Label>至<asp:Label ID="lblMonth" runat="server" Text=""></asp:Label>)
             </td>
             <td style="width: 20%;">
                 修正数值
@@ -111,7 +128,12 @@
               {
                   xitong = ViewState["OverTime"].ToString();
                   month = ViewState["OverTimeMonth"].ToString();
-              }                 
+              }   
+              if (m.CostType == "财务成本")
+              {
+                  xitong = ViewState["yearGoodTotal"].ToString();
+                  month = ViewState["monthGoodTotal"].ToString();
+              }   
             %>
             <td>
                 <%= month %>

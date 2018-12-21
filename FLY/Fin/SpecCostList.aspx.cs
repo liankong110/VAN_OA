@@ -24,6 +24,10 @@ namespace VAN_OA.Fin
 
         protected void btnSelect_Click(object sender, EventArgs e)
         {
+            if (Check() == false)
+            {
+                return;
+            }
             Show();
             btnSave.Enabled = true;
         }
@@ -32,6 +36,25 @@ namespace VAN_OA.Fin
             Show();
         }
 
+        private bool Check()
+        {
+            if (CommHelp.VerifesToNum(txtZhangQi.Text) == false||Convert.ToDecimal(txtZhangQi.Text)<0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目财务成本账期 格式有问题！');</script>");
+                return false;
+            }
+            if (CommHelp.VerifesToNum(txtCeSuanDian.Text) == false || Convert.ToDecimal(txtCeSuanDian.Text) < 0 || Convert.ToDecimal(txtCeSuanDian.Text) >1)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('财务成本测算点 格式有问题！');</script>");
+                return false;
+            }
+            if (CommHelp.VerifesToNum(txtMonthLiLv.Text) == false || Convert.ToDecimal(txtMonthLiLv.Text) < 0 || Convert.ToDecimal(txtMonthLiLv.Text) > 1)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('财务成本月利率 格式有问题！');</script>");
+                return false;
+            }
+            return true;
+        }
         private void Show()
         {
             var comModel = new Dal.BaseInfo.TB_CompanyService().GetModel(Convert.ToInt32(ddlCompany.Text));
@@ -63,7 +86,48 @@ and guestDai ='{2}' and tb_OverTime.id in (select allE_id from tb_EForm where pr
 select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", ddlYear.Text, ddlMonth.Text, ddlUser.SelectedItem.Text);
 
             ViewState["OverTimeMonth"] = DBHelp.ExeScalar(sql);
-         
+            GetGoodTotal();
+
+            lblYear.Text = string.Format("{0}-01",ddlYear.Text);
+            lblMonth.Text= string.Format("{0}-{1}", ddlYear.Text,ddlMonth.Text);
+        }
+
+
+        /// <summary>
+        /// 获取项目总成本信息
+        /// </summary>
+        private void GetGoodTotal()
+        {
+            string resultSql = "";
+            string sql = "where ifzhui=0  and CG_POOrder.Status='通过'";
+            if (cbAll.Checked == false)
+            {
+                string ids = "";
+                foreach (ListItem item in cbListPoType.Items)
+                {
+                    if (item.Selected)
+                    {
+                        ids += item.Value + ",";
+                    }
+                }
+                if (!string.IsNullOrEmpty(ids))
+                {
+                    sql += " and CG_POOrder.POType in (" + ids.Trim(',') + ")";
+                }              
+            }
+            sql +=string.Format( " and CG_POOrder.AE='{0}' and IsSpecial=0  ",ddlUser.SelectedItem.Text);
+            sql += string.Format(" and year(CG_POOrder.PODate)={0}",ddlYear.Text);
+            resultSql = string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};",sql);
+
+            sql += string.Format(" and month(CG_POOrder.PODate)={0}", ddlMonth.Text);
+            resultSql += string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};", sql);
+
+            var ds= DBHelp.getDataSet(resultSql);
+            var year = ds.Tables[0];
+            var month = ds.Tables[1];
+
+            ViewState["yearGoodTotal"] = year.Rows.Count > 0 ? year.Rows[0][0] : 0;
+            ViewState["monthGoodTotal"] = month.Rows.Count > 0 ? month.Rows[0][0] : 0;
         }
 
         protected void gvList_DataBinding(object sender, EventArgs e)
@@ -113,6 +177,21 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                 {
                     btnSave.Visible = false;
                 }
+                List<TB_BasePoType> basePoTypeList = new TB_BasePoTypeService().GetListArray("");
+                cbListPoType.DataSource = basePoTypeList;
+                cbListPoType.DataBind();
+                cbListPoType.DataTextField = "BasePoType";
+                cbListPoType.DataValueField = "Id";
+
+                TB_ProjectCostService _projectCostService = new TB_ProjectCostService();
+                var projectCosts=_projectCostService.GetListArray("");
+                if (projectCosts.Count > 0)
+                {
+                    var model = projectCosts[0];
+                    txtZhangQi.Text = model.ZhangQi.ToString();
+                    txtCeSuanDian.Text = model.CeSuanDian.ToString();
+                    txtMonthLiLv.Text = model.MonthLiLv.ToString();
+                }
             }
         }
 
@@ -161,6 +240,22 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
             else
             {
                 btnSelect.Enabled = false;
+            }
+        }
+
+        protected void cbAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbAll.Checked)
+            {
+                foreach (ListItem item in cbListPoType.Items)
+                {
+                    item.Selected = false;
+                }
+                cbListPoType.Enabled = false;
+            }
+            else
+            {
+                cbListPoType.Enabled = true;
             }
         }
     }

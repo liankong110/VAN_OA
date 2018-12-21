@@ -597,6 +597,11 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('新票据号必填！');</script>");
                             return false;
                         }
+                        if (txtSecondFPNo.Text.Trim() == txtFristFPNo.Text.Trim())
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('原票据号和新票据号不能一样！');</script>");
+                            return false;
+                        }
                         string fristFpNo = txtFristFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtFristFPNo.Text;
                         string secondFpNo = txtSecondFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtSecondFPNo.Text;
 

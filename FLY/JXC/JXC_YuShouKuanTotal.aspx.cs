@@ -481,14 +481,14 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and MaxDaoKuanDate<='{0} 23:59:59'", txtShiJiDateTo.Text);
             }
             //经验账期
-            if (ddlAvg_ZQ.Text != "-1")
+            if (ddlAvg_ZQ.Text != "-1"&& ddlAvg_ZQ.Text != "无")
             {
                 if (CommHelp.VerifesToNum(txtAvg_ZQ.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('经验账期 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and AVG_ZQ{0}{1}", ddlAvg_ZQ.Text, txtAvg_ZQ.Text.Trim());
+                fuhao += string.Format(" and isnull(AVG_ZQ,0){0}{1}", ddlAvg_ZQ.Text, txtAvg_ZQ.Text.Trim());
             }
 
             //预估位序
@@ -537,8 +537,29 @@ namespace VAN_OA.JXC
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal == jingLi);
                 }
+                if (ddlYuGuDaoKuan.Text == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal != jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal == 0);
+                }
             }
-
+            if (ddlDELAY.Text == "1")
+            { 
+                pOOrderList = pOOrderList.FindAll(m => (m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                ||(m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0));
+            }
+            if (ddlDELAY.Text == "2")
+            {
+                pOOrderList = pOOrderList.FindAll(m =>!( (m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                 || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)));
+            }
+            if (ddlAvg_ZQ.Text == "无")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.Avg_ZQ == 0);
+            }
             if (txtDaoKuanNumber.Text != "")
             {
                 int daoKuanNumber = Convert.ToInt32(txtDaoKuanNumber.Text);
@@ -590,14 +611,16 @@ namespace VAN_OA.JXC
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate > daoKuanDate);
                 }
-                if (ddlYuGuDaoKuan_1.Text == "<")
-                {
-                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate < daoKuanDate);
-                }
                 if (ddlYuGuDaoKuan_1.Text == ">=")
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate >= daoKuanDate);
                 }
+
+                if (ddlYuGuDaoKuan_1.Text == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate < daoKuanDate);
+                }
+                
                 if (ddlYuGuDaoKuan_1.Text == "<=")
                 {
                     pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate <= daoKuanDate);

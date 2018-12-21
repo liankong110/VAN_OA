@@ -170,10 +170,12 @@
                 预估到款:
                   <asp:DropDownList ID="ddlYuGuDaoKuan" runat="server">
                       <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
-                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
                       <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                      <asp:ListItem Text="<=" Value="<="></asp:ListItem>
                       <asp:ListItem Text="=" Value="="></asp:ListItem>
-                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>                    
                   </asp:DropDownList>
                 <asp:TextBox ID="txtYuGuDaoKuan" runat="server" Width="80px"></asp:TextBox>
 
@@ -188,8 +190,8 @@
                 <cc1:CalendarExtender ID="CalendarExtender6" PopupButtonID="ImageButton5" runat="server"
                     Format="yyyy-MM-dd" TargetControlID="txtBillDateTo">
                 </cc1:CalendarExtender>
-                <asp:CheckBox ID="cbWuKaiPiaoRi" runat="server"  Text="无最近开票日" AutoPostBack="True" OnCheckedChanged="cbWuKaiPiaoRi_CheckedChanged"/>
-                  <br />
+                <asp:CheckBox ID="cbWuKaiPiaoRi" runat="server" Text="无最近开票日" AutoPostBack="True" OnCheckedChanged="cbWuKaiPiaoRi_CheckedChanged" />
+                <br />
                 最近计算开票日:
                  <asp:TextBox ID="txtJSKaiPiaoDate" runat="server" Width="70px"></asp:TextBox>
                 <asp:ImageButton ID="ImageButton6" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
@@ -205,10 +207,13 @@
                 经验账期:
                  <asp:DropDownList ID="ddlAvg_ZQ" runat="server">
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
-                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
-                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
-                     <asp:ListItem Text="=" Value="="></asp:ListItem>
-                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                      <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                      <asp:ListItem Text="=" Value="="></asp:ListItem>
+                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                      
                  </asp:DropDownList>
                 <asp:TextBox ID="txtAvg_ZQ" runat="server" Width="40px"></asp:TextBox>
 
@@ -225,33 +230,41 @@
                 </cc1:CalendarExtender>
 
 
-                  预估位序:
+                预估位序:
                  <asp:DropDownList ID="ddlDaoKuanNumber" runat="server">
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
-                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
-                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
-                       <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
-                      <asp:ListItem Text="无" Value="无"></asp:ListItem>
+                     <asp:ListItem Text="无" Value="无"></asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtDaoKuanNumber" runat="server" Width="40px"></asp:TextBox>
 
                 预估到款日期：
                   <asp:DropDownList ID="ddlYuGuDaoKuan_1" runat="server">
-                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
-                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
-                       <asp:ListItem Text="无" Value="无"></asp:ListItem>
-                 </asp:DropDownList>
+                      <asp:ListItem Text="无" Value="无"></asp:ListItem>
+                  </asp:DropDownList>
                 <asp:TextBox ID="txtYuGuDaoKuan_1" runat="server" Width="80px"></asp:TextBox>
-                     <asp:ImageButton ID="ImageButton10" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                <asp:ImageButton ID="ImageButton10" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
                 <cc1:CalendarExtender ID="CalendarExtender11" PopupButtonID="ImageButton10" runat="server"
                     Format="yyyy-MM-dd" TargetControlID="txtYuGuDaoKuan_1">
                 </cc1:CalendarExtender>
+                DELAY：
+                <asp:DropDownList ID="ddlDELAY" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                    <asp:ListItem Text="DELAY" Value="1"></asp:ListItem>
+                    <asp:ListItem Text="NO DELAY" Value="2"></asp:ListItem>
+                </asp:DropDownList>
                 <br />
                 <asp:CheckBox ID="CheckBox1" runat="server" Text="初始状态" />
                 <asp:CheckBox ID="CheckBox2" runat="server" Text="已交付" />
@@ -405,11 +418,11 @@
                     SortExpression="goodSellTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                  <asp:BoundField DataField="Model" HeaderText="模型"
+                <asp:BoundField DataField="Model" HeaderText="模型"
                     SortExpression="Model" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                
+
                 <asp:BoundField DataField="SumPOTotal" HeaderText="项目金额" DataFormatString="{0:n2}"
                     SortExpression="SumPOTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
@@ -418,19 +431,19 @@
                     SortExpression="SellFPTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                  
-                  <asp:BoundField DataField="MinFPTime" HeaderText="首次开票日"
+
+                <asp:BoundField DataField="MinFPTime" HeaderText="首次开票日"
                     SortExpression="MinFPTime" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                
+
 
                 <asp:BoundField DataField="BillDate" HeaderText="最近开票日"
                     SortExpression="BillDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                
-                  <asp:BoundField DataField="MinBillDate" HeaderText="首次计算开票日"
+
+                <asp:BoundField DataField="MinBillDate" HeaderText="首次计算开票日"
                     SortExpression="MinBillDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -468,11 +481,11 @@
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                   <asp:BoundField DataField="MinDaoKuanTime_ZQ" HeaderText="首次实际到款日" SortExpression="MinDaoKuanTime_ZQ" DataFormatString="{0:yyyy-MM-dd}"
+                <asp:BoundField DataField="MinDaoKuanTime_ZQ" HeaderText="首次实际到款日" SortExpression="MinDaoKuanTime_ZQ" DataFormatString="{0:yyyy-MM-dd}"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                  <asp:BoundField DataField="SecondDaoKuanDate" HeaderText="其次实际到款日" SortExpression="SecondDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
+                <asp:BoundField DataField="SecondDaoKuanDate" HeaderText="其次实际到款日" SortExpression="SecondDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -480,8 +493,8 @@
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-             
-                 <asp:BoundField DataField="DaoKuanNumber" HeaderText="预估位序" 
+
+                <asp:BoundField DataField="DaoKuanNumber" HeaderText="预估位序"
                     SortExpression="DaoKuanNumber" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -491,7 +504,7 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
 
-                  <asp:TemplateField HeaderText="实际账期">
+                <asp:TemplateField HeaderText="实际账期">
                     <ItemTemplate>
                         <asp:Label ID="lblZQ" runat="server" Text='<% #Eval("ZQ") %>'></asp:Label>
                     </ItemTemplate>
@@ -555,7 +568,8 @@
      开票率：<asp:Label ID="lblAllFaPiaoLv" runat="server" Text="0" ForeColor="Red"></asp:Label>%  &nbsp; &nbsp;
       <br />
     预估到款合计:<asp:Label ID="lblYuGuDaoKuanTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
-      <br />  <br />
+    <br />
+    <br />
     <br />
     项目模型说明： 
        <asp:GridView ID="gvModel" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
@@ -563,8 +577,8 @@
            ShowHeader="false"
            Style="border-collapse: collapse;">
            <Columns>
-               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
-               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType" />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu" />
            </Columns>
            <PagerStyle HorizontalAlign="Center" />
            <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
