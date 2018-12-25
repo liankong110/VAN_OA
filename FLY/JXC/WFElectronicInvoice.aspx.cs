@@ -23,6 +23,18 @@ namespace VAN_OA.JXC
         {
             if (!IsPostBack)
             {
+                //TB_CompanyService comSer = new TB_CompanyService();
+                //var comList = comSer.GetListArray("");
+
+                //comList.Insert(0, new VAN_OA.Model.BaseInfo.TB_Company() { ComCode = "-1", ComName = "全部" });
+                //ddlCompany.DataSource = comList;
+                //ddlCompany.DataBind();
+
+                Province_CityService proList = new Province_CityService();
+                var proviceList = proList.ProvinceList();
+                ddlProvince.DataSource = proviceList;
+                ddlProvince.DataBind();
+
                 TB_ModelService modelService = new TB_ModelService();
                 var _modelList = modelService.GetListArray("");
                 _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
@@ -77,6 +89,18 @@ namespace VAN_OA.JXC
                 }
                 sumWhere += string.Format(" and isnull(sum(ActPay),0){0} {1}", ddlTotal.Text, txtBigTotal.Text.Trim());
             }
+            if (txtPFNo.Text.Trim() != "")
+            {
+                sql += string.Format(" and LastFPNo like '%{0}%'", txtPFNo.Text.Trim());
+            }
+            //if (txtNotPFNo.Text.Trim() != "")
+            //{
+            //    sql += string.Format(" and LastFPNo <>'{0}'", txtNotPFNo.Text.Trim());
+            //}
+            if (txtSupplierBrandName.Text.Trim() != "")
+            {
+                sql += string.Format(" and SupplierBrandName like '%{0}%'", txtSupplierBrandName.Text.Trim());
+            }
 
             if (txtPONo.Text.Trim() != "")
             {
@@ -120,6 +144,10 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and AE='{0}'", ddlUser.SelectedItem.Text);
             }
 
+            //if (ddlCompany.Text != "-1")
+            //{
+            //    sql += string.Format(" and AE='{0}'", ddlCompany.SelectedItem.Text);
+            //}
             if (!string.IsNullOrEmpty(txtSupplierName.Text))
             {
                 if (cbSupplierName.Checked == false)
@@ -153,6 +181,14 @@ namespace VAN_OA.JXC
             if (ddlPeculiarity.Text != "全部")
             {
                 sql += string.Format(" and Peculiarity='{0}'", ddlPeculiarity.Text);
+            }
+            if (ddlProvince.Text != "")
+            {
+                sql += string.Format(" and Province='{0}'", ddlProvince.SelectedItem.Text);
+            }
+            if (ddlCity.Text != "")
+            {
+                sql += string.Format(" and City='{0}'", ddlCity.SelectedItem.Text);
             }
             var list = this.electronicInvoiceSer.GetReport(sql, sumWhere);
 
@@ -404,6 +440,15 @@ namespace VAN_OA.JXC
             model.ActPay = list.Sum(t => t.ActPay);
             Session["ElectronicInvoice"] = model;
             Response.Write("<script>window.open('/Fin/EI_InCome.aspx','_blank')</script>");
+        }
+
+        protected void ddlProvince_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Province_CityService proList = new Province_CityService();
+            var cityList = proList.CityList(ddlProvince.Text);
+            cityList.Insert(0, "");
+            ddlCity.DataSource = cityList;
+            ddlCity.DataBind();
         }
     }
 }

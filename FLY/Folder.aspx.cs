@@ -68,7 +68,7 @@ namespace VAN_OA
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            if (tvMain.SelectedNode == null || tvMain.SelectedNode.Depth <= 0)
+            if (tvMain.SelectedNode == null || tvMain.SelectedNode.Depth < 0)
             {
                 ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('请选择一个上级文件夹节点进行添加！');"), true);
                 // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请选择一个文件夹节点进行编辑！');</script>");

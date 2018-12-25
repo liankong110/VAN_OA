@@ -288,8 +288,8 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                         }
                         string fristFpNo = txtFristFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtFristFPNo.Text;
 
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1}  AND Status<>'不通过'", fristFpNo, Request["allE_id"]);
-                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1} AND Status<>'不通过' and CreateName<>'admin'", fristFpNo, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1}  AND Status<>'不通过' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1} AND Status<>'不通过' and CreateName<>'admin' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, Request["allE_id"]);
 
                     }
                     if (txtSecondFPNo.Enabled)
@@ -307,8 +307,8 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                         string fristFpNo = txtFristFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtFristFPNo.Text;
                         string secondFpNo = txtSecondFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtSecondFPNo.Text;
 
-                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where  (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过'", fristFpNo, secondFpNo, Request["allE_id"]);
-                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过' and CreateName<>'admin'", fristFpNo, secondFpNo, Request["allE_id"]);
+                        checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where  (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, secondFpNo, Request["allE_id"]);
+                        checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过' and CreateName<>'admin' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, secondFpNo, Request["allE_id"]);
                     }
                     if (checkFPNo != "")
                     {
@@ -550,7 +550,12 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                     }
                     else
                     {
-                        txtSecondFPNo.Enabled = true;
+                        VAN_OA.Model.User use = Session["userInfo"] as VAN_OA.Model.User;
+                        if (use != null&&use.LoginName== "车惠")
+                        {
+                            txtSecondFPNo.Enabled = true;
+                        }
+                       
                     }
                 }
             }

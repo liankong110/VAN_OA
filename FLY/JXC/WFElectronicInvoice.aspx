@@ -69,7 +69,7 @@
         </tr>
 
         <tr>
-            <td colspan="2">
+            <td colspan="4">
                   <asp:TextBox ID="txtSmallTotal" runat="server" Width="100PX"></asp:TextBox>
                  <asp:DropDownList ID="ddlLeftTotal" runat="server">
                     <asp:ListItem Text="=" Value="="></asp:ListItem>
@@ -91,14 +91,24 @@
                       <asp:ListItem Text="总代理" Value="总代理"></asp:ListItem>
                        <asp:ListItem Text="个人" Value="个人"></asp:ListItem>
                 </asp:DropDownList>
+
+                票号：<asp:TextBox ID="txtPFNo" runat="server" Width="100PX"></asp:TextBox>
+             <%--   形式票号：<asp:TextBox ID="txtNotPFNo" runat="server" Width="100PX"></asp:TextBox>--%>
+                开户行：<asp:TextBox ID="txtSupplierBrandName" runat="server" Width="100PX"></asp:TextBox>
+                省份：   <asp:DropDownList ID="ddlProvince" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlProvince_SelectedIndexChanged">
+                </asp:DropDownList>
+                <asp:DropDownList ID="ddlCity" runat="server">
+                </asp:DropDownList>                
+                
                 </td>
-            <td colspan="2">
-                <div align="right">
+            
+        </tr>
+        <tr>
+            <td colspan="4"> <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;&nbsp;
                      <asp:Button ID="btnYuLan" runat="server" Text=" 合并预览 " BackColor="Yellow" OnClick="btnYuLan_Click" Enabled="false" />&nbsp;&nbsp;&nbsp;&nbsp;
                      <asp:Button ID="btbPrint" runat="server" Text=" 合并打印进账单 " BackColor="Yellow" OnClick="btbPrint_Click" Enabled="false"/>&nbsp;&nbsp;&nbsp;&nbsp;
-                </div>
-            </td>
+                </div></td>
         </tr>
     </table>
 
