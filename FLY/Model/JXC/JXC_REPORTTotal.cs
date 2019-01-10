@@ -428,6 +428,30 @@ namespace VAN_OA.Model.JXC
         /// 到款次数 --第几次到款
         /// </summary>
         public int? DaoKuanNumber { get; set; }
+
+        /// <summary>
+        /// 财务成本
+        /// </summary>
+        public decimal CaiWuChengBen { get; set; }
+        /// <summary>
+        /// 第一次出库时间
+        /// </summary>
+        public DateTime? MinOutDate { get; internal set; }
+
+        /// <summary>
+        /// 新利润扣除=利润扣除+财务成本
+        /// </summary>
+        public decimal NewKouLiRun { get; set; }
+
+        /// <summary>
+        /// 新帐内利润=帐内利润-财务成本
+        /// </summary>
+        public decimal NewNo_KouLiRun { get; set; }
+
+        /// <summary>
+        /// 财务成本计量
+        /// </summary>
+        public string ChengBenJiLiangString { get; set; }
     }
 
     public class InvoiceSimpDetail

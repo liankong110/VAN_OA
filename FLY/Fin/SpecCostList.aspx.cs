@@ -8,13 +8,14 @@ using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model.BaseInfo;
 using VAN_OA.Dal.Fin;
 using VAN_OA.Model.Fin;
-
-
+using VAN_OA.Model.JXC;
+using VAN_OA.Dal.JXC;
 
 namespace VAN_OA.Fin
 {
     public partial class SpecCostList : BasePage
     {
+        JXC_REPORTService POSer = new JXC_REPORTService();
         protected List<FIN_Property> propertyList = new List<FIN_Property>();
         FIN_PropertyService FIN_PropertyService = new FIN_PropertyService();
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -98,36 +99,151 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
         /// </summary>
         private void GetGoodTotal()
         {
-            string resultSql = "";
-            string sql = "where ifzhui=0  and CG_POOrder.Status='通过'";
-            if (cbAll.Checked == false)
+            //string resultSql = "";
+            //string sql = "where ifzhui=0  and CG_POOrder.Status='通过'";
+            //if (cbAll.Checked == false)
+            //{
+            //    string ids = "";
+            //    foreach (ListItem item in cbListPoType.Items)
+            //    {
+            //        if (item.Selected)
+            //        {
+            //            ids += item.Value + ",";
+            //        }
+            //    }
+            //    if (!string.IsNullOrEmpty(ids))
+            //    {
+            //        sql += " and CG_POOrder.POType in (" + ids.Trim(',') + ")";
+            //    }              
+            //}
+            //sql +=string.Format( " and CG_POOrder.AE='{0}' and IsSpecial=0  ",ddlUser.SelectedItem.Text);
+            //sql += string.Format(" and year(CG_POOrder.PODate)={0}",ddlYear.Text);
+            //resultSql = string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};",sql);
+
+            //sql += string.Format(" and month(CG_POOrder.PODate)={0}", ddlMonth.Text);
+            //resultSql += string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};", sql);
+
+            //var ds= DBHelp.getDataSet(resultSql);
+            //var year = ds.Tables[0];
+            //var month = ds.Tables[1];
+
+            var sql = string.Format("and year(CG_POOrder.PODate)={1} and IsSpecial=0 and CG_POOrder.AE='{0}' ",
+                ddlUser.SelectedItem.Text, ddlYear.Text);
+            List<JXC_REPORTTotal> pOOrderList = this.POSer.NEW_GetListArray_Total(sql, "", "where 1=1 ", DateTime.Now.Date, "", "", "", "", "-1", -1);
+
+
+            if (pOOrderList.Count > 0)
             {
-                string ids = "";
+                var D = Convert.ToInt32(txtZhangQi.Text);
+                var P = Convert.ToSingle(txtCeSuanDian.Text);
+                var R = Convert.ToDecimal(txtMonthLiLv.Text);
+
+
+                //计算财务成本为0 的项目
+                var zeroList = POSer.GetPoNoList(D, P);
+                //财务成本不为0的 项目
+                var invoiceList = POSer.GetInvoiceList(D, P);
+                // 计算财务成本，按首次出库单开具日期 + D + 1这一天开始计算，这天定义为T
+                //IF T > 今日的日期,财务成本 = 0
+                // ELSE
+                //     IF T的到款金额 >= 项目金额 * P ，财务成本 = 0
+                //       ELSE
+                //        财务成本 = 0
+                //        FOR I = 0 TO 100
+                //        v = T + 30 * i
+                //           IF v> 今日的日期  v = 今日的日期；
+                //X = IIF(（项目金额 * P - 截止v的到款总金额）*R > 0, （项目金额 * P - 截止v的到款总金额）*R * IIF(该项目类别属于勾选的财务成本考核项目类别, 1, 0), 0)； 财务成本 = 财务成本 + X；EXIT
+                //           
+                //X = IIF(（项目金额 * P - 截止v的到款总金额）*R > 0, （项目金额 * P - 截止v的到款总金额）*R * IIF(该项目类别属于勾选的财务成本考核项目类别, 1, 0), 0)
+                //        财务成本 = 财务成本 + X
+                //        NEXT I
+                //     ENDIF
+
+                //获取勾选财务成本考核项的信息
+
+
+                string selectedPoType = "";
                 foreach (ListItem item in cbListPoType.Items)
                 {
                     if (item.Selected)
                     {
-                        ids += item.Value + ",";
+                        selectedPoType += item.Value + ",";
                     }
                 }
-                if (!string.IsNullOrEmpty(ids))
+                selectedPoType = selectedPoType.Trim(',');
+                //if (selectedPoType == ""&& cbAll.Checked==false)
+                //{
+                //    selectedPoType = "1,2,3";
+                //}
+                if (cbAll.Checked)
                 {
-                    sql += " and CG_POOrder.POType in (" + ids.Trim(',') + ")";
-                }              
+                    selectedPoType = "1,2,3";
+                }
+                foreach (var model in pOOrderList)
+                {
+                    decimal chengben = 0;
+                    if (!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype))
+                    {
+                        var T = model.MinOutDate.Value.AddDays(D + 1);
+
+                        for (int i = 1; i <= 100; i++)
+                        {
+                            var v = T.AddDays(30 * i);
+
+                            if (v > DateTime.Now)
+                            {
+
+                                //IF v> 今日的日期  v1 = 今日的日期；X = IIF(（项目金额 * P - 截止v1的到款
+                                //总金额）*R > 0, （项目金额 * P - 截止v1的到款总金额）*R *（30 - v + v1）/ 30 * IIF(该项
+                                //目类别属于勾选的财务成本考核项目类别, 1, 0), 0)； 财务成本 = 财务成本 + X；EXIT
+
+                                var v1 = DateTime.Now;
+                                //v = DateTime.Now;
+                                var invoiceTotal = invoiceList.FindAll(t => t.DaoKuanDate <= v1 && t.PoNo == model.PONo).Sum(t => t.Total);
+                                var X = (model.SumPOTotal * Convert.ToDecimal(P) - invoiceTotal) * R * (30 + (v1.Date - v).Days) / 30;
+                                if (X > 0)
+                                {
+                                    chengben = chengben + X;
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                var result = invoiceList.FindAll(t => t.DaoKuanDate <= v && t.PoNo == model.PONo);
+                                var invoiceTotal = result.Sum(t => t.Total);
+                                if (model.SumPOTotal * Convert.ToDecimal(P) <= invoiceTotal)
+                                {
+                                    if (result.Count > 0)
+                                    {
+                                        var v2 = result.Max(t => t.DaoKuanDate).AddDays(-1);
+                                        var v2_Total = invoiceList.FindAll(t => t.DaoKuanDate <= v2 && t.PoNo == model.PONo).Sum(t => t.Total);
+                                        if (v2_Total > 0)
+                                        {
+                                            var X2 = (model.SumPOTotal * Convert.ToDecimal(P) - v2_Total) * R * (30 + (v2.Date - v).Days) / 30;
+                                            if (X2 > 0)
+                                            {
+                                                chengben = chengben + X2;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                                var X = (model.SumPOTotal * Convert.ToDecimal(P) - invoiceTotal) * R;
+                                if (X > 0)
+                                {
+                                    chengben = chengben + X;
+                                }
+                            }
+                        }
+                    }
+                    model.CaiWuChengBen = chengben;
+                    model.NewKouLiRun = model.KouLiRun + model.CaiWuChengBen;
+                    model.NewNo_KouLiRun = model.No_KouLiRun + model.CaiWuChengBen;
+                }
             }
-            sql +=string.Format( " and CG_POOrder.AE='{0}' and IsSpecial=0  ",ddlUser.SelectedItem.Text);
-            sql += string.Format(" and year(CG_POOrder.PODate)={0}",ddlYear.Text);
-            resultSql = string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};",sql);
 
-            sql += string.Format(" and month(CG_POOrder.PODate)={0}", ddlMonth.Text);
-            resultSql += string.Format(" select  sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from CG_POOrder left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo  {0};", sql);
-
-            var ds= DBHelp.getDataSet(resultSql);
-            var year = ds.Tables[0];
-            var month = ds.Tables[1];
-
-            ViewState["yearGoodTotal"] = year.Rows.Count > 0 ? year.Rows[0][0] : 0;
-            ViewState["monthGoodTotal"] = month.Rows.Count > 0 ? month.Rows[0][0] : 0;
+            ViewState["yearGoodTotal"] = string.Format("{0:n5}", pOOrderList.Sum(t => t.CaiWuChengBen));
+            ViewState["monthGoodTotal"] = string.Format("{0:n5}", pOOrderList.Where(t=>t.PODate.Month==Convert.ToInt32(ddlMonth.Text)).Sum(t => t.CaiWuChengBen));
         }
 
         protected void gvList_DataBinding(object sender, EventArgs e)

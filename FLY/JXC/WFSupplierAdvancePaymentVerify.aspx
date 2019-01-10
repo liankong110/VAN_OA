@@ -195,6 +195,16 @@
                         <asp:Label ID="lblSupplierAllName" runat="server" Text='<%# Eval("SupplierAllName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
+                   <asp:TemplateField HeaderText="省份">
+                    <ItemTemplate>
+                        <asp:Label ID="lblProvince" runat="server" Text='<%# Eval("Province") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="城市">
+                    <ItemTemplate>
+                        <asp:Label ID="lblCity" runat="server" Text='<%# Eval("City") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="含税">
                     <ItemTemplate>
                         <asp:CheckBox ID="CBIsHanShui" runat="server" Checked='<%# Eval("IsHanShui") %>'

@@ -220,6 +220,15 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.DropDownList ddlTrueZhangQI;
         
         /// <summary>
+        /// ddlJiLiang 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlJiLiang;
+        
+        /// <summary>
         /// CheckBox1 控件。
         /// </summary>
         /// <remarks>
@@ -373,6 +382,51 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.CheckBoxList cbKaoList;
         
         /// <summary>
+        /// txtZhangQi 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtZhangQi;
+        
+        /// <summary>
+        /// txtCeSuanDian 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCeSuanDian;
+        
+        /// <summary>
+        /// txtMonthLiLv 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMonthLiLv;
+        
+        /// <summary>
+        /// cbAll 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAll;
+        
+        /// <summary>
+        /// cbListPoType 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cbListPoType;
+        
+        /// <summary>
         /// btnSelect 控件。
         /// </summary>
         /// <remarks>
@@ -436,6 +490,15 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.Label lblJLR;
         
         /// <summary>
+        /// lblCaiWuChengBen 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCaiWuChengBen;
+        
+        /// <summary>
         /// Label3 控件。
         /// </summary>
         /// <remarks>
@@ -454,6 +517,15 @@ namespace VAN_OA.JXC {
         protected global::System.Web.UI.WebControls.Label lblLiRunKouTotal;
         
         /// <summary>
+        /// lblNewKouLiRun 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewKouLiRun;
+        
+        /// <summary>
         /// Label5 控件。
         /// </summary>
         /// <remarks>
@@ -470,6 +542,15 @@ namespace VAN_OA.JXC {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label8;
+        
+        /// <summary>
+        /// lblNewNo_KouLiRun 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewNo_KouLiRun;
         
         /// <summary>
         /// Label6 控件。

@@ -373,5 +373,8 @@ namespace VAN_OA.Model.JXC
 
         public int GuestPro { get; set; }
         public string Peculiarity { get; internal set; }
+
+        public string Province { get; set; }
+        public string City { get; set; }
     }
 }

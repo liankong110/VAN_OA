@@ -205,7 +205,7 @@ namespace VAN_OA.Dal.JXC
 CAI_POOrder.PONo,POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,Num,
 LastTruePrice as lastPrice,SupplierFPNo,CAI_POOrder.Status,SupplierInvoiceNum,SupplierInvoicePrice,
 SupplierInvoiceDate,SupplierInvoiceTotal  ,TB_SupplierAdvancePayments.ids as PayIds,SupplierProNo,AE,CAI_POOrder.GuestName ,HadSupplierInvoiceTotal 
-,IsHanShui from TB_SupplierAdvancePayment 
+,IsHanShui ,Province,city from TB_SupplierAdvancePayment 
 left join TB_SupplierAdvancePayments on  TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id 
 left join CAI_POCai  on  TB_SupplierAdvancePayments.CaiIds=CAI_POCai.ids
 left join CAI_POOrder  on   CAI_POCai.id=CAI_POOrder.id  
@@ -253,7 +253,16 @@ left join [PO_InvoiceTotal_SumView] on [PO_InvoiceTotal_SumView].PONo=CAI_POOrde
                         {
                             model.HuiKuanLiLv = InvoiceTotal / SumPOTotal;
                         }
-
+                        ojb = dataReader["Province"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Province = ojb.ToString();
+                        }
+                        ojb = dataReader["city"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.City = ojb.ToString();
+                        }
                         list.Add(model);
                     }
                 }

@@ -399,6 +399,11 @@ namespace VAN_OA.Model.JXC
         /// 模型名称
         /// </summary>
         public string Model { get; set; }
+
+        /// <summary>
+        /// 财务成本计量  0 表示不计量，1表示计量。字段的缺省 是1
+        /// </summary>
+        public bool ChengBenJiLiang { get; set; }
     }
 
 }

@@ -5,8 +5,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SampleContent">
     <style type="text/css">
-        .item
-        {
+        .item {
             word-break: break-all;
             word-wrap: break-word;
         }
@@ -22,31 +21,27 @@
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="4" style="height: 20px; background-color: #336699; color: White;">
-                销售业绩帐期考核
+            <td colspan="4" style="height: 20px; background-color: #336699; color: White;">销售业绩帐期考核
             </td>
         </tr>
         <tr>
-            <td>
-                项目编号:
+            <td>项目编号:
             </td>
             <td colspan="1">
                 <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>
             </td>
-            <td>
-                项目名称:
+            <td>项目名称:
             </td>
             <td>
                 <asp:TextBox ID="ttxPOName" runat="server"></asp:TextBox>公司名称：
                 <asp:DropDownList ID="ddlCompany" runat="server" DataTextField="ComName"
-                  DataValueField="ComSimpName"
+                    DataValueField="ComSimpName"
                     Width="200PX">
                 </asp:DropDownList>
             </td>
         </tr>
         <tr>
-            <td>
-                项目时间:
+            <td>项目时间:
             </td>
             <td>
                 <asp:TextBox ID="txtFrom" runat="server"></asp:TextBox>
@@ -60,41 +55,36 @@
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
             </td>
-            <td>
-                客户名称:
+            <td>客户名称:
             </td>
             <td>
                 <asp:TextBox ID="txtGuestName" runat="server" Width="300px"></asp:TextBox>
             </td>
         </tr>
         <tr>
-            <td>
-                AE：
+            <td>AE：
             </td>
             <td>
                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="Id"
                     Width="200PX">
                 </asp:DropDownList>
             </td>
-            <td>
-                不含特殊
+            <td>不含特殊
             </td>
             <td>
                 <asp:CheckBox ID="cbIsSpecial" runat="server" Checked="true" />
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                客户类型:<asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
-                    DataTextField="GuestType">
-                </asp:DropDownList>
+            <td colspan="2">客户类型:<asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
+                DataTextField="GuestType">
+            </asp:DropDownList>
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString" Style="left: 0px;">
                 </asp:DropDownList>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             </td>
-            <td colspan="2">
-                项目金额
+            <td colspan="2">项目金额
                 <asp:DropDownList ID="ddlFuHao" runat="server">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
@@ -122,8 +112,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4">
-                项目关闭：
+            <td colspan="4">项目关闭：
                 <asp:DropDownList ID="ddlIsClose" runat="server">
                     <asp:ListItem Text="全部" Value="-1"> </asp:ListItem>
                     <asp:ListItem Text="关闭" Value="1"> </asp:ListItem>
@@ -147,7 +136,8 @@
                     <asp:ListItem Value="1">零售</asp:ListItem>
                     <asp:ListItem Value="2">工程</asp:ListItem>--%>
                 </asp:DropDownList>
-                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
                 实际帐期:
                 <asp:DropDownList ID="ddlTrueZhangQI" runat="server">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
@@ -156,6 +146,12 @@
                     <asp:ListItem Text="60天<实际帐期<=90天" Value="3"></asp:ListItem>
                     <asp:ListItem Text="90天<实际帐期<=120天" Value="4"></asp:ListItem>
                     <asp:ListItem Text="实际帐期>120天" Value="5"></asp:ListItem>
+                </asp:DropDownList>
+                财本计量：
+                <asp:DropDownList ID="ddlJiLiang" runat="server">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="计量"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="不计量"></asp:ListItem>
                 </asp:DropDownList>
                 <br />
                 <asp:CheckBox ID="CheckBox1" runat="server" Text="初始状态" />
@@ -192,22 +188,22 @@
                 </asp:DropDownList>
                 实际净利
                 <br />
-               
+
                 <table style="border: 0px; margin: 0px;">
-                    <tr><td>
-                     启用时间:
+                    <tr>
+                        <td>启用时间:
                 <asp:TextBox ID="txtStartTime" runat="server"></asp:TextBox>
-                <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
-                <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
-                    Format="yyyy-MM-dd" TargetControlID="txtStartTime">
-                </cc1:CalendarExtender>
-                考核帐期:<asp:DropDownList ID="ddlZhangQI" runat="server">
-                 <asp:ListItem Text="实际帐期 >帐期截止期 " Value="2"></asp:ListItem>
-                    <asp:ListItem Text="实际帐期>=帐期截止期" Value="1"></asp:ListItem>
-                   
-                    <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
-                </asp:DropDownList>
-                    </td>
+                            <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                            <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
+                                Format="yyyy-MM-dd" TargetControlID="txtStartTime">
+                            </cc1:CalendarExtender>
+                            考核帐期:<asp:DropDownList ID="ddlZhangQI" runat="server">
+                                <asp:ListItem Text="实际帐期 >帐期截止期 " Value="2"></asp:ListItem>
+                                <asp:ListItem Text="实际帐期>=帐期截止期" Value="1"></asp:ListItem>
+
+                                <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
                         <td>
                             <font style="color: Red;">[考核]</font>项目类别：
                         </td>
@@ -218,102 +214,100 @@
                             <asp:CheckBoxList ID="cbKaoList" CssClass="ckblstEffect" runat="server" DataTextField="BasePoType"
                                 DataValueField="Id" RepeatDirection="Horizontal">
                             </asp:CheckBoxList>
+
+
                         </td>
                     </tr>
                 </table>
-    </td> </tr>
-    <tr>
-        <td colspan="4">
-            <div align="right">
-                <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div>
+                    <div style="display: inline-block;">
+                        项目财务成本账期:<asp:TextBox ID="txtZhangQi" runat="server" Width="50"></asp:TextBox>天
+                财务成本测算点:<asp:TextBox ID="txtCeSuanDian" runat="server" Width="50"></asp:TextBox>
+                        财务成本月利率:<asp:TextBox ID="txtMonthLiLv" runat="server" Width="50"></asp:TextBox>
+                        财务成本考核项目类别：   
+                            <asp:CheckBox ID="cbAll" runat="server" Text="全部" AutoPostBack="true" OnCheckedChanged="cbAll_CheckedChanged" />
+                    </div>
+
+                    <div style="display: inline-block;">
+                        <asp:CheckBoxList ID="cbListPoType" CssClass="ckblstEffect" runat="server" DataTextField="BasePoType"
+                            DataValueField="Id" RepeatDirection="Horizontal">
+                        </asp:CheckBoxList>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div align="right">
+                    <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                 <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" Visible="false"
                     OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
-            </div>
-        </td>
-    </tr>
+                </div>
+            </td>
+        </tr>
     </table>
     <asp:Panel ID="Panel2" runat="server" Width="100%" ScrollBars="Horizontal">
         <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
-            Width="160%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
+            Width="200%" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
             OnRowDataBound="gvMain_RowDataBound" OnRowCommand="gvMain_RowCommand">
             <PagerTemplate>
             </PagerTemplate>
             <EmptyDataTemplate>
                 <table width="100%">
                     <tr style="height: 20px; background-color: #336699; color: White;">
-                        <td>
-                            项目编号
+                        <td>项目编号
                         </td>
-                        <td>
-                            项目名称
+                        <td>项目名称
                         </td>
-                        <td>
-                            项目日期
+                        <td>项目日期
                         </td>
-                        <td>
-                            客户名称
+                        <td>客户名称
                         </td>
-                        <td>
-                            销售额
+                        <td>销售额
                         </td>
-                        <td>
-                            项目金额
+                        <td>项目金额
                         </td>
-                        <td>
-                            发票总额
+                        <td>发票总额
                         </td>
-                        <td>
-                            实际到账
+                        <td>实际到账
                         </td>
-                        <td>
-                            总成本
+                        <td>总成本
                         </td>
-                        <td>
-                            项目净利润
+                        <td>项目净利润
                         </td>
-                        <td>
-                            实际利润
+                        <td>实际利润
                         </td>
-                        <td>
-                            帐内到款
+                        <td>帐内到款
                         </td>
-                        <td>
-                            帐内欠款
+                        <td>帐内欠款
                         </td>
-                        <td>
-                            利润扣除
+                        <td>利润扣除
                         </td>
-                        <td>
-                            发票号码
+                        <td>发票号码
                         </td>
-                        <td>
-                            帐期
+                        <td>帐期
                         </td>
-                        <td>
-                            实际到款期
+                        <td>实际到款期
                         </td>
-                        <td>
-                            AE
+                        <td>AE
                         </td>
-                        <td>
-                            INSIDE
+                        <td>INSIDE
                         </td>
-                        <td>
-                            AE%
+                        <td>AE%
                         </td>
-                        <td>
-                            INSIDE%
+                        <td>INSIDE%
                         </td>
-                        <td>
-                            AE金额
+                        <td>AE金额
                         </td>
-                        <td>
-                            INSIDE金额
+                        <td>INSIDE金额
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6" align="center" style="height: 80%">
-                            ---暂无数据---
+                        <td colspan="6" align="center" style="height: 80%">---暂无数据---
                         </td>
                     </tr>
                 </table>
@@ -337,8 +331,8 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="5%" DataFormatString="{0:yyyy-MM-dd}">
-                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                    DataFormatString="{0:yyyy-MM-dd}" >
+                    <ItemStyle HorizontalAlign="Center" Width="65px"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
                     HeaderStyle-Width="100" ItemStyle-HorizontalAlign="Left">
@@ -346,9 +340,12 @@
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestType" HeaderText="类型" SortExpression="GuestType"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="ChengBenJiLiangString" HeaderText="财本计量" SortExpression="ChengBenJiLiangString"
+                    HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
+
                 <asp:BoundField DataField="GuestProString" HeaderText="属性" SortExpression="GuestProString"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
-                   <asp:BoundField DataField="potypeString" HeaderText="类别" SortExpression="potypeString"
+                <asp:BoundField DataField="potypeString" HeaderText="类别" SortExpression="potypeString"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="goodSellTotal" HeaderText="销售额" DataFormatString="{0:n2}"
                     SortExpression="goodSellTotal" ItemStyle-HorizontalAlign="Center">
@@ -371,7 +368,7 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="maoliTotal" HeaderText="项目净利" SortExpression="maoliTotal"
-                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n6}">
+                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="TrueLiRun" HeaderText="实际利润" SortExpression="TrueLiRun"
@@ -379,19 +376,35 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="WaiInvoTotal" HeaderText="帐内到款" SortExpression="WaiInvoTotal"
-                    DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Center">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="WaiQianKuan" HeaderText="帐内欠款" SortExpression="WaiQianKuan"
-                    DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Center">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="MinOutDate" HeaderText="首出日期" SortExpression="MinOutDate" ItemStyle-HorizontalAlign="Center"
+                    DataFormatString="{0:yyyy-MM-dd}">
+                    <ItemStyle HorizontalAlign="Center" Width="65px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="CaiWuChengBen" HeaderText="财务成本" SortExpression="CaiWuChengBen"
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="KouLiRun" HeaderText="利润扣除" SortExpression="KouLiRun"
-                    DataFormatString="{0:n6}" ItemStyle-HorizontalAlign="Center">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="NewKouLiRun" HeaderText="新利润扣除" SortExpression="NewKouLiRun"
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="No_KouLiRun" HeaderText="帐内利润" SortExpression="No_KouLiRun"
-                    DataFormatString="{0:n6}" ItemStyle-HorizontalAlign="Center">
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="NewNo_KouLiRun" HeaderText="新帐内利润" SortExpression="NewNo_KouLiRun"
+                    DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="ZhangQiTotal" HeaderText="帐期" SortExpression="ZhangQiTotal"
@@ -405,20 +418,20 @@
 
                 <asp:TemplateField HeaderText="天数">
                     <ItemTemplate>
-                        <asp:Label ID="lblDays" runat="server" Text='<% #Eval("trueZhangQi") %>' ></asp:Label>
+                        <asp:Label ID="lblDays" runat="server" Text='<% #Eval("trueZhangQi") %>'></asp:Label>
                     </ItemTemplate>
                     <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="3%" ItemStyle-CssClass="item">
+                    ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" SortExpression="INSIDE" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="AEPer" HeaderText="AE%" SortExpression="AEPer" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="2%" ItemStyle-CssClass="item">
+                    ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="INSIDEPer" HeaderText="IS%" SortExpression="INSIDEPer"
@@ -434,7 +447,7 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="FPTotal" HeaderText="发票号码" SortExpression="FPTotal" ItemStyle-HorizontalAlign="Left"
-                    ItemStyle-Width="40%" ItemStyle-CssClass="item"></asp:BoundField>
+                    ItemStyle-Width="30%" ItemStyle-CssClass="item"></asp:BoundField>
             </Columns>
             <PagerStyle HorizontalAlign="Center" />
             <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -455,12 +468,20 @@
     <asp:Label ID="Label1" runat="server" Text="项目净利合计"></asp:Label>
     <asp:Label ID="lblJLR" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
+       财务成本合计:<asp:Label ID="lblCaiWuChengBen" runat="server" Text="0" ForeColor="Red"></asp:Label>
+    &nbsp; &nbsp;
     <asp:Label ID="Label3" runat="server" Text="利润扣除合计"></asp:Label>
     <asp:Label ID="lblLiRunKouTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
-    <asp:Label ID="Label5" runat="server" Text="帐内利润扣除合计"></asp:Label>
+     新利润扣除合计 ：<asp:Label ID="lblNewKouLiRun" runat="server" Text="0" ForeColor="Red"></asp:Label>
+    &nbsp; &nbsp;
+    <asp:Label ID="Label5" runat="server" Text="帐内利润合计"></asp:Label>
     <asp:Label ID="Label8" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
+     新帐内利润合计：<asp:Label ID="lblNewNo_KouLiRun" runat="server" Text="0" ForeColor="Red"></asp:Label>
+   
+    &nbsp; &nbsp;
+    <br />
     <asp:Label ID="Label6" runat="server" Text="项目纯利合计"></asp:Label>
     <asp:Label ID="lblChunLiTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
@@ -481,4 +502,8 @@
     &nbsp; &nbsp; 到款率：<asp:Label ID="lblAllDaoKuanLv" runat="server" Text="0" ForeColor="Red"></asp:Label>%
     &nbsp; &nbsp; 开票率：<asp:Label ID="lblAllFaPiaoLv" runat="server" Text="0" ForeColor="Red"></asp:Label>%
     &nbsp; &nbsp;
+    
+
+
+
 </asp:Content>

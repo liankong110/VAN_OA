@@ -58,9 +58,9 @@
                             </div>
 
                      <div style="display:inline-block;">
-                  <asp:CheckBoxList ID="cbListPoType" CssClass="ckblstEffect" runat="server" DataTextField="BasePoType"
-                                DataValueField="Id" RepeatDirection="Horizontal">
-                            </asp:CheckBoxList>
+                      <asp:CheckBoxList ID="cbListPoType" CssClass="ckblstEffect" runat="server" DataTextField="BasePoType"
+                                    DataValueField="Id" RepeatDirection="Horizontal">
+                                </asp:CheckBoxList>
              </div>
                           <div style="display:inline-block;">
                 <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " Enabled="false" BackColor="Yellow"

@@ -288,6 +288,12 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                         }
                         string fristFpNo = txtFristFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtFristFPNo.Text;
 
+                        if (fristFpNo == "12345678")
+                        {
+                            fristFpNo = "-";
+                        }
+                      
+
                         checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1}  AND Status<>'不通过' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, Request["allE_id"]);
                         checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo='{0}' or SecondFPNo='{0}') AND ID<>{1} AND Status<>'不通过' and CreateName<>'admin' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, Request["allE_id"]);
 
@@ -307,16 +313,24 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                         string fristFpNo = txtFristFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtFristFPNo.Text;
                         string secondFpNo = txtSecondFPNo.Text.Trim() == "" ? Guid.NewGuid().ToString() : txtSecondFPNo.Text;
 
+                        if (fristFpNo == "12345678")
+                        {
+                            fristFpNo = "-";
+                        }
+                        if (secondFpNo == "12345678")
+                        {
+                            secondFpNo = "-";
+                        }
                         checkFPNo = string.Format("select COUNT(*) from [dbo].[TB_SupplierAdvancePayment]  where  (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, secondFpNo, Request["allE_id"]);
                         checkFPNo1 = string.Format("select COUNT(*) from [dbo].[TB_SupplierInvoice]  where (FristFPNo in ('{0}','{1}') or SecondFPNo in ('{0}','{1}')) AND ID<>{2} AND Status<>'不通过' and CreateName<>'admin' and (FristFPNo<>'12345678' or SecondFPNo<>'12345678')", fristFpNo, secondFpNo, Request["allE_id"]);
                     }
                     if (checkFPNo != "")
-                    {
-                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0|| Convert.ToInt32(DBHelp.ExeScalar(checkFPNo1)) > 0)
+                    {                         
+                        if (Convert.ToInt32(DBHelp.ExeScalar(checkFPNo)) > 0 || Convert.ToInt32(DBHelp.ExeScalar(checkFPNo1)) > 0)
                         {
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('票据号码有误（重复），请重新输入');</script>");
                             return false;
-                        }
+                        }                         
                     }
                     
                     List<SupplierToInvoiceView> POOrders = ViewState["Orders"] as List<SupplierToInvoiceView>;

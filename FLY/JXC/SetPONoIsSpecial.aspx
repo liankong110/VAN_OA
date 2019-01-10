@@ -133,6 +133,12 @@
                     DataTextField="GuestProString"  Width="50px">
                 </asp:DropDownList>项目模型:
                  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                 财本计量：
+                <asp:DropDownList ID="ddlJiLiang" runat="server">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="计量"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="不计量"></asp:ListItem>
+                </asp:DropDownList>
                 <br />
                 注：项目金额=0，项目净利=0 ，项目的特殊属性自动在关闭按钮中添加
             </td>
@@ -347,6 +353,15 @@
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
+
+              <asp:TemplateField HeaderText="财本计量">
+                <ItemTemplate>
+                    <asp:CheckBox ID="cbChengBenJiLiang" runat="server" Checked='<% #Eval("ChengBenJiLiang") %>'
+                        Enabled="<%# IsChengBenJiLiang() %>" />
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+            </asp:TemplateField>
+
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="Black" Font-Size="12px" />

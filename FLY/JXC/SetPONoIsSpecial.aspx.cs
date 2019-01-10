@@ -11,7 +11,7 @@ using System.Data;
 
 namespace VAN_OA.JXC
 {
-    
+
     public partial class SetPONoIsSpecial : BasePage
     {
 
@@ -27,6 +27,14 @@ namespace VAN_OA.JXC
         List<GuestTypeBaseInfo> _guestTypeList = new List<GuestTypeBaseInfo>();
         List<GuestProBaseInfo> _guestProList = new List<GuestProBaseInfo>();
 
+        protected bool IsChengBenJiLiang()
+        {
+            if (ViewState["isChengBenJiLiang"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
         protected string GetType(object type)
         {
             if (type.ToString() == "0")
@@ -100,7 +108,7 @@ namespace VAN_OA.JXC
 
         protected string GetNum(string num)
         {
-            return string.Format("{0:n2}",num);            
+            return string.Format("{0:n2}", num);
         }
 
 
@@ -133,14 +141,14 @@ namespace VAN_OA.JXC
 
         protected void cbIsPoFax_CheckedChanged(object sender, EventArgs e)
         {
-           
+
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-               
+
                 _modelList = modelService.GetListArray("");
                 _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
                 ddlModel.DataSource = _modelList;
@@ -196,6 +204,11 @@ namespace VAN_OA.JXC
                     btnJieIsSelected.Visible = false;
                 }
 
+                if (NewShowAll_textName("项目归类", "财务成本计量可编辑") == false)
+                {
+                    ViewState["isChengBenJiLiang"] = false;
+                }
+
                 if (NewShowAll_textName("项目归类", "客户类型可编辑") == false)
                 {
                     ViewState["isGuestType"] = false;
@@ -239,15 +252,15 @@ namespace VAN_OA.JXC
                 dllFPstye.DataTextField = "FpType";
                 dllFPstye.DataValueField = "Id";
 
-                dllFPstye.Items[fpTypeList.Count-1].Attributes.Add("style", "background-color: red");
+                dllFPstye.Items[fpTypeList.Count - 1].Attributes.Add("style", "background-color: red");
 
                 List<FpTypeBaseInfo> newFpTypeList = new List<FpTypeBaseInfo>();
                 foreach (var fp in fpTypeList)
                 {
-                    newFpTypeList.Add(new FpTypeBaseInfo { Id=fp.Id,FpType=fp.FpType });
+                    newFpTypeList.Add(new FpTypeBaseInfo { Id = fp.Id, FpType = fp.FpType });
                 }
-               
-                newFpTypeList.Add(new FpTypeBaseInfo { Id=1000,FpType="其他"});
+
+                newFpTypeList.Add(new FpTypeBaseInfo { Id = 1000, FpType = "其他" });
                 ddlFPType.DataSource = newFpTypeList;
                 ddlFPType.DataBind();
                 ddlFPType.DataTextField = "FpType";
@@ -267,7 +280,7 @@ namespace VAN_OA.JXC
                 var dalList = dal.GetListArray("");
                 dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "" });
                 dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
-              
+
                 ddlGuestTypeList.DataSource = dalList;
                 ddlGuestTypeList.DataBind();
                 ddlGuestTypeList.DataTextField = "GuestType";
@@ -277,7 +290,7 @@ namespace VAN_OA.JXC
                 var proList = guestProBaseInfodal.GetListArray("");
                 proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -1 });
                 proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2, });
-             
+
                 ddlGuestProList.DataSource = proList;
                 ddlGuestProList.DataBind();
                 ddlGuestProList.DataTextField = "GuestProString";
@@ -307,7 +320,7 @@ namespace VAN_OA.JXC
 
             var fpTypeBaseInfoService = new FpTypeBaseInfoService();
             gooQGooddList = fpTypeBaseInfoService.GetListArray("");
-            gooQGooddList.Add(new FpTypeBaseInfo { FpType=""});
+            gooQGooddList.Add(new FpTypeBaseInfo { FpType = "" });
             allFpTypes = gooQGooddList.Select(t => t.FpType).ToList();
             var sql = "";
 
@@ -383,9 +396,9 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and AE IN(select loginName from tb_User where {0})", where);
             }
 
-            if (ddlSpecial.Text!="-1")
+            if (ddlSpecial.Text != "-1")
             {
-                sql += string.Format(" and IsSpecial={0}",ddlSpecial.Text);
+                sql += string.Format(" and IsSpecial={0}", ddlSpecial.Text);
             }
             if (ddlNoSelected.Text != "-1")
             {
@@ -395,16 +408,16 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and JieIsSelected=" + ddlJieIsSelected.Text);
             }
-            if (ddlColse.Text!="-1")
+            if (ddlColse.Text != "-1")
             {
                 sql += string.Format(" and IsClose={0}", ddlColse.Text);
             }
 
-            if (ddlIsPoFax.Text!="-1")
+            if (ddlIsPoFax.Text != "-1")
             {
                 sql += string.Format(" and IsPoFax={0}", ddlIsPoFax.Text);
 
-                if (ddlIsPoFax.Text == "1" && dllFPstye.Text!="-1")
+                if (ddlIsPoFax.Text == "1" && dllFPstye.Text != "-1")
                 {
                     sql += string.Format(" and FpType='" + dllFPstye.SelectedItem.Text + "'");
                 }
@@ -413,11 +426,17 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and POType=" + ddlPOTyle.Text);
             }
-            if (ddlModel.Text != "全部")
+            if (ddlJiLiang.Text != "-1")
             {
-                sql += string.Format(" and Model='{0}'" ,ddlModel.Text);
+                sql += string.Format(" and ChengBenJiLiang=" + ddlJiLiang.Text);
             }
             
+
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
+
             if (!string.IsNullOrEmpty(txtPoTotal.Text))
             {
                 if (CommHelp.VerifesToNum(txtPoTotal.Text) == false)
@@ -425,9 +444,9 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
                     return;
                 }
-                sql += string.Format(" and SumPOTotal{0}{1}",ddlFuHao.Text, txtPoTotal.Text);
+                sql += string.Format(" and SumPOTotal{0}{1}", ddlFuHao.Text, txtPoTotal.Text);
             }
-            
+
             if (!string.IsNullOrEmpty(txtGuestName.Text.Trim()))
             {
                 sql += string.Format(" and GuestName like '%{0}%'", txtGuestName.Text.Trim());
@@ -437,7 +456,7 @@ namespace VAN_OA.JXC
                 if (ddlFPType.SelectedItem.Text != "其他")
                 {
                     sql += string.Format(" and FPType='{0}'", ddlFPType.SelectedItem.Text);
-                }                
+                }
                 else
                 {
                     sql += string.Format(" and FPType not in (select FpType from FpTypeBaseInfo) and FPType<>''");
@@ -463,7 +482,7 @@ namespace VAN_OA.JXC
             }
 
             if (ddlGuestTypeList.SelectedValue != "全部")
-            {              
+            {
                 sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
             }
             if (ddlGuestProList.SelectedValue != "-2")
@@ -541,7 +560,7 @@ namespace VAN_OA.JXC
                     //}
                     //else
                     //{
-                        drp.SelectedIndex = allFpTypes.IndexOf(hidTxt);
+                    drp.SelectedIndex = allFpTypes.IndexOf(hidTxt);
                     //}
 
                 }
@@ -583,7 +602,7 @@ namespace VAN_OA.JXC
                     var hidModeltxt = ((HiddenField)e.Row.FindControl("hidModeltxt")).Value;
                     if (hidModeltxt != "-1")
                     {
-                        ddlModel.SelectedIndex = _modelList.FindIndex(t => t.ModelName== hidModeltxt);
+                        ddlModel.SelectedIndex = _modelList.FindIndex(t => t.ModelName == hidModeltxt);
                     }
 
                 }
@@ -596,7 +615,7 @@ namespace VAN_OA.JXC
                 try
                 {
                     DropDownList dllGuestPro = (DropDownList)e.Row.FindControl("dllGuestPro");
-                    dllGuestPro.DataSource =_guestProList;
+                    dllGuestPro.DataSource = _guestProList;
                     dllGuestPro.DataBind();
                     dllGuestPro.DataTextField = "GuestProString";
                     dllGuestPro.DataValueField = "GuestPro";
@@ -625,7 +644,7 @@ namespace VAN_OA.JXC
                     var hidGuestTypetxt = ((HiddenField)e.Row.FindControl("hidGuestTypetxt")).Value;
                     if (hidGuestTypetxt != "-1")
                     {
-                        dllGuestType.SelectedIndex = _guestTypeList.FindIndex(t => t.GuestType== hidGuestTypetxt);
+                        dllGuestType.SelectedIndex = _guestTypeList.FindIndex(t => t.GuestType == hidGuestTypetxt);
                     }
 
                 }
@@ -672,7 +691,7 @@ SELECT @AllCount;", lblIds.Text);
                         if (Convert.ToInt32(sqlComm.ExecuteScalar()) > 0)
                         {
                             base.ClientScript.RegisterStartupScript(base.GetType(), null,
-                                string.Format( "<script>alert('项目{0},有费用，不能定义为特殊订单！');</script>", lblIds.Text));
+                                string.Format("<script>alert('项目{0},有费用，不能定义为特殊订单！');</script>", lblIds.Text));
                             return false;
                         }
                     }
@@ -689,7 +708,7 @@ SELECT @AllCount;", lblIds.Text);
             {
                 if (CheckIsSpecial() == false)
                 {
-                    return ;
+                    return;
                 }
                 for (int i = 0; i < this.gvMain.Rows.Count; i++)
                 {
@@ -718,6 +737,42 @@ SELECT @AllCount;", lblIds.Text);
                 {
                     expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
                     var sql = "update CG_POOrder set IsSpecial=0 where " + expWhere;
+                    DBHelp.ExeCommand(sql);
+                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+            }
+
+            if (ViewState["isChengBenJiLiang"] == null)
+            {
+                 where = " PONo  in (";
+                 expWhere = " PONo  in (";
+                for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                {
+                    CheckBox cb = (gvMain.Rows[i].FindControl("cbChengBenJiLiang")) as CheckBox;
+                    if (cb.Checked)
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        where += "'" + lblIds.Text + "',";
+                    }
+                    else
+                    {
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        expWhere += "'" + lblIds.Text + "',";
+                    }
+                }
+
+                if (where != " PONo  in (")
+                {
+                    where = where.Substring(0, where.Length - 1) + ")";
+                    var sql = "update CG_POOrder set ChengBenJiLiang=1 where " + where;
+                    DBHelp.ExeCommand(sql);
+                    //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                }
+
+                if (expWhere != " PONo  in (")
+                {
+                    expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
+                    var sql = "update CG_POOrder set ChengBenJiLiang=0 where " + expWhere;
                     DBHelp.ExeCommand(sql);
                     // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
@@ -798,7 +853,7 @@ SELECT @AllCount;", lblIds.Text);
 
                     }
                     conn.Close();
-                }               
+                }
             }
 
             if (ViewState["isFaxEdist"] == null)
@@ -855,19 +910,19 @@ SELECT @AllCount;", lblIds.Text);
                 string where = " PONo  in (";
                 string expWhere = " PONo  in (";
 
-                string whereEpec= " PONo  in (";
-                string expWhereEpec= " PONo  in (";
+                string whereEpec = " PONo  in (";
+                string expWhereEpec = " PONo  in (";
 
                 for (int i = 0; i < this.gvMain.Rows.Count; i++)
                 {
                     CheckBox cb = (gvMain.Rows[i].FindControl("cbIsClose")) as CheckBox;
                     Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
                     if (cb.Checked)
-                    {                    
+                    {
                         where += "'" + lblIds.Text + "',";
                     }
                     else
-                    {                        
+                    {
                         expWhere += "'" + lblIds.Text + "',";
                     }
                     decimal poTotal = Convert.ToDecimal(gvMain.Rows[i].Cells[3].Text);
@@ -903,7 +958,7 @@ SELECT @AllCount;", lblIds.Text);
                 {
                     whereEpec = whereEpec.Substring(0, whereEpec.Length - 1) + ")";
                     var sql = "update CG_POOrder set IsSpecial=1 where " + whereEpec;
-                    DBHelp.ExeCommand(sql); 
+                    DBHelp.ExeCommand(sql);
                 }
 
                 //if (expWhereEpec != " PONo  in (")
@@ -913,7 +968,7 @@ SELECT @AllCount;", lblIds.Text);
                 //    DBHelp.ExeCommand(sql);                    
                 //}
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
-            } 
+            }
             Show();
         }
 
@@ -1032,7 +1087,7 @@ SELECT @AllCount;", lblIds.Text);
         protected void ddlIsPoFax_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if (ddlIsPoFax.Text=="1")
+            if (ddlIsPoFax.Text == "1")
             {
                 dllFPstye.Enabled = true;
             }
@@ -1064,7 +1119,7 @@ SELECT @AllCount;", lblIds.Text);
                     conn.Close();
                 }
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
-            } 
+            }
             //Show();
         }
 
@@ -1091,7 +1146,7 @@ SELECT @AllCount;", lblIds.Text);
                 }
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
             }
-            
+
             //Show();
         }
     }

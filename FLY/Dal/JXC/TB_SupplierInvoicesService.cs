@@ -347,7 +347,7 @@ as tb3  on tb3.PONO=CAI_OrderInHouse.PONO and tb3.GoodId=CAI_OrderInHouses.GooId
             strSql.Append(@" select SumPOTotal,InvoiceTotal,CaiNum,TB_SupplierInvoices.SupplierFpDate,TB_SupplierInfo.SupplierName,CAI_OrderInHouses.Ids,CAI_OrderInHouse.ProNo,
 RuTime,Supplier,houseName,CAI_OrderInHouse.PONo,CAI_OrderInHouse.POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum,
 supplierTuiGoodNum,CaiLastTruePrice as GoodPrice,DoPer,SupplierFPNo,ChcekProNo,CAI_OrderInHouse.Status,SupplierInvoiceNum,SupplierInvoicePrice,SupplierInvoiceDate,SupplierInvoiceTotal,TB_SupplierInvoices.ids as PayIds,SupplierProNo
- ,tb3.AE,tb3.GuestName, HadSupplierInvoiceTotal,IsHanShui,ActPay,RePayClear ,FuShuTotal,IsPayStatus,IsYuFu,HadFuShuTotal
+ ,tb3.AE,tb3.GuestName, HadSupplierInvoiceTotal,IsHanShui,ActPay,RePayClear ,FuShuTotal,IsPayStatus,IsYuFu,HadFuShuTotal,Province,city
 from  TB_SupplierInvoices  
 left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses  on  TB_SupplierInvoices.RuIds= CAI_OrderInHouses.Ids 
@@ -474,6 +474,16 @@ left join [PO_InvoiceTotal_SumView] on [PO_InvoiceTotal_SumView].PONo=CAI_OrderI
                         if (SumPOTotal != 0)
                         {
                             model.HuiKuanLiLv = InvoiceTotal / SumPOTotal;
+                        }
+                        ojb = dataReader["Province"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Province = ojb.ToString();
+                        }
+                        ojb = dataReader["city"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.City = ojb.ToString();
                         }
                         list.Add(model);
                     }

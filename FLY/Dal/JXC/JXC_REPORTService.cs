@@ -1109,7 +1109,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                             model.JSKaiPiaoDate = Convert.ToDateTime(model.BillDate.Value.Year + "-" + model.BillDate.Value.Month + "-1").AddMonths(1).AddDays(-1);
                             //model.MinBillDate = model.JSKaiPiaoDate;
                         }
-                       
+
 
                         if (model.SellFPTotal - model.InvoiceTotal != 0)
                         {
@@ -1337,6 +1337,79 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
             return list;
         }
 
+        public string GetSql(int D, float P)
+        {
+            string sql = string.Format(@"
+-- IF T >今日的日期,财务成本=0
+select PONo  from Sell_OrderOutHouse where Status='通过' group by PONo having DATEADD(day,{0}, MIN(RuTime))>GETDATE()
+union 
+--T的到款金额>=项目金额*P ，财务成本=0
+select POTotal_SumView.PONo from POTotal_SumView
+left join 
+(
+select TB_ToInvoice.PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice 
+left join 
+(
+select PONo,DATEADD(day,{0}, MIN(RuTime)) as MinSellOutDate from Sell_OrderOutHouse  where Status='通过' group by PONo
+) as OrderOutHouse on OrderOutHouse.PONo=TB_ToInvoice.PONo
+ where  TB_ToInvoice.state='通过' and DaoKuanDate<=MinSellOutDate group by TB_ToInvoice.PoNo) 
+as newtable1 on POTotal_SumView.PONo=newtable1.PONo  where InvoTotal>=SumPOTotal*{1}", D, P);
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取所有财务成本=0 的项目
+        /// </summary>
+        /// <param name="D"></param>
+        /// <param name="P"></param>
+        /// <returns></returns>
+
+        public Hashtable GetPoNoList(int D, float P)
+        {
+            Hashtable hs = new Hashtable(); 
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(GetSql(D,P), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        hs.Add(dataReader["PONo"].ToString(),null);
+                    }
+                }
+            }
+            return hs;
+        }
+
+        /// <summary>
+        /// 获取所有财务成本不是0的 财务明细
+        /// </summary>
+        /// <param name="D"></param>
+        /// <param name="P"></param>
+        /// <returns></returns>
+        public List<TB_ToInvoice> GetInvoiceList(int D, float P)
+        {
+            List<TB_ToInvoice> list = new List<TB_ToInvoice>();
+            string sql = string.Format(@"select PONO,TOTAL,DaoKuanDate from TB_ToInvoice where State='通过' and PoNo not in ({0})", GetSql(D, P));
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var model = new TB_ToInvoice();
+                        model.PoNo=dataReader["PONo"].ToString();
+                        model.Total =Convert.ToDecimal(dataReader["TOTAL"]);
+                        model.DaoKuanDate =Convert.ToDateTime(dataReader["DaoKuanDate"]);
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
@@ -1347,7 +1420,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
             BaseKeyValue baseKeyModel = new BaseKeyValueService().GetModel(1);
             StringBuilder strSql = new StringBuilder();
             strSql.Append(" select  SumPOTotal,*" + (compare == "" ? ",0 as KouInvoTotal" : ",WaiInvoTotal as KouInvoTotal") + " from (");
-            strSql.Append("select  CG_POOrder.POType, MinOutDate,isnull(MaxDaoKuanDate,getdate()) as MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
+            strSql.Append("select  ChengBenJiLiang,CG_POOrder.POType, MinOutDate,isnull(MaxDaoKuanDate,getdate()) as MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
             strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
             strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
             strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,avg(" + (compare == "" ? "0.05" : "WaiInvoTotal") + ") as WaiInvoTotal  from CG_POOrder ");
@@ -1356,14 +1429,24 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
             strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
             strSql.Append(@" left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses
 on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO");
+//            if (!string.IsNullOrEmpty(compare))
+//            {
+//                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
+//else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
+//(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
+// where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
+// group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
+//   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+
+
+//            }
             if (!string.IsNullOrEmpty(compare))
             {
                 strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
 else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
 (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
  where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
- group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
-   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+ group by CG_POOrder.PoNo,POStatue4 ) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
 
 
             }
@@ -1375,7 +1458,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType  ");
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType ,ChengBenJiLiang ");
 
             if (having != "")
             {
@@ -1449,6 +1532,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
 
                         if (MinOutDate != null && MinOutDate != DBNull.Value)
                         {
+                            model.MinOutDate = Convert.ToDateTime(MinOutDate);
                             TimeSpan ts = (Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")) - Convert.ToDateTime(Convert.ToDateTime(MinOutDate).ToString("yyyy-MM-dd")));
 
                             model.trueZhangQi = ts.Days;
@@ -1527,6 +1611,12 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         int POType = Convert.ToInt32(dataReader["POType"]);
                         model.potypeString = poTypeList.Find(t => t.Id == POType).BasePoType;
                         model.potype = dataReader["POType"].ToString();
+                        ojb = dataReader["ChengBenJiLiang"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ChengBenJiLiangString = ojb.ToString();
+                        }
+                        
                         list.Add(model);
                     }
                 }
