@@ -189,6 +189,30 @@ namespace VAN_OA.JXC
 
         private void Show()
         {
+
+            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text)&& CommHelp.VerifesToNum(txtZhangNeiDaoKuan.Text) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('账内到款 格式有问题！');</script>");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(txtCaiWuChegBen.Text) && CommHelp.VerifesToNum(txtCaiWuChegBen.Text) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('财务成本 格式有问题！');</script>");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(txtLiRunKouChu.Text) && CommHelp.VerifesToNum(txtLiRunKouChu.Text) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('利润扣除 格式有问题！');</script>");
+                return;
+            }
+            if (!string.IsNullOrEmpty(txtZhangNeiLiRun.Text) && CommHelp.VerifesToNum(txtZhangNeiLiRun.Text) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('账内利润 格式有问题！');</script>");
+                return;
+            }
+
             if (CommHelp.VerifesToNum(txtZhangQi.Text) == false || Convert.ToDecimal(txtZhangQi.Text) < 0)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目财务成本账期 格式有问题！');</script>");
@@ -397,8 +421,21 @@ namespace VAN_OA.JXC
             }
             if (ddlPOFaTotal.Text != "-1")
             {
+          
                 fuhao += string.Format(" and SumPOTotal {0} isnull(SellFPTotal,0)", ddlPOFaTotal.Text);
             }
+            
+            if (ddlPOTotal.Text != "-1")
+            {
+                if (CommHelp.VerifesToNum(txtPOTotal.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and SumPOTotal {0} {1}", ddlPOTotal.Text, txtPOTotal.Text);
+            }
+
+
             if (ddlShiJiDaoKuan.Text != "-1")
             {
                 fuhao += string.Format(" and SumPOTotal {0} isnull(InvoTotal,0)", ddlShiJiDaoKuan.Text);
@@ -508,13 +545,104 @@ namespace VAN_OA.JXC
                 }
             }
 
+
+            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text)&& ddlZhangNeiDaoKuan.Text!="-1")
+            {
+                var fuHao = ddlZhangNeiDaoKuan.Text;
+                var val = Convert.ToDecimal(txtZhangNeiDaoKuan.Text);
+                if (fuHao == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal > val);
+                }
+                if (fuHao == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal >= val);
+                }
+                if (fuHao == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal < val);
+                }
+                if (fuHao == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal <= val);
+                }
+                if (fuHao == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal == val);
+                }
+                if (fuHao == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal != val);
+                }
+            }
+
+        
+            if (!string.IsNullOrEmpty(txtLiRunKouChu.Text) && ddlLiRunKouChu.Text != "-1")
+            {
+                var fuHao = ddlLiRunKouChu.Text;
+                var val = Convert.ToDecimal(txtLiRunKouChu.Text);
+                if (fuHao == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun > val);
+                }
+                if (fuHao == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun >= val);
+                }
+                if (fuHao == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun < val);
+                }
+                if (fuHao == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun <= val);
+                }
+                if (fuHao == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun == val);
+                }
+                if (fuHao == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun != val);
+                }
+            }
+            if (!string.IsNullOrEmpty(txtZhangNeiLiRun.Text) && ddlZhangNeiLiRun.Text != "-1")
+            {
+                var fuHao = ddlZhangNeiLiRun.Text;
+                var val = Convert.ToDecimal(txtZhangNeiLiRun.Text);
+                if (fuHao == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun > val);
+                }
+                if (fuHao == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun >= val);
+                }
+                if (fuHao == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun < val);
+                }
+                if (fuHao == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun <= val);
+                }
+                if (fuHao == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun == val);
+                }
+                if (fuHao == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun != val);
+                }
+            }
+
             if (pOOrderList.Count > 0)
             {
                 var D = Convert.ToInt32(txtZhangQi.Text);
                 var P = Convert.ToSingle(txtCeSuanDian.Text);
                 var R = Convert.ToDecimal(txtMonthLiLv.Text);
 
-
+                var jiliang =Convert.ToInt32( ddlJiLiang.Text);
                 //计算财务成本为0 的项目
                 var zeroList = POSer.GetPoNoList(D, P);
                 //财务成本不为0的 项目
@@ -547,10 +675,7 @@ namespace VAN_OA.JXC
                     }
                 }
                 selectedPoType = selectedPoType.Trim(',');
-                //if (selectedPoType == ""&& cbAll.Checked==false)
-                //{
-                //    selectedPoType = "1,2,3";
-                //}
+               
                 if ( cbAll.Checked )
                 {
                     selectedPoType = "1,2,3";
@@ -558,7 +683,7 @@ namespace VAN_OA.JXC
                 foreach (var model in pOOrderList)
                 {
                     decimal chengben = 0;
-                    if (!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype))
+                    if (jiliang!=0&&!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype)&&model.ChengBenJiLiangString)
                     {
                         var T = model.MinOutDate.Value.AddDays(D + 1);
 
@@ -613,7 +738,37 @@ namespace VAN_OA.JXC
                     }
                     model.CaiWuChengBen = chengben;
                     model.NewKouLiRun = model.KouLiRun + model.CaiWuChengBen;
-                    model.NewNo_KouLiRun = model.No_KouLiRun + model.CaiWuChengBen;
+                    model.NewNo_KouLiRun = model.KPI_No_KouLiRun - model.CaiWuChengBen;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(txtCaiWuChegBen.Text) && ddlCaiWuChegBen.Text != "-1")
+            {
+                var fuHao = ddlCaiWuChegBen.Text;
+                var val = Convert.ToDecimal(txtCaiWuChegBen.Text);
+                if (fuHao == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen > val);
+                }
+                if (fuHao == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen >= val);
+                }
+                if (fuHao == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen < val);
+                }
+                if (fuHao == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen <= val);
+                }
+                if (fuHao == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) == val);
+                }
+                if (fuHao == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen != val);
                 }
             }
             //var a=pOOrderList.FindAll(T => T.SumPOTotal == 0);
@@ -630,7 +785,7 @@ namespace VAN_OA.JXC
             //项目纯利合计（项目净利合计-利润扣除合计）
             lblChunLiTotal.Text = string.Format("{0:n6}", (jlr - liRunKouTotal));
 
-            decimal no_liRunKouTotal = pOOrderList.Sum(t => t.No_KouLiRun);
+            decimal no_liRunKouTotal = pOOrderList.Sum(t => t.KPI_No_KouLiRun);
             Label8.Text = string.Format("{0:n5}", no_liRunKouTotal);
 
 

@@ -307,6 +307,16 @@ namespace VAN_OA.Model.JXC
                 return 0;
             }
         }
+        /// <summary>
+        /// (KPI 账)帐内利润=项目净利-利润扣除
+        /// </summary>
+        public decimal KPI_No_KouLiRun
+        {
+            get
+            {
+                return maoliTotal - KouLiRun;
+            }
+        }
 
         public string PoTypeList { get; set; }
         /// <summary>
@@ -451,7 +461,7 @@ namespace VAN_OA.Model.JXC
         /// <summary>
         /// 财务成本计量
         /// </summary>
-        public string ChengBenJiLiangString { get; set; }
+        public bool ChengBenJiLiangString { get; set; }
     }
 
     public class InvoiceSimpDetail

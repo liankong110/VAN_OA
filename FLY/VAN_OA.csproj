@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BaseInfo\GoodTemp.aspx" />
+    <Content Include="BaseInfo\WFFin_JieDate.aspx" />
+    <Content Include="BaseInfo\WFFin_JieDatelList.aspx" />
     <Content Include="BaseInfo\WFProjectCost.aspx" />
     <Content Include="BaseInfo\WFProjectCostList.aspx" />
     <Content Include="BaseInfo\WFModel.aspx" />
@@ -314,6 +316,20 @@
     </Compile>
     <Compile Include="BaseInfo\GuestProBaseInfoList.aspx.designer.cs">
       <DependentUpon>GuestProBaseInfoList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\WFFin_JieDate.aspx.cs">
+      <DependentUpon>WFFin_JieDate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFFin_JieDate.aspx.designer.cs">
+      <DependentUpon>WFFin_JieDate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\WFFin_JieDatelList.aspx.cs">
+      <DependentUpon>WFFin_JieDatelList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFFin_JieDatelList.aspx.designer.cs">
+      <DependentUpon>WFFin_JieDatelList.aspx</DependentUpon>
     </Compile>
     <Compile Include="BaseInfo\WFProjectCost.aspx.cs">
       <DependentUpon>WFProjectCost.aspx</DependentUpon>
@@ -692,6 +708,7 @@
     <Compile Include="Dal\BaseInfo\Invoice_PersonService.cs" />
     <Compile Include="Dal\BaseInfo\PetitionsService.cs" />
     <Compile Include="Dal\BaseInfo\Province_CityService.cs" />
+    <Compile Include="Dal\BaseInfo\Fin_JieDateService.cs" />
     <Compile Include="Dal\BaseInfo\TB_ProjectCostService.cs" />
     <Compile Include="Dal\BaseInfo\TB_BasePoTypeService.cs" />
     <Compile Include="Dal\BaseInfo\TB_BaseSkillService.cs" />
@@ -2079,6 +2096,7 @@
     <Compile Include="Model\BaseInfo\TB_HouseInfo.cs" />
     <Compile Include="Model\BaseInfo\Tb_Inventory.cs" />
     <Compile Include="Model\BaseInfo\FpTaxInfo.cs" />
+    <Compile Include="Model\BaseInfo\Fin_JieDate.cs" />
     <Compile Include="Model\BaseInfo\TB_Model.cs" />
     <Compile Include="Model\BaseInfo\TB_ProjectCost.cs" />
     <Compile Include="Model\BaseInfo\TeamInfo.cs" />

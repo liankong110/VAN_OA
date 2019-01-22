@@ -152,7 +152,63 @@
                     <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
                     <asp:ListItem Value="1" Text="计量"></asp:ListItem>
                     <asp:ListItem Value="0" Text="不计量"></asp:ListItem>
+                </asp:DropDownList>   <br />
+                账内到款：
+                 <asp:DropDownList ID="ddlZhangNeiDaoKuan" runat="server">
+                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                     <asp:ListItem Text="=" Value="="></asp:ListItem>
+                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                 </asp:DropDownList>
+                <asp:TextBox ID="txtZhangNeiDaoKuan" runat="server" Width="80px"></asp:TextBox>
+                项目金额：
+                 <asp:DropDownList ID="ddlPOTotal" runat="server">
+                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                     <asp:ListItem Text="=" Value="="></asp:ListItem>
+                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                 </asp:DropDownList>
+                <asp:TextBox ID="txtPOTotal" runat="server" Width="80px"></asp:TextBox>
+                财务成本：
+                 <asp:DropDownList ID="ddlCaiWuChegBen" runat="server">
+                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                     <asp:ListItem Text="=" Value="="></asp:ListItem>
+                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                 </asp:DropDownList>
+                <asp:TextBox ID="txtCaiWuChegBen" runat="server" Width="80px"></asp:TextBox>
+             
+                利润扣除：
+                 <asp:DropDownList ID="ddlLiRunKouChu" runat="server">
+                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                     <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                     <asp:ListItem Text="=" Value="="></asp:ListItem>
+                     <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
+                 </asp:DropDownList>
+                <asp:TextBox ID="txtLiRunKouChu" runat="server" Width="80px"></asp:TextBox>
+                账内利润：
+                <asp:DropDownList ID="ddlZhangNeiLiRun" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                    <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                 </asp:DropDownList>
+                <asp:TextBox ID="txtZhangNeiLiRun" runat="server" Width="80px"></asp:TextBox>
                 <br />
                 <asp:CheckBox ID="CheckBox1" runat="server" Text="初始状态" />
                 <asp:CheckBox ID="CheckBox2" runat="server" Text="已交付" />
@@ -331,7 +387,7 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                    DataFormatString="{0:yyyy-MM-dd}" >
+                    DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center" Width="65px"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
@@ -346,6 +402,8 @@
                 <asp:BoundField DataField="GuestProString" HeaderText="属性" SortExpression="GuestProString"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="potypeString" HeaderText="类别" SortExpression="potypeString"
+                    HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="goodSellTotal" HeaderText="销售额" DataFormatString="{0:n2}"
                     SortExpression="goodSellTotal" ItemStyle-HorizontalAlign="Center">
@@ -375,11 +433,11 @@
                     DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="WaiInvoTotal" HeaderText="帐内到款" SortExpression="WaiInvoTotal"
+                <asp:BoundField DataField="WaiInvoTotal" HeaderText="账内到款" SortExpression="WaiInvoTotal"
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="WaiQianKuan" HeaderText="帐内欠款" SortExpression="WaiQianKuan"
+                <asp:BoundField DataField="WaiQianKuan" HeaderText="账内欠款" SortExpression="WaiQianKuan"
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -399,15 +457,15 @@
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="No_KouLiRun" HeaderText="帐内利润" SortExpression="No_KouLiRun"
+                <asp:BoundField DataField="KPI_No_KouLiRun" HeaderText="账内利润" SortExpression="KPI_No_KouLiRun"
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="NewNo_KouLiRun" HeaderText="新帐内利润" SortExpression="NewNo_KouLiRun"
+                <asp:BoundField DataField="NewNo_KouLiRun" HeaderText="新账内利润" SortExpression="NewNo_KouLiRun"
                     DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="ZhangQiTotal" HeaderText="帐期" SortExpression="ZhangQiTotal"
+                <asp:BoundField DataField="ZhangQiTotal" HeaderText="账期" SortExpression="ZhangQiTotal"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -479,7 +537,7 @@
     <asp:Label ID="Label8" runat="server" Text="0" ForeColor="Red"></asp:Label>
     &nbsp; &nbsp;
      新帐内利润合计：<asp:Label ID="lblNewNo_KouLiRun" runat="server" Text="0" ForeColor="Red"></asp:Label>
-   
+
     &nbsp; &nbsp;
     <br />
     <asp:Label ID="Label6" runat="server" Text="项目纯利合计"></asp:Label>

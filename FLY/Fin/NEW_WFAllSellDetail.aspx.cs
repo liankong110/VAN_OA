@@ -110,6 +110,21 @@ namespace VAN_OA.JXC
                 }
                 ddlCompany.DataSource = comList;
                 ddlCompany.DataBind();
+                GetBuTime();
+            }
+        }
+
+        private void GetBuTime()
+        {
+            //系统今天时间-120天这个日期 缺省显示 在上面
+            var jieData = new Dal.BaseInfo.Fin_JieDateService().GetListArray(string.Format(" JYear={0}",Convert.ToInt32( ddlYear.Text)-1));
+            if (jieData.Count > 0)
+            {
+                txtBuTime.Text = jieData[0].JDate.AddDays(-120).ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                txtBuTime.Text = "";
             }
         }
 
@@ -152,7 +167,7 @@ namespace VAN_OA.JXC
 
                 if (Convert.ToDateTime(txtBuTime.Text) >= fristDate)
                 {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('补考时间必须小于财年-1-1！');</script>");
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('考核前延日期必须小于财年-1-1！');</script>");
                     return;
                 }
 
@@ -168,7 +183,7 @@ namespace VAN_OA.JXC
 
                 if (Convert.ToDateTime(txtStartTime.Text) < fristDate)
                 {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('启用时间必须大于等于财年-1-1！');</script>");
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('考核启用时间必须大于等于财年-1-1！');</script>");
                     return;
                 }
 
@@ -898,6 +913,16 @@ group by AE;
     <Border ss:Position='Left' ss:LineStyle='Continuous' ss:Weight='1'/>
     <Border ss:Position='Right' ss:LineStyle='Continuous' ss:Weight='1'/>
     <Border ss:Position='Top' ss:LineStyle='Continuous' ss:Weight='1'/>
+   </Borders><Font ss:FontName='宋体' x:CharSet='134' ss:Size='12' />
+   <Interior  ss:Pattern='Solid'/>
+   <NumberFormat ss:Format='@'/></Style>");
+
+
+            Response.Write(@"<Style ss:ID='s66'><Borders>
+    <Border ss:Position='Bottom' ss:LineStyle='Continuous' ss:Weight='1'/>
+    <Border ss:Position='Left' ss:LineStyle='Continuous' ss:Weight='1'/>
+    <Border ss:Position='Right' ss:LineStyle='Continuous' ss:Weight='1'/>
+    <Border ss:Position='Top' ss:LineStyle='Continuous' ss:Weight='1'/>
    </Borders><Font ss:FontName='宋体' x:CharSet='134' ss:Size='12' ss:Color='#FFFFFF'/>
    <Interior ss:Color='#366092' ss:Pattern='Solid'/>
    <NumberFormat ss:Format='@'/></Style>");
@@ -905,9 +930,14 @@ group by AE;
             Response.Write("</Styles>");
             show();
 
+            //将公务费放在最后
+            var gongWu=all_propertyList.Find(t => t.CostType == "公务费");
+            all_propertyList.Remove(gongWu);
+            all_propertyList.Add(gongWu);
+
             foreach (var u in user)
             {
-                int sumCount = all_propertyList.Count + 6;
+                int sumCount = all_propertyList.Count + 5;
                 if (sumCount % 2 == 0)
                 {
                     sumCount = sumCount / 2;
@@ -924,12 +954,12 @@ group by AE;
 
                 #region 报表公司运营费用
 
-                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:style='height: 20px; background-color: #336699; color: White;'>"));
+                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:style='height: 20px; '>"));
                 Response.Write(string.Format("<Cell ss:StyleID='border' ss:MergeAcross='{0}'  ><Data ss:Type='String'>公司运营费用</Data></Cell>", (sumCount - 1)));
                 Response.Write("</Row>");
 
 
-                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:style='height: 20px; background-color: #336699; color: White;'>"));
+                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:style='height: 20px; '>"));
                 Response.Write(string.Format("<Cell ss:StyleID='s82' ss:MergeAcross='{4}'  ><Data ss:Type='String'>公司名称:{0}     财年年月:{1} 公司年度总销售额:{2}     公司年度总用车里程数:{3}</Data></Cell>",
                     lblSimpName1.Text, lblYearMonth.Text, lblSellTotal.Text, lblCarTotal.Text, (sumCount - 1)));
                 Response.Write("</Row>");
@@ -955,10 +985,13 @@ group by AE;
                 report1_String += GetHtml_S82_String("总计");
                 report1_String += GetHtml_S82_String("用车公里数");
                 report1_String += GetHtml_S82_String("用车百分比");
-                report1_String += GetHtml_S82_String("总销售额");
-                report1_String += GetHtml_S82_String("销售额百分比");
+
                 report1_String += "</Row>";
+
+
                 Response.Write("</Row>");
+
+
 
                 //具体数据
                 decimal sum_AllTotal = 0;
@@ -1086,9 +1119,21 @@ group by AE;
                 {
                     report1_String += GetNumber_String(((RoadLong / Convert.ToDecimal(lblCarTotal.Text)) * 100).ToString("n2") + "%");
                 }
+
+                report1_String += "</Row>";
+
+
+
+                //新增一行
+                report1_String += "<Row ss:AutoFitHeight='1' ss:style='height: 20px;'>";
+                report1_String += GetHtml_S82_String("总销售额");
                 report1_String += GetNumber_String(sellT.ToString("n2"));
+                report1_String += GetHtml_S82_String("销售额百分比");
                 report1_String += GetNumber_String(baifenbi.ToString());
                 report1_String += "</Row>";
+                //===
+             
+
                 Response.Write("</Row>");
                 Response.Write(report1_String);
                 sum_AllTotal += allTotal;
@@ -1104,7 +1149,7 @@ group by AE;
                 Response.Write(string.Format("<Cell ss:StyleID='border' ss:MergeAcross='{0}'  ><Data ss:Type='String'>公司预期结算报表 </Data></Cell>", (14)));
                 Response.Write("</Row>");
 
-                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:colspan='21' ss:style='height: 20px; background-color: #336699; color: White;'>"));
+                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:colspan='21' ss:style='height: 20px; '>"));
 
                 Response.Write(string.Format("<Cell ss:StyleID='s82'  ss:MergeAcross='14' ><Data ss:Type='String'>公司：{0}</Data></Cell>", lblSimpName.Text));
 
@@ -1115,7 +1160,7 @@ group by AE;
                 Response.Write(string.Format("<Row ss:AutoFitHeight='1'>"));
                 Response.Write(string.Format("<Cell ss:StyleID='s82'><Data ss:Type='String'> </Data></Cell>", lblYearMonth1.Text));
 
-                Response.Write(string.Format("<Cell ss:StyleID='s82' ss:MergeAcross='15'><Data ss:Type='String'>全年合计</Data></Cell>"));
+                Response.Write(string.Format("<Cell ss:StyleID='s82' ss:MergeAcross='13'><Data ss:Type='String'>全年合计</Data></Cell>"));
 
                 //Response.Write(string.Format("<Cell ss:StyleID='s82' ss:MergeAcross='9'><Data ss:Type='String'>选中合计</Data></Cell>"));
 
@@ -1142,11 +1187,11 @@ group by AE;
 
                 GetHtml_S82("企业净利");
                 GetHtml_S82("企业纯利");
-                GetHtml_S82("企新纯利");
+                // 去除 GetHtml_S82("企新纯利");
 
                 GetHtml_S82("政府净利");
                 GetHtml_S82("政府纯利");
-                GetHtml_S82("政新纯利");
+                // 去除 GetHtml_S82("政新纯利");
 
                 report2_String += "<Row ss:AutoFitHeight='1'>";
                 report2_String += GetHtml_S82_String("");
@@ -1162,10 +1207,10 @@ group by AE;
                 report2_String += GetHtml_S82_String("政府成本");
                 report2_String += GetHtml_S82_String("企业净利");
                 report2_String += GetHtml_S82_String("企业纯利");
-                //report2_String += GetHtml_S82_String("企新纯利");
+
                 report2_String += GetHtml_S82_String("政府净利");
                 report2_String += GetHtml_S82_String("政府纯利");
-                //report2_String += GetHtml_S82_String("政新纯利");
+
                 report2_String += "</Row>";
                 Response.Write(string.Format("</Row>"));
                 decimal SUM_X1 = 0;
@@ -1261,10 +1306,10 @@ group by AE;
                 GetNumber(X8.ToString("n4"));
                 GetNumber(X9.ToString("n4"));
                 GetNumber((X9 - model.KouTotal_QZ).ToString("n4"));
-                GetNumber(newTotal_QY.ToString("n4"));
+                //去除 GetNumber(newTotal_QY.ToString("n4"));
                 GetNumber(X10.ToString("n4"));
                 GetNumber((X10 - model.KouTotal_ZZ).ToString("n4"));
-                GetNumber(newTotal_ZF.ToString("n4"));
+                //去除 GetNumber(newTotal_ZF.ToString("n4"));
                 report2_String += "<Row ss:AutoFitHeight='1'>";
                 report2_String += GetNumber_String(" ");
                 report2_String += GetNumber_String(X11.ToString("n4"));
@@ -1294,24 +1339,27 @@ group by AE;
 
                 report4_String += "<Row ss:AutoFitHeight='1'>";
                 report4_String += GetHtml_String("1.全年实现企业销售额：");
-                report4_String += GetNumber_String(model.SellTotal_QZ);
-                report4_String += GetHtml_String("政府企业额：");
+                report4_String += GetNumber_String(model.SellTotal_QZ.ToString("n2"));
+                report4_String += GetHtml_String("政府销售额：");
                 report4_String += GetNumber_String(model.SellTotal_ZZ);
-                report4_String += GetHtml_String("", 10);
+                report4_String += GetHtml_String_BGColor("企新纯利:");
+                report4_String += GetHtml_String(newTotal_QY.ToString("n2"));
+                report4_String += GetHtml_String_BGColor("政新纯利:");
+                report4_String += GetHtml_String(newTotal_ZF.ToString("n2"));
                 report4_String += "</Row>";
 
                 report4_String += "<Row ss:AutoFitHeight='1'>";
                 report4_String += GetHtml_String("2.全年实现企业净利：");
-                report4_String += GetNumber_String(X9.ToString("n4"));
+                report4_String += GetNumber_String(X9.ToString("n2"));
                 report4_String += GetHtml_String("政府净利：");
-                report4_String += GetNumber_String(X10.ToString("n4"));
-                report4_String += GetHtml_String("企业纯利：");
-                report4_String += GetNumber_String((X9 - model.KouTotal_QZ).ToString("n4"));
+                report4_String += GetNumber_String(X10.ToString("n2"));
+                report4_String += GetHtml_String_BGColor("企业纯利：");
+                report4_String += GetNumber_String((X9 - model.KouTotal_QZ).ToString("n2"));
                 report4_String += GetHtml_String("");
                 report4_String += GetHtml_String("");
                 report4_String += GetHtml_String("（结算依据）");
-                report4_String += GetHtml_String("政府纯利：");
-                report4_String += GetNumber_String((X10 - model.KouTotal_ZZ).ToString("n4"));
+                report4_String += GetHtml_String_BGColor("政府纯利：");
+                report4_String += GetNumber_String((X10 - model.KouTotal_ZZ).ToString("n2"));
                 report4_String += GetHtml_String("", 3);
                 report4_String += "</Row>";
 
@@ -1323,7 +1371,7 @@ group by AE;
                 Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:style='height: 20px; '>"));
                 Response.Write(string.Format("<Cell ss:StyleID='border' ss:MergeAcross='{0}'  ><Data ss:Type='String'>公司实际结算报表  </Data></Cell>", 14));
                 Response.Write("</Row>");
-                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:colspan='21' ss:style='height: 20px; background-color: #336699; color: White;'>"));
+                Response.Write(string.Format("<Row ss:AutoFitHeight='1' ss:colspan='21' ss:style='height: 20px; '>"));
 
                 Response.Write(string.Format("<Cell ss:StyleID='s82'  ss:MergeAcross='14' ><Data ss:Type='String'>公司：{0}</Data></Cell>", lblSimpName.Text));
 
@@ -1466,11 +1514,11 @@ group by AE;
 
 
                 report4_String += "<Row ss:AutoFitHeight='1'>";
-                report4_String += GetHtml_String("3.到账企实纯利：");
+                report4_String += GetHtml_String_BGColor("3.到账企实纯利：");
                 report4_String += GetNumber_String((X19 - model.KouTotal_QXZ).ToString("n4"));
                 report4_String += GetHtml_String("");
                 report4_String += GetHtml_String("");
-                report4_String += GetHtml_String("到账政实纯利：");
+                report4_String += GetHtml_String_BGColor("到账政实纯利：");
                 report4_String += GetNumber_String((X20 - model.KouTotal_ZXZ).ToString("n4"));
                 report4_String += GetHtml_String("", 8);
                 report4_String += "</Row>";
@@ -1544,6 +1592,17 @@ group by AE;
         {
             return string.Format("<Cell ss:StyleID='border'><Data ss:Type='String'>{0}</Data></Cell>", value.ToString());
         }
+
+
+        private string GetHtml_String_BGColor(object value)
+        {
+            return string.Format("<Cell ss:StyleID='s66' ><Data ss:Type='String'>{0}</Data></Cell>", value);
+        }
+
+
+
+
+
         private string GetHtml_String(object value, int merge)
         {
             return string.Format("<Cell ss:StyleID='border' ss:MergeAcross='{1}'><Data ss:Type='String'>{0}</Data></Cell>", value.ToString(), merge);
@@ -1597,6 +1656,11 @@ group by AE;
             {
                 cbKaoList.Enabled = true;
             }
+        }
+
+        protected void ddlYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetBuTime();
         }
     }
 }

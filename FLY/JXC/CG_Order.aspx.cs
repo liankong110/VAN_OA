@@ -68,6 +68,12 @@ namespace VAN_OA.JXC
 
                 return false;
             }
+            if (txtPOName.Text.Length > 20)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过20个汉字符，请修正！');</script>");
+                txtPOName.Focus();
+                return false;
+            }
 
             if (txtPODate.Text == "")
             {
@@ -108,6 +114,13 @@ namespace VAN_OA.JXC
             if (txtPOPayStype.Text == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写结算方式！');</script>");
+                txtPOPayStype.Focus();
+
+                return false;
+            }
+            if (txtPOPayStype.Text.Length >10)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('结算方式长度不能超过10个汉字符，请修正！');</script>");
                 txtPOPayStype.Focus();
 
                 return false;
@@ -190,6 +203,13 @@ namespace VAN_OA.JXC
                 if (txtPORemark.Text == "")
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写备注！');</script>");
+                    txtPORemark.Focus();
+                    return false;
+                }
+
+                if (txtPORemark.Text.Length>50)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过50个汉字符，请修正！');</script>");
                     txtPORemark.Focus();
                     return false;
                 }

@@ -127,6 +127,17 @@ namespace VAN_OA.JXC
                    return;
                 }
             }
+            if (lblModel.Text.Length > 20)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('型号长度不能超过20个汉字符，请修正！');</script>");
+                return;
+            }
+            if (txtDetailRemark.Text.Length > 20)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过20个汉字符，请修正！');</script>");
+                return;
+            }
+
             int goodId = goodsSer.GetGoodId(txtInvName.Text, lblSpec.Text, lblModel.Text,lblGoodSmTypeName.Text,lblUnit.Text);
             if (goodId == 0)
             {

@@ -171,10 +171,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                     }
                 }
                 selectedPoType = selectedPoType.Trim(',');
-                //if (selectedPoType == ""&& cbAll.Checked==false)
-                //{
-                //    selectedPoType = "1,2,3";
-                //}
+              
                 if (cbAll.Checked)
                 {
                     selectedPoType = "1,2,3";
@@ -182,13 +179,13 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                 foreach (var model in pOOrderList)
                 {
                     decimal chengben = 0;
-                    if (!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype))
+                    if ( !zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype) && model.ChengBenJiLiangString)
                     {
                         var T = model.MinOutDate.Value.AddDays(D + 1);
 
                         for (int i = 1; i <= 100; i++)
                         {
-                            var v = T.AddDays(30 * i);
+                            var v = T.AddDays(30 * i).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
                             if (v > DateTime.Now)
                             {
@@ -217,14 +214,13 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                                     {
                                         var v2 = result.Max(t => t.DaoKuanDate).AddDays(-1);
                                         var v2_Total = invoiceList.FindAll(t => t.DaoKuanDate <= v2 && t.PoNo == model.PONo).Sum(t => t.Total);
-                                        if (v2_Total > 0)
+
+                                        var X2 = (model.SumPOTotal * Convert.ToDecimal(P) - v2_Total) * R * (30 + (v2.Date - v).Days) / 30;
+                                        if (X2 > 0)
                                         {
-                                            var X2 = (model.SumPOTotal * Convert.ToDecimal(P) - v2_Total) * R * (30 + (v2.Date - v).Days) / 30;
-                                            if (X2 > 0)
-                                            {
-                                                chengben = chengben + X2;
-                                            }
+                                            chengben = chengben + X2;
                                         }
+
                                     }
                                     break;
                                 }
@@ -238,7 +234,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                     }
                     model.CaiWuChengBen = chengben;
                     model.NewKouLiRun = model.KouLiRun + model.CaiWuChengBen;
-                    model.NewNo_KouLiRun = model.No_KouLiRun + model.CaiWuChengBen;
+                    model.NewNo_KouLiRun = model.KPI_No_KouLiRun + model.CaiWuChengBen;
                 }
             }
 

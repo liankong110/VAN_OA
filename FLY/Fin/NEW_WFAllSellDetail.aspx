@@ -78,7 +78,7 @@
             </td>
             <td colspan="2">
                 财年年月：
-                <asp:DropDownList ID="ddlYear" runat="server">
+                <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged">
                 </asp:DropDownList>
                 <asp:DropDownList ID="ddlMonth" runat="server">
                     <asp:ListItem Value="01" Text="01"></asp:ListItem>
@@ -110,7 +110,7 @@
                     <asp:ListItem Value="1" Text="选中" Selected="True"></asp:ListItem>
                     <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
                 </asp:DropDownList>
-                启用时间:
+                考核启用时间:
                 <asp:TextBox ID="txtStartTime" runat="server"></asp:TextBox>
                 <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
                 <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
@@ -121,7 +121,7 @@
                     <asp:ListItem Text="实际帐期>=帐期截止期" Value="1"></asp:ListItem>
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                 </asp:DropDownList>
-                补考时间:
+                考核前延日期:
                 <asp:TextBox ID="txtBuTime" runat="server"></asp:TextBox>
                 <asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
                 <cc1:CalendarExtender ID="CalendarExtender1" PopupButtonID="ImageButton1" runat="server"

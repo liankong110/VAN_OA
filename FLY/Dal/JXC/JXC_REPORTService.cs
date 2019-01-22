@@ -1423,7 +1423,7 @@ as newtable1 on POTotal_SumView.PONo=newtable1.PONo  where InvoTotal>=SumPOTotal
             strSql.Append("select  ChengBenJiLiang,CG_POOrder.POType, MinOutDate,isnull(MaxDaoKuanDate,getdate()) as MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
             strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
             strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
-            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,avg(" + (compare == "" ? "0.05" : "WaiInvoTotal") + ") as WaiInvoTotal  from CG_POOrder ");
+            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,avg(" + (compare == "" ? "0.05" : "WaiInvoTotal") + ") as WaiInvoTotal,Model  from CG_POOrder ");
 
             strSql.Append(" left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo ");
             strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
@@ -1458,7 +1458,7 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType ,ChengBenJiLiang ");
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,CG_POOrder.POType ,ChengBenJiLiang,Model ");
 
             if (having != "")
             {
@@ -1487,6 +1487,11 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.PODate = (DateTime)ojb;
+                        }
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = ojb.ToString();
                         }
                         model.GuestName = dataReader["GuestName"].ToString();
                         ojb = dataReader["goodSellTotal"];
@@ -1614,9 +1619,8 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         ojb = dataReader["ChengBenJiLiang"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            model.ChengBenJiLiangString = ojb.ToString();
-                        }
-                        
+                            model.ChengBenJiLiangString =Convert.ToBoolean(ojb);
+                        }                        
                         list.Add(model);
                     }
                 }
