@@ -190,7 +190,7 @@ namespace VAN_OA.JXC
         private void Show()
         {
 
-            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text)&& CommHelp.VerifesToNum(txtZhangNeiDaoKuan.Text) == false)
+            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text) && CommHelp.VerifesToNum(txtZhangNeiDaoKuan.Text) == false)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('账内到款 格式有问题！');</script>");
                 return;
@@ -421,17 +421,17 @@ namespace VAN_OA.JXC
             }
             if (ddlPOFaTotal.Text != "-1")
             {
-          
+
                 fuhao += string.Format(" and SumPOTotal {0} isnull(SellFPTotal,0)", ddlPOFaTotal.Text);
             }
-            
-            if (ddlPOTotal.Text != "-1")
+
+            if (!string.IsNullOrEmpty(txtPOTotal.Text) && CommHelp.VerifesToNum(txtPOTotal.Text) == false)
             {
-                if (CommHelp.VerifesToNum(txtPOTotal.Text) == false)
-                {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
-                    return;
-                }
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                return;
+            }
+            if (!string.IsNullOrEmpty(txtPOTotal.Text) && ddlPOTotal.Text != "-1")
+            {
                 fuhao += string.Format(" and SumPOTotal {0} {1}", ddlPOTotal.Text, txtPOTotal.Text);
             }
 
@@ -452,7 +452,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目净利 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and maoliTotal {0} {1}", ddlProProfit.Text, txtProProfit.Text);
+                fuhao += string.Format(" and Round(maoliTotal,2) {0} {1}", ddlProProfit.Text, txtProProfit.Text);
             }
 
             if (!string.IsNullOrEmpty(txtProTureProfit.Text) && ddlProTureProfit.Text != "-1")
@@ -546,64 +546,65 @@ namespace VAN_OA.JXC
             }
 
 
-            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text)&& ddlZhangNeiDaoKuan.Text!="-1")
+            if (!string.IsNullOrEmpty(txtZhangNeiDaoKuan.Text) && ddlZhangNeiDaoKuan.Text != "-1")
             {
                 var fuHao = ddlZhangNeiDaoKuan.Text;
                 var val = Convert.ToDecimal(txtZhangNeiDaoKuan.Text);
                 if (fuHao == ">")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal > val);
+
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) > val);
                 }
                 if (fuHao == ">=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal >= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) >= val);
                 }
                 if (fuHao == "<")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal < val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) < val);
                 }
                 if (fuHao == "<=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal <= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) <= val);
                 }
                 if (fuHao == "=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal == val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) == val);
                 }
                 if (fuHao == "<>")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.WaiInvoTotal != val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal((T.WaiInvoTotal ?? 0).ToString("n2")) != val);
                 }
             }
 
-        
+
             if (!string.IsNullOrEmpty(txtLiRunKouChu.Text) && ddlLiRunKouChu.Text != "-1")
             {
                 var fuHao = ddlLiRunKouChu.Text;
                 var val = Convert.ToDecimal(txtLiRunKouChu.Text);
                 if (fuHao == ">")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun > val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) > val);
                 }
                 if (fuHao == ">=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun >= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) >= val);
                 }
                 if (fuHao == "<")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun < val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) < val);
                 }
                 if (fuHao == "<=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun <= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) <= val);
                 }
                 if (fuHao == "=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun == val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) == val);
                 }
                 if (fuHao == "<>")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KouLiRun != val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KouLiRun.ToString("n2")) != val);
                 }
             }
             if (!string.IsNullOrEmpty(txtZhangNeiLiRun.Text) && ddlZhangNeiLiRun.Text != "-1")
@@ -612,27 +613,27 @@ namespace VAN_OA.JXC
                 var val = Convert.ToDecimal(txtZhangNeiLiRun.Text);
                 if (fuHao == ">")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun > val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) > val);
                 }
                 if (fuHao == ">=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun >= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) >= val);
                 }
                 if (fuHao == "<")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun < val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) < val);
                 }
                 if (fuHao == "<=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun <= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) <= val);
                 }
                 if (fuHao == "=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun == val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) == val);
                 }
                 if (fuHao == "<>")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.KPI_No_KouLiRun != val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.KPI_No_KouLiRun.ToString("n2")) != val);
                 }
             }
 
@@ -642,7 +643,7 @@ namespace VAN_OA.JXC
                 var P = Convert.ToSingle(txtCeSuanDian.Text);
                 var R = Convert.ToDecimal(txtMonthLiLv.Text);
 
-                var jiliang =Convert.ToInt32( ddlJiLiang.Text);
+                var jiliang = Convert.ToInt32(ddlJiLiang.Text);
                 //计算财务成本为0 的项目
                 var zeroList = POSer.GetPoNoList(D, P);
                 //财务成本不为0的 项目
@@ -675,15 +676,15 @@ namespace VAN_OA.JXC
                     }
                 }
                 selectedPoType = selectedPoType.Trim(',');
-               
-                if ( cbAll.Checked )
+
+                if (cbAll.Checked)
                 {
                     selectedPoType = "1,2,3";
                 }
                 foreach (var model in pOOrderList)
                 {
                     decimal chengben = 0;
-                    if (jiliang!=0&&!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype)&&model.ChengBenJiLiangString)
+                    if (jiliang != 0 && !zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype) && model.ChengBenJiLiangString)
                     {
                         var T = model.MinOutDate.Value.AddDays(D + 1);
 
@@ -701,7 +702,7 @@ namespace VAN_OA.JXC
                                 var v1 = DateTime.Now;
                                 //v = DateTime.Now;
                                 var invoiceTotal = invoiceList.FindAll(t => t.DaoKuanDate <= v1 && t.PoNo == model.PONo).Sum(t => t.Total);
-                                var X = (model.SumPOTotal * Convert.ToDecimal(P) - invoiceTotal) * R*(30 + (v1.Date - v).Days)/30;
+                                var X = (model.SumPOTotal * Convert.ToDecimal(P) - invoiceTotal) * R * (30 + (v1.Date - v).Days) / 30;
                                 if (X > 0)
                                 {
                                     chengben = chengben + X;
@@ -718,13 +719,13 @@ namespace VAN_OA.JXC
                                     {
                                         var v2 = result.Max(t => t.DaoKuanDate).AddDays(-1);
                                         var v2_Total = invoiceList.FindAll(t => t.DaoKuanDate <= v2 && t.PoNo == model.PONo).Sum(t => t.Total);
-                                      
+
                                         var X2 = (model.SumPOTotal * Convert.ToDecimal(P) - v2_Total) * R * (30 + (v2.Date - v).Days) / 30;
                                         if (X2 > 0)
                                         {
                                             chengben = chengben + X2;
                                         }
-                                        
+
                                     }
                                     break;
                                 }
@@ -748,19 +749,19 @@ namespace VAN_OA.JXC
                 var val = Convert.ToDecimal(txtCaiWuChegBen.Text);
                 if (fuHao == ">")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen > val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) > val);
                 }
                 if (fuHao == ">=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen >= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) >= val);
                 }
                 if (fuHao == "<")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen < val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) < val);
                 }
                 if (fuHao == "<=")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen <= val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) <= val);
                 }
                 if (fuHao == "=")
                 {
@@ -768,7 +769,7 @@ namespace VAN_OA.JXC
                 }
                 if (fuHao == "<>")
                 {
-                    pOOrderList = pOOrderList.FindAll(T => T.CaiWuChengBen != val);
+                    pOOrderList = pOOrderList.FindAll(T => Convert.ToDecimal(T.CaiWuChengBen.ToString("n2")) != val);
                 }
             }
             //var a=pOOrderList.FindAll(T => T.SumPOTotal == 0);
@@ -901,7 +902,7 @@ namespace VAN_OA.JXC
 
             }
 
-         
+
         }
 
 

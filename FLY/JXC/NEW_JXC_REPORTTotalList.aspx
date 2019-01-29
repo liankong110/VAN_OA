@@ -153,8 +153,8 @@
                     <asp:ListItem Value="1" Text="计量"></asp:ListItem>
                     <asp:ListItem Value="0" Text="不计量"></asp:ListItem>
                 </asp:DropDownList>   <br />
-                账内到款：
-                 <asp:DropDownList ID="ddlZhangNeiDaoKuan" runat="server">
+               <font style="color: Red;"> 账内到款：</font>
+                 <asp:DropDownList ID="ddlZhangNeiDaoKuan" runat="server" style="color:red;">
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
@@ -175,8 +175,8 @@
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtPOTotal" runat="server" Width="80px"></asp:TextBox>
-                财务成本：
-                 <asp:DropDownList ID="ddlCaiWuChegBen" runat="server">
+               <font style="color: Red;"> 财务成本：</font>
+                 <asp:DropDownList ID="ddlCaiWuChegBen" runat="server" style="color:red;">
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
@@ -187,8 +187,8 @@
                  </asp:DropDownList>
                 <asp:TextBox ID="txtCaiWuChegBen" runat="server" Width="80px"></asp:TextBox>
              
-                利润扣除：
-                 <asp:DropDownList ID="ddlLiRunKouChu" runat="server">
+               <font style="color: Red;"> 利润扣除：</font>
+                 <asp:DropDownList ID="ddlLiRunKouChu" runat="server" style="color:red;">
                      <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
@@ -198,8 +198,8 @@
                      <asp:ListItem Text="<>" Value="<>"></asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtLiRunKouChu" runat="server" Width="80px"></asp:TextBox>
-                账内利润：
-                <asp:DropDownList ID="ddlZhangNeiLiRun" runat="server">
+                <font style="color: Red;">账内利润：</font>
+                <asp:DropDownList ID="ddlZhangNeiLiRun" runat="server" style="color:red;">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
                     <asp:ListItem Text=">=" Value=">="></asp:ListItem>
@@ -216,8 +216,8 @@
                 <asp:CheckBox ID="CheckBox4" runat="server" Text="已结清" />
                 &nbsp;&nbsp;&nbsp;&nbsp;<asp:CheckBox ID="CheckBox5" runat="server" Text="发票金额不一致" /><asp:CheckBox
                     ID="CheckBox6" runat="server" Text="实际金额不一致" />
-                项目净利
-                <asp:DropDownList ID="ddlProProfit" runat="server">
+              <font style="color: Red;">  项目净利</font>
+                <asp:DropDownList ID="ddlProProfit" runat="server" style="color:red;">
                     <asp:ListItem Text="全部" Value="-1"></asp:ListItem>
                     <asp:ListItem Text="<" Value="<"></asp:ListItem>
                     <asp:ListItem Text=">" Value=">"></asp:ListItem>
@@ -298,7 +298,10 @@
         </tr>
         <tr>
             <td colspan="4">
-                <div align="right">
+                <div style="display:inline">
+                    备注：红色的标题均采用小数点两位后四舍五入来显示。
+                </div>
+                <div align="right"  style="display:inline;float:right;">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                 <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" Visible="false"
                     OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;

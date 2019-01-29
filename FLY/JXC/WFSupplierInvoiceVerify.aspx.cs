@@ -754,6 +754,10 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                     for (int i = 0; i < gvList.Rows.Count; i++)
                     {
                         var model = POOrders[i];
+                        if (model.IfCheck == false)
+                        {
+                            continue;
+                        }
                         TextBox supplierFPNo = gvList.Rows[i].FindControl("txtSupplierFPNo") as TextBox;
                         if (supplierFPNo != null)
                         {

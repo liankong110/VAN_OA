@@ -34,6 +34,10 @@ namespace VAN_OA
         /// <returns></returns>
         public static bool VerifesToNum(string num)
         {
+            if (num.Contains(",") || num.Contains("，"))
+            {
+                return false;
+            }
             decimal result;
             return decimal.TryParse(num, out result);
         }
