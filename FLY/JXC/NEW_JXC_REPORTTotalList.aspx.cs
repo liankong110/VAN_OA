@@ -452,7 +452,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目净利 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and Round(maoliTotal,2) {0} {1}", ddlProProfit.Text, txtProProfit.Text);
+                fuhao += string.Format(" and Round(maoliTotal,2) {0} {1}", ddlProProfit.Text, txtProProfit.Text.Replace(",","").Replace("，", ""));
             }
 
             if (!string.IsNullOrEmpty(txtProTureProfit.Text) && ddlProTureProfit.Text != "-1")

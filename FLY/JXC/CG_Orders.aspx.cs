@@ -127,12 +127,12 @@ namespace VAN_OA.JXC
                    return;
                 }
             }
-            if (lblModel.Text.Length > 20)
+            if (CommHelp.GetByteLen(lblModel.Text) > 20 * 2)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('型号长度不能超过20个汉字符，请修正！');</script>");
                 return;
             }
-            if (txtDetailRemark.Text.Length > 20)
+            if (CommHelp.GetByteLen(txtDetailRemark.Text) > 20 * 2)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过20个汉字符，请修正！');</script>");
                 return;

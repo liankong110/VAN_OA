@@ -17,19 +17,20 @@ using VAN_OA.Model;
 using VAN_OA.Model.BaseInfo;
 using VAN_OA.Dal.BaseInfo;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace VAN_OA.JXC
 {
     public partial class CG_OrderList : BasePage
     {
         public string GetGestProInfo(object obj)
-        {            
-            return VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo(obj); 
+        {
+            return VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo(obj);
         }
 
         public string IsSpecial(object obj)
         {
-            if (obj != null &&Convert.ToBoolean(obj))
+            if (obj != null && Convert.ToBoolean(obj))
             {
                 return "特";
             }
@@ -121,23 +122,23 @@ namespace VAN_OA.JXC
 
 
                 bool showAll = true;
-                if (QuanXian_ShowAll(SysObj.CG_OrderList) == false)              
+                if (QuanXian_ShowAll(SysObj.CG_OrderList) == false)
                 {
                     ViewState["showAll"] = false;
                     showAll = false;
                 }
-//                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='查看特殊客户'
-//where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='项目订单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
-                
-//                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
+                //                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='查看特殊客户'
+                //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='项目订单列表') and sys_Object.AutoID is not null", Session["currentUserId"]);
+
+                //                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) <= 0)
                 if (NewShowAll_textName("项目订单列表", "查看特殊客户"))
-                    {
+                {
                     ViewState["ScanSpecGuests"] = true;
                 }
                 else
                 {
                     ViewState["ScanSpecGuests"] = false;
-                }             
+                }
 
                 bool WFScanDepartList = true;
                 if (showAll == false && VAN_OA.JXC.SysObj.IfShowAll(SysObj.CG_OrderList, Session["currentUserId"], "WFScanDepartList") == true)
@@ -170,7 +171,7 @@ namespace VAN_OA.JXC
 
 
                 List<TB_BasePoType> basePoTypeList = new TB_BasePoTypeService().GetListArray("");
-                basePoTypeList.Insert(0,new TB_BasePoType { BasePoType = "全部", Id = -1 });
+                basePoTypeList.Insert(0, new TB_BasePoType { BasePoType = "全部", Id = -1 });
                 ddlPOTyle.DataSource = basePoTypeList;
                 ddlPOTyle.DataBind();
                 ddlPOTyle.DataTextField = "BasePoType";
@@ -199,7 +200,7 @@ namespace VAN_OA.JXC
             else if (ddlFPState.Text == "2")//未开全票
             {
                 sql += " and exists(select PONO from POTotal_View where CG_POOrder.PONO=POTotal_View.PONO AND POTotal>hadFpTotal)";
-              
+
             }
             else if (ddlFPState.Text == "3")//未开票 (暂缓)
             {
@@ -311,7 +312,7 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and POType={0} ", ddlPOTyle.Text);
             }
             if (ddlZhangqi.Text != "-1")
-            { 
+            {
                 //实际帐期=该项目最后一笔到款单日期-该项目第一笔出库单日期
                 sql += string.Format(" and exists(select [ZhangQiView1].PONO from [ZhangQiView1] where CG_POOrder.PONo=[ZhangQiView1].PONo and [ZhangQiView1].ZhangQie{0}{1})", ddlZhangqi.Text, ViewState["KeyValue"]);
             }
@@ -329,12 +330,12 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and (AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}')", model.LoginIPosition);
             }
             else
-            {         
+            {
                 //sql += string.Format(" and (AE='{0}' OR exists( select TB_GuestTrack.Id from TB_GuestTrack where TB_GuestTrack.IsSpecial=1 and CG_POOrder.GuestNo=TB_GuestTrack.GuestId {1}) )", ddlUser.SelectedItem.Text, strSql.ToString());
-                sql += string.Format(" and (AE='{0}'", ddlUser.SelectedItem.Text);              
+                sql += string.Format(" and (AE='{0}'", ddlUser.SelectedItem.Text);
             }
-           
-            if ((ddlUser.Text == "-1"||ddlUser.Items.Count==1)&&(bool)ViewState["ScanSpecGuests"])
+
+            if ((ddlUser.Text == "-1" || ddlUser.Items.Count == 1) && (bool)ViewState["ScanSpecGuests"])
             {
                 var strSql = new System.Text.StringBuilder();
                 int month = DateTime.Now.Month;
@@ -379,7 +380,7 @@ namespace VAN_OA.JXC
                 string goodInfo = " and CG_POOrder.PONO IN (select PONO from CG_POOrders left join CG_POOrder on CG_POOrders.Id=CG_POOrder.Id left join TB_Good on CG_POOrders.GoodId=TB_Good.GoodId where 1=1 ";
                 if (txtGoodNo.Text != "")
                 {
-                    goodInfo += string.Format(" and TB_Good.GoodNo like '%{0}%'", txtGoodNo.Text); 
+                    goodInfo += string.Format(" and TB_Good.GoodNo like '%{0}%'", txtGoodNo.Text);
                 }
                 if (txtNameOrTypeOrSpec.Text != "" && txtNameOrTypeOrSpecTwo.Text != "")
                 {
@@ -395,7 +396,7 @@ namespace VAN_OA.JXC
                     goodInfo += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
                        NameOrTypeOrSpec);
                 }
-                sql +=goodInfo+ ")";
+                sql += goodInfo + ")";
             }
 
             List<CG_POOrder> pOOrderList = this.POSer.GetListArray(sql);
@@ -436,7 +437,7 @@ namespace VAN_OA.JXC
 
         }
 
-        private int Value=0;
+        private int Value = 0;
         protected void btnSelect_Click(object sender, EventArgs e)
         {
             var invSer = new BaseKeyValueService();
@@ -449,7 +450,7 @@ namespace VAN_OA.JXC
                     ViewState["KeyValue"] = Value;
                 }
                 catch (Exception)
-                { 
+                {
                 }
             }
             AspNetPager6.CurrentPageIndex = 1;
@@ -472,7 +473,7 @@ namespace VAN_OA.JXC
             //this.gvList.PageIndex = e.NewPageIndex;
             //XiaoShouChange(AspNetPager1.CurrentPageIndex);
 
-            gvList.PageIndex=AspNetPager1.CurrentPageIndex ;
+            gvList.PageIndex = AspNetPager1.CurrentPageIndex;
             gvAllPoRemark.PageIndex = AspNetPager1.CurrentPageIndex;
             gvCai.PageIndex = AspNetPager1.CurrentPageIndex;
 
@@ -501,7 +502,7 @@ namespace VAN_OA.JXC
             this.gvList.PageIndex = pageIndex - 1;
             this.gvAllPoRemark.PageIndex = pageIndex - 1;
 
-           
+
             ViewState["Orders"] = orders;
             gvList.DataSource = orders;
             gvList.DataBind();
@@ -511,7 +512,7 @@ namespace VAN_OA.JXC
             gvAllPoRemark.DataBind();
 
             //采购信息====
-             sql = "";
+            sql = "";
             if (ddlStatue.Text != "通过+执行")
             {
                 sql = string.Format(" and Status='{0}'", ddlStatue.Text);
@@ -525,22 +526,22 @@ namespace VAN_OA.JXC
             this.gvCai.PageIndex = pageIndex - 1;
             gvCai.DataSource = caiList;
             gvCai.DataBind();
-          
+
             //======
             AspNetPager2.RecordCount = caiList.Count;
             AspNetPager3.RecordCount = orders.Count;
             AspNetPager1.RecordCount = orders.Count;
             //if (TabContainer1.ActiveTabIndex == 0)
             //{
-                
-                this.AspNetPager3.CurrentPageIndex = pageIndex;
+
+            this.AspNetPager3.CurrentPageIndex = pageIndex;
             //}
             //  if (TabContainer1.ActiveTabIndex == 2)
-            
+
             //{
-                this.AspNetPager1.CurrentPageIndex = pageIndex;
+            this.AspNetPager1.CurrentPageIndex = pageIndex;
             //}
-                this.AspNetPager2.CurrentPageIndex = pageIndex;
+            this.AspNetPager2.CurrentPageIndex = pageIndex;
 
         }
         protected void gvList_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -560,7 +561,7 @@ namespace VAN_OA.JXC
             ViewState["Orders"] = orders;
             gvList.DataSource = orders;
             gvList.DataBind();
-            TabContainer1.ActiveTabIndex = 0;   
+            TabContainer1.ActiveTabIndex = 0;
             TabContainer1.TabIndex = 0;
         }
 
@@ -611,7 +612,7 @@ namespace VAN_OA.JXC
             List<CG_POCai> caiList = CaiSer.GetListArrayToList(" 1=1 and CG_POOrder.PONo='" + ViewState["selPONo"] + "'" + sql);
             gvCai.DataSource = caiList;
             gvCai.DataBind();
-            TabContainer1.ActiveTabIndex = 1;          
+            TabContainer1.ActiveTabIndex = 1;
             TabContainer1.TabIndex = 1;
         }
 
@@ -653,7 +654,7 @@ namespace VAN_OA.JXC
             List<Sell_OrderInHouses> ordersTui = ordersSerTui.GetListArrayToList(" 1=1 and Sell_OrderInHouse.PONo='" + ViewState["selPONo"] + "' and status<>'不通过'");
             gvTui.DataSource = ordersTui;
             gvTui.DataBind();
-            TabContainer2.ActiveTabIndex = 0;   
+            TabContainer2.ActiveTabIndex = 0;
             TabContainer2.TabIndex = 0;
         }
 
@@ -697,7 +698,7 @@ namespace VAN_OA.JXC
             List<CAI_OrderOutHouses> CaiInHouse = caiOutHouseSER.GetListArrayToPoNo(" 1=1 and CAI_OrderOutHouse.PONo='" + ViewState["selPONo"] + "' and status<>'不通过'");
             gvCaiOut.DataSource = CaiInHouse;
             gvCaiOut.DataBind();
-            TabContainer2.ActiveTabIndex = 1;   
+            TabContainer2.ActiveTabIndex = 1;
             TabContainer2.TabIndex = 1;
         }
 
@@ -738,7 +739,7 @@ namespace VAN_OA.JXC
 
         protected void gvAllPoRemark_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            this.gvAllPoRemark.PageIndex = e.NewPageIndex;            
+            this.gvAllPoRemark.PageIndex = e.NewPageIndex;
 
             string sql = "";
             if (ddlStatue.Text != "通过+执行")
@@ -758,7 +759,7 @@ namespace VAN_OA.JXC
             TabContainer1.ActiveTabIndex = 2;
             TabContainer1.TabIndex = 2;
         }
-        
+
 
         protected void gvMain_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -772,7 +773,7 @@ namespace VAN_OA.JXC
                     e.Row.BackColor = System.Drawing.Color.Red;
 
 
-                
+
                 if (model.IsSpecial)
                 {
                     (e.Row.FindControl("lblSpecial") as Label).BackColor = System.Drawing.Color.Blue;
@@ -850,8 +851,456 @@ namespace VAN_OA.JXC
             this.gvCaiOut.PageIndex = AspNetPager5.CurrentPageIndex - 1;
             gvCaiOut.DataSource = CaiInHouse;
             gvCaiOut.DataBind();
+
+            //这里增加一个表格来展示数据信息
+
+            var pVReport = GetPVReport(pono);
+
+            ViewState["PVReport"] = pVReport;
+            decimal cv = 0;
+            decimal sv = 0;
+            int hadDays = 0;
+            if (pVReport.Count > 0)
+            {
+                cv = pVReport.Find(t => t.No == 4).Values;
+                sv = pVReport.Find(t => t.No == 5).Values;
+                hadDays = pVReport.Find(t => t.No == 1).HadDays;
+            }
+
+            ViewState["PVChats"] = JsonConvert.SerializeObject(Chat(pono, cv, sv, hadDays));
+
         }
 
+
+        public List<PVReport> GetPVReport(string pono)
+        {
+            CG_POOrderService cG_POOrderService = new CG_POOrderService();
+            var model = cG_POOrderService.GetModel(pono);
+            List<PVReport> pVReports = new List<PVReport>();
+            var jxc = new JXC_REPORTService().GetListArray_Total(string.Format(" and CG_POOrder.pono='{0}'", pono), "", "");
+            if (jxc.Count > 0)
+            {
+
+                PVReport AC = new PVReport
+                {
+                    No = 1,
+                    CurrentDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    TargetName = "AC(实际成本)",
+                    StartDate = model.PODate.ToString("yyyy-MM-dd"),//开工日=项目建立的日期
+                    PlanDate = model.PODate.AddDays(model.PlanDays).ToString("yyyy-MM-dd"),//计划完工日=开工日+计划完工天数；
+                    Values = jxc[0].goodTotal,//截止到今天的 AC(实现的出库的总的成本价之和)
+                    //HadDays = (DateTime.Now - model.PODate.Date).Days,
+                    PlanDays = model.PlanDays
+                };
+                //当今天日期<计划完工日期（开工日+计划完工天数）时，截止计划完工日开工天数=今天日期-开工日 ；
+                //当今天日期 >=计划完工日期（开工日+计划完工天数）时，截止计划完工日开工天数=计划完工日-开工日；
+                if (DateTime.Now < model.PODate.AddDays(model.PlanDays).Date)
+                {
+                    AC.HadDays = (DateTime.Now - model.PODate.Date).Days;
+                }
+                else
+                {
+                    AC.HadDays = (model.PODate.AddDays(model.PlanDays) - model.PODate.Date).Days;
+                }
+                pVReports.Add(AC);
+                // 截止实际完工日开工天数
+                // 完整定义： 当项目未完工时 
+                // 出库金额《项目金额，截止实际完工日开工天数=今天日期-开工日 ；当项目已完工时（出库金额=项目金额 且不等于0），截止实际完工日开工天数=实际完工日-开工日；
+                // 当项目未关闭 同时 出库金额=项目金额 并且 等于0时，截止实际完工日开工天数=今天日期-开工日；
+                // 当项目关闭 同时 出库金额=项目金额 并且 等于0时，截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                string sql = string.Format("select isnull(sum(SellTotal),0) from Sell_OrderOutHouse where Status='通过' and PONo='{0}'", model.PONo);
+                var sellTotal = Convert.ToDecimal(DBHelp.ExeScalar(sql));
+                var sumPoTotal = Convert.ToDecimal(lblTotal.Text);
+                if (model.POStatue2 != "已交付" && sellTotal < sumPoTotal)
+                {
+                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
+                }
+                if (model.POStatue2 != "已交付" && sellTotal == sumPoTotal && sumPoTotal != 0)
+                {
+                    AC.ActualHadDays = (model.PODate.AddDays(model.PlanDays) - model.PODate.Date).Days;
+                }
+                if (model.IsClose == false && sellTotal == sumPoTotal && sumPoTotal == 0)
+                {
+                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
+                }
+                if (model.IsClose && sellTotal == sumPoTotal && sumPoTotal != 0)
+                {
+                    //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                    List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                    if (list.Count == 1)
+                    {
+                        AC.ActualHadDays = (list[0].JDate - model.PODate.Date).Days;
+                    }
+                    else
+                    {
+                        AC.ActualHadDays = 0;
+                    }
+                }
+                PVReport PV = new PVReport
+                {
+                    No = 2,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "PV（计划预算）",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //PV (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
+                    Values = model.PlanDays > 0 ?Convert.ToDecimal(Convert.ToSingle(jxc[0].SumPOTotal) / Convert.ToSingle(model.PlanDays) *Convert.ToSingle(AC.HadDays)) : 0
+                };
+                pVReports.Add(PV);
+                PVReport EV = new PVReport
+                {
+                    No = 3,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "EV（实际预算）",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //EV(实现总的销售额=实现的出库的总的销售额)
+                    Values = jxc[0].goodSellTotal
+                };
+                pVReports.Add(EV);
+                PVReport CV = new PVReport
+                {
+                    No = 4,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "CV成本偏差(EV-AC)",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //CV成本偏差(EV-AC)
+                    Values = EV.Values - AC.Values
+                };
+                pVReports.Add(CV);
+                PVReport SV = new PVReport
+                {
+                    No = 5,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "SV进度偏差(EV-PV)",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //SV进度偏差(EV-PV)
+                    Values = EV.Values - PV.Values
+                };
+                pVReports.Add(SV);
+                PVReport CPI = new PVReport
+                {
+                    No = 6,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "CPI成本效能指数(EV/AC)",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //CPI成本效能指数(EV/AC)
+                    Values = AC.Values > 0 ? (EV.Values / AC.Values) : 0
+                };
+                pVReports.Add(CPI);
+                PVReport SPI = new PVReport
+                {
+                    No = 7,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "SPI进度效率指数(EV / PV)",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //SPI进度效率指数(EV / PV)
+                    Values = PV.Values > 0 ? (EV.Values / PV.Values) : 0
+                };
+                pVReports.Add(SPI);
+                PVReport BAC = new PVReport
+                {
+                    No = 8,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "BAC计划总额",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //BAC=项目金额
+                    Values = jxc[0].SumPOTotal
+                };
+                pVReports.Add(BAC);
+                PVReport ETC = new PVReport
+                {
+                    No = 9,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "ETC完工尚需成本",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //ETC=（BAC-EV）
+                    Values = BAC.Values - EV.Values
+                };
+                pVReports.Add(ETC);
+                PVReport EAC = new PVReport
+                {
+                    No = 10,
+                    CurrentDate = AC.CurrentDate,
+                    TargetName = "EAC完工估算",
+                    StartDate = AC.StartDate,
+                    PlanDate = AC.PlanDate,
+                    HadDays = AC.HadDays,
+                    PlanDays = AC.PlanDays,
+                    //EAC= ETC+AC; 
+                    Values = ETC.Values + AC.Values
+                };
+                pVReports.Add(EAC);
+                string remark = "";
+                string cuoshi = "";
+                GetRemark(AC.Values, PV.Values, EV.Values, out remark, out cuoshi);
+                foreach (var m in pVReports)
+                {
+                    m.CuoShi = cuoshi;
+                    m.Remark = remark;
+                }
+            }
+
+            return pVReports;
+        }
+
+        /// <summary>
+        /// 图表
+        /// </summary>
+        public List<PVChat> Chat(string pono, decimal cv, decimal sv, int hadDays)
+        {
+            List<PVChat> series = new List<PVChat>();
+            var poDetail = POSer.GetPOOrderDetailList(string.Format(" and PONo='{0}'", pono));
+            if (poDetail.Count > 0)
+            {
+                var model = poDetail[0];
+                if (model.PlanDays > 0)
+                {
+                    string sql = string.Format("  JXC_REPORT.PONo='{0}'", pono);
+                    List<JXC_REPORT> pOOrderList = new JXC_REPORTService().GetListArray(sql);
+
+
+                    PVChat pV = new PVChat();
+                    pV.name = "PV";
+                    pV.type = "line";
+                    pV.markLine = new MarkLine();
+                    pV.markLine.data.Add(new MarkLineData { type = "max", name = "最大值" });
+                    pV.markLine.data.Add(new MarkLineData { type = "max", name = "最大值", valueIndex = 0 });
+                    // markLine:
+                    // {
+                    //     data: [
+                    // // 纵轴，默认
+                    // { type: 'max', name: '最大值', itemStyle: { normal: { color: '#dc143c'} } },
+                    // // 横轴
+                    // { type: 'max', name: '最大值', valueIndex: 0, itemStyle: { normal: { color: '#1e90ff'} } },
+                    //]
+                    //        }
+
+                    PVChat aC = new PVChat();
+                    aC.name = "AC";
+                    aC.type = "line";
+
+                    PVChat eV = new PVChat();
+                    eV.name = "EV";
+                    eV.type = "line";
+                    var tuiDeltail = pOOrderList.FindAll(t => t.PoType == "2");//销售退货 明细
+
+                    pV.data.Add(new List<decimal> { 0, 0 });
+                    aC.data.Add(new List<decimal> { 0, 0 });
+                    eV.data.Add(new List<decimal> { 0, 0 });
+                    //PVChat zero = new PVChat();
+                    //zero.name = "";
+                    //zero.type = "line";
+                    //for (int i = 0; i < model.PlanDays; i++)
+                    //{
+                    //    //zero
+                    //    List<decimal> pvPoint = new List<decimal>();
+                    //    pvPoint.Add(i + 1);//X
+                    //    pvPoint.Add(0);
+                    //    zero.data.Add(pvPoint);                        
+                    //}
+                    for (int i = 1; i <= model.PlanDays; i++)
+                    {
+                        if (model.PODate.AddDays(i) > DateTime.Now)
+                        {
+                            var sum = poDetail.FindAll(t => t.PODate.Date <= model.PODate.AddDays(i).Date).Sum(t => t.POTotal);
+                            var sumTui = tuiDeltail.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value;
+                            //PV
+                            List<decimal> pvPoint = new List<decimal>();
+                            pvPoint.Add(i);//X
+                            if (model.PlanDays != 0)
+                            {
+                                //pvPoint.Add((sum - sumTui) / model.PlanDays * i);//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
+                                pvPoint.Add(Convert.ToDecimal(Convert.ToSingle(sum - sumTui) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(i)));
+                            }
+                            else
+                            {
+                                pvPoint.Add(0);
+                            }
+                            pV.data.Add(pvPoint);
+
+                        }
+                        else
+                        {
+                            var sum = poDetail.FindAll(t => t.PODate.Date <= model.PODate.AddDays(i).Date).Sum(t => t.POTotal);
+                            var sumTui = tuiDeltail.Sum(t => t.goodSellTotal).Value;// tuiDeltail.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value;
+                            //PV
+                            List<decimal> pvPoint = new List<decimal>();
+                            pvPoint.Add(i);//X
+                            if (model.PlanDays != 0)
+                            {
+                                pvPoint.Add(Convert.ToDecimal( Convert.ToSingle(sum - sumTui) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(i)));//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
+                            }
+                            else
+                            {
+                                pvPoint.Add(0);
+                            }
+                            pV.data.Add(pvPoint);
+                            //AC
+                            List<decimal> acPoint = new List<decimal>();
+                            acPoint.Add(i);//X
+                            acPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodTotal).Value);//AC 截止到今天的 AC(实现的出库的总的成本价之和)
+                            aC.data.Add(acPoint);
+
+                            //EV (实现总的销售额=实现的出库的总的销售额)
+                            List<decimal> evPoint = new List<decimal>();
+                            evPoint.Add(i);//X
+                            evPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value);//(实现总的销售额=实现的出库的总的销售额)
+                            eV.data.Add(evPoint);
+                        }
+                    }
+
+                    series.Add(pV);
+                    series.Add(aC);
+                    series.Add(eV);
+
+                    //新项目 和 老项目 的CV SV 分别显示，
+                    //老项目按之前邮件说的1 / 2工期这个时间点来取值和显示。
+                    //新项目也就是未完工项目按今天的值来显示，因为EV AC 每天会变化 的。
+                    //var halfDays = Convert.ToInt32(string.Format("{0:n0}", model.PlanDays / 2.0));
+                    PVChat sV = new PVChat();
+                    sV.name = "SV";
+                    sV.type = "bar";
+                    sV.barHeight = "10";
+                    //4.PV 和EV 的差额 就是进度偏差 SV （对同一测量时间） ，图上显示，你按1/2工期这个时间点来取值和显示 进度偏差SV
+
+
+                    //if (model.POStatue2 == "已交付" && pV.data.Count >= halfDays && eV.data.Count >= halfDays)
+                    //{
+                    //    sV.data.Add(new List<decimal> { halfDays, pV.data[halfDays - 1][1] - eV.data[halfDays - 1][1] });
+                    //}
+
+                    PVChat cV = new PVChat();
+                    cV.name = "CV";
+                    cV.type = "bar";
+                    cV.barHeight = "10";
+                    //5.实际成本AC和挣值EV 的差额 就是成本偏差 CV （对同一测量时间） ，图上显示，你按1/2工期这个时间点来取值和显示成本偏差CV
+                    //if (model.POStatue2 == "已交付" && aC.data.Count >= halfDays && eV.data.Count >= halfDays)
+                    //{
+                    //    cV.data.Add(new List<decimal> { halfDays, aC.data[halfDays - 1][1] - eV.data[halfDays - 1][1] });
+                    //}
+
+                    //if (model.POStatue2 != "已交付")
+                    //{
+                    //    sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
+                    //    cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
+                    //}
+
+                    //需要修正的是：EV=PV 不等于0 时， CV、SV线需要在 实际完工当日 截止；EV=PV等于0时 CV，SV线继续直到项目首次建立日期中的年份的结算日截止。
+                    if (pV.data.Count == eV.data.Count)
+                    {
+                        var lastPV = pV.data[pV.data.Count - 1][1];
+                        var lastEV = eV.data[eV.data.Count - 1][1];
+                        if (lastPV == lastEV && lastPV != 0)
+                        {
+                            var halfDays = model.PlanDays;
+                            sV.data.Add(new List<decimal> { halfDays, sv });
+                            cV.data.Add(new List<decimal> { halfDays, cv });
+                        }
+                        else
+                        {
+                            //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                            List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                            if (list.Count == 1)
+                            {
+                                if (DateTime.Now > list[0].JDate)
+                                {
+                                    sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
+                                    cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
+                                }
+                                else
+                                {
+                                    sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
+                                    cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
+                                }
+                              
+                            }
+                           
+                        }                        
+                    }
+                    else
+                    {
+                        //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                        List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                        if (list.Count == 1)
+                        {
+                            if (DateTime.Now > list[0].JDate)
+                            {
+                                sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
+                                cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
+                            }
+                            else
+                            {
+                                sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
+                                cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
+                            }
+                        }
+                    }
+                    series.Add(sV);
+                    series.Add(cV);
+                    //series.Add(zero);
+                }
+            }
+            return series;
+        }
+
+
+        public void GetRemark(decimal ac, decimal pv, decimal ev, out string remark, out string cuoshi)
+        {
+            remark = "";
+            cuoshi = "";
+            if (ac > pv && pv > ev)
+            {
+                remark = "偏差指标：CV=EV-AC<0,说明投资超前;SV=EV-PV<0,说明进度拖延;";
+                remark += "绩效指标：CPI=EV/AC<1,说明资金使用效率低;SPI=EV/PV<1,说明进度效率低;";
+                cuoshi = "加大成本监控，并行工作，提高工作效率";
+                return;
+            }
+            if (pv > ac && ac >= ev)
+            {
+                remark = "偏差指标：CV=EV-AC<=0,说明成本支出适当;SV=EV-PV<0,说明进度拖延;";
+                remark += "绩效指标：CPI=EV/AC<=1,说明资金使用效率一般;SPI=EV/PV<1,说明进度效率低;";
+                cuoshi = "加大成本投入来提高进度效率;赶工，并行工作以追赶进度;增加高效人员投放";
+                return;
+            }
+
+            if (ac >= ev && ev > pv)
+            {
+                remark = "偏差指标：CV=EV-AC<=0,说明成本支出适当;SV=EV-PV>0,说明进度提前;";
+                remark += "绩效指标：CPI=EV/AC<=1,说明资金使用效率一般;SPI=EV/PV>1,说明进度效率高;";
+                cuoshi = "加大成本投入来进一步提高整体效率，加强人员培训和质量控制;";
+                return;
+            }
+            if (ev > pv && pv > ac)
+            {
+                remark = "偏差指标：CV=EV-AC>0,说明资金投入延后;SV=EV-PV>0,说明进度提前;";
+                remark += "绩效指标：CPI=EV/AC>1,说明资金使用效率高;SPI=EV/PV>1,说明进度效率高;";
+                cuoshi = "加强质量控制，密切监控项目;";
+                return;
+            }
+        }
         private void setValue(Label control, string value)
         {
             control.Text = value;
@@ -864,7 +1313,7 @@ namespace VAN_OA.JXC
             //return 0;
         }
         protected object ConvertToObj1(object obj)
-        { 
+        {
             if (obj != null) return string.Format("{0:f2}", Convert.ToDecimal(obj));
             return 0;
         }
@@ -877,7 +1326,7 @@ namespace VAN_OA.JXC
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
             }
         }
-        CG_POCai SumPOCai = new CG_POCai();    
+        CG_POCai SumPOCai = new CG_POCai();
         decimal IniProfit = 0;
         decimal SumSellTotal = 0;
         protected void gvCai_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -886,7 +1335,7 @@ namespace VAN_OA.JXC
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
-              
+
                 CG_POCai model = e.Row.DataItem as CG_POCai;
                 //获取商品的销售信息
                 List<CG_POOrders> POOrders = ViewState["Orders"] as List<CG_POOrders>;
@@ -927,8 +1376,8 @@ namespace VAN_OA.JXC
                 if (model.Total1 == minTotal)
                 {
                     model.CheapPrice = model.SupperPrice ?? 0;// (minTotal ?? 0);
-                    //(e.Row.FindControl("lblSupperPrice") as Label).BackColor = ColorTranslator.FromHtml("#D7E8FF");
-                    //(e.Row.FindControl("lblTotal1") as Label).BackColor = ColorTranslator.FromHtml("#D7E8FF");
+                                                              //(e.Row.FindControl("lblSupperPrice") as Label).BackColor = ColorTranslator.FromHtml("#D7E8FF");
+                                                              //(e.Row.FindControl("lblTotal1") as Label).BackColor = ColorTranslator.FromHtml("#D7E8FF");
                     e.Row.Cells[9].BackColor = ColorTranslator.FromHtml("#D7E8FF");
                     e.Row.Cells[10].BackColor = ColorTranslator.FromHtml("#D7E8FF");
                 }
@@ -966,7 +1415,7 @@ namespace VAN_OA.JXC
                 setValue(e.Row.FindControl("lblIniProfit") as Label, NumHelp.FormatFour(model.IniProfit).ToString());//数量
 
             }
-            
+
 
             if (e.Row.RowType == DataControlRowType.Footer)
             {
@@ -1041,7 +1490,7 @@ namespace VAN_OA.JXC
 
 
         CG_POOrders SumOrders = new CG_POOrders();
-      
+
         protected void gvList_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -1054,7 +1503,7 @@ namespace VAN_OA.JXC
                 SumOrders.Num += model.Num;
                 SumOrders.OtherCost += model.OtherCost;
                 SumOrders.SellTotal += model.SellTotal;
-                SumOrders.YiLiTotal += model.YiLiTotal;               
+                SumOrders.YiLiTotal += model.YiLiTotal;
 
             }
             ImageButton btnEdit = e.Row.FindControl("btnEdit") as ImageButton;
@@ -1093,7 +1542,7 @@ namespace VAN_OA.JXC
 
 
                 //e.Row.Cells[10].Text = SumOrders.SellTotal.ToString();//销售总额
-                setValue(e.Row.FindControl("lblSellTotal") as Label,  NumHelp.FormatTwo(SumOrders.SellTotal));//销售总额
+                setValue(e.Row.FindControl("lblSellTotal") as Label, NumHelp.FormatTwo(SumOrders.SellTotal));//销售总额
 
 
                 //e.Row.Cells[11].Text = SumOrders.OtherCost.ToString();//管理费
@@ -1140,8 +1589,8 @@ namespace VAN_OA.JXC
             if (e.Row.RowType == DataControlRowType.Footer)
             {
                 setValue(e.Row.FindControl("lblGoodName") as Label, "合计");//合计                      
-                setValue(e.Row.FindControl("lblTotal") as Label,  NumHelp.FormatFour(SumOrdersTui.Total));//成本总额    
-                setValue(e.Row.FindControl("lblTotal1") as Label,  NumHelp.FormatFour(SumOrdersTui.GoodSellPriceTotal));//成本总额    
+                setValue(e.Row.FindControl("lblTotal") as Label, NumHelp.FormatFour(SumOrdersTui.Total));//成本总额    
+                setValue(e.Row.FindControl("lblTotal1") as Label, NumHelp.FormatFour(SumOrdersTui.GoodSellPriceTotal));//成本总额    
             }
 
         }
@@ -1165,7 +1614,7 @@ namespace VAN_OA.JXC
 
                 CAI_OrderOutHouses model = e.Row.DataItem as CAI_OrderOutHouses;
                 CaiSumOrders.Total += model.Total;
-                
+
             }
 
             // 合计
@@ -1173,7 +1622,7 @@ namespace VAN_OA.JXC
             {
                 setValue(e.Row.FindControl("lblGoodName") as Label, "合计");//合计
 
-                setValue(e.Row.FindControl("lblTotal") as Label,  NumHelp.FormatFour(CaiSumOrders.Total));//成本总额    
+                setValue(e.Row.FindControl("lblTotal") as Label, NumHelp.FormatFour(CaiSumOrders.Total));//成本总额    
             }
 
         }
@@ -1183,7 +1632,7 @@ namespace VAN_OA.JXC
             AspNetPager1.CurrentPageIndex = 1;
             AspNetPager2.CurrentPageIndex = 1;
             AspNetPager3.CurrentPageIndex = 1;
-        
+
             GetData();
         }
         public void GetData()
@@ -1205,7 +1654,7 @@ namespace VAN_OA.JXC
 
             if (txtGoodNo1.Text != "" || txtNameOrTypeOrSpec1.Text != "" || txtNameOrTypeOrSpecTwo1.Text != "" || ddlGoodUnit.Text != "全部")
             {
-                string goodInfo ="";
+                string goodInfo = "";
                 if (txtGoodNo1.Text != "")
                 {
                     goodInfo += string.Format(" and TB_Good.GoodNo like '%{0}%'", txtGoodNo1.Text);
@@ -1226,7 +1675,7 @@ namespace VAN_OA.JXC
                 }
                 if (ddlGoodUnit.Text != "全部")
                 {
-                    goodInfo += string.Format(" and GoodUnit='{0}'",ddlGoodUnit.Text);
+                    goodInfo += string.Format(" and GoodUnit='{0}'", ddlGoodUnit.Text);
                 }
                 sql += goodInfo;
             }
@@ -1234,7 +1683,7 @@ namespace VAN_OA.JXC
 
             if (!string.IsNullOrEmpty(txtGoodNum.Text))
             {
-                sql += string.Format(" and Num{0}{1}",ddlFuHao.Text,txtGoodNum.Text);
+                sql += string.Format(" and Num{0}{1}", ddlFuHao.Text, txtGoodNum.Text);
             }
             string chenben = "";
             string caiChenben = "";
@@ -1247,7 +1696,7 @@ namespace VAN_OA.JXC
 
             if (!string.IsNullOrEmpty(txtRemark.Text))
             {
-                sql += string.Format(" and CG_POOrder.PORemark like '%{0}%'",txtRemark.Text);
+                sql += string.Format(" and CG_POOrder.PORemark like '%{0}%'", txtRemark.Text);
             }
             List<CG_POOrders> orders = ordersSer.GetListArrayToList(" 1=1 and CG_POOrder.PONo='" + pono + "' " + sql + chenben);
 
@@ -1273,7 +1722,7 @@ namespace VAN_OA.JXC
             this.gvCai.PageIndex = AspNetPager2.CurrentPageIndex - 1;
 
             gvCai.DataSource = caiList;
-            gvCai.DataBind(); 
+            gvCai.DataBind();
         }
     }
 }

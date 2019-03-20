@@ -258,7 +258,7 @@ namespace VAN_OA.Dal.Fin
                 strSql.Append(" where " + strWhere);
             }
 
-            strSql.Append(" order by TransactionDate desc");
+            strSql.Append(" order by Id desc");
             List<VAN_OA.Model.Fin.AEPromiseTotal> list = new List<VAN_OA.Model.Fin.AEPromiseTotal>();
 
             using (SqlConnection conn = DBHelp.getConn())
@@ -406,8 +406,7 @@ left join TB_Company on TB_Company.ComCode=tb_User.CompanyCode", year, promiseSq
                 }
             }
             return list;
-        }
-
+        } 
 
     }
 }

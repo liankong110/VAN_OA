@@ -68,7 +68,7 @@ namespace VAN_OA.JXC
 
                 return false;
             }
-            if (txtPOName.Text.Length > 20)
+            if (CommHelp.GetByteLen(txtPOName.Text) > 20 * 2)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过20个汉字符，请修正！');</script>");
                 txtPOName.Focus();
@@ -118,7 +118,8 @@ namespace VAN_OA.JXC
 
                 return false;
             }
-            if (txtPOPayStype.Text.Length >10)
+
+            if (CommHelp.GetByteLen(txtPOPayStype.Text) >10 * 2)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('结算方式长度不能超过10个汉字符，请修正！');</script>");
                 txtPOPayStype.Focus();
@@ -148,6 +149,17 @@ namespace VAN_OA.JXC
             if (ddlModel.Text == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请选择项目模型！');</script>");
+                return false;
+            }
+            if (string.IsNullOrEmpty(txtPlanDays.Text))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 必填！');</script>");
+                return false;
+            }
+            var result = 0;
+            if (int.TryParse(txtPlanDays.Text, out result) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式有误！');</script>");
                 return false;
             }
             if (txtAE.Text != txtName.Text)
@@ -207,7 +219,7 @@ namespace VAN_OA.JXC
                     return false;
                 }
 
-                if (txtPORemark.Text.Length>50)
+                if (CommHelp.GetByteLen(txtPORemark.Text)>50 * 2)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过50个汉字符，请修正！');</script>");
                     txtPORemark.Focus();
@@ -279,6 +291,12 @@ namespace VAN_OA.JXC
             }
             else
             {
+                if (CommHelp.GetByteLen(txtPORemark.Text) > 50*2)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过50个汉字符，请修正！');</script>");
+                    txtPORemark.Focus();
+                    return false;
+                }
                 if (ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过")
                 {
                     List<CG_POCai> orderCais = ViewState["Cais"] as List<CG_POCai>;
@@ -670,6 +688,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                         txtINSIDE.Text = pp.INSIDE;
                         txtPODate.Text = pp.PODate.ToString();
                         txtPOName.Text = pp.POName;
+                        txtPlanDays.Text = pp.PlanDays.ToString();
                         if (pp.IFZhui == 0)
                         {
                             txtPONo.Text = "";
@@ -769,7 +788,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                         txtPONo.Text = pp.PONo;
                         txtPOPayStype.Text = pp.POPayStype;
                         //txtPOTotal.Text = pp.POTotal.ToString();
-
+                        txtPlanDays.Text = pp.PlanDays.ToString();
                         txtPOTotal.Text = NumHelp.FormatTwo(pp.POTotal);
 
                         ddlIfZhui.SelectedValue = pp.IFZhui.ToString();
@@ -1064,6 +1083,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                     order.IsSpecial = cbSpecial.Checked;
                     order.POType = Convert.ToInt32(ddlPOTyle.Text);
                     order.Model = ddlModel.Text;
+                    order.PlanDays = Convert.ToInt32(txtPlanDays.Text);
                     List<CG_POOrders> POOrders = ViewState["Orders"] as List<CG_POOrders>;
                     List<CG_POCai> caiOrders = ViewState["Cais"] as List<CG_POCai>;
 

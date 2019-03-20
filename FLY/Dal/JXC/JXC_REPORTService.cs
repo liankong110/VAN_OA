@@ -20,7 +20,7 @@ namespace VAN_OA.Dal.JXC
         public List<Model.JXC.JXC_REPORT> GetListArray(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select CG_POOrder.POName,JXC_REPORT.PONo,JXC_REPORT.ProNo,RuTime,Supplier,goodInfo,GoodNum,GoodSellPrice,goodSellTotal,GoodPrice,goodTotal,t_GoodNums,t_GoodTotalChas,maoli,FPTotal as FPNo ");
+            strSql.Append("select JXC_REPORT.poType,CG_POOrder.POName,JXC_REPORT.PONo,JXC_REPORT.ProNo,RuTime,Supplier,goodInfo,GoodNum,GoodSellPrice,goodSellTotal,GoodPrice,goodTotal,t_GoodNums,t_GoodTotalChas,maoli,FPTotal as FPNo ");
             strSql.Append(" FROM JXC_REPORT ");
             strSql.Append(" left join CG_POOrder on JXC_REPORT.PONo=CG_POOrder.PONo and CG_POOrder.IFZhui=0 and CG_POOrder.Status='通过'");
 
@@ -2125,7 +2125,7 @@ left join TuiGuanLiTotal on tb1.pono=TuiGuanLiTotal.pono
             }
 
             model.POName = dataReader["POName"].ToString();
-
+            model.PoType = dataReader["PoType"].ToString();
             return model;
         }
 

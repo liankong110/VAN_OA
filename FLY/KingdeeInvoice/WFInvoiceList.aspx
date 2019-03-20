@@ -98,6 +98,7 @@
                     <asp:ListItem Value="&gt;=">&gt;=</asp:ListItem>
                     <asp:ListItem Value="<=">&lt;=</asp:ListItem>
                     <asp:ListItem>=</asp:ListItem>
+                     <asp:ListItem><></asp:ListItem>
                 </asp:DropDownList>
                 发票金额
             </td>
@@ -226,7 +227,7 @@
             <asp:BoundField DataField="InvoiceNumber" HeaderText="发票号码" SortExpression="InvoiceNumber" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="FPNoStyle" HeaderText="发票类型" SortExpression="FPNoStyle" ItemStyle-HorizontalAlign="Center" />
             <%--<asp:BoundField DataField="Total" HeaderText="金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" />--%>
-              <asp:TemplateField  HeaderText="未到款金额">
+              <asp:TemplateField  HeaderText="发票金额">
                 <ItemTemplate>
                     <asp:Label ID="Total" runat="server" Text='<%# Eval("Total") %>'></asp:Label>
                 </ItemTemplate>

@@ -18,14 +18,64 @@ namespace VAN_OA
     /// </summary>
     public static class CommHelp
     {
+
+        /// <summary>
+        /// 是否为日期型字符串
+        /// </summary>
+        /// <param name="StrSource">日期字符串(2008-05-08)</param>
+        /// <returns></returns>
+        public static bool newVerifesToDateTime(string StrSource)
+        {
+            var time= Regex.IsMatch(StrSource, @"^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-9]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$");
+
+            if (time == false)
+            {
+                return IsDateTime(StrSource);
+            }
+            return time;
+        }
+        /// <summary>
+        /// 获取字符数
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static int GetByteLen(string content)
+        {
+            return System.Text.Encoding.Default.GetBytes(content).Length;
+        }
+        /// <summary>
+        /// 是否为日期+时间型字符串
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static bool IsDateTime(string StrSource)
+        {
+            return Regex.IsMatch(StrSource, @"^(((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-)) (20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$ ");
+        }
         /// <summary>
         /// 验证是否是 日期类型
         /// </summary>
         /// <returns></returns>
         public static bool VerifesToDateTime(string dateTime)
         {
+            //if (dateTime.Contains("/"))
+            //{
+
+            //}
+            //if (dateTime.Contains("-"))
+            //{
+
+            //}
             DateTime result;
-            return DateTime.TryParse(dateTime, out result);
+            var bo= DateTime.TryParse(dateTime, out result);
+            if (bo)
+            {
+                if (result.Year < 2012)
+                {
+                    return false;
+                }
+            }
+            return bo;
         }
 
         /// <summary>
@@ -34,10 +84,10 @@ namespace VAN_OA
         /// <returns></returns>
         public static bool VerifesToNum(string num)
         {
-            if (num.Contains(",") || num.Contains("，"))
-            {
-                return false;
-            }
+            //if (num.Contains(",") || num.Contains("，"))
+            //{
+            //    return false;
+            //}
             decimal result;
             return decimal.TryParse(num, out result);
         }

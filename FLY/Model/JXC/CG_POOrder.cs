@@ -404,6 +404,11 @@ namespace VAN_OA.Model.JXC
         /// 财务成本计量  0 表示不计量，1表示计量。字段的缺省 是1
         /// </summary>
         public bool ChengBenJiLiang { get; set; }
+
+        /// <summary>
+        /// 计划完工天数，填数字，需要校验的
+        /// </summary>
+        public int PlanDays { get; set; }
     }
 
 }

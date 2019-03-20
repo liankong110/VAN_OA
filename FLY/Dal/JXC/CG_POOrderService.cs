@@ -409,7 +409,8 @@ namespace VAN_OA.Dal.JXC
             }
             strSql1.Append("POType,");
             strSql2.Append("" + model.POType + ",");
-
+            strSql1.Append("PlanDays,");
+            strSql2.Append("" + model.PlanDays + ",");
             //if (model.Status != null && model.Status != "执行中")
             //{
             //    strSql1.Append("TruePODate,");
@@ -524,7 +525,7 @@ namespace VAN_OA.Dal.JXC
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" Model,CG_POOrder.PoType,CG_POOrder.Id,AppName,loginName,CaiGou,cRemark ,fileName,fileType ,proNo,GuestId,GuestNo,GuestName,AE,INSIDE,PONo,POName,PODate,POTotal,POPayStype,Status,IFZhui,POStatue,PORemark,IsSpecial,IsPoFax,FpType,FpTax");
+            strSql.Append(" Model,CG_POOrder.PoType,CG_POOrder.Id,AppName,loginName,CaiGou,cRemark ,fileName,fileType ,proNo,GuestId,GuestNo,GuestName,AE,INSIDE,PONo,POName,PODate,POTotal,POPayStype,Status,IFZhui,POStatue,PORemark,IsSpecial,IsPoFax,FpType,FpTax,PlanDays");
             strSql.Append(" from CG_POOrder left join tb_User on tb_User.id=CG_POOrder.AppName");
             strSql.Append(" where CG_POOrder.Id=" + id + "");
 
@@ -554,6 +555,7 @@ namespace VAN_OA.Dal.JXC
                         model.FpType = dataReader["FpType"].ToString();
                         model.FpTax = Convert.ToDecimal(dataReader["FpTax"]);
                         model.Model = dataReader["Model"].ToString();
+                        model.PlanDays =Convert.ToInt32(dataReader["PlanDays"]);
                     }
                 }
             }
@@ -569,7 +571,7 @@ namespace VAN_OA.Dal.JXC
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" PONo,POName,GuestName");
+            strSql.Append(" PONo,POName,GuestName,PODate,PlanDays");
             strSql.Append(" from CG_POOrder");
             strSql.Append(" where CG_POOrder.PONO='" + pono + "' AND IFZhui=0 AND Status='通过'");
 
@@ -586,6 +588,8 @@ namespace VAN_OA.Dal.JXC
                         model.PONo = dataReader["PONo"].ToString();
                         model.POName = dataReader["POName"].ToString();
                         model.GuestName = dataReader["GuestName"].ToString();
+                        model.PODate = Convert.ToDateTime(dataReader["PODate"]);
+                        model.PlanDays = Convert.ToInt32(dataReader["PlanDays"]);
                     }
                 }
             }
@@ -924,6 +928,46 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
             }
             return list;
         }
+
+        /// <summary>
+        /// 获取项目订单明细 包含原+追加的订单明细
+        /// </summary>
+        public List<VAN_OA.Model.JXC.CG_POOrder> GetPOOrderDetailList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select POTotal,PODate,IFZhui,PlanDays,POStatue2 from CG_POOrder where Status='通过'");   
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(strWhere);
+            }
+            strSql.Append(" order by Id");
+            List<CG_POOrder> list = new List<CG_POOrder>();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var model = new CG_POOrder();                         
+                        model.PODate =Convert.ToDateTime(dataReader["PODate"]);
+                        model.IFZhui = Convert.ToInt32(dataReader["IFZhui"]);
+                        model.PlanDays = Convert.ToInt32(dataReader["PlanDays"]);
+                        model.POTotal = Convert.ToDecimal(dataReader["POTotal"]);
+                        var ojb = dataReader["POStatue2"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.POStatue2 = ojb.ToString();
+                        }
+                        
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>

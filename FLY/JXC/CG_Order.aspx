@@ -210,6 +210,9 @@
             <td>
                 <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList><font
                     style="color: Red">*</font>
+
+                计划完工天数: <asp:TextBox ID="txtPlanDays" runat="server" Width="100px"></asp:TextBox>天 <font
+                    style="color: Red">*</font>
             </td>
         </tr>
         <tr>
