@@ -228,7 +228,7 @@ namespace VAN_OA.KingdeeInvoice
                 {
                     //                    sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='删除'
                     //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='金蝶发票清单') and sys_Object.AutoID is not null", Session["currentUserId"]);
-                    if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶发票清单", Session["currentUserId"], "删除") == false)
+                    if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应收发票清单", Session["currentUserId"], "删除") == false)
                     {
                         gvList.Columns[0].Visible = false;
                     }

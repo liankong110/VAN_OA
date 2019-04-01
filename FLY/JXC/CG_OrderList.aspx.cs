@@ -860,14 +860,16 @@ namespace VAN_OA.JXC
             decimal cv = 0;
             decimal sv = 0;
             int hadDays = 0;
+            int actualHadDays = 0;
             if (pVReport.Count > 0)
             {
                 cv = pVReport.Find(t => t.No == 4).Values;
                 sv = pVReport.Find(t => t.No == 5).Values;
                 hadDays = pVReport.Find(t => t.No == 1).HadDays;
+                actualHadDays = pVReport.Find(t => t.No == 1).ActualHadDays;
             }
 
-            ViewState["PVChats"] = JsonConvert.SerializeObject(Chat(pono, cv, sv, hadDays));
+            ViewState["PVChats"] = JsonConvert.SerializeObject(Chat(pono, cv, sv, hadDays, actualHadDays));
 
         }
 
@@ -908,34 +910,36 @@ namespace VAN_OA.JXC
                 // 出库金额《项目金额，截止实际完工日开工天数=今天日期-开工日 ；当项目已完工时（出库金额=项目金额 且不等于0），截止实际完工日开工天数=实际完工日-开工日；
                 // 当项目未关闭 同时 出库金额=项目金额 并且 等于0时，截止实际完工日开工天数=今天日期-开工日；
                 // 当项目关闭 同时 出库金额=项目金额 并且 等于0时，截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
-                string sql = string.Format("select isnull(sum(SellTotal),0) from Sell_OrderOutHouse where Status='通过' and PONo='{0}'", model.PONo);
-                var sellTotal = Convert.ToDecimal(DBHelp.ExeScalar(sql));
-                var sumPoTotal = Convert.ToDecimal(lblTotal.Text);
-                if (model.POStatue2 != "已交付" && sellTotal < sumPoTotal)
+                string sql = string.Format("select isnull(sum(SellTotal),0),max(rutime) as rutime from Sell_OrderOutHouse where Status='通过' and PONo='{0}' and SellTotal>0", model.PONo);
+                var sellOutTB = DBHelp.getDataTable(sql);
+                decimal sellTotal = 0;
+                DateTime sellOutDate = DateTime.Now;
+                if (sellOutTB.Rows.Count > 0)
                 {
-                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
-                }
-                if (model.POStatue2 != "已交付" && sellTotal == sumPoTotal && sumPoTotal != 0)
-                {
-                    AC.ActualHadDays = (model.PODate.AddDays(model.PlanDays) - model.PODate.Date).Days;
-                }
-                if (model.IsClose == false && sellTotal == sumPoTotal && sumPoTotal == 0)
-                {
-                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
-                }
-                if (model.IsClose && sellTotal == sumPoTotal && sumPoTotal != 0)
-                {
-                    //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
-                    List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
-                    if (list.Count == 1)
+                    sellTotal = Convert.ToDecimal(sellOutTB.Rows[0][0]);
+                    if (sellOutTB.Rows[0][1] != DBNull.Value)
                     {
-                        AC.ActualHadDays = (list[0].JDate - model.PODate.Date).Days;
-                    }
-                    else
-                    {
-                        AC.ActualHadDays = 0;
+                        sellOutDate = Convert.ToDateTime(sellOutTB.Rows[0][1]);
                     }
                 }
+
+                sql = string.Format("select isnull(sum(tuiTotal),0),max(rutime) as rutime  from Sell_OrderInHouse where Status='通过' and PONo='{0}' and tuiTotal>0 ", model.PONo);
+                var sellInTB = DBHelp.getDataTable(sql);
+                if (sellInTB.Rows.Count > 0)
+                {
+                    sellTotal = sellTotal - Convert.ToDecimal(sellInTB.Rows[0][0]);
+                    if (sellInTB.Rows[0][1] != DBNull.Value)
+                    {
+                        var date = Convert.ToDateTime(sellInTB.Rows[0][1]);
+                        if (date > sellOutDate)
+                        {
+                            sellOutDate = date;
+                        }
+                    }
+                    
+                }
+              
+                
                 PVReport PV = new PVReport
                 {
                     No = 2,
@@ -946,7 +950,7 @@ namespace VAN_OA.JXC
                     HadDays = AC.HadDays,
                     PlanDays = AC.PlanDays,
                     //PV (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
-                    Values = model.PlanDays > 0 ?Convert.ToDecimal(Convert.ToSingle(jxc[0].SumPOTotal) / Convert.ToSingle(model.PlanDays) *Convert.ToSingle(AC.HadDays)) : 0
+                    Values = model.PlanDays > 0 ? Convert.ToDecimal(Convert.ToSingle(jxc[0].SumPOTotal) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(AC.HadDays)) : 0
                 };
                 pVReports.Add(PV);
                 PVReport EV = new PVReport
@@ -1053,6 +1057,50 @@ namespace VAN_OA.JXC
                     Values = ETC.Values + AC.Values
                 };
                 pVReports.Add(EAC);
+
+
+                var sumPoTotal = Convert.ToDecimal(lblTotal.Text);
+                if (model.POStatue2 != "已交付" && sellTotal < sumPoTotal)
+                {
+                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
+                }
+                if (model.POStatue2 != "已交付" && sellTotal == sumPoTotal && sumPoTotal != 0)
+                {
+                    AC.ActualHadDays = (sellOutDate.Date - model.PODate.Date).Days;
+                }
+                if (model.IsClose == false && sellTotal == sumPoTotal && sumPoTotal == 0)
+                {
+                    AC.ActualHadDays = (DateTime.Now - model.PODate.Date).Days;
+                }
+                if (model.IsClose && sellTotal == sumPoTotal && sumPoTotal != 0)
+                {
+                    //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                    List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                    if (list.Count == 1)
+                    {
+                        AC.ActualHadDays = (list[0].JDate - model.PODate.Date).Days;
+                    }
+                    else
+                    {
+                        AC.ActualHadDays = 0;
+                    }
+                }
+                //EV = PV 不等于0 时， CV、SV线需要在 实际完工当日 截止，同样EV 和AC 线也要在 实际完工当日 截止；
+                //EV = PV等于0时 CV，SV线继续直到项目首次建立日期中的年份的结算日截止，同样EV 和AC 线也要在 实际完工当日 截止。
+                if (EV.Values == PV.Values && EV.Values == 0)
+                {
+                    //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                    List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                    if (list.Count == 1)
+                    {
+                        var days = (list[0].JDate - model.PODate.Date).Days;
+                        if (days < AC.ActualHadDays)
+                        {
+                            AC.ActualHadDays = days;
+                        }                       
+                    }
+                   
+                }
                 string remark = "";
                 string cuoshi = "";
                 GetRemark(AC.Values, PV.Values, EV.Values, out remark, out cuoshi);
@@ -1069,7 +1117,7 @@ namespace VAN_OA.JXC
         /// <summary>
         /// 图表
         /// </summary>
-        public List<PVChat> Chat(string pono, decimal cv, decimal sv, int hadDays)
+        public List<PVChat> Chat(string pono, decimal cv, decimal sv, int hadDays, int actualHadDays)
         {
             List<PVChat> series = new List<PVChat>();
             var poDetail = POSer.GetPOOrderDetailList(string.Format(" and PONo='{0}'", pono));
@@ -1080,7 +1128,6 @@ namespace VAN_OA.JXC
                 {
                     string sql = string.Format("  JXC_REPORT.PONo='{0}'", pono);
                     List<JXC_REPORT> pOOrderList = new JXC_REPORTService().GetListArray(sql);
-
 
                     PVChat pV = new PVChat();
                     pV.name = "PV";
@@ -1105,161 +1152,142 @@ namespace VAN_OA.JXC
                     PVChat eV = new PVChat();
                     eV.name = "EV";
                     eV.type = "line";
+
+                  
+                    PVChat sV = new PVChat();
+                    sV.name = "SV";
+                    sV.type = "line";
+                  
+                    PVChat cV = new PVChat();
+                    cV.name = "CV";
+                    cV.type = "line";
+
                     var tuiDeltail = pOOrderList.FindAll(t => t.PoType == "2");//销售退货 明细
 
-                    pV.data.Add(new List<decimal> { 0, 0 });
-                    aC.data.Add(new List<decimal> { 0, 0 });
-                    eV.data.Add(new List<decimal> { 0, 0 });
-                    //PVChat zero = new PVChat();
-                    //zero.name = "";
-                    //zero.type = "line";
-                    //for (int i = 0; i < model.PlanDays; i++)
-                    //{
-                    //    //zero
-                    //    List<decimal> pvPoint = new List<decimal>();
-                    //    pvPoint.Add(i + 1);//X
-                    //    pvPoint.Add(0);
-                    //    zero.data.Add(pvPoint);                        
-                    //}
-                    for (int i = 1; i <= model.PlanDays; i++)
-                    {
-                        if (model.PODate.AddDays(i) > DateTime.Now)
+                    //pV.data.Add(new List<decimal> { 0, 0 });
+                    //aC.data.Add(new List<decimal> { 0, 0 });
+                    //eV.data.Add(new List<decimal> { 0, 0 });
+                    //sV.data.Add(new List<decimal> { 0, 0 });
+                    //cV.data.Add(new List<decimal> { 0, 0 });
+
+                    var sumPoTotal = Convert.ToDecimal(lblTotal.Text);
+                    //PV 按照计划的天数来
+                    for (int i = 0; i <= model.PlanDays; i++)
+                    {                       
+                        List<decimal> pvPoint = new List<decimal>();
+                        pvPoint.Add(i);//X
+                        if (model.PlanDays != 0)
                         {
-                            var sum = poDetail.FindAll(t => t.PODate.Date <= model.PODate.AddDays(i).Date).Sum(t => t.POTotal);
-                            var sumTui = tuiDeltail.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value;
-                            //PV
-                            List<decimal> pvPoint = new List<decimal>();
-                            pvPoint.Add(i);//X
-                            if (model.PlanDays != 0)
+                            if (i == model.PlanDays)
                             {
-                                //pvPoint.Add((sum - sumTui) / model.PlanDays * i);//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
-                                pvPoint.Add(Convert.ToDecimal(Convert.ToSingle(sum - sumTui) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(i)));
+                                pvPoint.Add(sumPoTotal);//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
                             }
                             else
                             {
-                                pvPoint.Add(0);
+                                pvPoint.Add(Convert.ToDecimal(Convert.ToSingle(sumPoTotal) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(i)));//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
                             }
-                            pV.data.Add(pvPoint);
-
                         }
                         else
                         {
-                            var sum = poDetail.FindAll(t => t.PODate.Date <= model.PODate.AddDays(i).Date).Sum(t => t.POTotal);
-                            var sumTui = tuiDeltail.Sum(t => t.goodSellTotal).Value;// tuiDeltail.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value;
-                            //PV
-                            List<decimal> pvPoint = new List<decimal>();
-                            pvPoint.Add(i);//X
-                            if (model.PlanDays != 0)
-                            {
-                                pvPoint.Add(Convert.ToDecimal( Convert.ToSingle(sum - sumTui) / Convert.ToSingle(model.PlanDays) * Convert.ToSingle(i)));//Y (PV=（今天-项目建立日期）*每天平均PV; 项目总价/计划完工天数= 每天平均PV) 
-                            }
-                            else
-                            {
-                                pvPoint.Add(0);
-                            }
-                            pV.data.Add(pvPoint);
-                            //AC
-                            List<decimal> acPoint = new List<decimal>();
-                            acPoint.Add(i);//X
-                            acPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodTotal).Value);//AC 截止到今天的 AC(实现的出库的总的成本价之和)
-                            aC.data.Add(acPoint);
-
-                            //EV (实现总的销售额=实现的出库的总的销售额)
-                            List<decimal> evPoint = new List<decimal>();
-                            evPoint.Add(i);//X
-                            evPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value);//(实现总的销售额=实现的出库的总的销售额)
-                            eV.data.Add(evPoint);
+                            pvPoint.Add(0);
                         }
+                        pV.data.Add(pvPoint);
+                        
+                    }
+                    //AC EV 按照实际天数来
+                    for (int i = 0; i <= actualHadDays; i++)
+                    {
+                        //AC
+                        List<decimal> acPoint = new List<decimal>();
+                        acPoint.Add(i);//X
+                        acPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodTotal).Value);//AC 截止到今天的 AC(实现的出库的总的成本价之和)
+                        aC.data.Add(acPoint);
+
+                        //EV (实现总的销售额=实现的出库的总的销售额)
+                        List<decimal> evPoint = new List<decimal>();
+                        evPoint.Add(i);//X
+                        evPoint.Add(pOOrderList.FindAll(t => t.RuTime.Date <= model.PODate.AddDays(i).Date).Sum(t => t.goodSellTotal).Value);//(实现总的销售额=实现的出库的总的销售额)
+                        eV.data.Add(evPoint);
+
+                        //SV进度偏差(EV-PV)
+                        List<decimal> svPoint = new List<decimal>();
+                        svPoint.Add(i);//X
+                        if (i <= model.PlanDays)
+                        {
+                            svPoint.Add(evPoint[1] - pV.data[i][1]);
+                        }
+                        else
+                        {
+                            svPoint.Add(evPoint[1] - pV.data[model.PlanDays][1]);
+                        }
+                        sV.data.Add(svPoint);
+
+                        //CV成本偏差(EV-AC)
+                        List<decimal> cvPoint = new List<decimal>();
+                        cvPoint.Add(i);//X
+                        cvPoint.Add(evPoint[1] - acPoint[1]);
+                        cV.data.Add(cvPoint);
                     }
 
                     series.Add(pV);
                     series.Add(aC);
                     series.Add(eV);
 
-                    //新项目 和 老项目 的CV SV 分别显示，
-                    //老项目按之前邮件说的1 / 2工期这个时间点来取值和显示。
-                    //新项目也就是未完工项目按今天的值来显示，因为EV AC 每天会变化 的。
-                    //var halfDays = Convert.ToInt32(string.Format("{0:n0}", model.PlanDays / 2.0));
-                    PVChat sV = new PVChat();
-                    sV.name = "SV";
-                    sV.type = "bar";
-                    sV.barHeight = "10";
-                    //4.PV 和EV 的差额 就是进度偏差 SV （对同一测量时间） ，图上显示，你按1/2工期这个时间点来取值和显示 进度偏差SV
-
-
-                    //if (model.POStatue2 == "已交付" && pV.data.Count >= halfDays && eV.data.Count >= halfDays)
-                    //{
-                    //    sV.data.Add(new List<decimal> { halfDays, pV.data[halfDays - 1][1] - eV.data[halfDays - 1][1] });
-                    //}
-
-                    PVChat cV = new PVChat();
-                    cV.name = "CV";
-                    cV.type = "bar";
-                    cV.barHeight = "10";
-                    //5.实际成本AC和挣值EV 的差额 就是成本偏差 CV （对同一测量时间） ，图上显示，你按1/2工期这个时间点来取值和显示成本偏差CV
-                    //if (model.POStatue2 == "已交付" && aC.data.Count >= halfDays && eV.data.Count >= halfDays)
-                    //{
-                    //    cV.data.Add(new List<decimal> { halfDays, aC.data[halfDays - 1][1] - eV.data[halfDays - 1][1] });
-                    //}
-
-                    //if (model.POStatue2 != "已交付")
-                    //{
-                    //    sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
-                    //    cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
-                    //}
-
-                    //需要修正的是：EV=PV 不等于0 时， CV、SV线需要在 实际完工当日 截止；EV=PV等于0时 CV，SV线继续直到项目首次建立日期中的年份的结算日截止。
-                    if (pV.data.Count == eV.data.Count)
-                    {
-                        var lastPV = pV.data[pV.data.Count - 1][1];
-                        var lastEV = eV.data[eV.data.Count - 1][1];
-                        if (lastPV == lastEV && lastPV != 0)
-                        {
-                            var halfDays = model.PlanDays;
-                            sV.data.Add(new List<decimal> { halfDays, sv });
-                            cV.data.Add(new List<decimal> { halfDays, cv });
-                        }
-                        else
-                        {
-                            //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
-                            List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
-                            if (list.Count == 1)
-                            {
-                                if (DateTime.Now > list[0].JDate)
-                                {
-                                    sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
-                                    cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
-                                }
-                                else
-                                {
-                                    sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
-                                    cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
-                                }
-                              
-                            }
-                           
-                        }                        
-                    }
-                    else
-                    {
-                        //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
-                        List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
-                        if (list.Count == 1)
-                        {
-                            if (DateTime.Now > list[0].JDate)
-                            {
-                                sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
-                                cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
-                            }
-                            else
-                            {
-                                sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
-                                cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
-                            }
-                        }
-                    }
                     series.Add(sV);
                     series.Add(cV);
+
+                    //需要修正的是：EV=PV 不等于0 时， CV、SV线需要在 实际完工当日 截止；EV=PV等于0时 CV，SV线继续直到项目首次建立日期中的年份的结算日截止。
+
+                    //if (pV.data.Count > 0 && eV.data.Count > 0)
+                    //{
+                    //    var lastPV = pV.data[pV.data.Count - 1][1];
+                    //    var lastEV = eV.data[eV.data.Count - 1][1];
+                    //    if (lastPV == lastEV && lastPV != 0)
+                    //    {
+                    //        var halfDays = actualHadDays;
+                    //        sV.data.Add(new List<decimal> { halfDays, sv });
+                    //        cV.data.Add(new List<decimal> { halfDays, cv });
+                    //    }
+                    //    else
+                    //    {
+                    //        //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                    //        List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                    //        if (list.Count == 1)
+                    //        {
+                    //            if (DateTime.Now > list[0].JDate)
+                    //            {
+                    //                sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
+                    //                cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
+                    //            }
+                    //            else
+                    //            {
+                    //                sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
+                    //                cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
+                    //            }
+
+                    //        }
+
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //截止实际完工日开工天数=（项目首次建立日期中的年份的结算日）-开工日（见图1）。
+                    //    List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear={0}", model.PODate.Year));
+                    //    if (list.Count == 1)
+                    //    {
+                    //        if (DateTime.Now > list[0].JDate)
+                    //        {
+                    //            sV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, sv });
+                    //            cV.data.Add(new List<decimal> { (list[0].JDate - model.PODate.Date).Days, cv });
+                    //        }
+                    //        else
+                    //        {
+                    //            sV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, sv });
+                    //            cV.data.Add(new List<decimal> { (DateTime.Now - model.PODate.Date).Days, cv });
+                    //        }
+                    //    }
+                    //}
+                    
                     //series.Add(zero);
                 }
             }

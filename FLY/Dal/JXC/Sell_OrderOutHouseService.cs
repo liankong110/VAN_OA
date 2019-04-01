@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using VAN_OA.Model.JXC;
 using System.Data.SqlClient;
- 
+
 using System.Text;
 using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.EFrom;
@@ -105,7 +105,7 @@ namespace VAN_OA.Dal.JXC
                 SqlCommand objCommand = conn.CreateCommand();
                 objCommand.Transaction = tan;
                 Sell_OrderOutHousesService OrdersSer = new Sell_OrderOutHousesService();
-                
+
                 TB_HouseGoodsService houseGoodsSer = new TB_HouseGoodsService();
                 try
                 {
@@ -132,7 +132,7 @@ namespace VAN_OA.Dal.JXC
                         {
                             houseGoodsSer.OutHouse(orders[i].HouseID, orders[i].GooId, orders[i].GoodNum, orders[i].GoodPrice, objCommand);
                         }
-                    } 
+                    }
                     tan.Commit();
                 }
                 catch (Exception)
@@ -158,10 +158,10 @@ namespace VAN_OA.Dal.JXC
                 strSql1.Append("CreateUserId,");
                 strSql2.Append("" + model.CreateUserId + ",");
             }
-            
+
             strSql1.Append("CreateTime,");
             strSql2.Append("getdate(),");
-           
+
             if (model.RuTime != null)
             {
                 strSql1.Append("RuTime,");
@@ -177,7 +177,7 @@ namespace VAN_OA.Dal.JXC
                 strSql1.Append("DoPer,");
                 strSql2.Append("'" + model.DoPer + "',");
             }
-          
+
             if (model.ChcekProNo != null)
             {
                 strSql1.Append("ChcekProNo,");
@@ -285,7 +285,7 @@ namespace VAN_OA.Dal.JXC
             {
                 strSql.Append("SellTotal=" + model.SellTotal + ",");
             }
-            
+
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -294,15 +294,15 @@ namespace VAN_OA.Dal.JXC
         }
 
 
-        public void SellOrderUpdatePoStatus(string pono,string status)
+        public void SellOrderUpdatePoStatus(string pono, string status)
         {
-            string sql = string.Format("select PONo from SellXiaoShou_View where PONo='{0}'",pono);
+            string sql = string.Format("select PONo from SellXiaoShou_View where PONo='{0}'", pono);
             using (SqlConnection conn = DBHelp.getConn())
             {
-                conn.Open();                
+                conn.Open();
                 SqlCommand objCommand = conn.CreateCommand();
                 objCommand.CommandText = sql;
-                object obj= objCommand.ExecuteScalar();
+                object obj = objCommand.ExecuteScalar();
                 if ((obj is DBNull) || obj == null)
                 {
                     sql = string.Format("update CG_POOrder set POStatue2='{0}' where PONo='{1}'", CG_POOrder.ConPOStatue2, pono);
@@ -310,13 +310,13 @@ namespace VAN_OA.Dal.JXC
                     objCommand.ExecuteNonQuery();
                 }
 
-//                if (status == "通过")
-//                {
-//                    sql = string.Format(@"if exists(select * from Sell_OrderOutHouseBack where Status='通过' and PONo='{1}')
-//begin update CG_POOrder set POStatue5='{0}' where PONo='{1}' end", CG_POOrder.ConPOStatue5_1, pono);
-//                    objCommand.CommandText = sql;
-//                    objCommand.ExecuteNonQuery();
-//                }
+                //                if (status == "通过")
+                //                {
+                //                    sql = string.Format(@"if exists(select * from Sell_OrderOutHouseBack where Status='通过' and PONo='{1}')
+                //begin update CG_POOrder set POStatue5='{0}' where PONo='{1}' end", CG_POOrder.ConPOStatue5_1, pono);
+                //                    objCommand.CommandText = sql;
+                //                    objCommand.ExecuteNonQuery();
+                //                }
                 //else
                 //{
                 //    //if (ifUpdate)
@@ -353,7 +353,7 @@ select GooId,sum(GoodNum) as sellTuiNum from Sell_OrderInHouse left join Sell_Or
 where  Status='通过' and  PoNo='{0}' group by GooId
 ) newTb4 on newTb3.GooId=newTb4.GooId  
 ", poNO);
-           
+
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();
@@ -397,11 +397,11 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                         decimal lastNum = 0;
                         if (sellTuiNum >= tuiNum)
                         {
-                            lastNum = totalNum - outNum;                            
+                            lastNum = totalNum - outNum;
                         }
                         else
                         {
-                            lastNum = totalNum - outNum + sellTuiNum - tuiNum;                           
+                            lastNum = totalNum - outNum + sellTuiNum - tuiNum;
                         }
                         if (!nums.ContainsKey(goodId))
                         {
@@ -412,7 +412,7 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                     dataReader.Close();
                 }
 
-                
+
                 conn.Close();
             }
             return nums;
@@ -439,7 +439,7 @@ where status='执行中' and gooId in ({0})  group by GooId", goodIds);
                     {
                         int goodId = 0;
                         decimal sumGoodNum = 0;
-                      
+
                         object ojb;
                         ojb = dataReader["GooId"];
                         if (ojb != null && ojb != DBNull.Value)
@@ -451,7 +451,7 @@ where status='执行中' and gooId in ({0})  group by GooId", goodIds);
                         {
                             sumGoodNum = Convert.ToDecimal(ojb);
                         }
-                       
+
                         if (!nums.ContainsKey(goodId))
                         {
                             nums.Add(goodId, sumGoodNum);
@@ -468,7 +468,7 @@ where status='执行中' and gooId in ({0})  group by GooId", goodIds);
         }
         public void SellOrderUpdatePoStatus2(string poNO)
         {
-            string sql =string.Format(@"select newTb1.totalNum, newTb2.outNum,newTb3.caiTuiNum,newTb4.sellTuiNum from (
+            string sql = string.Format(@"select newTb1.totalNum, newTb2.outNum,newTb3.caiTuiNum,newTb4.sellTuiNum from (
 select goodId ,sum(Num) as totalNum from CG_POOrder left join CG_POCai on CG_POOrder.id=CG_POCai.id where Status='通过'  and  PoNo='{0}'
 group by goodId) as newTb1  left join
 (
@@ -516,12 +516,12 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                         ojb = dataReader["sellTuiNum"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            sellTuiNum = Convert.ToDecimal(ojb);                            
+                            sellTuiNum = Convert.ToDecimal(ojb);
                         }
 
                         if (sellTuiNum >= tuiNum)
                         {
-                            if (totalNum - outNum> 0)
+                            if (totalNum - outNum > 0)
                             {
                                 ifALLOut = false;
                                 break;
@@ -535,7 +535,7 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                                 break;
                             }
                         }
-                    } 
+                    }
 
                     dataReader.Close();
                 }
@@ -607,7 +607,7 @@ where  Status='通过' and  PoNo='{0}' group by GooId
             strSql.Append(" from Sell_OrderOutHouse left join Sell_OrderOutHouseBack on Sell_OrderOutHouse.ProNo=Sell_OrderOutHouseBack.SellProNo and Sell_OrderOutHouseBack.Status<>'不通过'");
 
             strSql.Append(" where Sell_OrderOutHouse.Status='通过' and Sell_OrderOutHouseBack.id is null " + strWhere);
-          
+
             strSql.Append(" order by Sell_OrderOutHouse.Id desc");
             List<VAN_OA.Model.JXC.Sell_OrderOutHouse> list = new List<VAN_OA.Model.JXC.Sell_OrderOutHouse>();
 
@@ -625,13 +625,13 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.Id = (int)ojb;
-                        }                        
+                        }
                         ojb = dataReader["RuTime"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.RuTime = (DateTime)ojb;
                         }
-                        model.Supplier = dataReader["Supplier"].ToString();  
+                        model.Supplier = dataReader["Supplier"].ToString();
                         model.ProNo = dataReader["ProNo"].ToString();
                         model.PONo = dataReader["PONo"].ToString();
                         model.POName = dataReader["POName"].ToString();
@@ -706,12 +706,12 @@ where  Status='通过' and  PoNo='{0}' group by GooId
                         model.ProNo = dataReader["ProNo"].ToString();
                         model.PONo = dataReader["PONo"].ToString();
                         model.POName = dataReader["POName"].ToString();
-                        model.Remark = dataReader["Remark"].ToString();    
+                        model.Remark = dataReader["Remark"].ToString();
                         ojb = dataReader["Status"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.Status = ojb.ToString();
-                        }                      
+                        }
 
                         list.Add(model);
                     }
@@ -728,14 +728,14 @@ where  Status='通过' and  PoNo='{0}' group by GooId
         public Dictionary<string, decimal> GetAllTotal_ChengBen(string strWhere)
         {
             Dictionary<string, decimal> totalList = new Dictionary<string, decimal>();
-            
-            StringBuilder strSql = new StringBuilder();
-//            strSql.Append(
-//                @" select TB_Good.GoodNo,isnull(sum(GoodPrice*GoodNum),0) as priceTotal from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id
-//            left join TB_Good on TB_Good.GoodId=Sell_OrderOutHouses.GooId ");
 
-//            strSql.AppendFormat(@" where Sell_OrderOutHouse.Status='通过' and  GoodNo in ('17110','17112','16616','17109','14346','17111','14350',
-//'14396','14423','15317','14348','14349','17108','17158') {0} group by TB_Good.GoodNo ", strWhere);
+            StringBuilder strSql = new StringBuilder();
+            //            strSql.Append(
+            //                @" select TB_Good.GoodNo,isnull(sum(GoodPrice*GoodNum),0) as priceTotal from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id
+            //            left join TB_Good on TB_Good.GoodId=Sell_OrderOutHouses.GooId ");
+
+            //            strSql.AppendFormat(@" where Sell_OrderOutHouse.Status='通过' and  GoodNo in ('17110','17112','16616','17109','14346','17111','14350',
+            //'14396','14423','15317','14348','14349','17108','17158') {0} group by TB_Good.GoodNo ", strWhere);
 
             strSql.AppendFormat(@"select tb.GoodNo,priceTotal-isnull(tui_priceTotal,0) as priceTotal from 
 ( select TB_Good.GoodNo,isnull(sum(GoodPrice*GoodNum),0) as priceTotal from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id
@@ -753,7 +753,7 @@ left join
             var total = DBHelp.getDataTable(strSql.ToString());
             foreach (DataRow dr in total.Rows)
             {
-                totalList.Add((string)dr[0], (decimal)dr[1]);            
+                totalList.Add((string)dr[0], (decimal)dr[1]);
             }
             //if(total is DBNull||total==null)
             //{
@@ -774,17 +774,31 @@ left join
             {
                 strSql.Append(" where " + strWhere);
             }
-            var total= DBHelp.getDataTable(strSql.ToString());
+            var total = DBHelp.getDataTable(strSql.ToString());
             foreach (DataRow dr in total.Rows)
             {
                 totalList.Add((decimal)dr[0]);
                 totalList.Add((decimal)dr[1]);
             }
+
+            string sql = " SELECT SUM(SumPOTotal) FROM POTotal_SumView WHERE PONo IN (select PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id";
+            if (strWhere.Trim() != "")
+            {
+                sql += " where " + strWhere;
+            }
+            sql += ")";
+            total = DBHelp.getDataTable(sql);
+            foreach (DataRow dr in total.Rows)
+            {
+                totalList.Add((decimal)dr[0]);
+
+            }
+
             //if(total is DBNull||total==null)
             //{
             //    return 0;
             //}
-            
+
             //return (decimal) total;
             return totalList;
         }
@@ -798,7 +812,7 @@ left join
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
             strSql.Append(" Sell_OrderOutHouse.Id,CreateUserId,CreateTime,RuTime,Supplier,DoPer,ChcekProNo,ProNo,PONo,POName,Remark ,tb_User.loginName as CreateName,Status,FPNo,DaiLi,IsPrint,SellTotal ");
-            strSql.Append(" from Sell_OrderOutHouse left join tb_User on tb_User.id=CreateUserId "); 
+            strSql.Append(" from Sell_OrderOutHouse left join tb_User on tb_User.id=CreateUserId ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -822,7 +836,7 @@ left join
         }
 
 
-     
+
 
 
         /// <summary>
@@ -854,7 +868,7 @@ left join
             }
             model.Supplier = dataReader["Supplier"].ToString();
             model.DoPer = dataReader["DoPer"].ToString();
-           
+
             model.ChcekProNo = dataReader["ChcekProNo"].ToString();
             model.ProNo = dataReader["ProNo"].ToString();
             model.PONo = dataReader["PONo"].ToString();
@@ -870,7 +884,7 @@ left join
             if (ojb != null && ojb != DBNull.Value)
             {
                 model.Status = ojb.ToString();
-            } 
+            }
             ojb = dataReader["FPNo"];
             if (ojb != null && ojb != DBNull.Value)
             {
@@ -884,7 +898,7 @@ left join
             ojb = dataReader["IsPrint"];
             if (ojb != null && ojb != DBNull.Value)
             {
-                model.IsPrint =Convert.ToBoolean(ojb);
+                model.IsPrint = Convert.ToBoolean(ojb);
             }
 
             ojb = dataReader["SellTotal"];
@@ -893,7 +907,7 @@ left join
                 model.SellTotal = Convert.ToDecimal(ojb);
             }
 
-            
+
             return model;
         }
 
@@ -906,7 +920,7 @@ left join
         /// <param name="PoNo"></param>
         /// <param name="notOurId"></param>
         /// <returns></returns>
-        public decimal GetActGoosTotalNum(int goodId, string PoNo,int notOurId)
+        public decimal GetActGoosTotalNum(int goodId, string PoNo, int notOurId)
         {
             string sql = "";
 
@@ -925,7 +939,7 @@ if(@SellTuiTotalNum<>0 and @SellTuiTotalNum<@TuiTotalNum)
 begin 
 set @ALLTotalNum=@ALLTotalNum+@SellTuiTotalNum -@TuiTotalNum
 end
-select @ALLTotalNum", PoNo, goodId,notOurId);
+select @ALLTotalNum", PoNo, goodId, notOurId);
             }
             else
             {

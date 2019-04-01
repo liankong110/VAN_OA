@@ -1231,9 +1231,9 @@ left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_g
         /// <returns></returns>
         public DataTable SetPoSpecial(string where)
         {
-            string sql = @"select ChengBenJiLiang,GuestPro,GuestType,SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected,Model  from CG_POOrder";
+            string sql = @"select goodTotal,ChengBenJiLiang,GuestPro,GuestType,SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected,Model  from CG_POOrder";
             //sql += " , 1 as isCloseEdist,1 as isSpecialEdit, 1 as isFaxEdist, 1 as isFPTypeEdist from CG_POOrder";
-            sql += " left join (select pono,isnull(sum(maoli),0) as maoliTotal from JXC_REPORT group by pono) as REPORT on REPORT.PONo=CG_POOrder.PONo";
+            sql += " left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from JXC_REPORT group by pono) as REPORT on REPORT.PONo=CG_POOrder.PONo";
             sql += " left join POTotal_SumView on POTotal_SumView.PONO=CG_POOrder.PONO";
             sql += " where IFZhui=0 and Status='通过'" + where;
             sql += " order by CG_POOrder.PONo desc ";

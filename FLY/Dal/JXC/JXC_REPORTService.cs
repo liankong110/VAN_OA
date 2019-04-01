@@ -847,6 +847,255 @@ and BusType=0 and TB_ToInvoice.State='通过' order by DaoKuanDate");
             return list;
         }
 
+
+        /// <summary>
+        /// 获得数据列表（比DataSet效率高，推荐使用）
+        /// </summary>
+        public List<Model.JXC.JXC_REPORTTotal> Temp_YuShouKuan_GetListArray_Total(string strWhere, PagerDomain page,out DataTable sumDT)
+        {
+           
+            List<InvoiceSimpDetail> invSimpDetailList = GetInvoiceSimpDetailList();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"select  [SumPOTotal]
+           ,[DaoKuanCount]
+           ,[MinDaoKuanDate]
+           ,[MinOutDate]
+           ,[MaxDaoKuanDate]
+           , Temp_YuShouKuan.[IsClose]
+           , Temp_YuShouKuan.[PONo]
+           , Temp_YuShouKuan.[POName]
+           , Temp_YuShouKuan.[PODate]
+           , Temp_YuShouKuan.[GuestName]
+           , Temp_YuShouKuan.[GuestType]
+           , Temp_YuShouKuan.[GuestPro]
+           ,[goodSellTotal]
+           ,[goodTotal]
+           ,[maoliTotal]
+           , Temp_YuShouKuan.[FPTotal]
+           , Temp_YuShouKuan.[ZhangQiTotal]
+           , Temp_YuShouKuan.[AE]
+           , Temp_YuShouKuan.[INSIDE]
+           , Temp_YuShouKuan.[AEPer]
+           , Temp_YuShouKuan.[INSIDEPer]
+           ,[InvoTotal]
+           ,[SellFPTotal]
+           , Temp_YuShouKuan.[Model]
+           ,[BillDate]
+           ,[BillCount]
+           ,[AVG_ZQ]
+           ,[ZQ]
+           ,[MinDaoKuanTime_ZQ]
+           ,[MinBillDate]
+           ,[MinFPTime]
+           ,[DaoKuanDate],YuGuDaoKuanTotal,YuGuDaoKuanDate,DaoKuanNumber,JSKaiPiaoDate,trueZhangQi from [dbo].[Temp_YuShouKuan]
+           LEFT JOIN CG_POOrder on CG_POOrder.PONo = Temp_YuShouKuan.PONO AND IFZhui = 0 ");
+
+            strWhere = " Status='通过' " + strWhere;
+            //if (strWhere.Trim() != "")
+            //{
+            //    strSql.Append(strWhere);
+            //}
+
+            var  strSql_Page = new StringBuilder(DBHelp.GetPagerSql_Sum(page, strSql.ToString(), strWhere, " Temp_YuShouKuan.PONo DESC "));
+
+
+            #region 查询总条数
+            var strSql_Sum = new StringBuilder();
+            strSql_Sum.Append(@"select count(1) as cou,sum(maoliTotal) as maoliTotal,sum(goodSellTotal) as goodSellTotal,sum(YuGuDaoKuanTotal) as YuGuDaoKuanTotal,
+sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) as SellFPTotal,sum(InvoTotal) as InvoiceTotal,sum(goodTotal) as goodTotal");
+            strSql_Sum.Append(strSql.ToString().Substring(strSql.ToString().ToUpper().IndexOf(" FROM ")));
+            if (!string.IsNullOrEmpty(strWhere.Trim()))
+            {
+                strSql_Sum.Append(" where " + strWhere);
+            }
+            var allCount = DBHelp.getDataTable(strSql_Sum.ToString());
+            page.TotalCount = Convert.ToInt32(allCount.Rows[0]["cou"]);
+            sumDT = allCount;
+            #endregion
+
+            List<Model.JXC.JXC_REPORTTotal> list = new List<Model.JXC.JXC_REPORTTotal>();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql_Page.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        JXC_REPORTTotal model = new JXC_REPORTTotal();
+                        object ojb;
+                        model.PONo = dataReader["PONo"].ToString();
+                        model.POName = dataReader["POName"].ToString();
+                        ojb = dataReader["PODate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.PODate = (DateTime)ojb;
+                        }
+                        model.GuestName = dataReader["GuestName"].ToString();
+                        ojb = dataReader["goodSellTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.goodSellTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["goodTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.goodTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["maoliTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.maoliTotal = (decimal)ojb;
+                        }
+                        model.FPTotal = dataReader["FPTotal"].ToString();
+                        ojb = dataReader["ZhangQiTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ZhangQiTotal = (decimal)ojb;
+                        }
+
+                        ojb = dataReader["SumPOTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SumPOTotal = (decimal)ojb;
+                        }
+
+                        ojb = dataReader["MaxDaoKuanDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MaxDaoKuanDate =Convert.ToDateTime(ojb);
+                        }
+
+                        ojb = dataReader["InvoTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.InvoiceTotal = (decimal)ojb;
+                        }
+
+
+                        ojb = dataReader["trueZhangQi"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.trueZhangQi = (int)ojb;
+                        } 
+
+                        //===
+                        model.AE = dataReader["AE"].ToString();
+                        model.INSIDE = dataReader["INSIDE"].ToString();
+                        ojb = dataReader["AEPer"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.AEPer = (decimal)ojb;
+                        }
+                        ojb = dataReader["INSIDEPer"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.INSIDEPer = (decimal)ojb;
+                        }
+
+
+                        ojb = dataReader["SellFPTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SellFPTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["IsClose"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.IsClose = (bool)ojb;
+                        }
+                        ojb = dataReader["GuestType"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GuestType = ojb.ToString();
+                            model.GuestType = model.GuestType.Replace("用户", "");
+                        }
+
+                        ojb = dataReader["GuestPro"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb);
+
+                        }
+                        ojb = dataReader["MinDaoKuanTime_ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinDaoKuanTime_ZQ = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["MinBillDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinBillDate = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["MinFPTime"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinFPTime = Convert.ToDateTime(ojb);
+                        } 
+                        model.TrueLiRun = model.InvoiceTotal - model.goodTotal;
+                        model.AETotal = model.AEPer * model.maoliTotal / 100;
+                        model.InsidTotal = model.INSIDEPer * model.maoliTotal / 100; 
+                        if (model.SumPOTotal == model.InvoiceTotal)
+                        {
+                            model.IsQuanDao = true;
+                        }
+
+                        ojb = dataReader["BillDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.BillDate = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["JSKaiPiaoDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.JSKaiPiaoDate = Convert.ToDateTime(ojb);
+                        }                       
+
+                        //经验账期
+                        ojb = dataReader["AVG_ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Avg_ZQ = Convert.ToInt32(ojb);
+                        }
+                        ojb = dataReader["ZQ"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.ZQ = Convert.ToInt32(ojb);
+                        }
+                        ojb = dataReader["DaoKuanDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.SecondDaoKuanDate = Convert.ToDateTime(ojb);
+                        }
+
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = Convert.ToString(ojb);
+                        }
+
+                        ojb = dataReader["YuGuDaoKuanDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.YuGuDaoKuanDate = Convert.ToDateTime(ojb);
+                        }
+                        ojb = dataReader["DaoKuanNumber"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.DaoKuanNumber = Convert.ToInt32(ojb);
+                        }
+                        ojb = dataReader["YuGuDaoKuanTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.YuGuDaoKuanTotal = Convert.ToDecimal(ojb);
+                        }
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
@@ -954,6 +1203,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                             model.SumPOTotal = (decimal)ojb;
                         }
                         var MinDaoKuanDate = ojb = dataReader["MinDaoKuanDate"];
+                        model.MinDaoKuanDate = MinDaoKuanDate;
                         var MaxDaoKuanDate = ojb = dataReader["MaxDaoKuanDate"];
                         var MinOutDate = ojb = dataReader["MinOutDate"];
 
@@ -1023,6 +1273,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         ojb = dataReader["GuestPro"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
+                            model.GuestPro = Convert.ToInt32(ojb);
                             model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb);
 
                         }

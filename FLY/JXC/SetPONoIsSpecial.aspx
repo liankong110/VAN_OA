@@ -159,7 +159,8 @@
             </td>
         </tr>
     </table>
-    对特殊列进行编辑，点击保存后即可(保存当前页面信息)
+    对特殊列进行编辑，点击保存后即可(保存当前页面信息);如果项目金额<成本 并且是特殊订单，背景显示粉红色
+
     <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
         DataKeyNames="Id" Width="100%" AllowPaging="True" AutoGenerateColumns="False"
         OnPageIndexChanging="gvMain_PageIndexChanging" OnRowDataBound="gvMain_RowDataBound"
@@ -239,6 +240,10 @@
                     SortExpression="SumPOTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
+                <asp:BoundField DataField="goodTotal" HeaderText="成本" DataFormatString="{0:n2}"
+                    SortExpression="goodTotal" ItemStyle-HorizontalAlign="Center">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
                   <asp:BoundField DataField="maoliTotal" HeaderText="项目净利" SortExpression="maoliTotal" Visible="false"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n0}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
@@ -303,12 +308,12 @@
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
              <asp:BoundField DataField="FpType" HeaderText="发票类型" SortExpression="FpType" >
-                <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                <ItemStyle HorizontalAlign="Center" Font-Size="7"></ItemStyle>
             </asp:BoundField>
             <asp:TemplateField HeaderText="发票类型">
                 <ItemTemplate>
                     <asp:HiddenField runat="server" ID="hidtxt" Value='<%#Eval("FpType")%>' />
-                    <asp:DropDownList ID="dllFPstye" runat="server" DataValueField="FpType" DataTextField="FpType">
+                    <asp:DropDownList ID="dllFPstye" runat="server" DataValueField="FpType" DataTextField="FpType" style="font-size:8px;" >
                     </asp:DropDownList>
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />

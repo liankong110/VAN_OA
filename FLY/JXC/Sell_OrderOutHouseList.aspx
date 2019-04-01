@@ -413,7 +413,9 @@
                     <FooterStyle BackColor="#D7E8FF" />
                 </asp:GridView>
                  成本合计:<asp:Label ID="lblTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>&nbsp;&nbsp;&nbsp;  销售额合计:<asp:Label ID="lblPriceTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
-                &nbsp;&nbsp;&nbsp;成本总合计:<asp:Label ID="lblAllTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>&nbsp;&nbsp;&nbsp;  销售额总合计:<asp:Label ID="lblAllSellTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
+                &nbsp;&nbsp;&nbsp;成本总合计:<asp:Label ID="lblAllTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
+                &nbsp;&nbsp;&nbsp;  销售额总合计:<asp:Label ID="lblAllSellTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
+                &nbsp;&nbsp;&nbsp;  项目金额:<asp:Label ID="lblPoTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
             </td>
         </tr>
     </table>

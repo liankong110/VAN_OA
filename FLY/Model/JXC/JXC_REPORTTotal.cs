@@ -462,6 +462,10 @@ namespace VAN_OA.Model.JXC
         /// 财务成本计量
         /// </summary>
         public bool ChengBenJiLiangString { get; set; }
+
+
+        public object MinDaoKuanDate { get; set; }
+        public int GuestPro { get; set; }
     }
 
     public class InvoiceSimpDetail

@@ -272,6 +272,7 @@ namespace VAN_OA.JXC
             var total= POSer.GetAllTotal(sql);
             lblAllTotal.Text = total[0].ToString();
             lblAllSellTotal.Text = total[1].ToString();
+            lblPoTotal.Text= total[2].ToString();
             //子单
             List<Sell_OrderOutHouses> orders = new List<Sell_OrderOutHouses>();
             gvList.DataSource = orders;

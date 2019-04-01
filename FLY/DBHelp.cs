@@ -127,6 +127,31 @@ namespace VAN_OA
 
             return strSql.ToString();
         }
+
+
+        public static string GetPagerSql_Sum(PagerDomain domain, string sqlBody, string strWhere, string orderby)
+        {
+          
+
+            #region 拼接好的分页SQL
+            var strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM ( ");
+            strSql.Append(" SELECT ROW_NUMBER() OVER (");
+            if (!string.IsNullOrEmpty(orderby.Trim()))
+            {
+                strSql.Append("order by " + orderby);
+            }
+            strSql.AppendFormat(")AS Row, {0} ", sqlBody.Substring(sqlBody.ToUpper().IndexOf("SELECT ") + 7));
+            if (!string.IsNullOrEmpty(strWhere.Trim()))
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" ) TT");
+            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", (domain.CurrentPageIndex - 1) * domain.PageSize + 1, domain.CurrentPageIndex * domain.PageSize);
+            #endregion
+
+            return strSql.ToString();
+        }
     }
 }
 

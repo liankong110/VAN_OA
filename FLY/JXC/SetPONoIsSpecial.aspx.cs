@@ -537,6 +537,21 @@ namespace VAN_OA.JXC
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+
+                var dr=e.Row.DataItem as DataRowView;
+                var goodTotal=dr["goodTotal"];
+                var sumPOTotal = dr["SumPOTotal"];
+                if (goodTotal != DBNull.Value && sumPOTotal != DBNull.Value)
+                {
+                    //如果项目金额 < 成本 并且是特殊订单，帮我单据号，项目编码，成本 三列的格子背景帮我显示粉红色
+                    if (Convert.ToDecimal(sumPOTotal) < Convert.ToDecimal(goodTotal)&&Convert.ToBoolean(dr["IsSpecial"]))
+                    {
+                        e.Row.Cells[1].BackColor = System.Drawing.Color.Pink;
+                        e.Row.Cells[2].BackColor = System.Drawing.Color.Pink;
+                        e.Row.Cells[4].BackColor = System.Drawing.Color.Pink;
+
+                    }
+                }
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
                 DropDownList drp = (DropDownList)e.Row.FindControl("dllFPstye");
@@ -928,6 +943,7 @@ SELECT @AllCount;", lblIds.Text);
                     decimal poTotal = Convert.ToDecimal(gvMain.Rows[i].Cells[3].Text);
                     var pp = gvMain.Rows[i].Cells[4].Text;
                     decimal maoliTotal = Convert.ToDecimal((pp == "" ? "0" : pp));
+                    //项目金额=0，项目净利=0
                     if (poTotal == 0 && maoliTotal == 0)
                     {
                         whereEpec += "'" + lblIds.Text + "',";

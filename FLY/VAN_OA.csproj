@@ -566,6 +566,7 @@
     <Content Include="Image\To_Act.gif" />
     <Content Include="Image\up.gif" />
     <Content Include="JXC\JXCSum_SkilllList.aspx" />
+    <Content Include="JXC\Temp_JXC_YuShouKuanTotal.aspx" />
     <Content Include="JXC\JXC_YuShouKuanTotal.aspx" />
     <Content Include="JXC\JXC_SkilllList.aspx" />
     <Content Include="JXC\KPI_Sell.aspx" />
@@ -1786,6 +1787,13 @@
     </Compile>
     <Compile Include="JXC\JXCSum_SkilllList.aspx.designer.cs">
       <DependentUpon>JXCSum_SkilllList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JXC\Temp_JXC_YuShouKuanTotal.aspx.cs">
+      <DependentUpon>Temp_JXC_YuShouKuanTotal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JXC\Temp_JXC_YuShouKuanTotal.aspx.designer.cs">
+      <DependentUpon>Temp_JXC_YuShouKuanTotal.aspx</DependentUpon>
     </Compile>
     <Compile Include="JXC\JXC_YuShouKuanTotal.aspx.cs">
       <DependentUpon>JXC_YuShouKuanTotal.aspx</DependentUpon>
