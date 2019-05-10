@@ -190,11 +190,25 @@ namespace VAN_OA.Model.JXC
             {
                 if (POTotal == 0) { return "0%"; }
 
-                return string.Format("{0:n2}%", (POTotal - Total) / POTotal*100);
+                return string.Format("{0:n2}%", (POTotal - Total) / POTotal * 100);
 
             }
         }
 
+        public decimal SumWeiDaoTotal
+        {
+            get
+            {
+                return (POTotal - Total);
+            }
+        }
+        public decimal SumWeiDaoTotal1
+        {
+            get
+            {
+                return (POTotal - Total1);
+            }
+        }
         /// <summary>
         /// 未到比例=（项目金额-到款金额）/项目金额*100，显示加上“%“
         /// </summary>
@@ -203,9 +217,7 @@ namespace VAN_OA.Model.JXC
             get
             {
                 if (POTotal == 0) { return "0%"; }
-
                 return string.Format("{0:n2}%", (POTotal - Total1) / POTotal * 100);
-
             }
         }
         public decimal Total1 { get; set; }
@@ -237,5 +249,7 @@ namespace VAN_OA.Model.JXC
         /// 未开票天数
         /// </summary>
         public int? WeiFPDays { get; set; }
+
+        public string Model { get; set; }
     }
 }

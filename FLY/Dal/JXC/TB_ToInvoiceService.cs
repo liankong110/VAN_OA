@@ -540,9 +540,12 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
                             if (ojb != null && ojb != DBNull.Value)
                             {
                                 model.DaoKuanDate1 = (DateTime)ojb;
-                                TimeSpan ts = (Convert.ToDateTime(Convert.ToDateTime(ojb).ToString("yyyy-MM-dd")) - Convert.ToDateTime(model.MinOutTime.Value.ToString("yyyy-MM-dd")));
+                                if (model.MinOutTime != null)
+                                {
+                                    TimeSpan ts = (Convert.ToDateTime(Convert.ToDateTime(ojb).ToString("yyyy-MM-dd")) - Convert.ToDateTime(model.MinOutTime.Value.ToString("yyyy-MM-dd")));
 
-                                model.Days = ts.Days;
+                                    model.Days = ts.Days;
+                                }
                                 
                             }
                             ojb = dataReader["Total"];
@@ -652,7 +655,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
         public List<TB_ToInvoice> GetListArrayReport_HeBing(string strWhere, string strWhere2,string strWhere3,string fpTotal,string isColse)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.AppendFormat(@"select FPDate,CG_POOrder.AE,MaxDaoKuanDate,MinDaoKuanDate,CG_POOrder.IsPoFax,minProNo,minOutTime,FPTotal,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,CG_POOrder.PODate as minPoDate,Total,newtable1.PoName,newtable1.GuestName from(
+            strSql.AppendFormat(@"select Model,FPDate,CG_POOrder.AE,MaxDaoKuanDate,MinDaoKuanDate,CG_POOrder.IsPoFax,minProNo,minOutTime,FPTotal,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,CG_POOrder.PODate as minPoDate,Total,newtable1.PoName,newtable1.GuestName from(
 select PONo,sum(POTotal) AS POTotal,PoName,GuestName from CG_POOrder where Status='通过' {0} {2} {3} group by PONo,PoName,GuestName ) as newtable1
 left join(select PONo ,sum(TuiTotal) as TuiTotal from Sell_OrderInHouse where Status='通过'  group by PONo) as newtable2 on newtable1.PONo= newtable2.PONo
 left join( select PONo, sum(Total) as hadFpTotal,min(ruTime) as FPDate from Sell_OrderFP where Status='通过' group by PONo) as newtable3 on newtable1.PONo= newtable3.PONo
@@ -678,6 +681,12 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                     {
                         TB_ToInvoice model = new TB_ToInvoice();
                         object ojb;
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = Convert.ToString(ojb);
+                        }
+
                         ojb = dataReader["FPDate"];
                         if (ojb != null && ojb != DBNull.Value)
                         {

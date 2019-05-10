@@ -243,9 +243,11 @@
                 <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center">
-                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="100">
+                    <ItemStyle HorizontalAlign="Center" ></ItemStyle>
                 </asp:BoundField>
+                  <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model"
+                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="ProNo" HeaderText="单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>

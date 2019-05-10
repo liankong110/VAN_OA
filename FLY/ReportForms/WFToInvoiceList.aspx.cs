@@ -416,12 +416,18 @@ namespace VAN_OA.ReportForms
             List<TB_ToInvoice> cars = new List<TB_ToInvoice>();
             if (cbPOHeBing.Checked)
             {
+                gvList.Columns[gvList.Columns.Count - 5].Visible = false;
+                gvList.Columns[gvList.Columns.Count - 6].Visible = true;
+
                 gvList.Columns[gvList.Columns.Count - 3].Visible = false;
                 gvList.Columns[gvList.Columns.Count - 4].Visible = true;
                 cars = this.toInvoSerSer.GetListArrayReport_HeBing(s, s1, sql2, FPTotal, isClose);
             }
             else
             {
+                gvList.Columns[gvList.Columns.Count - 5].Visible = true;
+                gvList.Columns[gvList.Columns.Count - 6].Visible = false;
+
                 gvList.Columns[gvList.Columns.Count - 3].Visible = true;
                 gvList.Columns[gvList.Columns.Count - 4].Visible = false;
                 if (ddlBusType.Text != "-1")

@@ -326,9 +326,11 @@
         <tr>
             <td colspan="4">
                 <div align="right">
+                    <asp:Button ID="btnChuanTong" runat="server" Text=" 传统查询 " BackColor="Yellow" OnClick="btnChuanTong_Click"  />
+                    &nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
-                      <asp:Button ID="Button1" runat="server" Text=" 同步 " Visible="false" BackColor="Yellow" OnClick="Button1_Click"  />&nbsp;&nbsp;&nbsp;
+                      <asp:Button ID="Button1" runat="server" Text=" 缓存 "  BackColor="Yellow" OnClick="Button1_Click"  />&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -404,7 +406,7 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="5%" DataFormatString="{0:yyyy-MM-dd}">
+                     DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
@@ -432,7 +434,10 @@
                     SortExpression="SellFPTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-
+                   <asp:BoundField DataField="MinOutDate" HeaderText="出库日期"
+                    SortExpression="MinOutDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
                 <asp:BoundField DataField="MinFPTime" HeaderText="首次开票日"
                     SortExpression="MinFPTime" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
@@ -520,7 +525,7 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="3%" ItemStyle-CssClass="item">
+                     ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" SortExpression="INSIDE" ItemStyle-HorizontalAlign="Center">

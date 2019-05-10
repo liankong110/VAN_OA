@@ -4,7 +4,7 @@
 <%@ Import Namespace="VAN_OA" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SampleContent">
-
+    <script src="../Scripts/jquery-1.5.1.min.js"></script>
     <script type="text/javascript">
         function count1() {
 
@@ -48,6 +48,7 @@
 
                 var total = sl * dj;
                 document.getElementById('<%= txtTotal3.ClientID %>').value = total.toFixed(3).toString();
+
             }
             else {
                 document.getElementById('<%= txtTotal3.ClientID %>').value = "0.00";
@@ -73,6 +74,12 @@
                     document.getElementById('<%= txtAE.ClientID %>').value = arr[2];
                     document.getElementById('<%= txtINSIDE.ClientID %>').value = arr[3];
                     document.getElementById('<%= txtPOPayStype.ClientID %>').value = arr[4];
+
+
+
+                    $.post("/WebAPI.ASPX", { GuestName: arr[1] }, function (result) {
+                        document.getElementById('<%= lblHisModel.ClientID %>').innerText = result;
+                    });
 
                 }
             }
@@ -211,8 +218,9 @@
                 <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList><font
                     style="color: Red">*</font>
 
-                计划完工天数: <asp:TextBox ID="txtPlanDays" runat="server" Width="100px"></asp:TextBox>天 <font
-                    style="color: Red">*</font>
+                计划完工天数:
+                <asp:TextBox ID="txtPlanDays" runat="server" Width="100px"></asp:TextBox>天 <font
+                    style="color: Red">*</font>历史模型：<asp:Label ID="lblHisModel" runat="server" Text="" ForeColor="Red"></asp:Label>
             </td>
         </tr>
         <tr>
@@ -699,8 +707,8 @@
            ShowHeader="false"
            Style="border-collapse: collapse;">
            <Columns>
-               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
-               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType" />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu" />
            </Columns>
            <PagerStyle HorizontalAlign="Center" />
            <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />

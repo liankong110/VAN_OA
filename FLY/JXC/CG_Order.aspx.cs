@@ -998,7 +998,10 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
 
                 }
 
-
+                if (txtGuestName.Text != "")
+                {
+                    GetHisModel(txtGuestName.Text);
+                }
             }
         }
 
@@ -2219,6 +2222,13 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
         protected void cbKuCun3_CheckedChanged(object sender, EventArgs e)
         {
             SetKuCunValue(cbKuCun3, txtSupper3, txtPrice3, txtTotal3);
+        }
+
+        private void GetHisModel(string guestName)
+        {
+            string sql = string.Format("select Model FROM CG_POOrder WHERE GuestName='{0}' and Model<>'' and status='通过' group by Model",guestName);
+              
+            lblHisModel.Text = string.Join(",", DBHelp.getDataTable(sql).Select().Select(t => t[0].ToString()).ToArray());
         }
     }
 }

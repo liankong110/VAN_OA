@@ -595,9 +595,9 @@ namespace VAN_OA.BaseInfo
 
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
 
-                            if (Session["backurl"] != null)
+                            if (Session["backurl1"] != null)
                             {
-                                base.Response.Redirect("~" + Session["backurl"]);
+                                base.Response.Redirect("~" + Session["backurl1"]);
                             }
                             else
                             {
@@ -635,9 +635,9 @@ namespace VAN_OA.BaseInfo
 
                             if (fromSer.ifAudiPerAndCon(Convert.ToInt32(Session["currentUserId"]), Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])) == false)
                             {
-                                if (Session["backurl"] != null)
+                                if (Session["backurl1"] != null)
                                 {
-                                    base.Response.Redirect("~" + Session["backurl"]);
+                                    base.Response.Redirect("~" + Session["backurl1"]);
                                 }
                                 else
                                 {
@@ -682,9 +682,9 @@ namespace VAN_OA.BaseInfo
                         if (goodSer.updateTran(model, eform, forms))
                         {
                             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
-                            if (Session["backurl"] != null)
+                            if (Session["backurl1"] != null)
                             {
-                                base.Response.Redirect("~" + Session["backurl"]);
+                                base.Response.Redirect("~" + Session["backurl1"]);
                             }
                             else
                             {

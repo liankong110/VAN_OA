@@ -12,7 +12,7 @@
         }
     </style>
 
-    <script src="../Scripts/tinybox.js" type="text/javascript"></script>
+    <script src="../Scripts/tinybox.js" type="text/javascript"></"></script>
 
     <script src="../Scripts/tinyboxCu.js" type="text/javascript"></script>
 
@@ -244,7 +244,7 @@
                             <%--  <asp:BoundField DataField="PONo" HeaderText="项目编码" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />--%>
                             <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
                             <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                                DataFormatString="{0:yyyy-MM-dd}" />
+                                DataFormatString="{0:yyyy-MM-dd}"  />
                             <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:f2}" />
                             <asp:BoundField DataField="POPayStype" HeaderText="结算" SortExpression="POPayStype"
                                 ItemStyle-HorizontalAlign="Center" />
@@ -385,13 +385,13 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="Type" HeaderText="" SortExpression="Type" />
-                                                <asp:BoundField DataField="MyProNo" HeaderText="单据号" SortExpression="MyProNo" ItemStyle-Width="5%" />
+                                                <asp:BoundField DataField="Type" HeaderText="" SortExpression="Type"  ItemStyle-Width="10px" />
+                                                <asp:BoundField DataField="MyProNo" HeaderText="单据号" SortExpression="MyProNo"  />
                                                 <asp:BoundField DataField="PODate" HeaderText="日期" SortExpression="PODate" DataFormatString="{0:yyyy-MM-dd}"
                                                     ItemStyle-Width="80" />
-                                                <asp:BoundField DataField="States" SortExpression="States" HeaderText="状态" ItemStyle-Width="2%" />
-                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" />
-                                                <asp:TemplateField HeaderText="名称" ItemStyle-Width="5%">
+                                                <asp:BoundField DataField="States" SortExpression="States" HeaderText="状态"  />
+                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="40PX" />
+                                                <asp:TemplateField HeaderText="名称" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -399,11 +399,11 @@
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" />
-                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" HeaderStyle-Width="8%" />
+                                                <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-Width="70PX" />
+                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec"  />
                                                 <%--  <asp:BoundField DataField="Good_Model" HeaderText="型号" SortExpression="Good_Model" />--%>
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="2%" />
-                                                <asp:TemplateField HeaderText="数量">
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit"/>
+                                                <asp:TemplateField HeaderText="数量" ItemStyle-Width="50PX">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("Num") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -411,7 +411,7 @@
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("Num") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本单价" ItemStyle-Width="5%">
+                                                <asp:TemplateField HeaderText="成本单价" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCostPrice" runat="server" Text='<%# ConvertToObj(Eval("CostPrice")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -419,7 +419,7 @@
                                 <asp:Label ID="lblCostPrice" runat="server" Text='<%# ConvertToObj(Eval("CostPrice")) %>'></asp:Label>
                             </FooterTemplate>--%>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本总价" ItemStyle-Width="5%">
+                                                <asp:TemplateField HeaderText="成本总价" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCostTotal" runat="server" Text='<%# NumHelp.FormatTwo(Eval("CostTotal")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -427,7 +427,7 @@
                                                         <asp:Label ID="lblCostTotal" runat="server" Text='<%# NumHelp.FormatFour(Eval("CostTotal")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="销售单价" ItemStyle-Width="5%">
+                                                <asp:TemplateField HeaderText="销售单价" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblSellPrice" runat="server" Text='<%# ConvertToObj(Eval("SellPrice")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -435,7 +435,7 @@
                                 <asp:Label ID="lblSellPrice" runat="server" Text='<%# ConvertToObj(Eval("SellPrice")) %>'></asp:Label>
                             </FooterTemplate>--%>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="销售总价" ItemStyle-Width="5%">
+                                                <asp:TemplateField HeaderText="销售总价" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblSellTotal" runat="server" Text='<%# NumHelp.FormatFour(Eval("SellTotal")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -443,7 +443,7 @@
                                                         <asp:Label ID="lblSellTotal" runat="server" Text='<%# ConvertToObj(Eval("SellTotal")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="管理费">
+                                                <asp:TemplateField HeaderText="管理费" >
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblOtherCost" runat="server" Text='<%# ConvertToObj(Eval("OtherCost")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -460,8 +460,8 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="ToTime" HeaderText="到帐日期" SortExpression="ToTime" DataFormatString="{0:yyyy-MM-dd}"
-                                                    ItemStyle-Width="5%" />
-                                                <asp:TemplateField HeaderText="利润%">
+                                                    />
+                                                <asp:TemplateField HeaderText="利润%" ItemStyle-Width="50PX">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblProfit" runat="server" Text='<%# ConvertToObj1(Eval("Profit")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -1053,6 +1053,23 @@
         </tr>
     </table>
 
+    项目模型说明： 
+       <asp:GridView ID="gvModel" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
+           ShowFooter="false" Width="100%" AutoGenerateColumns="False"
+           ShowHeader="false"
+           Style="border-collapse: collapse;">
+           <Columns>
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+           </Columns>
+           <PagerStyle HorizontalAlign="Center" />
+           <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
+           <HeaderStyle CssClass="GV_header" BackColor="#336699" Height="24px" ForeColor="White"
+               HorizontalAlign="Center" />
+           <AlternatingRowStyle CssClass="InfoDetail2" BackColor="#FBFBFB" />
+           <RowStyle CssClass="InfoDetail1" />
+           <FooterStyle BackColor="#D7E8FF" />
+       </asp:GridView>
 
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
@@ -1063,9 +1080,9 @@
             <td>开工日</td>
             <td>今天日期</td>
             <td>截止计划完工日开工天数</td>
-             <td>截止实际完工日开工天数</td>
-            <td style="width:20%;">说明</td>
-            <td  style="width:20%;">调整措施</td>
+            <td>截止实际完工日开工天数</td>
+            <td style="width: 20%;">说明</td>
+            <td style="width: 20%;">调整措施</td>
             <td>计划完工天数</td>
             <td>计划完工日</td>
         </tr>
@@ -1089,7 +1106,7 @@
             <td rowspan="10"><%= m.StartDate %> </td>
             <td rowspan="10"><%= m.CurrentDate %> </td>
             <td rowspan="10"><%= m.HadDays %> </td>
-             <td rowspan="10"><%= m.ActualHadDays %> </td>
+            <td rowspan="10"><%= m.ActualHadDays %> </td>
             <td rowspan="10"><%= m.Remark %> </td>
             <td rowspan="10"><%= m.CuoShi %> </td>
             <td rowspan="10"><%= m.PlanDays %> </td>
@@ -1125,11 +1142,13 @@
     <%--<div><%=ViewState["PVChats"] %></div>--%>
 
     <div id="main" style="height: 500px; border: 1px solid #ccc; padding: 10px;"></div>
+    <div id="mainACCV" style="height: 500px; border: 1px solid #ccc; padding: 10px;"></div>
     <script src="../Echat/www/js/echarts.js"></script>
     <script src="../Echat/theme/macarons.js"></script>
     <script type="text/javascript">
 
         var myseries = <%=ViewState["PVChats"] %>;
+        var series_ACCV = <%=ViewState["series_ACCV"] %>;
         console.log(myseries);
         // Step:3 conifg ECharts's path, link to echarts.js from current page.
         // Step:3 为模块加载器配置echarts的路径，从当前页面链接到echarts.js，定义所需图表路径
@@ -1192,37 +1211,6 @@
                         }
                     ],
                     series: myseries
-                    //series: [
-                    //    {
-                    //        name: 'PV',
-                    //        type: 'line',
-                    //        data: [
-                    //            [0, 0], [5, 7], [8, 8], [12, 6], [11, 12], [16, 9], [14, 6], [17, 4], [19, 9]
-                    //        ]
-                    //    },
-                    //    {
-                    //        name: 'AC',
-                    //        type: 'line',
-                    //        data: [
-                    //            [0, 0], [15, 7], [18, 8], [22, 6], [21, 12], [26, 9], [24, 6], [27, 4], [39, 9]
-                    //        ]
-                    //    },
-                    //    {
-                    //        name: 'EV',
-                    //        type: 'line',
-                    //        data: [
-                    //            [0, 0], [45, 7], [48, 8], [42, 16], [41, 12], [46, 9], [44, 6], [47, 4], [49, 9]
-                    //        ]
-                    //    },
-                    //    {
-                    //        name: '数据2',
-                    //        type: 'bar',
-                    //        barHeight: 10,
-                    //        data: [
-                    //            [0, 0], [2, 3], [4, 4], [7, 5], [11, 11], [18, 15]
-                    //        ]
-                    //    }
-                    //]
                 };
 
 
@@ -1231,5 +1219,63 @@
 
             }
         );
+
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar',
+                'echarts/chart/line'
+            ],
+            function (ec) {
+                //--- 折柱 ---
+                var myChart = ec.init(document.getElementById('mainACCV'), 'macarons');
+                var option = {
+                    title: {
+                        text: '',
+                        subtext: ''
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            show: true,
+                            type: 'cross',
+                            lineStyle: {
+                                type: 'dashed',
+                                width: 1
+                            }
+                        },
+                        formatter: function (params) {
+                            return params.seriesName + ' : [ '
+                                + params.value[0] + ', '
+                                + params.value[1] + ' ]';
+                        }
+                    },
+                    legend: {
+                        data: ['AC', 'CV']
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+
+                            type: 'value'
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#dc143c'
+                                }
+                            }
+                        }
+                    ],
+                    series: series_ACCV
+                };
+                myChart.setOption(option);
+            }
+        );
+
+      
     </script>
 </asp:Content>

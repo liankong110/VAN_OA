@@ -432,6 +432,11 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
 
+                  <asp:BoundField DataField="MinOutDate" HeaderText="出库日期"
+                    SortExpression="MinOutDate" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
+                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                </asp:BoundField>
+
                 <asp:BoundField DataField="MinFPTime" HeaderText="首次开票日"
                     SortExpression="MinFPTime" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>

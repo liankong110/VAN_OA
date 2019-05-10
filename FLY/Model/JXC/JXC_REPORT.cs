@@ -145,6 +145,6 @@ namespace VAN_OA.Model.JXC
         #endregion Model
 
         public string PoType { get; set; }
-
+        public string Model { get; set; }
     }
 }

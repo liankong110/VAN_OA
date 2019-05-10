@@ -35,8 +35,15 @@ namespace VAN_OA
             return 0;
         }
         public void Execute()
-        {
-            ServiceAppSetting.LoggerHander.Invoke(string.Format("执行一次! - {0}", DateTime.Now), "");
+        { 
+            //OA系统每天晚上23:55，准时发起，一个任务，就是点击缓存按钮的动作，这样我们可以获得 当天的数据的快速列表印象。
+            if (DateTime.Now.Hour == 22 && DateTime.Now.Minute == 00)
+            {
+                ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-缓存! - {0}", DateTime.Now), "");
+                new JXC_REPORTService().CatchData();
+                ServiceAppSetting.LoggerHander.Invoke(string.Format("结束-缓存! - {0}", DateTime.Now), "");
+            }
+            ServiceAppSetting.LoggerHander.Invoke(string.Format("do! {0}", DateTime.Now), "");
             //每天早上1，2，3点处理最高值
             if ((DateTime.Now.Hour == 1||DateTime.Now.Hour == 2||DateTime.Now.Hour == 3) && DateTime.Now.Minute== 0)
             {
@@ -127,6 +134,7 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
                 }
             }
 
+           
         }
 
         public void Execute(JobExecutionContext context)

@@ -20,7 +20,7 @@ namespace VAN_OA.Dal.JXC
         public List<Model.JXC.JXC_REPORT> GetListArray(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select JXC_REPORT.poType,CG_POOrder.POName,JXC_REPORT.PONo,JXC_REPORT.ProNo,RuTime,Supplier,goodInfo,GoodNum,GoodSellPrice,goodSellTotal,GoodPrice,goodTotal,t_GoodNums,t_GoodTotalChas,maoli,FPTotal as FPNo ");
+            strSql.Append("select Model,JXC_REPORT.poType,CG_POOrder.POName,JXC_REPORT.PONo,JXC_REPORT.ProNo,RuTime,Supplier,goodInfo,GoodNum,GoodSellPrice,goodSellTotal,GoodPrice,goodTotal,t_GoodNums,t_GoodTotalChas,maoli,FPTotal as FPNo ");
             strSql.Append(" FROM JXC_REPORT ");
             strSql.Append(" left join CG_POOrder on JXC_REPORT.PONo=CG_POOrder.PONo and CG_POOrder.IFZhui=0 and CG_POOrder.Status='通过'");
 
@@ -647,7 +647,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append(" select  SumPOTotal,* from (");
-            strSql.Append("select  MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
+            strSql.Append("select  Model,MinOutDate,MaxDaoKuanDate,CG_POOrder.IsClose,CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate, CG_POOrder.GuestName,CG_POOrder.GuestType, CG_POOrder.GuestPro, ");
             strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
             strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
             //strSql.Append(" ZhangQi as trueZhangQi,AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal  from CG_POOrder ");
@@ -666,7 +666,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro  ");
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model  ");
 
             if (having != "")
             {
@@ -795,6 +795,12 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                             model.GuestProString = VAN_OA.BaseInfo.GuestProBaseInfoList.GetGestProInfo_1(ojb);
 
                         }
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = ojb.ToString();
+                        }
+                        
                         model.TrueLiRun = model.InvoiceTotal - model.goodTotal;
 
                         model.AETotal = model.AEPer * model.maoliTotal / 100;
@@ -851,9 +857,9 @@ and BusType=0 and TB_ToInvoice.State='通过' order by DaoKuanDate");
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
-        public List<Model.JXC.JXC_REPORTTotal> Temp_YuShouKuan_GetListArray_Total(string strWhere, PagerDomain page,out DataTable sumDT)
+        public List<Model.JXC.JXC_REPORTTotal> Temp_YuShouKuan_GetListArray_Total(string strWhere, PagerDomain page, out DataTable sumDT)
         {
-           
+
             List<InvoiceSimpDetail> invSimpDetailList = GetInvoiceSimpDetailList();
             StringBuilder strSql = new StringBuilder();
             strSql.Append(@"select  [SumPOTotal]
@@ -896,7 +902,7 @@ and BusType=0 and TB_ToInvoice.State='通过' order by DaoKuanDate");
             //    strSql.Append(strWhere);
             //}
 
-            var  strSql_Page = new StringBuilder(DBHelp.GetPagerSql_Sum(page, strSql.ToString(), strWhere, " Temp_YuShouKuan.PONo DESC "));
+            var strSql_Page = new StringBuilder(DBHelp.GetPagerSql_Sum(page, strSql.ToString(), strWhere, " Temp_YuShouKuan.PONo DESC "));
 
 
             #region 查询总条数
@@ -963,7 +969,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         ojb = dataReader["MaxDaoKuanDate"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            model.MaxDaoKuanDate =Convert.ToDateTime(ojb);
+                            model.MaxDaoKuanDate = Convert.ToDateTime(ojb);
                         }
 
                         ojb = dataReader["InvoTotal"];
@@ -977,7 +983,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.trueZhangQi = (int)ojb;
-                        } 
+                        }
 
                         //===
                         model.AE = dataReader["AE"].ToString();
@@ -1031,10 +1037,10 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.MinFPTime = Convert.ToDateTime(ojb);
-                        } 
+                        }
                         model.TrueLiRun = model.InvoiceTotal - model.goodTotal;
                         model.AETotal = model.AEPer * model.maoliTotal / 100;
-                        model.InsidTotal = model.INSIDEPer * model.maoliTotal / 100; 
+                        model.InsidTotal = model.INSIDEPer * model.maoliTotal / 100;
                         if (model.SumPOTotal == model.InvoiceTotal)
                         {
                             model.IsQuanDao = true;
@@ -1049,7 +1055,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.JSKaiPiaoDate = Convert.ToDateTime(ojb);
-                        }                       
+                        }
 
                         //经验账期
                         ojb = dataReader["AVG_ZQ"];
@@ -1073,7 +1079,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         {
                             model.Model = Convert.ToString(ojb);
                         }
-
+                       
                         ojb = dataReader["YuGuDaoKuanDate"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -1089,6 +1095,20 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
                         {
                             model.YuGuDaoKuanTotal = Convert.ToDecimal(ojb);
                         }
+                        ojb = dataReader["MinOutDate"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.MinOutDate = Convert.ToDateTime(ojb);
+                        }
+                        
+                        //模型0,3,4,5,6,7,8的 项目的 首次计算开票日和 最近计算开票日 不用显示，空着。
+                        if (model.Model == "模型0" || model.Model == "模型3" || model.Model == "模型4" || model.Model == "模型5" || model.Model == "模型6" || model.Model == "模型7" ||
+                            model.Model == "模型8")
+
+                        {
+                            model.MinBillDate = null;
+                            model.JSKaiPiaoDate = null;
+                        }
                         list.Add(model);
                     }
                 }
@@ -1096,6 +1116,143 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
             return list;
         }
 
+        /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="sqlTableName"></param>
+        public void BatchSaveData(DataTable dataTable, string sqlTableName)
+        {
+            using (var sqlBulkCopy = new SqlBulkCopy(DBHelp.getConn().ConnectionString))
+            {
+                sqlBulkCopy.DestinationTableName = "[" + sqlTableName + "]";
+                sqlBulkCopy.BatchSize = dataTable.Rows.Count;
+                if (dataTable != null && dataTable.Rows.Count != 0)
+                {
+                    sqlBulkCopy.WriteToServer(dataTable);
+                }
+                sqlBulkCopy.Close();
+            }
+            dataTable = null;
+        }
+
+        private DataTable GetTableSchema()
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Id") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("SumPOTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanCount") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinDaoKuanDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinOutDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MaxDaoKuanDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("IsClose") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("PONo") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("POName") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("PODate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestName") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestType") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestPro") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("goodSellTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("goodTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("maoliTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("FPTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("ZhangQiTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AE") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("INSIDE") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AEPer") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("INSIDEPer") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("InvoTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("SellFPTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Model") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("BillDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("BillCount") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AVG_ZQ") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("ZQ") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinDaoKuanTime_ZQ") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinBillDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinFPTime") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("YuGuDaoKuanTotal") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("YuGuDaoKuanDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanNumber") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("JSKaiPiaoDate") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("trueZhangQi") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("JingLi") });
+            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DELAY") });
+            return dataTable;
+        }
+        /// <summary>
+        /// 缓存数据
+        /// </summary>
+        public void CatchData()
+        {
+            DBHelp.ExeCommand("truncate table Temp_YuShouKuan;");
+            List<JXC_REPORTTotal> pOOrderList = YuShouKuan_GetListArray_Total("", "", "");
+            DataTable dataTable = GetTableSchema();
+
+            foreach (var model in pOOrderList)
+            {
+                var dataRow = dataTable.NewRow();
+                dataRow[1] = model.SumPOTotal;
+                dataRow[2] = 0;
+                dataRow[3] = model.MinDaoKuanDate;
+                dataRow[4] = model.MinOutDate;
+                dataRow[5] = model.MaxDaoKuanDate;
+                dataRow[6] = model.IsClose;
+                dataRow[7] = model.PONo;
+                dataRow[8] = model.POName;
+                dataRow[9] = model.PODate;
+                dataRow[10] = model.GuestName;
+                dataRow[11] = model.GuestType;
+                dataRow[12] = model.GuestPro;
+                dataRow[13] = model.goodSellTotal;
+                dataRow[14] = model.goodTotal;
+                dataRow[15] = model.maoliTotal;
+                dataRow[16] = model.FPTotal;
+                dataRow[17] = model.ZhangQiTotal;
+                dataRow[18] = model.AE;
+                dataRow[19] = model.INSIDE;
+                dataRow[20] = model.AEPer;
+                dataRow[21] = model.INSIDEPer;
+                dataRow[22] = model.InvoiceTotal;
+                dataRow[23] = model.SellFPTotal;
+                dataRow[24] = model.Model;
+                dataRow[25] = model.BillDate;
+                dataRow[26] = model.DaoKuanNumber;
+                dataRow[27] = model.Avg_ZQ;
+                dataRow[28] = model.ZQ;
+                dataRow[29] = model.MinDaoKuanTime_ZQ;
+                dataRow[30] = model.MinBillDate;
+                dataRow[31] = model.MinFPTime;
+                dataRow[32] = model.SecondDaoKuanDate;
+                dataRow[33] = model.YuGuDaoKuanTotal;
+                dataRow[34] = model.YuGuDaoKuanDate;
+                dataRow[35] = model.DaoKuanNumber;
+                dataRow[36] = model.JSKaiPiaoDate;
+                dataRow[37] = model.trueZhangQi;
+                dataRow[38] = model.JingLi;
+
+                var m = model;
+
+                if ((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                    || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0))
+                {
+                    dataRow[39] = 1;
+                }
+                if (!((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                     || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)))
+                {
+                    dataRow[39] = 2;
+                }
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            if (dataTable.Rows.Count > 0)
+            {
+                BatchSaveData(dataTable, "Temp_YuShouKuan");
+            }
+        }
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
@@ -1217,6 +1374,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                             var minOutTime = Convert.ToDateTime(ojb);
                             TimeSpan ts = (Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")) - Convert.ToDateTime(minOutTime.ToString("yyyy-MM-dd")));
                             model.trueZhangQi = ts.Days;
+                            model.MinOutDate = minOutTime;
                         }
                         ojb = dataReader["InvoTotal"];
                         if (ojb != null && ojb != DBNull.Value)
@@ -1579,8 +1737,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         {
                             model.YuGuDaoKuanTotal = model.SellFPTotal - model.InvoiceTotal;
                             model.YuGuDaoKuanDate = model.YuGuDaoKuanDate.Value.Date;
-                        }
-
+                        }                       
                         list.Add(model);
                     }
                 }
@@ -1617,16 +1774,16 @@ as newtable1 on POTotal_SumView.PONo=newtable1.PONo  where InvoTotal>=SumPOTotal
 
         public Hashtable GetPoNoList(int D, float P)
         {
-            Hashtable hs = new Hashtable(); 
+            Hashtable hs = new Hashtable();
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();
-                SqlCommand objCommand = new SqlCommand(GetSql(D,P), conn);
+                SqlCommand objCommand = new SqlCommand(GetSql(D, P), conn);
                 using (SqlDataReader dataReader = objCommand.ExecuteReader())
                 {
                     while (dataReader.Read())
                     {
-                        hs.Add(dataReader["PONo"].ToString(),null);
+                        hs.Add(dataReader["PONo"].ToString(), null);
                     }
                 }
             }
@@ -1652,9 +1809,9 @@ as newtable1 on POTotal_SumView.PONo=newtable1.PONo  where InvoTotal>=SumPOTotal
                     while (dataReader.Read())
                     {
                         var model = new TB_ToInvoice();
-                        model.PoNo=dataReader["PONo"].ToString();
-                        model.Total =Convert.ToDecimal(dataReader["TOTAL"]);
-                        model.DaoKuanDate =Convert.ToDateTime(dataReader["DaoKuanDate"]);
+                        model.PoNo = dataReader["PONo"].ToString();
+                        model.Total = Convert.ToDecimal(dataReader["TOTAL"]);
+                        model.DaoKuanDate = Convert.ToDateTime(dataReader["DaoKuanDate"]);
                         list.Add(model);
                     }
                 }
@@ -1680,17 +1837,17 @@ as newtable1 on POTotal_SumView.PONo=newtable1.PONo  where InvoTotal>=SumPOTotal
             strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
             strSql.Append(@" left join (select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses
 on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by PONO ) as SellOut on CG_POOrder.PONo=SellOut.PONO");
-//            if (!string.IsNullOrEmpty(compare))
-//            {
-//                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
-//else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
-//(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
-// where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
-// group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
-//   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
+            //            if (!string.IsNullOrEmpty(compare))
+            //            {
+            //                strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
+            //else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POOrder.PONo=TB_ToInvoice.PoNo  and TB_ToInvoice.state='通过' left join 
+            //(select min(CreateTime) as MinOutDate,PONO from Sell_OrderOutHouse where  Status='通过' group by PONO ) as MinOutPO on MinOutPO.PONo=CG_POOrder.PoNo 
+            // where   CG_POOrder.IFZhui=0 and CG_POOrder.PODate between '{2} 00:00:00'  and  '{3} 23:59:59' {5}
+            // group by CG_POOrder.PoNo,POStatue4 having (POStatue4='已结清' and datediff(day,min(MinOutDate),isnull(max(TB_ToInvoice.DaoKuanDate),getdate())){4}{1})  or    
+            //   (( POStatue4='' or POStatue4 is null)and datediff(day,min(MinOutDate),getdate()){4}{1})) as ntb3 on CG_POOrder.PONo=ntb3.PONo", compare, baseKeyModel.TypeValue, StartTime.ToString("yyyy-MM-dd"), DateTime.Now.Year + "-12-31", fuhao_E, KAO_POType);
 
 
-//            }
+            //            }
             if (!string.IsNullOrEmpty(compare))
             {
                 strSql.AppendFormat(@" left join ( select CG_POOrder.PONO,sum(case when datediff(day,MinOutDate,TB_ToInvoice.DaoKuanDate) {0} {1} then Total 
@@ -1870,8 +2027,8 @@ else 0 end)  as WaiInvoTotal   from CG_POOrder  left join TB_ToInvoice on CG_POO
                         ojb = dataReader["ChengBenJiLiang"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            model.ChengBenJiLiangString =Convert.ToBoolean(ojb);
-                        }                        
+                            model.ChengBenJiLiangString = Convert.ToBoolean(ojb);
+                        }
                         list.Add(model);
                     }
                 }
@@ -2374,7 +2531,12 @@ left join TuiGuanLiTotal on tb1.pono=TuiGuanLiTotal.pono
             {
                 model.FPNo = ojb.ToString();
             }
-
+            ojb = dataReader["Model"];
+            if (ojb != null && ojb != DBNull.Value)
+            {
+                model.Model = ojb.ToString();
+            }
+            
             model.POName = dataReader["POName"].ToString();
             model.PoType = dataReader["PoType"].ToString();
             return model;

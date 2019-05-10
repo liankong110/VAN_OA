@@ -78,6 +78,14 @@ namespace VAN_OA
             return bo;
         }
 
+        public static bool VerifesToDateTime_1(string dateTime)
+        {
+            
+            DateTime result;
+            var bo = DateTime.TryParse(dateTime, out result);
+         
+            return bo;
+        }
         /// <summary>
         /// 验证是否是 数字类型
         /// </summary>

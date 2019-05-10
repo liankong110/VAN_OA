@@ -5,6 +5,7 @@ using System.Web;
 
 namespace VAN_OA.Model.JXC
 {
+    [Serializable]
     public class PVChat
     {
         public string name { get; set; }

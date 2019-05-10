@@ -327,17 +327,19 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="5%" DataFormatString="{0:yyyy-MM-dd}">
+                    ItemStyle-Width="70px" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
-                    HeaderStyle-Width="100" ItemStyle-HorizontalAlign="Left">
+                    HeaderStyle-Width="120" ItemStyle-HorizontalAlign="Left">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestType" HeaderText="类型" SortExpression="GuestType"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GuestProString" HeaderText="属性" SortExpression="GuestProString"
                     HeaderStyle-Width="30" ItemStyle-HorizontalAlign="Center" />
+                   <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model"
+                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="goodSellTotal" HeaderText="销售额" DataFormatString="{0:n2}"
                     SortExpression="goodSellTotal" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
@@ -387,14 +389,14 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="3%" ItemStyle-CssClass="item">
+                   HeaderStyle-Width="40px" ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" SortExpression="INSIDE" ItemStyle-HorizontalAlign="Center">
+                <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" SortExpression="INSIDE" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="20">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="AEPer" HeaderText="AE%" SortExpression="AEPer" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="2%" ItemStyle-CssClass="item">
+                     ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="INSIDEPer" HeaderText="IS%" SortExpression="INSIDEPer"

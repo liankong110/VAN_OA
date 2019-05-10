@@ -250,7 +250,7 @@ namespace VAN_OA
             }
             if (!string.IsNullOrEmpty(txtSchoolDate.Text))
             {
-                if (CommHelp.VerifesToDateTime(txtSchoolDate.Text) == false)
+                if (CommHelp.VerifesToDateTime_1(txtSchoolDate.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('毕业时间 格式错误！');</script>");
                     return false;
@@ -258,7 +258,7 @@ namespace VAN_OA
             }
             if (!string.IsNullOrEmpty(txtWorkDate.Text))
             {
-                if (CommHelp.VerifesToDateTime(txtWorkDate.Text) == false)
+                if (CommHelp.VerifesToDateTime_1(txtWorkDate.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('参加工作时间 格式错误！');</script>");
                     return false;
@@ -266,7 +266,7 @@ namespace VAN_OA
             }
             if (!string.IsNullOrEmpty(txtCreateTime.Text))
             {
-                if (CommHelp.VerifesToDateTime(txtCreateTime.Text) == false)
+                if (CommHelp.VerifesToDateTime_1(txtCreateTime.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('建档时间 格式错误！');</script>");
                     return false;

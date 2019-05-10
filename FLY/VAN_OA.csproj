@@ -3054,6 +3054,13 @@
     </Compile>
     <Compile Include="RMBCapitalization.cs" />
     <Compile Include="ServiceAppSetting.cs" />
+    <Compile Include="WebAPI.aspx.cs">
+      <DependentUpon>WebAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebAPI.aspx.designer.cs">
+      <DependentUpon>WebAPI.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3580,6 +3587,7 @@
     <Content Include="Styles\MyPager.css" />
     <Content Include="Top.aspx" />
     <Content Include="UpdatePwd.aspx" />
+    <Content Include="WebAPI.aspx" />
     <Content Include="WebForm1.aspx" />
     <Content Include="WebForm3.aspx" />
     <Content Include="WebForm4.aspx" />

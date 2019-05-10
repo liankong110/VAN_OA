@@ -25,14 +25,20 @@ namespace VAN_OA
             try
             {                 
                 var dt = DateTime.Now;
-                var content = DateTime.Now.ToString() + "执行JOB一次\r\n";
+                var content = DateTime.Now.ToString() + "do ！\r\n";
                 lock (Tclock)
-                {                    
-                  
+                {
+                    //OA系统每天晚上23:55，准时发起，一个任务，就是点击缓存按钮的动作，这样我们可以获得 当天的数据的快速列表印象。
+                    if (DateTime.Now.Hour == 19 && DateTime.Now.Minute == 45)
+                    {
+                        ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-缓存! 1- {0}", DateTime.Now), "");
+                        new JXC_REPORTService().CatchData();
+                        ServiceAppSetting.LoggerHander.Invoke(string.Format("结束-缓存! 1- {0}", DateTime.Now), "");
+                    }
 
                     //每天早上1，2，3点处理最高值
-                  //  if (DateTime.Now.Hour ==10 && DateTime.Now.Minute == 40)
-                  if (DateTime.Now.Hour == 2 && DateTime.Now.Minute == 00)
+                    //  if (DateTime.Now.Hour ==10 && DateTime.Now.Minute == 40)
+                    if (DateTime.Now.Hour == 2 && DateTime.Now.Minute == 00)
                     {
                         //ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-最高金额! - {0}", DateTime.Now), "");
                         content += "执行最高金额";

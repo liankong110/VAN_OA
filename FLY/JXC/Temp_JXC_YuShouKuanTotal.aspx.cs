@@ -37,6 +37,7 @@ namespace VAN_OA.JXC
                 txtYuGuDaoKuan_1.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
                 var _modelList = modelService.GetListArray("");
+                _modelList.Add(new TB_Model { Id=-2,ModelName=""});
                 _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
                 ddlModel.DataSource = _modelList;
                 ddlModel.DataBind();
@@ -473,7 +474,7 @@ namespace VAN_OA.JXC
             }
             if (ddlAvg_ZQ.Text == "无")
             {
-                sql += string.Format(" and isnull(AVG_ZQ,0)=0");               
+                sql += string.Format(" and isnull(AVG_ZQ,0)=0");
             }
 
             //预估位序
@@ -483,16 +484,16 @@ namespace VAN_OA.JXC
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估位序 格式错误！');</script>");
                     return;
-                }              
+                }
 
                 if (ddlDaoKuanNumber.Text == "无")
-                { 
+                {
                     sql += string.Format(" and DaoKuanNumber is null");
                 }
                 else
                 {
                     sql += string.Format(" and DaoKuanNumber{0}{1}", ddlDaoKuanNumber.Text, txtDaoKuanNumber.Text.Trim());
-                }   
+                }
             }
             //预估到款
             if (txtYuGuDaoKuan.Text != "")
@@ -504,7 +505,7 @@ namespace VAN_OA.JXC
                 }
                 decimal jingLi = Convert.ToDecimal(txtYuGuDaoKuan.Text);
                 if (ddlYuGuDaoKuan.Text == "无")
-                {                     
+                {
                     sql += string.Format(" and YuGuDaoKuanTotal=0");
                 }
                 else
@@ -520,32 +521,32 @@ namespace VAN_OA.JXC
             {
                 if (ddlTrueZhangQI.Text == "1")
                 {
-                    sql += string.Format(" and trueZhangQi<=30");                   
+                    sql += string.Format(" and trueZhangQi<=30");
                 }
                 if (ddlTrueZhangQI.Text == "2")
-                {                    
+                {
                     sql += string.Format(" and trueZhangQi>30 and trueZhangQi<=60");
                 }
                 if (ddlTrueZhangQI.Text == "3")
                 {
-                    sql += string.Format(" and trueZhangQi>60 and trueZhangQi<=90"); 
+                    sql += string.Format(" and trueZhangQi>60 and trueZhangQi<=90");
                 }
                 if (ddlTrueZhangQI.Text == "4")
                 {
-                    sql += string.Format(" and trueZhangQi>90 and trueZhangQi<=120"); 
+                    sql += string.Format(" and trueZhangQi>90 and trueZhangQi<=120");
                 }
                 if (ddlTrueZhangQI.Text == "5")
                 {
-                    sql += string.Format(" and trueZhangQi>120 "); 
+                    sql += string.Format(" and trueZhangQi>120 ");
                 }
             }
             //计算开票日
             if (txtJSKaiPiaoDate.Text != "")
-            { 
+            {
                 sql += string.Format(" and JSKaiPiaoDate>='{0} 00:00:00'", txtJSKaiPiaoDate.Text);
             }
             if (txtJSKaiPiaoDateTo.Text != "")
-            {               
+            {
                 sql += string.Format(" and JSKaiPiaoDate<='{0} 23:59:59'", txtJSKaiPiaoDateTo.Text);
             }
             if (ddlYuGuDaoKuan_1.Text != "-1" && !string.IsNullOrEmpty(txtYuGuDaoKuan_1.Text))
@@ -562,18 +563,18 @@ namespace VAN_OA.JXC
 
             //预计到款
             if (txtYuDaoDate.Text != "")
-            {              
+            {
                 sql += string.Format(" and YuGuDaoKuanDate>='{0} 00:00:00'", txtYuDaoDate.Text);
             }
             if (txtYuDaoDateTo.Text != "")
-            { 
+            {
                 sql += string.Format(" and YuGuDaoKuanDate<='{0} 23:59:59'", txtYuDaoDateTo.Text);
             }
             if (ddlDELAY.Text != "-1")
             {
                 sql += string.Format(" and DELAY={0}", ddlDELAY.Text);
             }
-            
+
 
             PagerDomain page = new PagerDomain();
             page.CurrentPageIndex = AspNetPager1.CurrentPageIndex;
@@ -583,12 +584,12 @@ namespace VAN_OA.JXC
                 page.PageSize = 100000;
             }
 
-       
+
             List<JXC_REPORTTotal> pOOrderList = this.POSer.Temp_YuShouKuan_GetListArray_Total(sql, page, out sumDT);
 
-           
-           
-        
+
+
+
             var getAllPONos = pOOrderList.Aggregate("", (current, m) => current + ("'" + m.PONo + "',")).Trim(',');
             lblVisAllPONO.Text = getAllPONos;
             decimal jlr = Convert.ToDecimal(sumDT.Rows[0]["maoliTotal"] == DBNull.Value ? 0 : sumDT.Rows[0]["maoliTotal"]);
@@ -603,7 +604,7 @@ namespace VAN_OA.JXC
 
             var InvoiceTotal = Convert.ToDecimal(sumDT.Rows[0]["InvoiceTotal"] == DBNull.Value ? 0 : sumDT.Rows[0]["InvoiceTotal"]);
             var goodTotal = Convert.ToDecimal(sumDT.Rows[0]["goodTotal"] == DBNull.Value ? 0 : sumDT.Rows[0]["goodTotal"]);
-            var trueLiRun = InvoiceTotal- goodTotal;
+            var trueLiRun = InvoiceTotal - goodTotal;
             lblSJLR.Text = string.Format("{0:n6}", trueLiRun);
 
             lblFP.Text = string.Format("{0:n6}", Convert.ToDecimal(sumDT.Rows[0]["SellFPTotal"] == DBNull.Value ? 0 : sumDT.Rows[0]["SellFPTotal"]));
@@ -623,7 +624,7 @@ namespace VAN_OA.JXC
                 lblAllTrunLv.Text = string.Format("{0:f2}", (trueLiRun / allPoTotal * 100));
             }
             //项目到款总额：TTT= 实到帐的合计 
-         
+
             lblAllDaoKuan.Text = string.Format("{0:n6}", InvoiceTotal);
             //到款率： VVV=TTT/XXX   
             lblAllDaoKuanLv.Text = "0";
@@ -639,17 +640,18 @@ namespace VAN_OA.JXC
             {
                 lblAllFaPiaoLv.Text = string.Format("{0:f2}", (faPiaoTotal / allPoTotal * 100));
             }
-           
-            AspNetPager1.RecordCount = page.TotalCount; 
+
+            AspNetPager1.RecordCount = page.TotalCount;
 
             this.gvMain.DataSource = pOOrderList;
             this.gvMain.DataBind();
 
-        
+
 
         }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
+            ViewState["ChuanTong"] = false;
             AspNetPager1.CurrentPageIndex = 1;
             Show();
         }
@@ -663,12 +665,31 @@ namespace VAN_OA.JXC
 
         protected void AspNetPager1_PageChanged(object src, EventArgs e)
         {
-            Show();
+            if (ViewState["ChuanTong"] != null && Convert.ToBoolean(ViewState["ChuanTong"]))
+            {
+                ViewState["ChuanTong"] = ViewState["ChuanTong"];               
+                ChuanTongShow();
+            }
+            else
+            {
+                Show();
+            }
         }
 
         protected void gvMain_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {           
-            Show();
+        {
+            if (ViewState["ChuanTong"] != null && Convert.ToBoolean(ViewState["ChuanTong"]))
+            {
+                ViewState["ChuanTong"] = ViewState["ChuanTong"];
+                this.gvMain.PageIndex = e.NewPageIndex;
+                ChuanTongShow();
+            }
+            else
+            {
+                Show();
+            }
+
+           
         }
 
         protected void gvMain_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -737,7 +758,7 @@ namespace VAN_OA.JXC
             }
         }
 
-        bool isExcel = false; 
+        bool isExcel = false;
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
@@ -798,142 +819,629 @@ namespace VAN_OA.JXC
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            DBHelp.ExeCommand("truncate table Temp_YuShouKuan;");
-            List<JXC_REPORTTotal> pOOrderList = this.POSer.YuShouKuan_GetListArray_Total("", "", "");
+            POSer.CatchData();
 
-           
-
-            DataTable dataTable = GetTableSchema();
-
-            foreach (var model in pOOrderList)
-            {
-                var dataRow = dataTable.NewRow();
-                dataRow[1] = model.SumPOTotal;
-                dataRow[2] = 0;
-                dataRow[3] = model.MinDaoKuanDate;
-                dataRow[4] = model.MinOutDate;
-                dataRow[5] = model.MaxDaoKuanDate;
-                dataRow[6] = model.IsClose;
-                dataRow[7] = model.PONo;
-                dataRow[8] = model.POName;
-                dataRow[9] = model.PODate;
-                dataRow[10] = model.GuestName;
-                dataRow[11] = model.GuestType;
-                dataRow[12] = model.GuestPro;
-                dataRow[13] = model.goodSellTotal;
-                dataRow[14] = model.goodTotal;
-                dataRow[15] = model.maoliTotal;
-                dataRow[16] = model.FPTotal;
-                dataRow[17] = model.ZhangQiTotal;
-                dataRow[18] = model.AE;
-                dataRow[19] = model.INSIDE;
-                dataRow[20] = model.AEPer;
-                dataRow[21] = model.INSIDEPer;
-                dataRow[22] = model.InvoiceTotal;
-                dataRow[23] = model.SellFPTotal;
-                dataRow[24] = model.Model;
-                dataRow[25] = model.BillDate;
-                dataRow[26] = model.DaoKuanNumber;
-                dataRow[27] = model.Avg_ZQ;
-                dataRow[28] = model.ZQ;
-                dataRow[29] = model.MinDaoKuanTime_ZQ;
-                dataRow[30] = model.MinBillDate;
-                dataRow[31] = model.MinFPTime;
-                dataRow[32] = null;
-                dataRow[33] = model.YuGuDaoKuanTotal;
-                dataRow[34] = model.YuGuDaoKuanDate;
-                dataRow[35] = model.DaoKuanNumber;
-                dataRow[36] = model.JSKaiPiaoDate;
-                dataRow[37] = model.trueZhangQi;
-                dataRow[38] = model.JingLi;
-
-                var m = model;
-
-                if ((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
-                    || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0))
-                {
-                    dataRow[39] = 1;
-                }
-                if (!((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
-                     || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)))
-                {
-                    dataRow[39] = 2;
-                }
-
-               
-                dataTable.Rows.Add(dataRow);
-            }
-
-            if (dataTable.Rows.Count > 0)
-            {
-                BatchSaveData(dataTable, "Temp_YuShouKuan");
-            }
+            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('缓存成功！');</script>");
         }
 
-        /// <summary>
-        /// 批量新增
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <param name="sqlTableName"></param>
-        public void BatchSaveData(DataTable dataTable, string sqlTableName)
+        protected void btnChuanTong_Click(object sender, EventArgs e)
         {
-            using (var sqlBulkCopy = new SqlBulkCopy(DBHelp.getConn().ConnectionString))
-            {
-                sqlBulkCopy.DestinationTableName = "[" + sqlTableName + "]";
-                sqlBulkCopy.BatchSize = dataTable.Rows.Count;
-                if (dataTable != null && dataTable.Rows.Count != 0)
-                {
-                    sqlBulkCopy.WriteToServer(dataTable);
-                }
-                sqlBulkCopy.Close();
-            }
-            dataTable = null;
+            AspNetPager1.CurrentPageIndex = 1;
+            ViewState["ChuanTong"] = true;
+            ChuanTongShow();
         }
 
-        private DataTable GetTableSchema()
+        private void ChuanTongShow()
         {
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Id") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("SumPOTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanCount") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinDaoKuanDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinOutDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MaxDaoKuanDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("IsClose") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("PONo") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("POName") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("PODate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestName") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestType") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("GuestPro") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("goodSellTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("goodTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("maoliTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("FPTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("ZhangQiTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AE") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("INSIDE") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AEPer") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("INSIDEPer") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("InvoTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("SellFPTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Model") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("BillDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("BillCount") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("AVG_ZQ") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("ZQ") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinDaoKuanTime_ZQ") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinBillDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("MinFPTime") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("YuGuDaoKuanTotal") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("YuGuDaoKuanDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DaoKuanNumber") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("JSKaiPiaoDate") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("trueZhangQi") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("JingLi") });
-            dataTable.Columns.AddRange(new DataColumn[] { new DataColumn("DELAY") });
-            return dataTable;
+            string sql = " ";
+
+            if (ddlCompany.Text != "-1")
+            {
+                string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
+                sql += string.Format(" and exists (select id from tb_User where IFZhui=0 and {0} and CG_POOrder.appName=id)", where);
+            }
+            if (txtPONo.Text.Trim() != "")
+            {
+                if (CheckPoNO(txtPONo.Text.Trim()) == false)
+                {
+                    return;
+                }
+                sql += string.Format(" and CG_POOrder.PONo like '%{0}%'", txtPONo.Text.Trim());
+            }
+
+
+            if (ttxPOName.Text.Trim() != "")
+            {
+                sql += string.Format(" and CG_POOrder.POName like '%{0}%'", ttxPOName.Text.Trim());
+            }
+
+            if (txtFrom.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00'", txtFrom.Text);
+            }
+
+            if (txtTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目时间 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and CG_POOrder.PODate<='{0} 23:59:59'", txtTo.Text);
+            }
+
+
+            if (txtGuestName.Text.Trim() != "")
+            {
+                sql += string.Format(" and CG_POOrder.GuestName  like '%{0}%'", txtGuestName.Text.Trim());
+            }
+            var isColse = "";
+            if (ddlIsClose.Text != "-1")
+            {
+                isColse = " and IsClose=" + ddlIsClose.Text;
+            }
+
+            if (ddlIsSelect.Text != "-1")
+            {
+                isColse += " and IsSelected=" + ddlIsSelect.Text;
+            }
+            if (ddlPOTyle.Text != "-1")
+            {
+                isColse += " and CG_POOrder.POType=" + ddlPOTyle.Text;
+            }
+
+
+            if (ddlJieIsSelected.Text != "-1")
+            {
+                isColse += " and JieIsSelected=" + ddlJieIsSelected.Text;
+            }
+            //if (ViewState["showAll"] != null)
+            //{
+            //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
+            //}
+
+            //if (ddlGuestTypeList.SelectedValue != "全部")
+            //{
+            //    sql += string.Format(" and EXISTS (select id from TB_GuestTrack where MyGuestType='{0}' and TB_GuestTrack.id=CG_POOrder.GuestId )",ddlGuestTypeList.SelectedValue);
+            //}
+            if (ddlModel.Text != "全部")
+            {
+                sql += string.Format(" and Model='{0}'", ddlModel.Text);
+            }
+            if (ddlGuestTypeList.SelectedValue != "全部")
+            {
+                sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
+            }
+
+            if (ddlGuestProList.SelectedValue != "-2")
+            {
+                sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+            }
+
+
+
+            if (ddlUser.Text == "-1")//显示所有用户
+            {
+                if (ddlIsSpecial.Text != "-1")
+                {
+                    sql += string.Format(" and IsSpecial={1} {0} ", isColse, ddlIsSpecial.Text);
+                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=0 AND PONO=JXC_REPORT.PONO {0})", isColse);
+                }
+
+                //else
+                //{
+                //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=1 AND PONO=JXC_REPORT.PONO {0})", isColse);
+                //}
+                //var model = Session["userInfo"] as User;
+                //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
+            }
+            else if (ddlUser.Text == "0")//显示部门信息
+            {
+                var model = Session["userInfo"] as User;
+                //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') AND PONO=JXC_REPORT.PONO )", model.LoginIPosition);
+
+                if (ddlIsSpecial.Text != "-1")
+                {
+                    sql += string.Format(" and CG_POOrder.AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') and IsSpecial={2} {1}",
+                         model.LoginIPosition, isColse, ddlIsSpecial.Text);
+                    // sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') AND PONO=JXC_REPORT.PONO and IsSpecial=0 {1})", model.LoginIPosition, isColse);
+                }
+                else
+                {
+                    sql += string.Format(" and CG_POOrder.AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}')  {1}",
+                        model.LoginIPosition, isColse);
+                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职' and loginIPosition<>'' and loginIPosition='{0}') AND PONO=JXC_REPORT.PONO and IsSpecial=1 {1})", model.LoginIPosition, isColse);
+                }
+            }
+            else
+            {
+
+                if (ddlIsSpecial.Text != "-1")
+                {
+                    sql += string.Format(" and CG_POOrder.AppName={0} and IsSpecial={2} {1} ", ddlUser.Text, isColse, ddlIsSpecial.Text);
+                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO  and IsSpecial=0 {1})", ddlUser.Text, isColse);
+                }
+                else
+                {
+                    sql += string.Format(" and CG_POOrder.AppName={0}  {1} ", ddlUser.Text, isColse);
+                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO  and IsSpecial=1 {1})", ddlUser.Text, isColse);
+
+                }
+                //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName={0} AND PONO=JXC_REPORT.PONO )", ddlUser.Text);
+            }
+
+            if (CheckBox1.Checked || CheckBox2.Checked || CheckBox3.Checked || CheckBox4.Checked)
+            {
+
+                sql += " and exists ( select ID from CG_POOrder where PONO=JXC_REPORT.PONO";
+                if (CheckBox1.Checked)
+                {
+                    sql += string.Format(" and POStatue='{0}'", CheckBox1.Text);
+                }
+                if (CheckBox2.Checked)
+                {
+                    sql += string.Format(" and POStatue2='{0}'", CheckBox2.Text);
+                }
+                if (CheckBox3.Checked)
+                {
+                    sql += string.Format(" and POStatue3='{0}'", CheckBox3.Text);
+                }
+                if (CheckBox4.Checked)
+                {
+                    sql += string.Format(" and POStatue4='{0}'", CheckBox4.Text);
+                }
+
+                sql += ")";
+            }
+
+
+            string having = " having ";
+            if (CheckBox5.Checked && CheckBox6.Checked)
+            {
+                having += string.Format("  (avg(SellFPTotal)<> sum(goodSellTotal) or  avg(SellFPTotal) is null)  and (avg(InvoTotal)<> sum(goodSellTotal) or sum(InvoTotal) is null)");
+            }
+            else if (CheckBox5.Checked || CheckBox6.Checked)
+            {
+                if (CheckBox5.Checked)
+                {
+                    having += string.Format("  avg(SellFPTotal)<> sum(goodSellTotal) or  avg(SellFPTotal) is null ");
+                }
+                if (CheckBox6.Checked)
+                {
+                    having += string.Format("  avg(InvoTotal)<> sum(goodSellTotal) or sum(InvoTotal) is null ");
+                }
+            }
+            else
+            {
+                having = "";
+            }
+
+
+            string fuhao = " where 1=1 ";
+            if (ddlFuHao.Text != "-1")
+            {
+                fuhao = string.Format(" where SumPOTotal {0} isnull(goodSellTotal,0)", ddlFuHao.Text);
+            }
+            if (ddlPOFaTotal.Text != "-1")
+            {
+                fuhao += string.Format(" and SumPOTotal {0} isnull(SellFPTotal,0)", ddlPOFaTotal.Text);
+            }
+            if (ddlShiJiDaoKuan.Text != "-1")
+            {
+                fuhao += string.Format(" and SumPOTotal {0} isnull(InvoTotal,0)", ddlShiJiDaoKuan.Text);
+            }
+            if (ddlEquPOTotal.Text != "-1")
+            {
+                if (CommHelp.VerifesToNum(txtEquTotal.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and SumPOTotal{0}{1}", ddlEquPOTotal.Text, txtEquTotal.Text);
+            }
+
+
+
+            if (ddlJingLiTotal.Text != "-1")
+            {
+                fuhao += string.Format(" and maoliTotal {0} (isnull(InvoTotal,0)-isnull(goodTotal,0))", ddlJingLiTotal.Text);
+            }
+
+            if (!string.IsNullOrEmpty(txtProProfit.Text) && ddlProProfit.Text != "-1")
+            {
+                if (CommHelp.VerifesToNum(txtProProfit.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目净利 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and maoliTotal {0} {1}", ddlProProfit.Text, txtProProfit.Text);
+            }
+
+            if (!string.IsNullOrEmpty(txtProTureProfit.Text) && ddlProTureProfit.Text != "-1")
+            {
+                if (CommHelp.VerifesToNum(txtProTureProfit.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('实际净利 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and InvoTotal-goodTotal {0} {1}", ddlProTureProfit.Text, txtProTureProfit.Text);
+            }
+
+            if (ddlJingLi.Text != "-1" && !string.IsNullOrEmpty(txtJingLi.Text))
+            {
+                if (CommHelp.VerifesToNum(txtJingLi.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('净利润率 格式错误！');</script>");
+                    return;
+                }
+            }
+
+            //预计到款
+            if (txtYuDaoDate.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtYuDaoDate.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估到款日 格式错误！');</script>");
+                    return;
+                }
+            }
+            if (txtYuDaoDateTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtYuDaoDateTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估到款日 格式错误！');</script>");
+                    return;
+                }
+            }
+            if (txtYuGuDaoKuan_1.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtYuGuDaoKuan_1.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估到款日期 格式错误！');</script>");
+                    return;
+                }
+            }
+            //最近开票日
+            if (txtBillDate.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtBillDate.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('最近开票日 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and BillDate>='{0} 00:00:00'", txtBillDate.Text);
+            }
+            if (txtBillDateTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtBillDateTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('最近开票日 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and BillDate<='{0} 23:59:59'", txtBillDateTo.Text);
+            }
+            if (cbWuKaiPiaoRi.Checked)
+            {
+                fuhao += string.Format(" and BillDate is null");
+            }
+            //计算开票日
+            if (txtJSKaiPiaoDate.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtJSKaiPiaoDate.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计算开票日 格式错误！');</script>");
+                    return;
+                }
+            }
+            if (txtJSKaiPiaoDateTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtJSKaiPiaoDateTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计算开票日 格式错误！');</script>");
+                    return;
+                }
+            }
+            //实际到款日
+            if (txtShiJiDate.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtShiJiDate.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('实际到款日 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and MaxDaoKuanDate>='{0} 00:00:00'", txtShiJiDate.Text);
+            }
+            if (txtShiJiDateTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtShiJiDateTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('实际到款日 格式错误！');</script>");
+                    return;
+                }
+                sql += string.Format(" and MaxDaoKuanDate<='{0} 23:59:59'", txtShiJiDateTo.Text);
+            }
+            //经验账期
+            if (ddlAvg_ZQ.Text != "-1" && ddlAvg_ZQ.Text != "无")
+            {
+                if (CommHelp.VerifesToNum(txtAvg_ZQ.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('经验账期 格式错误！');</script>");
+                    return;
+                }
+                fuhao += string.Format(" and isnull(AVG_ZQ,0){0}{1}", ddlAvg_ZQ.Text, txtAvg_ZQ.Text.Trim());
+            }
+
+            //预估位序
+            if (txtDaoKuanNumber.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtDaoKuanNumber.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估位序 格式错误！');</script>");
+                    return;
+                }
+
+            }
+            //预估到款
+            if (txtYuGuDaoKuan.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtYuGuDaoKuan.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('预估到款 格式错误！');</script>");
+                    return;
+                }
+
+            }
+
+            List<JXC_REPORTTotal> pOOrderList = this.POSer.YuShouKuan_GetListArray_Total(sql, having, fuhao);
+
+            if (txtYuGuDaoKuan.Text != "")
+            {
+                decimal jingLi = Convert.ToDecimal(txtYuGuDaoKuan.Text);
+                if (ddlYuGuDaoKuan.Text == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal > jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal < jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal >= jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal <= jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal == jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal != jingLi);
+                }
+                if (ddlYuGuDaoKuan.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanTotal == 0);
+                }
+            }
+            if (ddlDELAY.Text == "1")
+            {
+                pOOrderList = pOOrderList.FindAll(m => (m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0));
+            }
+            if (ddlDELAY.Text == "2")
+            {
+                pOOrderList = pOOrderList.FindAll(m => !((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                 || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)));
+            }
+            if (ddlAvg_ZQ.Text == "无")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.Avg_ZQ == 0);
+            }
+            if (txtDaoKuanNumber.Text != "")
+            {
+                int daoKuanNumber = Convert.ToInt32(txtDaoKuanNumber.Text);
+                if (ddlDaoKuanNumber.Text == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber > daoKuanNumber);
+                }
+
+                if (ddlDaoKuanNumber.Text == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber < daoKuanNumber);
+                }
+                if (ddlDaoKuanNumber.Text == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber >= daoKuanNumber);
+                }
+                if (ddlDaoKuanNumber.Text == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber <= daoKuanNumber);
+                }
+                if (ddlDaoKuanNumber.Text == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber == daoKuanNumber);
+                }
+                if (ddlDaoKuanNumber.Text == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber != daoKuanNumber);
+                }
+                if (ddlDaoKuanNumber.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.DaoKuanNumber == null);
+                }
+            }
+
+            //预计到款
+            if (txtYuDaoDate.Text != "")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate >= Convert.ToDateTime(txtYuDaoDate.Text));
+            }
+            if (txtYuDaoDateTo.Text != "")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate <= Convert.ToDateTime(txtYuDaoDateTo.Text));
+            }
+
+            if (ddlYuGuDaoKuan_1.Text != "-1" && !string.IsNullOrEmpty(txtYuGuDaoKuan_1.Text))
+            {
+                var daoKuanDate = Convert.ToDateTime(txtYuGuDaoKuan_1.Text);
+                if (ddlYuGuDaoKuan_1.Text == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate > daoKuanDate);
+                }
+                if (ddlYuGuDaoKuan_1.Text == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate >= daoKuanDate);
+                }
+
+                if (ddlYuGuDaoKuan_1.Text == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate < daoKuanDate);
+                }
+
+                if (ddlYuGuDaoKuan_1.Text == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate <= daoKuanDate);
+                }
+                if (ddlYuGuDaoKuan_1.Text == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate == daoKuanDate);
+                }
+                if (ddlYuGuDaoKuan_1.Text == "<>")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate != daoKuanDate);
+                }
+                if (ddlYuGuDaoKuan_1.Text == "无")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.YuGuDaoKuanDate == null);
+                }
+            }
+
+
+
+            //计算开票日
+            if (txtJSKaiPiaoDate.Text != "")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.JSKaiPiaoDate >= Convert.ToDateTime(txtJSKaiPiaoDate.Text));
+            }
+            if (txtJSKaiPiaoDateTo.Text != "")
+            {
+                pOOrderList = pOOrderList.FindAll(t => t.JSKaiPiaoDate <= Convert.ToDateTime(txtJSKaiPiaoDateTo.Text));
+            }
+
+            if (ddlTrueZhangQI.Text != "-1")
+            {
+                if (ddlTrueZhangQI.Text == "1")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi <= 30);
+                }
+                if (ddlTrueZhangQI.Text == "2")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 30 && T.trueZhangQi <= 60);
+                }
+                if (ddlTrueZhangQI.Text == "3")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 60 && T.trueZhangQi <= 90);
+                }
+                if (ddlTrueZhangQI.Text == "4")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 90 && T.trueZhangQi <= 120);
+                }
+                if (ddlTrueZhangQI.Text == "5")
+                {
+                    pOOrderList = pOOrderList.FindAll(T => T.trueZhangQi > 120);
+                }
+            }
+
+
+            if (ddlJingLi.Text != "-1" && !string.IsNullOrEmpty(txtJingLi.Text))
+            {
+
+                decimal jingLi = Convert.ToDecimal(txtJingLi.Text);
+                if (ddlJingLi.Text == ">")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.JingLi > jingLi);
+                }
+                if (ddlJingLi.Text == "<")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.JingLi < jingLi);
+                }
+                if (ddlJingLi.Text == ">=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.JingLi >= jingLi);
+                }
+                if (ddlJingLi.Text == "<=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.JingLi <= jingLi);
+                }
+                if (ddlJingLi.Text == "=")
+                {
+                    pOOrderList = pOOrderList.FindAll(t => t.JingLi == jingLi);
+                }
+            }
+            var getAllPONos = pOOrderList.Aggregate("", (current, m) => current + ("'" + m.PONo + "',")).Trim(',');
+            lblVisAllPONO.Text = getAllPONos;
+            decimal jlr = pOOrderList.Sum(t => t.maoliTotal);
+            lblJLR.Text = string.Format("{0:n6}", jlr);
+            lblXSE.Text = string.Format("{0:n6}", pOOrderList.Sum(t => t.goodSellTotal));
+
+            lblYuGuDaoKuanTotal.Text = string.Format("{0:n6}", pOOrderList.Sum(t => t.YuGuDaoKuanTotal));
+            var trueLiRun = pOOrderList.Sum(t => t.TrueLiRun);
+            lblSJLR.Text = string.Format("{0:n6}", trueLiRun);
+
+            lblFP.Text = string.Format("{0:n6}", pOOrderList.Sum(t => t.SellFPTotal));
+            // 项目总额：XXX      
+            decimal allPoTotal = pOOrderList.Sum(t => t.SumPOTotal);
+            lblAllPoTotal.Text = string.Format("{0:n6}", allPoTotal);
+            //项目总利润率：YYY = 项目净利合计/XXX 
+            lblAllLRLv.Text = "0";
+            if (allPoTotal > 0)
+            {
+                lblAllLRLv.Text = string.Format("{0:f2}", (jlr / allPoTotal * 100));
+            }
+            // 实际总利润率：ZZZ=  实际利润合计/XXX  
+            lblAllTrunLv.Text = "0";
+            if (allPoTotal > 0)
+            {
+                lblAllTrunLv.Text = string.Format("{0:f2}", (trueLiRun / allPoTotal * 100));
+            }
+            //项目到款总额：TTT= 实到帐的合计 
+            var allDaoKuan = pOOrderList.Sum(t => t.InvoiceTotal);
+            lblAllDaoKuan.Text = string.Format("{0:n6}", allDaoKuan);
+            //到款率： VVV=TTT/XXX   
+            lblAllDaoKuanLv.Text = "0";
+            if (allPoTotal > 0)
+            {
+                lblAllDaoKuanLv.Text = string.Format("{0:f2}", (allDaoKuan / allPoTotal * 100));
+            }
+
+            //开票率：LLL= 发票总额合计 /XXX
+            var faPiaoTotal = pOOrderList.Sum(t => t.SellFPTotal);
+            lblAllFaPiaoLv.Text = "0";
+            if (allPoTotal > 0)
+            {
+                lblAllFaPiaoLv.Text = string.Format("{0:f2}", (faPiaoTotal / allPoTotal * 100));
+            }
+
+            AspNetPager1.RecordCount = pOOrderList.Count;
+            this.gvMain.PageIndex = AspNetPager1.CurrentPageIndex - 1;
+
+            this.gvMain.DataSource = pOOrderList;
+            this.gvMain.DataBind();
+
+            //pager.TotalCount = pOOrderList.Count;
+            //PagerControl page= gvMain.BottomPagerRow.Cells[0].FindControl("myPage") as PagerControl;
+            //page.TotalCount = pOOrderList.Count;
+            //page.BindData();
+            // AspNetPager1.CustomInfoHTML = "第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录";
+
         }
     }
 }

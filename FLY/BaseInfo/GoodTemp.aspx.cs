@@ -52,7 +52,7 @@ namespace VAN_OA.BaseInfo
                     }
 
                     string url = "~/BaseInfo/WFGoods.aspx?ProId=" + proId + "&allE_id=" + goodId + "&EForm_Id=" + eformIdObj + "&&ReAudit=true";
-                    Session["backurl"] = "/BaseInfo/WFGoodsList.aspx";
+                    Session["backurl1"] = "/BaseInfo/WFGoodsList.aspx";
                     Response.Redirect(url);
                 }
             }
