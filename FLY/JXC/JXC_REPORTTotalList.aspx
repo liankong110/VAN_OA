@@ -324,14 +324,14 @@
                     <ItemStyle HorizontalAlign="Center" Width="50px" />
                 </asp:TemplateField>
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center">
-                    <ItemStyle HorizontalAlign="Center"></ItemStyle>
+                    <ItemStyle HorizontalAlign="Center" Width="170px"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
                     ItemStyle-Width="70px" DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
-                    HeaderStyle-Width="120" ItemStyle-HorizontalAlign="Left">
+                    HeaderStyle-Width="200" ItemStyle-HorizontalAlign="Left">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="GuestType" HeaderText="类型" SortExpression="GuestType"

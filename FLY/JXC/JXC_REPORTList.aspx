@@ -240,7 +240,7 @@
                 </table>
             </EmptyDataTemplate>
             <Columns>
-                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center">
+                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="100">
@@ -248,15 +248,15 @@
                 </asp:BoundField>
                   <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model"
                      ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="ProNo" HeaderText="单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center">
+                <asp:BoundField DataField="ProNo" HeaderText="单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="60px" >
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="RuTime" HeaderText="日期" SortExpression="RuTime" ItemStyle-HorizontalAlign="Center"
-                    DataFormatString="{0:yyyy-MM-dd}">
+                    DataFormatString="{0:yyyy-MM-dd}"  ItemStyle-Width="70px">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="Supplier" HeaderText="客户名称" SortExpression="Supplier"
-                    ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="100">
+                    ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="goodInfo" HeaderText="销售内容" SortExpression="goodInfo"

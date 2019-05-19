@@ -68,9 +68,9 @@ namespace VAN_OA.JXC
 
                 return false;
             }
-            if (CommHelp.GetByteLen(txtPOName.Text) > 20 * 2)
+            if (CommHelp.GetByteLen(txtPOName.Text) > 15 * 2)
             {
-                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过20个汉字符，请修正！');</script>");
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过15个汉字符，请修正！');</script>");
                 txtPOName.Focus();
                 return false;
             }

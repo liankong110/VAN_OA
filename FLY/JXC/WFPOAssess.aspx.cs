@@ -588,7 +588,7 @@ left join CG_POOrder on CG_POOrder.pono=newtable1.PONo and Status='通过' and I
 OR (isnull(Total,0)<newtable1.POTotal-isnull(TuiTotal,0) and DATEDIFF(day,minOutTime,getdate()){1}{0}))", txtYSDKDays.Text, ddlYSDKDays.Text);
             }
             //催账提醒未到日
-            sqlInfo.AppendFormat(@";select newtable1.PONo  ,AE,hadFpTotal ,POTotal-isnull(TuiTotal,0) as POTotal, datediff(dd, minOutTime,getdate() ) as chaDays,SimpGuestName from(
+            sqlInfo.AppendFormat(@" order by newtable1.PONo;select newtable1.PONo  ,AE,hadFpTotal ,POTotal-isnull(TuiTotal,0) as POTotal, datediff(dd, minOutTime,getdate() ) as chaDays,SimpGuestName from(
 select PONo,sum(POTotal) AS POTotal from CG_POOrder where Status='通过'  and " + special + @"
 group by PONo) as newtable1 
 left join(select PONo ,sum(TuiTotal) as TuiTotal from Sell_OrderInHouse where Status='通过'  group by PONo) as newtable2 on newtable1.PONo= newtable2.PONo
