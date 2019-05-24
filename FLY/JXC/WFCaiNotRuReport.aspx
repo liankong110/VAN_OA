@@ -164,7 +164,7 @@
                         需检数量
                     </td>
                     <td>
-                        供应商
+                        供应商简称
                     </td>
                     <td>
                         最终价格
@@ -188,23 +188,23 @@
         </EmptyDataTemplate>
         <Columns>
             <asp:BoundField DataField="ProNo" HeaderText="采购单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
+            <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="60px" />
+            <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="180px"/>
+            <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="65px"
                 DataFormatString="{0:yyyy-MM-dd}" />
             <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Right"
                 DataFormatString="{0:n2}" />
-            <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
+            <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName" ItemStyle-Width="180px"
                 ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Left" />
+            <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="40px"/>
             <asp:TemplateField HeaderText="含税">
                 <ItemTemplate>
                     <asp:Label ID="lblIsHanShui" runat="server" Text=""></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="GoodAreaNumber" HeaderText="仓位" SortExpression="GoodAreaNumber"
+            <asp:BoundField DataField="GoodAreaNumber" HeaderText="仓位" SortExpression="GoodAreaNumber" ItemStyle-Width="40px"
                 ItemStyle-HorizontalAlign="Center" />
-            <asp:BoundField DataField="GoodNo" HeaderText="商品编码" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" />
+            <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="30px" />
             <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" />
                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-HorizontalAlign="Left" />
             <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="10%"
@@ -219,7 +219,7 @@
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
             <asp:BoundField DataField="CaiGoodSum" HeaderText="需检数量" SortExpression="CaiGoodSum"
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
-            <asp:BoundField DataField="lastSupplier" HeaderText="供应商" SortExpression="lastSupplier"
+            <asp:BoundField DataField="lastSupplier" HeaderText="供应商简称" SortExpression="lastSupplier"
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="lastPrice" HeaderText="最终价格" SortExpression="lastPrice"
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n3}" />
@@ -228,7 +228,7 @@
                  <asp:BoundField DataField="SupplierInvoiceTotal" HeaderText="预付未到库总价" SortExpression="SupplierInvoiceTotal"
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n3}" /> 
 
-            <asp:BoundField DataField="MinInHouseDate" HeaderText="入库时间" SortExpression="MinInHouseDate"
+            <asp:BoundField DataField="MinInHouseDate" HeaderText="入库时间" SortExpression="MinInHouseDate" ItemStyle-Width="65px"
                 ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
             <asp:BoundField DataField="GoodNum" HeaderText="库存数量" SortExpression="GoodNum" ItemStyle-HorizontalAlign="Right"
                 DataFormatString="{0:n2}" />

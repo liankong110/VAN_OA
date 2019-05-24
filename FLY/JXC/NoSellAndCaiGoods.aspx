@@ -195,10 +195,10 @@
                 </table>
             </EmptyDataTemplate>
             <Columns>
-                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left" />
-                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Left" />
-                <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Left" />
-                <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
+                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="60px"/>
+                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="180px"/>
+                <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="40px"/>
+                <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"  ItemStyle-Width="180px"
                     ItemStyle-HorizontalAlign="Left" />
                 <asp:TemplateField HeaderText="含税">
                     <ItemTemplate>
@@ -208,7 +208,7 @@
                 <asp:BoundField DataField="GoodAreaNumber" HeaderText="仓位" SortExpression="GoodAreaNumber"
                     ItemStyle-HorizontalAlign="Center" />
                 <%--<asp:BoundField DataField="GoodId" HeaderText="GoodId" SortExpression="GoodId" ItemStyle-HorizontalAlign="Center"  /> --%>
-                <asp:BoundField DataField="GoodNo" HeaderText="商品编号" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" />
+                <asp:BoundField DataField="GoodNo" HeaderText="编号" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Left" ItemStyle-Width="30px"  />
                 <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Left" />
                   <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-HorizontalAlign="Left" />
                 <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Left" />
@@ -235,9 +235,9 @@
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="CaiDate" HeaderText="采购时间" SortExpression="CaiDate" ItemStyle-HorizontalAlign="Center"
-                    DataFormatString="{0:yyyy-MM-dd}" />
+                    DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px"/>
                 <asp:BoundField DataField="minPODate" HeaderText="订单时间" SortExpression="minPODate"
-                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
+                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px"/>
             </Columns>
             <PagerStyle HorizontalAlign="Center" />
             <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="Black" Font-Size="12px" />

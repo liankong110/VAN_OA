@@ -222,25 +222,25 @@
                 </table>
             </EmptyDataTemplate>
             <Columns>
-                <asp:TemplateField HeaderText="项目编号" ItemStyle-Width="7%">
+                <asp:TemplateField HeaderText="项目编号"  ItemStyle-Width="60px">
                     <ItemTemplate>
                         <asp:LinkButton ID="LinkButton11" runat="server" CommandName="PoNo" UnderLine="1"
                             CommandArgument='<% #Eval("PoNo_FpTotal") %>' Text='<% #Eval("PONo") %>'>
                         </asp:LinkButton>
                     </ItemTemplate>
-                    <ItemStyle HorizontalAlign="Center" CssClass="item"></ItemStyle>
+                  
                 </asp:TemplateField>
                 <%-- <asp:BoundField  ItemStyle-Width="5%" DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>--%>
-                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center">
+                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="6%" DataFormatString="{0:yyyy-MM-dd}">
+                <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="65px"
+                   DataFormatString="{0:yyyy-MM-dd}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
+                <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName" ItemStyle-Width="180px"
                     ItemStyle-HorizontalAlign="Left">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -261,14 +261,14 @@
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
                 <asp:BoundField DataField="maoliTotal" HeaderText="净利润" SortExpression="maoliTotal"
-                    ItemStyle-HorizontalAlign="Center" ItemStyle-Width="5%" DataFormatString="{0:n0}">
+                    ItemStyle-HorizontalAlign="Center"  DataFormatString="{0:n0}">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="TrueLiRun" ItemStyle-Width="5%" HeaderText="实际利润" SortExpression="TrueLiRun"
+                <asp:BoundField DataField="TrueLiRun"   HeaderText="实际利润" SortExpression="TrueLiRun"
                     DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="ZhangQiTotal" ItemStyle-Width="3%" HeaderText="账期/天" SortExpression="ZhangQiTotal"
+                <asp:BoundField DataField="ZhangQiTotal" ItemStyle-Width="50px" HeaderText="账期/天" SortExpression="ZhangQiTotal"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -285,10 +285,10 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center"
-                    ItemStyle-Width="3%" ItemStyle-CssClass="item">
+                   ItemStyle-Width="40px" ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" ItemStyle-Width="3%" SortExpression="INSIDE"
+                <asp:BoundField DataField="INSIDE" HeaderText="INSIDE" ItemStyle-Width="40px"  SortExpression="INSIDE"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
@@ -296,7 +296,7 @@
                     ItemStyle-Width="5%" ItemStyle-CssClass="item">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>--%>
-                <asp:TemplateField HeaderText="费用类型" ItemStyle-Width="40px">
+                <asp:TemplateField HeaderText="费用类型">
                     <ItemTemplate>
                         <asp:LinkButton ID="LinkButton1" runat="server" CommandName="selectPoNo" UnderLine="1"
                             CommandArgument='<% #Eval("PONO_ProType") %>' Text='<% #Eval("potype") %>'>

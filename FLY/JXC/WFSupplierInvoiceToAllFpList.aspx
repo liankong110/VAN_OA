@@ -7,31 +7,28 @@
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
         <tr>
-            <td colspan="6" style="height: 20px; background-color: #336699; color: White;">
-                预付款发票列表
+            <td colspan="6" style="height: 20px; background-color: #336699; color: White;">预付款发票列表
             </td>
         </tr>
         <tr>
-            <td>
-                项目编号:
+            <td>项目编号:
             </td>
             <td colspan="1">
-                <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                <asp:TextBox ID="txtPONo" runat="server"></asp:TextBox>项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
-            <td>
-                项目名称:
+            <td>项目名称:
             </td>
             <td>
                 <asp:TextBox ID="ttxPOName" runat="server"></asp:TextBox>公司名称：
                 <asp:DropDownList ID="ddlCompany" runat="server" DataTextField="ComName"
-                  DataValueField="ComSimpName"
+                    DataValueField="ComSimpName"
                     Width="200PX">
                 </asp:DropDownList>
             </td>
         </tr>
         <tr>
-            <td>
-                支付时间:
+            <td>支付时间:
             </td>
             <td>
                 <asp:TextBox ID="txtFrom" runat="server"></asp:TextBox>
@@ -45,8 +42,7 @@
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
             </td>
-            <td>
-                状态:
+            <td>状态:
             </td>
             <td>
                 <asp:DropDownList ID="ddlStatue" runat="server" Width="160px">
@@ -58,22 +54,19 @@
             </td>
         </tr>
         <tr>
-            <td>
-                支付单号:
+            <td>支付单号:
             </td>
             <td>
                 <asp:TextBox ID="txtProNo" runat="server" Width="350px"></asp:TextBox>
             </td>
-            <td>
-                入库/采购单号:
+            <td>入库/采购单号:
             </td>
             <td>
                 <asp:TextBox ID="txtRuCaiProNo" runat="server" Width="350px"></asp:TextBox>
             </td>
         </tr>
         <tr>
-            <td>
-                供应商:
+            <td>供应商:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>
@@ -83,16 +76,14 @@
                 </cc1:AutoCompleteExtender>
                 <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
             </td>
-            <td>
-                商品编码:
+            <td>商品编码:
             </td>
             <td>
                 <asp:TextBox ID="txtGoodNo" runat="server" Width="350px"></asp:TextBox>
             </td>
         </tr>
         <tr>
-            <td>
-                发票状态:
+            <td>发票状态:
             </td>
             <td>
                 <asp:DropDownList ID="ddlFpState" runat="server">
@@ -102,8 +93,7 @@
                     <asp:ListItem Value="2">不含税</asp:ListItem>
                 </asp:DropDownList>
             </td>
-            <td>
-                AE：
+            <td>AE：
             </td>
             <td>
                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="Id"
@@ -115,7 +105,8 @@
     </table>
     小计：
     <asp:Label ID="lblTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
-    &nbsp;&nbsp;&nbsp;合计数：  <asp:Label ID="lblAllTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
+    &nbsp;&nbsp;&nbsp;合计数： 
+    <asp:Label ID="lblAllTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>
     <asp:Panel runat="server" ID="plMain" ScrollBars="Horizontal" Width="100%">
         <asp:GridView ID="gvMain" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
             DataKeyNames="payId" AllowPaging="True" AutoGenerateColumns="False" OnPageIndexChanging="gvMain_PageIndexChanging"
@@ -136,76 +127,53 @@
             <EmptyDataTemplate>
                 <table width="100%">
                     <tr style="height: 20px; background-color: #336699; color: White;">
-                        <td>
-                            类型
+                        <td>类型
                         </td>
-                        <td>
-                           支付单/预付单号
+                        <td>支付单/预付单号
                         </td>
-                        <td>
-                             支付单号
+                        <td>支付单号
                         </td>
-                        <td>
-                            入库/采购单号
+                        <td>入库/采购单号
                         </td>
-                        <td>
-                            供应商
+                        <td>供应商
                         </td>
-                        <td>
-                            项目编码
+                        <td>项目编码
                         </td>
-                        <td>
-                            项目名称
+                        <td>项目名称
                         </td>
-                        <td>
-                            客户名称
+                        <td>客户名称
                         </td>
-                        <td>
-                            AE
+                        <td>AE
                         </td>
-                        <td>
-                            编码
+                        <td>编码
                         </td>
-                        <td>
-                            名称
+                        <td>名称
                         </td>
-                        <td>
-                            小类
+                        <td>小类
                         </td>
-                        <td>
-                            规格
+                        <td>规格
                         </td>
-                        <td>
-                            单位
+                        <td>单位
                         </td>
-                        <td>
-                            采购数
+                        <td>采购数
                         </td>
-                        <td>
-                            采购单价
+                        <td>采购单价
                         </td>
-                        <td>
-                            金额
+                        <td>金额
                         </td>
-                        <td>
-                            发票号
+                        <td>发票号
                         </td>
-                        <td>
-                            出款日期
+                        <td>出款日期
                         </td>
-                        <td>
-                            付款金额
+                        <td>付款金额
                         </td>
-                        <td>
-                            采购人
+                        <td>采购人
                         </td>
-                        <td>
-                            支付
+                        <td>支付
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6" align="center" style="height: 80%">
-                            ---暂无数据---
+                        <td colspan="6" align="center" style="height: 80%">---暂无数据---
                         </td>
                     </tr>
                 </table>
@@ -220,27 +188,27 @@
                 </asp:TemplateField>
                 <asp:BoundField DataField="busType" HeaderText="类型" SortExpression="busType" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="InvProNo" HeaderText="支付单/预付单号" SortExpression="InvProNo"
-                    ItemStyle-HorizontalAlign="Center" />
+                    ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="50px"/>
                 <asp:BoundField DataField="SupplierProNo" HeaderText="支付流水号" SortExpression="SupplierProNo"
                     ItemStyle-HorizontalAlign="Center" />
-                     <asp:BoundField DataField="RuTime" HeaderText="入库时间" SortExpression="RuTime"
+                <asp:BoundField DataField="RuTime" HeaderText="入库时间" SortExpression="RuTime" ItemStyle-Width="65px"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
                 <asp:BoundField DataField="SupplierInvoiceDate" HeaderText="支付时间" SortExpression="SupplierInvoiceDate"
-                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
+                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:TemplateField HeaderText="" Visible="false">
                     <ItemTemplate>
                         <asp:Label ID="Ids" runat="server" Text='<%# Eval("Ids") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:BoundField DataField="ProNo" HeaderText=" 入库/采购单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="GuestName" HeaderText="供应商" SortExpression="GuestName"
+                <asp:BoundField DataField="ProNo" HeaderText=" 入库/采购单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px"/>
+                <asp:BoundField DataField="GuestName" HeaderText="供应商" SortExpression="GuestName" ItemStyle-Width="100px"
                     ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="POGuestName" HeaderText="客户名称" SortExpression="POGuestName"
+                <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="60px"/>
+                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px"/>
+                <asp:BoundField DataField="POGuestName" HeaderText="客户名称" SortExpression="POGuestName" ItemStyle-Width="180px"
                     ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="POAE" HeaderText="AE" SortExpression="POAE" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="POAE" HeaderText="AE" SortExpression="POAE" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="40px"/>
+                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="30px"/>
                 <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName"
                     ItemStyle-HorizontalAlign="Center" />
@@ -259,7 +227,7 @@
                 <asp:BoundField DataField="SupplierFPNo" HeaderText="发票号" SortExpression="SupplierFPNo"
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="SupplierInvoiceDate" HeaderText="出款日期" SortExpression="SupplierInvoiceDate"
-                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
+                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:BoundField DataField="SupplierInvoicePrice" HeaderText="付款单价" SortExpression="SupplierInvoicePrice"
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="SupplierInvoiceTotal" HeaderText="付款金额" SortExpression="SupplierInvoiceTotal"

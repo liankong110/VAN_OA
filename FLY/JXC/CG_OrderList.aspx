@@ -244,7 +244,7 @@
                             <%--  <asp:BoundField DataField="PONo" HeaderText="项目编码" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />--%>
                             <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
                             <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                                DataFormatString="{0:yyyy-MM-dd}"  />
+                                DataFormatString="{0:yyyy-MM-dd}" />
                             <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:f2}" />
                             <asp:BoundField DataField="POPayStype" HeaderText="结算" SortExpression="POPayStype"
                                 ItemStyle-HorizontalAlign="Center" />
@@ -321,6 +321,21 @@
     <asp:TextBox ID="txtChenBen" runat="server" Width="100px"></asp:TextBox>
     备注:
     <asp:TextBox ID="txtRemark" runat="server" Width="100px"></asp:TextBox>
+    <br />
+    单据号:
+    <asp:TextBox ID="txtNeiProNo" runat="server" Width="100px"></asp:TextBox>
+    日期:
+     <asp:TextBox ID="txtNeiFrom" runat="server" Width="70px"></asp:TextBox>
+                <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                -<asp:TextBox ID="txtNeiTo" runat="server" Width="70px"></asp:TextBox>
+                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
+                    Format="yyyy-MM-dd" TargetControlID="txtNeiFrom">
+                </cc1:CalendarExtender>
+                <cc1:CalendarExtender ID="CalendarExtender4" PopupButtonID="ImageButton3" runat="server"
+                    Format="yyyy-MM-dd" TargetControlID="txtNeiTo">
+                </cc1:CalendarExtender>
+
     <asp:Button ID="Button1" runat="server" Text=" 查 询 "
         BackColor="Yellow" OnClick="Button1_Click" />
     <table width="100%" border="0">
@@ -385,13 +400,13 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="Type" HeaderText="" SortExpression="Type"  ItemStyle-Width="10px" />
-                                                <asp:BoundField DataField="MyProNo" HeaderText="单据号" SortExpression="MyProNo"  />
+                                                <asp:BoundField DataField="Type" HeaderText="" SortExpression="Type" ItemStyle-Width="10px" />
+                                                <asp:BoundField DataField="MyProNo" HeaderText="单据号" SortExpression="MyProNo" />
                                                 <asp:BoundField DataField="PODate" HeaderText="日期" SortExpression="PODate" DataFormatString="{0:yyyy-MM-dd}"
                                                     ItemStyle-Width="80" />
-                                                <asp:BoundField DataField="States" SortExpression="States" HeaderText="状态"  />
+                                                <asp:BoundField DataField="States" SortExpression="States" HeaderText="状态" />
                                                 <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="40PX" />
-                                                <asp:TemplateField HeaderText="名称" >
+                                                <asp:TemplateField HeaderText="名称">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -400,9 +415,9 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" ItemStyle-Width="70PX" />
-                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec"  />
+                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" />
                                                 <%--  <asp:BoundField DataField="Good_Model" HeaderText="型号" SortExpression="Good_Model" />--%>
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit"/>
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" />
                                                 <asp:TemplateField HeaderText="数量" ItemStyle-Width="50PX">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("Num") %>'></asp:Label>
@@ -411,7 +426,7 @@
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("Num") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本单价" >
+                                                <asp:TemplateField HeaderText="成本单价">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCostPrice" runat="server" Text='<%# ConvertToObj(Eval("CostPrice")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -419,7 +434,7 @@
                                 <asp:Label ID="lblCostPrice" runat="server" Text='<%# ConvertToObj(Eval("CostPrice")) %>'></asp:Label>
                             </FooterTemplate>--%>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本总价" >
+                                                <asp:TemplateField HeaderText="成本总价">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCostTotal" runat="server" Text='<%# NumHelp.FormatTwo(Eval("CostTotal")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -427,7 +442,7 @@
                                                         <asp:Label ID="lblCostTotal" runat="server" Text='<%# NumHelp.FormatFour(Eval("CostTotal")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="销售单价" >
+                                                <asp:TemplateField HeaderText="销售单价">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblSellPrice" runat="server" Text='<%# ConvertToObj(Eval("SellPrice")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -435,7 +450,7 @@
                                 <asp:Label ID="lblSellPrice" runat="server" Text='<%# ConvertToObj(Eval("SellPrice")) %>'></asp:Label>
                             </FooterTemplate>--%>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="销售总价" >
+                                                <asp:TemplateField HeaderText="销售总价">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblSellTotal" runat="server" Text='<%# NumHelp.FormatFour(Eval("SellTotal")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -443,7 +458,7 @@
                                                         <asp:Label ID="lblSellTotal" runat="server" Text='<%# ConvertToObj(Eval("SellTotal")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="管理费" >
+                                                <asp:TemplateField HeaderText="管理费">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblOtherCost" runat="server" Text='<%# ConvertToObj(Eval("OtherCost")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -459,8 +474,7 @@
                                                         <asp:Label ID="lblYiLiTotal" runat="server" Text='<%# NumHelp.FormatFour(Eval("YiLiTotal")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:BoundField DataField="ToTime" HeaderText="到帐日期" SortExpression="ToTime" DataFormatString="{0:yyyy-MM-dd}"
-                                                    />
+                                                <asp:BoundField DataField="ToTime" HeaderText="到帐日期" SortExpression="ToTime" DataFormatString="{0:yyyy-MM-dd}" />
                                                 <asp:TemplateField HeaderText="利润%" ItemStyle-Width="50PX">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblProfit" runat="server" Text='<%# ConvertToObj1(Eval("Profit")) %>'></asp:Label>
@@ -829,8 +843,8 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="HouseName" HeaderText="仓库" SortExpression="HouseName" />
-                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" />
+                                                <asp:BoundField DataField="HouseName" HeaderText="仓库" SortExpression="HouseName"  ItemStyle-Width="40px" />
+                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px"/>
                                                 <asp:TemplateField HeaderText="名称">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
@@ -840,10 +854,10 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" />
-                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" HeaderStyle-Width="8%" />
+                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec"  />
 
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" />
-                                                <asp:BoundField DataField="RuTime" HeaderText="销退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" />
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px"/>
+                                                <asp:BoundField DataField="RuTime" HeaderText="销退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="80px"  />
                                                 <asp:TemplateField HeaderText="数量">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
@@ -852,7 +866,7 @@
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本单价">
+                                                <asp:TemplateField HeaderText="成本单价" ItemStyle-Width="95px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCheckPrice" runat="server" Text='<%# Eval("GoodPrice") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -860,7 +874,7 @@
                                                         <asp:Label ID="lblCheckPrice" runat="server" Text='<%# Eval("GoodPrice") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本总价">
+                                                <asp:TemplateField HeaderText="成本总价" ItemStyle-Width="105px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTotal" runat="server" Text='<%#  NumHelp.FormatFour(Eval("Total")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -868,12 +882,12 @@
                                                         <asp:Label ID="lblTotal" runat="server" Text='<%#  NumHelp.FormatFour(Eval("Total")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="成本确认价">
+                                                <asp:TemplateField HeaderText="成本确认价" ItemStyle-Width="95px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="txtGoodPriceSecond" runat="server" Text='<%# Eval("GoodPriceSecond") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="差额">
+                                                <asp:TemplateField HeaderText="差额" ItemStyle-Width="85px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodTotalCha" runat="server" Text='<%#  NumHelp.FormatFour(Eval("GoodTotalCha")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -881,7 +895,7 @@
                                                         <asp:Label ID="lblGoodTotalCha" runat="server" Text='<%#  NumHelp.FormatFour(Eval("GoodTotalCha")) %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="销售单价">
+                                                <asp:TemplateField HeaderText="销售单价" ItemStyle-Width="95px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCheckPrice1" runat="server" Text='<%# Eval("GoodSellPrice") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -983,8 +997,8 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" />
-                                                <asp:TemplateField HeaderText="名称">
+                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px"/>
+                                                <asp:TemplateField HeaderText="名称" ItemStyle-Width="150px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -993,11 +1007,11 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" />
-                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" HeaderStyle-Width="8%" />
+                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" />
                                                 <%--            <asp:BoundField DataField="Good_Model" HeaderText="型号" SortExpression="Good_Model" />--%>
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" />
-                                                <asp:BoundField DataField="RuTime" HeaderText="采退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" />
-                                                <asp:TemplateField HeaderText="数量">
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px"/>
+                                                <asp:BoundField DataField="RuTime" HeaderText="采退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="80px" />
+                                                <asp:TemplateField HeaderText="数量" ItemStyle-Width="60px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lbVislNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -1005,7 +1019,7 @@
                                                         <asp:Label ID="lblVisNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="单价">
+                                                <asp:TemplateField HeaderText="单价" ItemStyle-Width="105px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblCheckPrice" runat="server" Text='<%# Eval("GoodPrice") %>'></asp:Label>
                                                     </ItemTemplate>
@@ -1013,7 +1027,7 @@
                                                         <asp:Label ID="lblCheckPrice" runat="server" Text='<%# Eval("GoodPrice") %>'></asp:Label>
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="总价">
+                                                <asp:TemplateField HeaderText="总价" ItemStyle-Width="115px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTotal" runat="server" Text='<%#  NumHelp.FormatFour(Eval("Total")) %>'></asp:Label>
                                                     </ItemTemplate>
@@ -1022,8 +1036,8 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodRemark" HeaderText="备注" SortExpression="GoodRemark" />
-                                                <asp:BoundField DataField="QingGouPer" HeaderText="请购人" SortExpression="QingGouPer" />
-                                                <asp:BoundField DataField="Status" HeaderText="状态" SortExpression="Status" />
+                                                <asp:BoundField DataField="QingGouPer" HeaderText="请购人" SortExpression="QingGouPer" ItemStyle-Width="50px"/>
+                                                <asp:BoundField DataField="Status" HeaderText="状态" SortExpression="Status" ItemStyle-Width="50px"/>
                                             </Columns>
                                             <PagerStyle HorizontalAlign="Center" />
                                             <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -1049,6 +1063,11 @@
                         </ContentTemplate>
                     </cc1:TabPanel>
                 </cc1:TabContainer>
+
+                总金额：
+    <asp:Label ID="lblTotal1" runat="server" Text="0" ForeColor="Red"></asp:Label>
+                <br />
+                所有项目金额:<asp:Label ID="lblAllTotal1" runat="server" Text="0" ForeColor="Red"></asp:Label>
             </td>
         </tr>
     </table>
@@ -1059,8 +1078,8 @@
            ShowHeader="false"
            Style="border-collapse: collapse;">
            <Columns>
-               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType"  />
-               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu"  />
+               <asp:BoundField DataField="ModelName" HeaderText="模型名称" SortExpression="MyPoType" />
+               <asp:BoundField DataField="ModelRemark" HeaderText="模型说明" SortExpression="XiShu" />
            </Columns>
            <PagerStyle HorizontalAlign="Center" />
            <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -1276,6 +1295,6 @@
             }
         );
 
-      
+
     </script>
 </asp:Content>

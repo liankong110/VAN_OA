@@ -232,18 +232,18 @@
             <br />
         </PagerTemplate>
         <Columns>
-            <asp:TemplateField HeaderText="发票号码" ItemStyle-BorderColor="Black" ItemStyle-BorderWidth="1px"
+            <asp:TemplateField HeaderText="发票号码" ItemStyle-BorderColor="Black" ItemStyle-BorderWidth="1px"  ItemStyle-Width="55px"
                 ItemStyle-BorderStyle="Solid">
                 <ItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CommandName="selectAll" Text='<% #Eval("All_InvoiceNo") %>'
                         CommandArgument='<% #Eval("All_InvoiceNo") %>'></asp:LinkButton>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="MaxDate" HeaderText="发票日期" SortExpression="MaxDate" DataFormatString="{0:yyyy-MM-dd}" />
+            <asp:BoundField DataField="MaxDate" HeaderText="发票日期" SortExpression="MaxDate" DataFormatString="{0:yyyy-MM-dd}"  ItemStyle-Width="65px"/>
             <%--  <asp:BoundField DataField="All_PONO" HeaderText="项目编码" SortExpression="All_PONO"
                 ItemStyle-HorizontalAlign="Center" />--%>
 
-            <asp:TemplateField HeaderText="项目编码">
+            <asp:TemplateField HeaderText="项目编码"  ItemStyle-Width="60px">
                 <ItemTemplate>
                     <asp:Label ID="lblAll_PONO" runat="server" Text='<% #Eval("All_PONO") %>'></asp:Label>
                 </ItemTemplate>
@@ -254,7 +254,7 @@
                     <asp:Label ID="lblAll_OAGuestName" runat="server" Text='<% #Eval("All_OAGuestName") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="AE">
+            <asp:TemplateField HeaderText="AE"  ItemStyle-Width="40px">
                 <ItemTemplate>
                     <asp:Label ID="lblAll_OAAE" runat="server" Text='<% #Eval("All_OAAE") %>'></asp:Label>
                 </ItemTemplate>
@@ -285,7 +285,7 @@
             <%--  <asp:BoundField DataField="OA_GuestName" HeaderText="客户名称" SortExpression="OA_GuestName"
                 ItemStyle-HorizontalAlign="Center" />--%>
 
-            <asp:TemplateField HeaderText="项目编号">
+            <asp:TemplateField HeaderText="项目编号"  ItemStyle-Width="60px">
                 <ItemTemplate>
                     <asp:Label ID="lblOA_PONO" runat="server" Text='<% #Eval("OA_PONO") %>'></asp:Label>
                 </ItemTemplate>
@@ -293,7 +293,7 @@
 
             <asp:BoundField DataField="OA_InvoiceTotal" HeaderText="金额" SortExpression="OA_InvoiceTotal"
                 DataFormatString="{0:n4}" ItemStyle-HorizontalAlign="Right" />
-            <asp:BoundField DataField="OA_InvoiceDate" HeaderText="日期" SortExpression="OA_InvoiceDate"
+            <asp:BoundField DataField="OA_InvoiceDate" HeaderText="日期"  ItemStyle-Width="65px" SortExpression="OA_InvoiceDate"
                 ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
             <%-- <asp:BoundField DataField="OA_PONO" HeaderText="项目编号" SortExpression="OA_PONO" ItemStyle-HorizontalAlign="Center" />--%>
 
@@ -316,7 +316,7 @@
             <asp:BoundField DataField="Kingdee_InvoiceTotal" HeaderText="金额" SortExpression="Kingdee_InvoiceTotal"
                 DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right" />
             <asp:BoundField DataField="Kingdee_InvoiceDate" HeaderText="日期" SortExpression="Kingdee_InvoiceDate"
-                ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
+                ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}"  ItemStyle-Width="65px"/>
             <asp:BoundField DataField="Kingdee_AccountTotal" HeaderText="到帐金额" SortExpression="Kingdee_AccountTotal"
                 DataFormatString="{0:n4}" ItemStyle-HorizontalAlign="Right" />
         </Columns>

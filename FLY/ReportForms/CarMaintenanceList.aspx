@@ -142,6 +142,7 @@
                     PageSize="10" CurrentPageIndex="1" FirstPageText="Ê×Ò³" LastPageText="Î²Ò³" PrevPageText="ÉÏÒ³"
                     NextPageText="ÏÂÒ³" OnPageChanged="AspNetPager1_PageChanged">
                 </webdiyer:AspNetPager>
+                <br />  <br />  <br />
             </ContentTemplate>
         </cc1:TabPanel>
         <cc1:TabPanel ID="TabPanel2" runat="server">
@@ -308,6 +309,7 @@
                     PageSize="10" CurrentPageIndex="1" FirstPageText="Ê×Ò³" LastPageText="Î²Ò³" PrevPageText="ÉÏÒ³"
                     NextPageText="ÏÂÒ³" OnPageChanged="AspNetPager2_PageChanged">
                 </webdiyer:AspNetPager>
+                  <br />  <br />  <br />
             </ContentTemplate>
         </cc1:TabPanel>
     </cc1:TabContainer>

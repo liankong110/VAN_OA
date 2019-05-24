@@ -339,7 +339,7 @@
                 <%--  <asp:BoundField DataField="RuTime" HeaderText="入库时间" SortExpression="RuTime"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />--%>
                 <asp:BoundField DataField="SupplierInvoiceDate" HeaderText="支付时间" SortExpression="SupplierInvoiceDate"
-                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
+                    ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="70px"/>
                 <asp:TemplateField HeaderText="" Visible="false">
                     <ItemTemplate>
                         <asp:Label ID="Ids" runat="server" Text='<%# Eval("Ids") %>'></asp:Label>
@@ -348,20 +348,20 @@
                 <asp:BoundField DataField="ProNo" HeaderText="入库单号" SortExpression="ProNo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="CaiProNo" HeaderText="采购单号" SortExpression="CaiProNo" ItemStyle-HorizontalAlign="Center" />
 
-                <asp:BoundField DataField="RuTime" HeaderText="入库时间" SortExpression="RuTime" ItemStyle-HorizontalAlign="Center"
+                <asp:BoundField DataField="RuTime" HeaderText="入库时间" SortExpression="RuTime" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px"
                     DataFormatString="{0:yyyy-MM-dd}" />
-                <asp:BoundField DataField="GuestName" HeaderText="供应商" SortExpression="GuestName"
+                <asp:BoundField DataField="GuestName" HeaderText="供应商简称" SortExpression="GuestName" ItemStyle-Width="100px"
                     ItemStyle-HorizontalAlign="Center" />
                    <asp:BoundField DataField="Peculiarity" HeaderText="特性" SortExpression="Peculiarity" ItemStyle-HorizontalAlign="Center"  >
                 <ItemStyle HorizontalAlign="Center"></ItemStyle>
             </asp:BoundField>
                 <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center"   ItemStyle-Width="170px"/>
                 <asp:BoundField DataField="POGuestName" HeaderText="客户名称" SortExpression="POGuestName"
+                    ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="200px"/>
+                <asp:BoundField DataField="GuestType" HeaderText="客户类型" SortExpression="GuestType" ItemStyle-Width="50px"
                     ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="GuestType" HeaderText="客户类型" SortExpression="GuestType"
-                    ItemStyle-HorizontalAlign="Center" />
-                <asp:TemplateField HeaderText="客户属性" ItemStyle-HorizontalAlign="Center">
+                <asp:TemplateField HeaderText="客户属性" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px">
                     <ItemTemplate>
                         <%# GetGestProInfo(Eval("GuestPro"))%>
                     </ItemTemplate>
@@ -371,7 +371,7 @@
                 <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName"
                     ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="60px" ItemStyle-Font-Size="8px"/>
                 <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GoodNum" HeaderText="数量" SortExpression="GoodNum" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="supplierTuiGoodNum" HeaderText="采退数" SortExpression="supplierTuiGoodNum"
@@ -395,7 +395,7 @@
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="ActPay" HeaderText="实际支付" SortExpression="ActPay" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="LastPayTotal" HeaderText="出价合计" SortExpression="LastPayTotal" DataFormatString="{0:n5}" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="RePayClearString" HeaderText="结算状态" SortExpression="RePayClearString"
+                <asp:BoundField DataField="RePayClearString" HeaderText="结算" SortExpression="RePayClearString" ItemStyle-Width="30px"
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="IsHeBingString" HeaderText="合并" SortExpression="IsHeBingString"
                     ItemStyle-HorizontalAlign="Center" />
@@ -524,7 +524,7 @@
                 <asp:BoundField DataField="GoodName" HeaderText="名称" SortExpression="GoodName" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName"
                     ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Center" />
+                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" ItemStyle-HorizontalAlign="Center"  />
                 <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GoodNum" HeaderText="数量" SortExpression="GoodNum" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="supplierTuiGoodNum" HeaderText="采退数" SortExpression="supplierTuiGoodNum"

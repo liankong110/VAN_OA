@@ -408,7 +408,7 @@ namespace VAN_OA.JXC
 
 
             lblAllTotal.Text = (list.Sum(t => t.POTotal) - list.Sum(t => t.TuiTotal)).ToString();
-
+            lblAllTotal1.Text = (list.Sum(t => t.POTotal) - list.Sum(t => t.TuiTotal)).ToString();
             AspNetPager6.RecordCount = pOOrderList.Count;
             this.gvMain.PageIndex = AspNetPager6.CurrentPageIndex - 1;
             this.gvMain.DataSource = pOOrderList;
@@ -436,6 +436,7 @@ namespace VAN_OA.JXC
             AspNetPager5.RecordCount = 0;
 
             lblTotal.Text = "0";
+            lblTotal1.Text = "0";
 
         }
 
@@ -1355,8 +1356,12 @@ namespace VAN_OA.JXC
                 List<CG_POOrders> POOrders = ViewState["Orders"] as List<CG_POOrders>;
                 if (POOrders != null)
                 {
-                    model.SellPrice = POOrders.Find(p => p.GoodId == model.GoodId).SellPrice;
-                    (e.Row.FindControl("lblSellPrice") as Label).Text = model.SellPrice.ToString();
+                    var mm = POOrders.Find(p => p.GoodId == model.GoodId);
+                    if (mm != null)
+                    {
+                        model.SellPrice = mm.SellPrice;
+                        (e.Row.FindControl("lblSellPrice") as Label).Text = model.SellPrice.ToString();
+                    }
                 }
                 if (model.Total1 != null)
                 {
@@ -1582,7 +1587,7 @@ namespace VAN_OA.JXC
                 setValue(e.Row.FindControl("lblProfit") as Label, NumHelp.FormatFour(SumOrders.Profit));//利润
 
 
-            }
+            }  
 
         }
         Sell_OrderInHouses SumOrdersTui = new Sell_OrderInHouses();
@@ -1615,6 +1620,7 @@ namespace VAN_OA.JXC
             if (list.Count > 0)
             {
                 lblTotal.Text = (list[0].POTotal - list[0].TuiTotal).ToString();
+                lblTotal1.Text = (list[0].POTotal - list[0].TuiTotal).ToString();
             }
         }
 
@@ -1712,7 +1718,41 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and CG_POOrder.PORemark like '%{0}%'", txtRemark.Text);
             }
-            List<CG_POOrders> orders = ordersSer.GetListArrayToList(" 1=1 and CG_POOrder.PONo='" + pono + "' " + sql + chenben);
+            string proNo = "";
+            if (!string.IsNullOrEmpty(txtNeiProNo.Text.Trim()))
+            {
+                if (CheckProNo(txtNeiProNo.Text.Trim()) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('单据号 格式错误！');</script>");
+
+                    return;
+                }
+                proNo = string.Format(" and ProNo like '%{0}%'", txtNeiProNo.Text.Trim());
+            }
+            
+            string time = "";
+            if (txtNeiFrom.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtNeiFrom.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
+                    return;
+                }
+
+                time += string.Format(" and PODate>='{0} 00:00:00'", txtNeiFrom.Text);
+            }
+            
+            if (txtNeiTo.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtNeiTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
+                    return;
+                }
+                time += string.Format(" and PODate<='{0} 23:59:59'", txtNeiTo.Text);
+            }
+
+            List<CG_POOrders> orders = ordersSer.GetListArrayToList(" 1=1 and CG_POOrder.PONo='" + pono + "' " + sql + chenben+ proNo+ time);
 
             ViewState["Orders"] = orders;
 

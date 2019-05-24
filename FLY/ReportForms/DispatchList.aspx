@@ -157,35 +157,35 @@
         </EmptyDataTemplate>
         <Columns>
 
-            <asp:TemplateField HeaderText="编辑">
+            <asp:TemplateField HeaderText="编辑"  ItemStyle-Width="30px">
                 <ItemTemplate>
                     <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&&allE_id=<%# Eval("id") %>&IsEdit=true" target="_blank">编辑 </a>
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" Width="50px" />
+                <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="查看">
+            <asp:TemplateField HeaderText="查看"  ItemStyle-Width="30px">
                 <ItemTemplate>
                     <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&allE_id=<%# Eval("id") %>" target="_blank">查看</a>
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" Width="50px" />
+                <ItemStyle HorizontalAlign="Center"  />
             </asp:TemplateField>
-            <asp:BoundField DataField="CardNo" HeaderText="单据号">
+            <asp:BoundField DataField="CardNo" HeaderText="单据号"  ItemStyle-Width="60px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="CreateTime" HeaderText="事件日期" DataFormatString="{0:yyyy-MM-dd}">
+            <asp:BoundField DataField="CreateTime" HeaderText="事件日期" DataFormatString="{0:yyyy-MM-dd}"  ItemStyle-Width="65px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="PONo" HeaderText="项目编号">
+            <asp:BoundField DataField="PONo" HeaderText="项目编号"  ItemStyle-Width="60px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="POName" HeaderText="项目名称" ItemStyle-Width="200px">
+            <asp:BoundField DataField="POName" HeaderText="项目名称" >
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
             <asp:BoundField DataField="GuestName" HeaderText="客户名称">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="AE" HeaderText="AE">
+            <asp:BoundField DataField="AE" HeaderText="AE"  ItemStyle-Width="40px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
 
