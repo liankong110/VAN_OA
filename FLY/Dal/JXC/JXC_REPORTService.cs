@@ -1265,7 +1265,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
             strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
             strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
             //strSql.Append(" ZhangQi as trueZhangQi,AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal  from CG_POOrder ");
-            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,Model  from CG_POOrder ");
+            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,Model,IsPoFax  from CG_POOrder ");
 
             strSql.Append(" left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo ");
             strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal,min(DaoKuanDate)  as MinDaoKuanDate,sum(case WHEN BUSTYPE=0 THEN 1 ELSE 0 end) AS DaOKuanCount from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
@@ -1280,7 +1280,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model ,MinDaoKuanDate,DaOKuanCount ");
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model ,MinDaoKuanDate,DaOKuanCount,IsPoFax ");
 
             if (having != "")
             {
@@ -1316,6 +1316,8 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                     while (dataReader.Read())
                     {
                         JXC_REPORTTotal model = new JXC_REPORTTotal();
+
+                        var IsPoFax = Convert.ToBoolean(dataReader["IsPoFax"]);
                         object ojb;
                         model.PONo = dataReader["PONo"].ToString();
                         model.POName = dataReader["POName"].ToString();
@@ -1519,7 +1521,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                             //model.MinBillDate = model.JSKaiPiaoDate;
                         }
 
-
+                      
                         if (model.SellFPTotal - model.InvoiceTotal != 0)
                         {
                             if (model.Model == "模型0")
@@ -1737,7 +1739,12 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                         {
                             model.YuGuDaoKuanTotal = model.SellFPTotal - model.InvoiceTotal;
                             model.YuGuDaoKuanDate = model.YuGuDaoKuanDate.Value.Date;
-                        }                       
+                        }
+                        if (IsPoFax == false && model.InvoiceTotal == model.SumPOTotal)
+                        {
+                            model.YuGuDaoKuanTotal =0;
+                            model.YuGuDaoKuanDate = null;
+                        }
                         list.Add(model);
                     }
                 }

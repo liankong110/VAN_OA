@@ -270,7 +270,7 @@ namespace VAN_OA.JXC
                 DropDownList dllUse = (DropDownList)e.Row.FindControl("dllUse");
                 if (model.Peculiarity == "个人")
                 {
-                    dllUse.Text = "还款";
+                    dllUse.Text = "备用金";
                 }
 
                 if (hb.ContainsKey(model.busType + model.ProNo))

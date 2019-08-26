@@ -57,7 +57,7 @@
         </tr>
         <tr>
             <td>
-                供应商:
+                供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>
@@ -268,7 +268,7 @@
                     <asp:Label ID="lblIsHanShui" runat="server" Text=""></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-                <asp:BoundField DataField="GuestName" HeaderText="供应商" SortExpression="GuestName"
+                <asp:BoundField DataField="GuestName" HeaderText="供应商简称" SortExpression="GuestName"
                     ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="PONo" HeaderText="项目编号" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />

@@ -25,7 +25,7 @@
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
             </td>
-            <td>供应商名称:
+            <td>供应商全称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplierName" runat="server" Width="400px"></asp:TextBox>

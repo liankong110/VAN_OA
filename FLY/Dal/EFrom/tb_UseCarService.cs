@@ -546,7 +546,7 @@ namespace VAN_OA.Dal.EFrom
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select AE,tb_UseCar.id,appName,datetime,pers_car,type,useReason,roadLong,deAddress,goAddress,toAddress,goTime,endTime,loginName,proNo,POGuestName,PONo,POName,OilPrice,state");
             strSql.Append(" FROM tb_UseCar  left join tb_User on tb_UseCar.appName=tb_User.Id ");
-            strSql.Append("  LEFT JOIN ( SELECT PONo AS T_PONO,AE FROM CG_POOrder where IFZhui=0 ) AS T_POOrder on T_POOrder.T_PONO=tb_UseCar.PONo ");
+            strSql.Append("  LEFT JOIN ( SELECT PONo AS T_PONO,AE,GuestType,GuestPro,IsClose,IsSelected,JieIsSelected,IsSpecial FROM CG_POOrder where IFZhui=0 ) AS T_POOrder on T_POOrder.T_PONO=tb_UseCar.PONo ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);

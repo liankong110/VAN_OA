@@ -349,6 +349,12 @@ namespace VAN_OA.EFrom
                                                         "<script>alert('此项目已经关闭！');</script>");
                 return false;
             }
+            if (CG_POOrderService.IsSpecialPONO(txtPONo.Text, txtPOName.Text))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null,
+                                                        "<script>alert('特殊订单无法计入费用！');</script>");
+                return false;
+            }
             return true;
         }
 
@@ -695,6 +701,14 @@ namespace VAN_OA.EFrom
 
                                 if (eformSer.ifLastNode(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])))
                                 {
+                                    if (carModel.DoTime == null)
+                                    { 
+                                        btnOtherSub.Visible = true;
+                                        btnOtherClose.Visible = true;
+                                        btnClose.Visible = false;
+                                        btnEdit.Visible = false;
+                                        btnSub.Visible = false;
+                                    }
                                     lblPer.Visible = false;
                                     ddlPers.Visible = false;
                                 }
@@ -1307,7 +1321,7 @@ namespace VAN_OA.EFrom
             string sql = string.Format("select a_Index from A_ProInfos where  ids=(select toProsId from tb_EForm where proId={0} and allE_id={1})",
                                             Request["ProId"], Request["allE_id"]);
             object a_index = DBHelp.ExeScalar(sql);
-            if (a_index != null && Convert.ToInt32(a_index) == 1)
+            if (a_index != null && Convert.ToInt32(a_index) == 0)
             {
                 if (Request["ProId"] != null && Request["allE_id"] != null)
                 {

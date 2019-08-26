@@ -84,7 +84,7 @@
             </td>
         </tr>
         <tr>
-            <td>供应商:
+            <td>供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="350px"></asp:TextBox>

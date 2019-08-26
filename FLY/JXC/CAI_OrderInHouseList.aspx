@@ -73,7 +73,7 @@
         </tr>
         <tr>
             <td>
-                供应商:
+                供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>
@@ -237,7 +237,7 @@
             </asp:TemplateField>
             <asp:BoundField DataField="RuTime" HeaderText="入库日期" SortExpression="RuTime" ItemStyle-HorizontalAlign="Center"
                 DataFormatString="{0:yyyy-MM-dd}" />
-            <asp:TemplateField HeaderText="供应商">
+            <asp:TemplateField HeaderText="供应商简称">
                 <ItemTemplate>
                     <asp:Label ID="Supplier" runat="server" Text='<%# Eval("Supplier") %>'></asp:Label>
                 </ItemTemplate>

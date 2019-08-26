@@ -115,7 +115,25 @@
                  <asp:TextBox ID="txtPoTotal" runat="server" ></asp:TextBox>
                  客户名称： <asp:TextBox ID="txtGuestName" runat="server" ></asp:TextBox>
                  发票类型：<asp:DropDownList ID="ddlFPType" runat="server" DataValueField="Id" DataTextField="FpType"></asp:DropDownList>
-                 <br />
+                <asp:TextBox ID="txtPlanDayForm" runat="server" Width="50px"></asp:TextBox>
+                <asp:DropDownList ID="ddlPlanDayForm" runat="server">
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                </asp:DropDownList>
+                计划完工天数
+                  <asp:DropDownList ID="ddlPlanDayTo" runat="server">
+                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                      <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                      <asp:ListItem Text="=" Value="="></asp:ListItem>
+                  </asp:DropDownList>
+                <asp:TextBox ID="txtPlanDayTo" runat="server" Width="50px"></asp:TextBox>
+                
+                <br />
                 <asp:TextBox ID="txtEque1" runat="server" Width="100"></asp:TextBox>
                 <asp:DropDownList ID="ddlEque1" runat="server">
                     <asp:ListItem Value="&gt;"></asp:ListItem>
@@ -367,6 +385,13 @@
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
 
+               <asp:TemplateField HeaderText="计划完工天数">
+                <ItemTemplate>
+                        <asp:TextBox ID="txtPlanDays" runat="server" Width="70px" Text='<% #Eval("PlanDays") %>'   Enabled="<%# IsPlanDays() %>" ></asp:TextBox>
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
+            </asp:TemplateField>
+    
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="Black" Font-Size="12px" />

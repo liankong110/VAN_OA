@@ -94,7 +94,7 @@
                     <asp:ListItem>=</asp:ListItem>
                 </asp:DropDownList>
                 <asp:TextBox ID="txtYFWDTotal" runat="server" Width="57px"></asp:TextBox>
-                预付未到票单位:<asp:TextBox ID="txtYFWDUnit" runat="server" Width="163px"></asp:TextBox>
+                预付未到单位简称:<asp:TextBox ID="txtYFWDUnit" runat="server" Width="140px"></asp:TextBox>
                 项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
 
             </td>

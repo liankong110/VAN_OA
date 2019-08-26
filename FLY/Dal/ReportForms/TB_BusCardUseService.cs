@@ -453,7 +453,7 @@ namespace VAN_OA.Dal.ReportForms
 			StringBuilder strSql=new StringBuilder();
             strSql.Append("select UseName,AE,ProNo,Status,TB_BusCardUse.Id,BusCardNo,BusCardPer,BusCardDate,Address,GuestName,UseTotal,BusUseRemark,CreateTime,loginName as CreateUserName,CreateUserId,POGuestName,PONo,POName  ");
             strSql.Append(" FROM TB_BusCardUse left join tb_User on tb_User.ID=TB_BusCardUse.CreateUserId ");
-            strSql.Append("  LEFT JOIN ( SELECT PONo AS T_PONO,AE FROM CG_POOrder where IFZhui=0 ) AS T_POOrder on T_POOrder.T_PONO=TB_BusCardUse.PONo ");
+            strSql.Append("  LEFT JOIN ( SELECT PONo AS T_PONO,AE,GuestType,GuestPro,IsClose,IsSelected,JieIsSelected,IsSpecial FROM CG_POOrder where IFZhui=0 ) AS T_POOrder on T_POOrder.T_PONO=TB_BusCardUse.PONo ");
             if (strWhere.Trim()!="")
 			{
 				strSql.Append(" where "+strWhere);

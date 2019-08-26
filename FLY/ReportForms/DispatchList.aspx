@@ -73,7 +73,7 @@
             </td>
             <td colspan="3">
                 <asp:TextBox ID="txtProNo" runat="server"></asp:TextBox>关键词:
-                  <asp:TextBox ID="txtKeyWords" runat="server"></asp:TextBox> 
+                  <asp:TextBox ID="txtKeyWords" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -83,7 +83,8 @@
                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="Id"
                     Width="200PX">
                 </asp:DropDownList>
-                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
             <td>请款类型
             </td>
@@ -110,8 +111,43 @@
             </td>
         </tr>
         <tr>
-            
-              
+            <td colspan="6">
+                
+                  项目归类:
+                <asp:DropDownList ID="ddlIsSpecial" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
+                    <asp:ListItem Value="1">特殊</asp:ListItem>
+                </asp:DropDownList>
+                项目关闭：
+                <asp:DropDownList ID="ddlClose" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"> </asp:ListItem>
+                    <asp:ListItem Text="关闭" Value="1"> </asp:ListItem>
+                    <asp:ListItem Text="未关闭" Value="0"> </asp:ListItem>
+                </asp:DropDownList>
+                 项目选中：
+                <asp:DropDownList ID="ddlIsSelect" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未选中</asp:ListItem>
+                    <asp:ListItem Value="1">选中</asp:ListItem>
+                </asp:DropDownList>
+                结算选中：
+                <asp:DropDownList ID="ddlJieIsSelected" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="选中"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
+                </asp:DropDownList>
+                   客户类型:<asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
+                    DataTextField="GuestType">
+                </asp:DropDownList>
+                客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
+                    DataTextField="GuestProString" Style="left: 0px;">
+                </asp:DropDownList>
+            </td>
+        </tr>
+        <tr>
+
+
             <td colspan="6">
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
@@ -157,35 +193,35 @@
         </EmptyDataTemplate>
         <Columns>
 
-            <asp:TemplateField HeaderText="编辑"  ItemStyle-Width="30px">
+            <asp:TemplateField HeaderText="编辑" ItemStyle-Width="30px">
                 <ItemTemplate>
                     <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&&allE_id=<%# Eval("id") %>&IsEdit=true" target="_blank">编辑 </a>
                 </ItemTemplate>
                 <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="查看"  ItemStyle-Width="30px">
+            <asp:TemplateField HeaderText="查看" ItemStyle-Width="30px">
                 <ItemTemplate>
                     <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&allE_id=<%# Eval("id") %>" target="_blank">查看</a>
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center"  />
+                <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
-            <asp:BoundField DataField="CardNo" HeaderText="单据号"  ItemStyle-Width="60px">
+            <asp:BoundField DataField="CardNo" HeaderText="单据号" ItemStyle-Width="60px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="CreateTime" HeaderText="事件日期" DataFormatString="{0:yyyy-MM-dd}"  ItemStyle-Width="65px">
+            <asp:BoundField DataField="CreateTime" HeaderText="事件日期" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="PONo" HeaderText="项目编号"  ItemStyle-Width="60px">
+            <asp:BoundField DataField="PONo" HeaderText="项目编号" ItemStyle-Width="60px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="POName" HeaderText="项目名称" >
+            <asp:BoundField DataField="POName" HeaderText="项目名称">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
             <asp:BoundField DataField="GuestName" HeaderText="客户名称">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:BoundField DataField="AE" HeaderText="AE"  ItemStyle-Width="40px">
+            <asp:BoundField DataField="AE" HeaderText="AE" ItemStyle-Width="40px">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
 
@@ -215,6 +251,6 @@
         NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
     </webdiyer:AspNetPager>
 
-     总金额合计:
+    总金额合计:
     <asp:Label ID="lblTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>&nbsp;&nbsp;
 </asp:Content>

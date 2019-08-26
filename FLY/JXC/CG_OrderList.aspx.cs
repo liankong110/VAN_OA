@@ -194,6 +194,28 @@ namespace VAN_OA.JXC
         private void Show()
         {
             string sql = " 1=1 and IFZhui=0 ";
+            
+            if (txtPlanDayForm.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtPlanDayForm.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式错误！');</script>");
+                    return;
+                }
+
+                sql += string.Format(" and {1}{0}PlanDays", ddlPlanDayForm.Text, txtPlanDayForm.Text);
+            }
+            
+            if (txtPlanDayTo.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtPlanDayTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式错误！');</script>");
+                    return;
+                }
+
+                sql += string.Format(" and PlanDays{0}{1}", ddlPlanDayTo.Text, txtPlanDayTo.Text);
+            }
 
             if (ddlFPState.Text == "1")
             {

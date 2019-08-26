@@ -436,6 +436,60 @@ namespace VAN_OA.ReportForms {
         protected global::System.Web.UI.WebControls.TextBox txtSecondPONo;
         
         /// <summary>
+        /// ddlIsSpecial1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlIsSpecial1;
+        
+        /// <summary>
+        /// ddlClose1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlClose1;
+        
+        /// <summary>
+        /// ddlIsSelect1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlIsSelect1;
+        
+        /// <summary>
+        /// ddlJieIsSelected1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlJieIsSelected1;
+        
+        /// <summary>
+        /// ddlGuestTypeList1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlGuestTypeList1;
+        
+        /// <summary>
+        /// ddlGuestProList1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlGuestProList1;
+        
+        /// <summary>
         /// dllCompayList 控件。
         /// </summary>
         /// <remarks>

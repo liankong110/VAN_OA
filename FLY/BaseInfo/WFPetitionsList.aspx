@@ -57,7 +57,7 @@
                 <asp:TextBox ID="txtPONo" runat="server" Width="200px"></asp:TextBox>
             </td>
 
-            <td>采购单位：
+            <td>采购单位简称：
             </td>
             <td>
                 <asp:TextBox ID="txtSalesUnit" runat="server" Width="200px"></asp:TextBox>

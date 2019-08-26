@@ -68,6 +68,39 @@
                     Width="200PX"></asp:DropDownList>
             </td>
         </tr>
+              <tr>
+                        <td colspan="4">项目归类:
+                <asp:DropDownList ID="ddlIsSpecial" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
+                    <asp:ListItem Value="1">特殊</asp:ListItem>
+                </asp:DropDownList>
+                            项目关闭：
+                <asp:DropDownList ID="ddlClose" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"> </asp:ListItem>
+                    <asp:ListItem Text="关闭" Value="1"> </asp:ListItem>
+                    <asp:ListItem Text="未关闭" Value="0"> </asp:ListItem>
+                </asp:DropDownList>
+                            项目选中：
+                <asp:DropDownList ID="ddlIsSelect" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未选中</asp:ListItem>
+                    <asp:ListItem Value="1">选中</asp:ListItem>
+                </asp:DropDownList>
+                            结算选中：
+                <asp:DropDownList ID="ddlJieIsSelected" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="选中"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
+                </asp:DropDownList>
+                            客户类型:<asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
+                                DataTextField="GuestType">
+                            </asp:DropDownList>
+                            客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
+                                DataTextField="GuestProString" Style="left: 0px;">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
         <tr>
             <td colspan="4">
                 <div align="right">

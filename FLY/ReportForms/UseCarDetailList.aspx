@@ -245,12 +245,12 @@
                 </asp:Panel>
             </ContentTemplate>
         </cc1:TabPanel>
-        <cc1:TabPanel ID="TabPanel2" runat="server" HeaderText="私车公用申请单">
+        <cc1:TabPanel ID="TabPanel2" runat="server" HeaderText="私车公用列表">
             <ContentTemplate>
                 <table cellpadding="0" cellspacing="0" width="90%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
                     border="1">
                     <tr>
-                        <td colspan="8" style="height: 20px; background-color: #336699; color: White;">私车公用明细清单
+                        <td colspan="8" style="height: 20px; background-color: #336699; color: White;">私车公用列表
                         </td>
                     </tr>
                     <tr>
@@ -286,11 +286,43 @@
                             <asp:TextBox ID="txtSecondPONo" runat="server"></asp:TextBox>
                         </td>
                     </tr>
+                      <tr>
+                        <td colspan="4">项目归类:
+                <asp:DropDownList ID="ddlIsSpecial1" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
+                    <asp:ListItem Value="1">特殊</asp:ListItem>
+                </asp:DropDownList>
+                            项目关闭：
+                <asp:DropDownList ID="ddlClose1" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"> </asp:ListItem>
+                    <asp:ListItem Text="关闭" Value="1"> </asp:ListItem>
+                    <asp:ListItem Text="未关闭" Value="0"> </asp:ListItem>
+                </asp:DropDownList>
+                            项目选中：
+                <asp:DropDownList ID="ddlIsSelect1" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未选中</asp:ListItem>
+                    <asp:ListItem Value="1">选中</asp:ListItem>
+                </asp:DropDownList>
+                            结算选中：
+                <asp:DropDownList ID="ddlJieIsSelected1" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="选中"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
+                </asp:DropDownList>
+                            客户类型:<asp:DropDownList ID="ddlGuestTypeList1" runat="server" DataValueField="GuestType"
+                                DataTextField="GuestType">
+                            </asp:DropDownList>
+                            客户属性:<asp:DropDownList ID="ddlGuestProList1" runat="server" DataValueField="GuestPro"
+                                DataTextField="GuestProString" Style="left: 0px;">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
                     <tr>
                         <tr>
-                            <td>公司名称:
-                            </td>
-                            <td colspan="3">
+                            <td colspan="4">公司名称:
+                            
                                 <asp:DropDownList ID="dllCompayList" runat="server" DataTextField="ComName" DataValueField="ComSimpName"
                                     Width="200PX">
                                 </asp:DropDownList>AE

@@ -76,7 +76,7 @@
             </td>
         </tr>
         <tr>
-            <td>供应商:
+            <td>供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>
@@ -206,7 +206,7 @@
                     <asp:Label ID="lblIsHanShui" runat="server" Text=""></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="供应商">
+            <asp:TemplateField HeaderText="供应商简称">
                 <ItemTemplate>
                     <asp:Label ID="Supplier" runat="server" Text='<%# Eval("Supplier") %>'></asp:Label>
                 </ItemTemplate>

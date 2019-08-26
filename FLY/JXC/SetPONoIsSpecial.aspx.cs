@@ -35,6 +35,15 @@ namespace VAN_OA.JXC
             }
             return true;
         }
+
+        protected bool IsPlanDays()
+        {
+            if (ViewState["isPlanDays"] != null)
+            {
+                return false;
+            }
+            return true;
+        }
         protected string GetType(object type)
         {
             if (type.ToString() == "0")
@@ -208,7 +217,10 @@ namespace VAN_OA.JXC
                 {
                     ViewState["isChengBenJiLiang"] = false;
                 }
-
+                if (NewShowAll_textName("项目归类", "计划完工天数可编辑") == false)
+                {
+                    ViewState["isPlanDays"] = false;
+                }
                 if (NewShowAll_textName("项目归类", "客户类型可编辑") == false)
                 {
                     ViewState["isGuestType"] = false;
@@ -336,6 +348,29 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and PONAME like '%{0}%'", txtPOName.Text.Trim());
             }
+
+            if (txtPlanDayForm.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtPlanDayForm.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式错误！');</script>");
+                    return;
+                }
+
+                sql += string.Format(" and {1}{0}PlanDays", ddlPlanDayForm.Text, txtPlanDayForm.Text);
+            }
+
+            if (txtPlanDayTo.Text != "")
+            {
+                if (CommHelp.VerifesToNum(txtPlanDayTo.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式错误！');</script>");
+                    return;
+                }
+
+                sql += string.Format(" and PlanDays{0}{1}", ddlPlanDayTo.Text, txtPlanDayTo.Text);
+            }
+
             if (txtFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
@@ -430,7 +465,7 @@ namespace VAN_OA.JXC
             {
                 sql += string.Format(" and ChengBenJiLiang=" + ddlJiLiang.Text);
             }
-            
+
 
             if (ddlModel.Text != "全部")
             {
@@ -538,13 +573,13 @@ namespace VAN_OA.JXC
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
 
-                var dr=e.Row.DataItem as DataRowView;
-                var goodTotal=dr["goodTotal"];
+                var dr = e.Row.DataItem as DataRowView;
+                var goodTotal = dr["goodTotal"];
                 var sumPOTotal = dr["SumPOTotal"];
                 if (goodTotal != DBNull.Value && sumPOTotal != DBNull.Value)
                 {
                     //如果项目金额 < 成本 并且是特殊订单，帮我单据号，项目编码，成本 三列的格子背景帮我显示粉红色
-                    if (Convert.ToDecimal(sumPOTotal) < Convert.ToDecimal(goodTotal)&&Convert.ToBoolean(dr["IsSpecial"]))
+                    if (Convert.ToDecimal(sumPOTotal) < Convert.ToDecimal(goodTotal) && Convert.ToBoolean(dr["IsSpecial"]))
                     {
                         e.Row.Cells[1].BackColor = System.Drawing.Color.Pink;
                         e.Row.Cells[2].BackColor = System.Drawing.Color.Pink;
@@ -759,8 +794,8 @@ SELECT @AllCount;", lblIds.Text);
 
             if (ViewState["isChengBenJiLiang"] == null)
             {
-                 where = " PONo  in (";
-                 expWhere = " PONo  in (";
+                where = " PONo  in (";
+                expWhere = " PONo  in (";
                 for (int i = 0; i < this.gvMain.Rows.Count; i++)
                 {
                     CheckBox cb = (gvMain.Rows[i].FindControl("cbChengBenJiLiang")) as CheckBox;
@@ -913,6 +948,34 @@ SELECT @AllCount;", lblIds.Text);
 
                 }
             }
+            if (ViewState["isPlanDays"] == null)
+            {
+                //保存含税信息
+                expWhere = " PONo  in (";
+
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = conn.CreateCommand();
+
+                    for (int i = 0; i < this.gvMain.Rows.Count; i++)
+                    {
+                        TextBox txtPlanDayForm = (gvMain.Rows[i].FindControl("txtPlanDays")) as TextBox;
+                        if (CommHelp.VerifesToNum(txtPlanDayForm.Text) == false)
+                        {
+                            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式错误！');</script>");
+                            return;
+                        }
+
+                        Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
+                        objCommand.CommandText = string.Format("update CG_POOrder set PlanDays={1} where PONO='{0}'",
+                            lblIds.Text, txtPlanDayForm.Text);
+                        objCommand.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }                 
+            }
+
             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
             //AspNetPager1.CurrentPageIndex = 1;
             Show();

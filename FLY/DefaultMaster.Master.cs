@@ -69,11 +69,13 @@ namespace VAN_OA
             if (allEForms > 0)
             {
                 lblMessTodo.Text = string.Format("你有 {0} 个文件要审批", allEForms);
+                lblMessTodoOld.Text = string.Format("（原）你有 {0} 个文件要审批", allEForms);
                 imgMess.Visible = true;
             }
             else
             {
-                lblMessTodo.Text = "";
+                lblMessTodoOld.Text = "";
+                   lblMessTodo.Text = "";
                 imgMess.Visible = false;
             }
             
@@ -180,8 +182,15 @@ and  proid=(select pro_Id from A_ProInfo where pro_Type='订单报批表')", bas
         }
 
         protected void lblMessTodo_Click(object sender, EventArgs e)
+        {           
+
+            WebQuerySessin Sess = new WebQuerySessin("");
+            Response.Redirect("~/EFrom/MyEFormsTodo_New.aspx");
+        }
+
+        protected void lblMessTodoOld_Click(object sender, EventArgs e)
         {
-            
+
 
             WebQuerySessin Sess = new WebQuerySessin("");
             Response.Redirect("~/EFrom/MyEFormsTodo.aspx");

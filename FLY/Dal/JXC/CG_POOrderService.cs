@@ -555,7 +555,7 @@ namespace VAN_OA.Dal.JXC
                         model.FpType = dataReader["FpType"].ToString();
                         model.FpTax = Convert.ToDecimal(dataReader["FpTax"]);
                         model.Model = dataReader["Model"].ToString();
-                        model.PlanDays =Convert.ToInt32(dataReader["PlanDays"]);
+                        model.PlanDays = Convert.ToInt32(dataReader["PlanDays"]);
                     }
                 }
             }
@@ -935,7 +935,7 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
         public List<VAN_OA.Model.JXC.CG_POOrder> GetPOOrderDetailList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select POTotal,PODate,IFZhui,PlanDays,POStatue2 from CG_POOrder where Status='通过'");   
+            strSql.Append("select POTotal,PODate,IFZhui,PlanDays,POStatue2 from CG_POOrder where Status='通过'");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(strWhere);
@@ -950,8 +950,8 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
                 {
                     while (dataReader.Read())
                     {
-                        var model = new CG_POOrder();                         
-                        model.PODate =Convert.ToDateTime(dataReader["PODate"]);
+                        var model = new CG_POOrder();
+                        model.PODate = Convert.ToDateTime(dataReader["PODate"]);
                         model.IFZhui = Convert.ToInt32(dataReader["IFZhui"]);
                         model.PlanDays = Convert.ToInt32(dataReader["PlanDays"]);
                         model.POTotal = Convert.ToDecimal(dataReader["POTotal"]);
@@ -960,7 +960,7 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
                         {
                             model.POStatue2 = ojb.ToString();
                         }
-                        
+
                         list.Add(model);
                     }
                 }
@@ -976,7 +976,7 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
 
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" Model,Order_ToInvoice_1.[POTotal] as InvoTotal,[TuiTotal],TB_BasePoType.BasePoType,POType,GuestPro,GuestType,CG_POOrder.Id,AppName,loginName,CaiGou ,cRemark,fileName,fileType,proNo,GuestId,GuestNo,CG_POOrder.GuestName,AE,INSIDE,CG_POOrder.PONo,CG_POOrder.POName,PODate,CG_POOrder.POTotal,POPayStype ,Status,IFZhui,FPTotal,POStatue,POStatue2,POStatue3,POStatue4,POStatue5,POStatue6,PORemark,IsSpecial,IsPoFax ");
+            strSql.Append(" PlanDays,Model,Order_ToInvoice_1.[POTotal] as InvoTotal,[TuiTotal],TB_BasePoType.BasePoType,POType,GuestPro,GuestType,CG_POOrder.Id,AppName,loginName,CaiGou ,cRemark,fileName,fileType,proNo,GuestId,GuestNo,CG_POOrder.GuestName,AE,INSIDE,CG_POOrder.PONo,CG_POOrder.POName,PODate,CG_POOrder.POTotal,POPayStype ,Status,IFZhui,FPTotal,POStatue,POStatue2,POStatue3,POStatue4,POStatue5,POStatue6,PORemark,IsSpecial,IsPoFax ");
             strSql.Append(" from CG_POOrder left join tb_User on tb_User.id=CG_POOrder.AppName left join TB_BasePoType on TB_BasePoType.id=CG_POOrder.POType ");
             strSql.Append(" left join Order_ToInvoice_1 on Order_ToInvoice_1.PONO=CG_POOrder.PONO ");
             if (strWhere.Trim() != "")
@@ -1092,6 +1092,9 @@ select PONo,POName,PODate,GuestNo,GuestName,AE,INSIDE from CAI_POOrder where  St
                             TuiTotal = Convert.ToDecimal(ojb);
                         }
                         model.POTotal = InvoTotal - TuiTotal;
+
+                        model.PlanDays = Convert.ToInt32(dataReader["PlanDays"]);
+
                         list.Add(model);
                     }
                 }
@@ -1231,7 +1234,7 @@ left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_g
         /// <returns></returns>
         public DataTable SetPoSpecial(string where)
         {
-            string sql = @"select goodTotal,ChengBenJiLiang,GuestPro,GuestType,SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected,Model  from CG_POOrder";
+            string sql = @"select PlanDays,goodTotal,ChengBenJiLiang,GuestPro,GuestType,SumPOTotal,maoliTotal,POType,Id,ProNo,GuestName,CG_POOrder.PONo,POName,PODate,IsSpecial,AE,IsPoFax,FpType,IsClose,IsSelected,JieIsSelected,Model  from CG_POOrder";
             //sql += " , 1 as isCloseEdist,1 as isSpecialEdit, 1 as isFaxEdist, 1 as isFPTypeEdist from CG_POOrder";
             sql += " left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal from JXC_REPORT group by pono) as REPORT on REPORT.PONo=CG_POOrder.PONo";
             sql += " left join POTotal_SumView on POTotal_SumView.PONO=CG_POOrder.PONO";
@@ -1605,6 +1608,26 @@ left join (select pono,isnull(sum(maoli),0) as maoliTotal,sum(goodTotal)+sum(t_g
         {
             if (pono == "") return true;
             string sql = string.Format("select IsClose FROM CG_POOrder where PONO='{0}' and IFZhui=0 ", pono);
+            return Convert.ToBoolean(DBHelp.ExeScalar(sql));
+
+        }
+
+        /// <summary>
+        /// 项目是否特殊订单无法计入费用
+        /// </summary>
+        /// <param name="pono"></param>
+        /// <returns></returns>
+        public static bool IsSpecialPONO(string pono, string poName)
+        {
+            //2019年万邦电脑行政经费
+            //以上的特殊订单的项目名称 如果是 "XXXX年万邦电脑行政经费", "XXXX年源达行政经费"，"XXXX年易佳通行政经费"，"XXXX年万邦科技行政经费"；XXXX 为4位数字
+            //则不需要提示“特殊订单无法计入费用”，可以直接通过！
+            if (poName.Contains("年万邦电脑行政经费") || poName.Contains("年源达行政经费") || poName.Contains("年易佳通行政经费") || poName.Contains("年万邦科技行政经费"))
+            {
+                return false;
+            }
+            if (pono == "") return true;
+            string sql = string.Format("select IsSpecial FROM CG_POOrder where PONO='{0}' and IFZhui=0 ", pono);
             return Convert.ToBoolean(DBHelp.ExeScalar(sql));
 
         }

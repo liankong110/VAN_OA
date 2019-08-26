@@ -104,7 +104,7 @@
                 <asp:TextBox ID="txtGoodNo" runat="server" Width="350px"></asp:TextBox>
             </td>
             <td>
-                供应商:
+                供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtLastSupplier" runat="server" Width="200px"></asp:TextBox>

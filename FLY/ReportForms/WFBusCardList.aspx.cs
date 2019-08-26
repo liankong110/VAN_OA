@@ -10,6 +10,7 @@ using VAN_OA.Model.ReportForms;
 using System.Data;
 using VAN_OA.Dal.EFrom;
 using VAN_OA.Model;
+using VAN_OA.Dal.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -126,6 +127,35 @@ namespace VAN_OA.ReportForms
             {
                 sql += string.Format(" and AE='{0}'", ddlAE.SelectedItem.Text);
             }
+
+            //增加查询条件
+            if (ddlGuestTypeList.SelectedValue != "全部")
+            {
+                sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList.SelectedValue);
+            }
+
+            if (ddlGuestProList.SelectedValue != "-2")
+            {
+                sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
+            }
+
+            if (ddlClose.Text != "-1")
+            {
+                sql += string.Format(" and IsClose={0} ", ddlClose.Text);
+            }
+            if (ddlIsSelect.Text != "-1")
+            {
+                sql += string.Format(" and IsSelected={0} ", ddlIsSelect.Text);
+            }
+            if (ddlJieIsSelected.Text != "-1")
+            {
+                sql += string.Format(" and JieIsSelected={0} ", ddlJieIsSelected.Text);
+            }
+            if (ddlIsSpecial.Text != "-1")
+            {
+                sql += string.Format(" and IsSpecial={0} ", ddlIsSpecial.Text);
+            }
+
 
             List<TB_BusCardUse> pos = this.BusCardUseSer.GetListArray(sql);
             lblTotal.Text = pos.Sum(t => t.UseTotal).ToString();
@@ -364,6 +394,22 @@ namespace VAN_OA.ReportForms
                     gvCardRecordList.Columns[1].Visible = false;
                 }
                 #endregion
+
+                GuestTypeBaseInfoService dal = new GuestTypeBaseInfoService();
+                var dalList = dal.GetListArray("");
+                dalList.Insert(0, new VAN_OA.Model.BaseInfo.GuestTypeBaseInfo { GuestType = "全部" });
+                ddlGuestTypeList.DataSource = dalList;
+                ddlGuestTypeList.DataBind();
+                ddlGuestTypeList.DataTextField = "GuestType";
+                ddlGuestTypeList.DataValueField = "GuestType";
+
+                GuestProBaseInfoService guestProBaseInfodal = new GuestProBaseInfoService();
+                var proList = guestProBaseInfodal.GetListArray("");
+                proList.Insert(0, new VAN_OA.Model.BaseInfo.GuestProBaseInfo { GuestPro = -2 });
+                ddlGuestProList.DataSource = proList;
+                ddlGuestProList.DataBind();
+                ddlGuestProList.DataTextField = "GuestProString";
+                ddlGuestProList.DataValueField = "GuestPro";
             }
         }
     }

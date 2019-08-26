@@ -73,7 +73,7 @@
         </tr>
         <tr>
             <td>
-                供应商:
+                供应商简称:
             </td>
             <td>
                 <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>  <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
@@ -143,7 +143,7 @@
                         AE
                     </td>
                     <td>
-                        供应商
+                        供应商简称
                     </td>
                     <td>
                         检验人
@@ -207,7 +207,7 @@
                     <asp:Label ID="lblIsHanShui" runat="server" Text=""></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="SupplierName" HeaderText="供应商" SortExpression="SupplierName" />
+            <asp:BoundField DataField="SupplierName" HeaderText="供应商简称" SortExpression="SupplierName" />
             <%-- <asp:BoundField DataField="PONo" HeaderText="项目编码" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"

@@ -1713,22 +1713,22 @@ order by a_Index desc ", loginID, pro_Id);
 
         /// 我所要审核的单子  包括 委托的
         /// </summary>
-        public List<VAN_OA.Model.EFrom.tb_EForm> GetListArray_ToDo(string strWhere, int UserId)
+        public List<VAN_OA.Model.EFrom.tb_EForm> GetListArray_ToDo(string strWhere,string poSQL, int UserId)
         {
             StringBuilder strSql = new StringBuilder();
 
-            strSql.Append(string.Format(@" select table2.*,pro_Type,maxDoTime from (
-select *,'' as type1 from tb_EForm_View where  state='执行中' and toPer={0}
+            strSql.Append(string.Format(@" select table2.*,pro_Type from (
+select *,'' as type1 from tb_EForm_View where  state='执行中' and toPer={0} {1}
 union
 select * ,'委托' as type1 from (
 select tb_EForm_View.* from tb_EForm_View left join tb_Consignor on tb_EForm_View.proId =tb_Consignor.proId
 and tb_EForm_View.toPer=tb_Consignor.appPer
 where conState='开启' and  consignor={0} and (ifYouXiao=1  or 
-appTime between fromTime and toTime  or appTime>=fromTime  or appTime<=toTime)
+appTime between fromTime and toTime  or appTime>=fromTime  or appTime<=toTime) {1}
 ) as table1
-) as table2 left join A_ProInfo on A_ProInfo.pro_Id=table2.proId ", UserId));
+) as table2 left join A_ProInfo on A_ProInfo.pro_Id=table2.proId ", UserId, poSQL));
 
-            strSql.AppendFormat(" left join (select e_Id,max(dotime) as maxDoTime from tb_EForms   group by e_id) as newTb on newTb.E_Id=table2.ID ");
+            //strSql.AppendFormat(" left join (select e_Id,max(dotime) as maxDoTime from tb_EForms   group by e_id) as newTb on newTb.E_Id=table2.ID ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -1845,7 +1845,7 @@ appTime between fromTime and toTime  or appTime>=fromTime  or appTime<=toTime)
                         //    model.ToPer_Name = ojb.ToString();
                         //}
 
-                        ojb = dataReader["maxDoTime"];
+                        ojb = dataReader["e_LastTime"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.maxDoTime = ojb.ToString();

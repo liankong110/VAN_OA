@@ -51,9 +51,9 @@
                     DataKeyNames="Id" Width="100%" AllowPaging="true" AutoGenerateColumns="False"
                     OnPageIndexChanging="gvList_PageIndexChanging" OnRowDeleting="gvList_RowDeleting"
                     OnRowEditing="gvList_RowEditing" OnRowDataBound="gvList_RowDataBound" PageSize="20">
-                       <PagerTemplate>
-                            <br />
-                           </PagerTemplate>
+                    <PagerTemplate>
+                        <br />
+                    </PagerTemplate>
                     <EmptyDataTemplate>
                         <table width="100%">
                             <tr style="height: 20px; background-color: #336699; color: White;">
@@ -108,16 +108,17 @@
                     <RowStyle CssClass="InfoDetail1" />
                 </asp:GridView>
 
-                 <br />
-                 
-                    <webdiyer:AspNetPager ID="AspNetPager2" runat="server" Width="100%" ShowPageIndexBox="Always"
-                        TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%"
-                        CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left" ButtonImageAlign="Middle"
-                        CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"
-                        PageSize="20" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
-                        NextPageText="下页" OnPageChanged="AspNetPager2_PageChanged">
-                    </webdiyer:AspNetPager>
-                 <br /> <br />
+                <br />
+
+                <webdiyer:AspNetPager ID="AspNetPager2" runat="server" Width="100%" ShowPageIndexBox="Always"
+                    TextBeforePageIndexBox="跳转到第" TextAfterPageIndexBox="页" CustomInfoSectionWidth="40%"
+                    CurrentPageButtonPosition="Center" ShowCustomInfoSection="Left" ButtonImageAlign="Middle"
+                    CustomInfoHTML="第<font color='red'><b>%currentPageIndex%</b></font>页，共%PageCount%页，每页显示%PageSize%条记录"
+                    PageSize="20" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
+                    NextPageText="下页" OnPageChanged="AspNetPager2_PageChanged">
+                </webdiyer:AspNetPager>
+                <br />
+                <br />
             </ContentTemplate>
         </cc1:TabPanel>
         <cc1:TabPanel ID="TabPanel2" runat="server">
@@ -163,6 +164,39 @@
                         </td>
                         <td>
                             <asp:TextBox ID="txtGuestName" runat="server"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">项目归类:
+                <asp:DropDownList ID="ddlIsSpecial" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
+                    <asp:ListItem Value="1">特殊</asp:ListItem>
+                </asp:DropDownList>
+                            项目关闭：
+                <asp:DropDownList ID="ddlClose" runat="server">
+                    <asp:ListItem Text="全部" Value="-1"> </asp:ListItem>
+                    <asp:ListItem Text="关闭" Value="1"> </asp:ListItem>
+                    <asp:ListItem Text="未关闭" Value="0"> </asp:ListItem>
+                </asp:DropDownList>
+                            项目选中：
+                <asp:DropDownList ID="ddlIsSelect" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未选中</asp:ListItem>
+                    <asp:ListItem Value="1">选中</asp:ListItem>
+                </asp:DropDownList>
+                            结算选中：
+                <asp:DropDownList ID="ddlJieIsSelected" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="选中"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
+                </asp:DropDownList>
+                            客户类型:<asp:DropDownList ID="ddlGuestTypeList" runat="server" DataValueField="GuestType"
+                                DataTextField="GuestType">
+                            </asp:DropDownList>
+                            客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
+                                DataTextField="GuestProString" Style="left: 0px;">
+                            </asp:DropDownList>
                         </td>
                     </tr>
                     <tr>

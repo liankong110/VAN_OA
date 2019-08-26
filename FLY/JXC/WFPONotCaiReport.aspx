@@ -61,7 +61,7 @@
                 <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="100PX"></asp:TextBox>
                 或者
                 <asp:TextBox ID="txtNameOrTypeOrSpecTwo" runat="server" Width="100PX"></asp:TextBox>
-                &nbsp;&nbsp;&nbsp; 供应商:  <asp:TextBox ID="txtSupplier" runat="server" Width="200px"></asp:TextBox>
+                &nbsp;&nbsp;&nbsp; 供应商简称:  <asp:TextBox ID="txtSupplier" runat="server" Width="200px"></asp:TextBox>
                   <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
                 <asp:CheckBox ID="cbZero" runat="server" Checked="true" Text="需采数量不为0" />
                 项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
@@ -69,7 +69,7 @@
         </tr>
         <tr>
            <td>
-                &nbsp;项目名称：
+                项目名称：
             </td>
             <td>
               <asp:TextBox ID="txtPOName" runat="server" Width="200px"></asp:TextBox>
@@ -173,7 +173,7 @@
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n2}" />
             <asp:BoundField DataField="lastNum" HeaderText="需采数量" SortExpression="lastNum" ItemStyle-HorizontalAlign="Right"
                 DataFormatString="{0:n2}" />
-            <asp:BoundField DataField="lastSupplier" HeaderText="供应商" SortExpression="lastSupplier" ItemStyle-Width="100px" 
+            <asp:BoundField DataField="lastSupplier" HeaderText="供应商简称" SortExpression="lastSupplier" ItemStyle-Width="100px" 
                 ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="lastPrice" HeaderText="初步价格" SortExpression="lastPrice"
                 ItemStyle-HorizontalAlign="Right" DataFormatString="{0:n3}" />

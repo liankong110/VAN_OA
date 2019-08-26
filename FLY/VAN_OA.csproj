@@ -489,6 +489,7 @@
     <Content Include="Echat\www\js\chart\wordCloud.js" />
     <Content Include="Echat\www\js\echarts.js" />
     <Content Include="Echat\描述.txt" />
+    <Content Include="EFrom\MyEFormsTodo_New.aspx" />
     <Content Include="Fin\CommCostList.aspx" />
     <Content Include="Fin\EI_B.aspx" />
     <Content Include="Fin\EI_BankBillPrint.aspx" />
@@ -1402,6 +1403,13 @@
     </Compile>
     <Compile Include="EFrom\MyEForms.aspx.designer.cs">
       <DependentUpon>MyEForms.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EFrom\MyEFormsTodo_New.aspx.cs">
+      <DependentUpon>MyEFormsTodo_New.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EFrom\MyEFormsTodo_New.aspx.designer.cs">
+      <DependentUpon>MyEFormsTodo_New.aspx</DependentUpon>
     </Compile>
     <Compile Include="EFrom\MyEFormsTodo.aspx.cs">
       <DependentUpon>MyEFormsTodo.aspx</DependentUpon>

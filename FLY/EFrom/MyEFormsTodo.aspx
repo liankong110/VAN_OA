@@ -98,8 +98,49 @@
                 </div>
             </td>
         </tr>
+         <tr>
+            <td colspan="4">项目归类:
+                <asp:DropDownList ID="ddlIsSpecial" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">非特殊</asp:ListItem>
+                    <asp:ListItem Value="1">特殊</asp:ListItem>
+                </asp:DropDownList>
+                项目含税：
+                <asp:DropDownList ID="ddlHanShui" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="1">含税</asp:ListItem>
+                    <asp:ListItem Value="0">不含税</asp:ListItem>
+                </asp:DropDownList>
+                项目关闭：
+                <asp:DropDownList ID="ddlClose" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未关闭</asp:ListItem>
+                    <asp:ListItem Value="1">关闭</asp:ListItem>
+                </asp:DropDownList>
+                项目选中：
+                <asp:DropDownList ID="ddlIsSelect" runat="server" Width="50px">
+                    <asp:ListItem Value="-1">全部</asp:ListItem>
+                    <asp:ListItem Value="0">未选中</asp:ListItem>
+                    <asp:ListItem Value="1">选中</asp:ListItem>
+                </asp:DropDownList>
+                结算选中：
+                <asp:DropDownList ID="ddlJieIsSelected" runat="server" Width="50px">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text="选中"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="未选中"></asp:ListItem>
+                </asp:DropDownList>
+                项目金额
+                <asp:DropDownList ID="ddlPrice" runat="server">
+                    <asp:ListItem Value="-1" Text="全部"></asp:ListItem>
+                    <asp:ListItem Value="1" Text=">0"></asp:ListItem>
+                    <asp:ListItem Value="0" Text="=0"></asp:ListItem>
+                </asp:DropDownList>
+                供应商简称:<asp:TextBox ID="txtPOSupplier" runat="server"></asp:TextBox>
+                <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
+            </td>
+        </tr>
     </table>
-    <br>
+    <br/>
     <asp:GridView ID="gvList" runat="server" BorderColor="#FBFBFB" BorderStyle="Solid"
         DataKeyNames="id" Width="100%" AllowPaging="True" AutoGenerateColumns="False"
         OnPageIndexChanging="gvList_PageIndexChanging" OnRowDeleting="gvList_RowDeleting"
@@ -183,7 +224,7 @@
             <asp:BoundField DataField="E_Remark" HeaderText="备注">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
-            <asp:TemplateField HeaderText="" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
+            <asp:TemplateField HeaderText="供应商简称" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
                 <ItemTemplate>
                     <asp:Label ID="lblSupplierName" runat="server" Text='<%# Eval("SupplierName") %>'></asp:Label>
                 </ItemTemplate>

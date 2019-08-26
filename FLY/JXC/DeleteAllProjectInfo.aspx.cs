@@ -298,6 +298,25 @@ where TB_Good.GoodNo='{1}' and CG_POOrders.Id=CG_POOrder.Id)", txtPOProNo1.Text,
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('未找到任务项目信息！');</script>");
                 return;
             }
+            //查询项目是否是原始项目，如果是原始项目 必须要有一个商品信息，最后一个商品不能被删除；
+            check = string.Format("select  IFZhui from CG_POOrder where ProNo='{0}'", txtPOProNo1.Text);
+            var IFZhui = DBHelp.ExeScalar(check);
+            if (IFZhui == null || IFZhui is DBNull)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('未找到任务项目信息！');</script>");
+                return;
+            }
+            if (Convert.ToBoolean(IFZhui)==false)
+            {
+                //判断是否只有一项
+                check = string.Format("select COUNT(*) FROM CG_POOrders WHERE ID IN (select ID from CG_POOrder where ProNo='{0}')", txtPOProNo1.Text);
+                if (Convert.ToInt32(DBHelp.ExeScalar(check)) <= 1)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('原始项目仅有一项商品时，不能被删除！');</script>");
+                    return;
+                }
+            }
+
 
             var sql = string.Format("select GoodId from TB_Good where GoodNo='{0}'", txtGoodNo.Text);
             var objGood = DBHelp.ExeScalar(sql);
@@ -335,19 +354,31 @@ where  CAI_POOrder.CG_ProNo='{0}' and CAI_POCai.GoodId={1}", txtPOProNo1.Text, o
                 return;
             }
 
-//            //检查项目预付款单
-//            sql = string.Format(@"select COUNT(*) from TB_SupplierAdvancePayment left join TB_SupplierAdvancePayments
-//on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id left join 
-//CAI_OrderChecks on CAI_OrderChecks.CaiId=TB_SupplierAdvancePayments.CaiIds  
-//left join CAI_OrderCheck on CAI_OrderCheck.Id=CAI_OrderChecks.CheckId
-//where TB_SupplierAdvancePayment.status<>'不通过' and CAI_OrderCheckS.CheckGoodId={1}
-//AND  CaiProNo in (select proNo from CAI_POOrder where CG_ProNo='{0}')", txtPOProNo1.Text, objGood);
-//            obj = DBHelp.ExeScalar(sql);
-//            if (Convert.ToInt32(obj) > 0)
-//            {
-//                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('无法删除，请先删除项目预付款信息！');</script>");
-//                return;
-//            }
+
+            //检查出库单有没有使用该单据下商品
+            sql = string.Format(@"select count(*) from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouses.id=Sell_OrderOutHouse.Id
+where GooId in (select GoodId from CAI_POCai WHERE 
+ID IN (select id FROM CAI_POOrder WHERE CG_ProNo='{0}') and 
+lastSupplier='库存' and GoodId={2} ) and PONo='{1}' AND Status IN ('通过','执行中')", txtPOProNo1.Text, myObj.ToString(), objGood);// 只查询通过和执行中的数据
+            obj = DBHelp.ExeScalar(sql);
+            if (Convert.ToInt32(obj) > 0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目无法删除，已有库存物品出库！');</script>");
+                return;
+            }
+            //            //检查项目预付款单
+            //            sql = string.Format(@"select COUNT(*) from TB_SupplierAdvancePayment left join TB_SupplierAdvancePayments
+            //on TB_SupplierAdvancePayment.id=TB_SupplierAdvancePayments.Id left join 
+            //CAI_OrderChecks on CAI_OrderChecks.CaiId=TB_SupplierAdvancePayments.CaiIds  
+            //left join CAI_OrderCheck on CAI_OrderCheck.Id=CAI_OrderChecks.CheckId
+            //where TB_SupplierAdvancePayment.status<>'不通过' and CAI_OrderCheckS.CheckGoodId={1}
+            //AND  CaiProNo in (select proNo from CAI_POOrder where CG_ProNo='{0}')", txtPOProNo1.Text, objGood);
+            //            obj = DBHelp.ExeScalar(sql);
+            //            if (Convert.ToInt32(obj) > 0)
+            //            {
+            //                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('无法删除，请先删除项目预付款信息！');</script>");
+            //                return;
+            //            }
             //删除采购检验单信息
             //删除采购订单信息
             //删除项目信息
@@ -368,8 +399,13 @@ where  CAI_POOrder.CG_ProNo='{0}' and CAI_POCai.GoodId={1}", txtPOProNo1.Text, o
             //sql += "delete from tb_EForm  where proId=(select pro_Id from A_ProInfo where pro_Type='项目订单') and allE_Id in (select Id from CG_POOrder where ProNo='{0}');";//删除审批流程单据
             sql += "delete from CG_POCai where Id in (select Id from CG_POOrder where ProNo='{0}')  and GoodId={1}; ";//删除项目订单 采购子单据
             sql += "delete from CG_POOrders where Id in (select Id from CG_POOrder where ProNo='{0}')  and GoodId={1}; ";//删除项目订单 项目子单据
-            
+
             //sql += "delete from CG_POOrder where ProNo='{0}'; ";//删除项目订单主单据
+            //删除出库单不通过的单子
+            sql += string.Format(@"delete from Sell_OrderOutHouses where ids in ( select Sell_OrderOutHouses.Ids  from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouses.id=Sell_OrderOutHouse.Id
+where GooId in (select GoodId from CAI_POCai WHERE 
+ID IN (select id FROM CAI_POOrder WHERE CG_ProNo='{0}') and 
+lastSupplier='库存' and GoodId={2} ) and PONo='{1}' AND Status='不通过')", txtPOProNo1.Text, myObj.ToString(), objGood);// 只查询通过和执行中的数据
 
             sql = string.Format(sql, txtPOProNo1.Text, objGood);
 
@@ -466,6 +502,17 @@ where  CAI_POOrder.CG_ProNo='{0}'", txtPOProNo.Text);
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('无法删除，请先删除项目预付款信息！');</script>");
                 return;
             }
+            //检查出库单有没有使用该单据下商品
+            sql = string.Format(@"select count(*) from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouses.id=Sell_OrderOutHouse.Id
+where GooId in (select GoodId from CAI_POCai WHERE 
+ID IN (select id FROM CAI_POOrder WHERE CG_ProNo='{0}') and 
+lastSupplier='库存' ) and PONo='{1}' AND Status IN ('通过','执行中')", txtPOProNo.Text, myObj.ToString());
+            obj = DBHelp.ExeScalar(sql);
+            if (Convert.ToInt32(obj) > 0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目无法删除，已有库存物品出库！');</script>");
+                return;
+            }
             //            //检查有没有出库信息
             //            sql = string.Format("select count(*) from Sell_OrderOutHouse where poNo='{0}'", myObj.ToString());
             //            obj = DBHelp.ExeScalar(sql);
@@ -512,6 +559,13 @@ where  CAI_POOrder.CG_ProNo='{0}'", txtPOProNo.Text);
             sql += "delete from CG_POCai where Id in (select Id from CG_POOrder where ProNo='{0}'); ";//删除项目订单 采购子单据
             sql += "delete from CG_POOrders where Id in (select Id from CG_POOrder where ProNo='{0}'); ";//删除项目订单 项目子单据
             sql += "delete from CG_POOrder where ProNo='{0}'; ";//删除项目订单主单据
+
+            //sql += "delete from CG_POOrder where ProNo='{0}'; ";//删除项目订单主单据
+            //删除出库单不通过的单子
+            sql += string.Format(@"delete from Sell_OrderOutHouses where ids in ( select Sell_OrderOutHouses.Ids  from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouses.id=Sell_OrderOutHouse.Id
+where GooId in (select GoodId from CAI_POCai WHERE 
+ID IN (select id FROM CAI_POOrder WHERE CG_ProNo='{0}') and 
+lastSupplier='库存' ) and PONo='{1}' AND Status='不通过')", txtPOProNo1.Text, myObj.ToString());// 只查询通过和执行中的数据
 
             sql = string.Format(sql, txtPOProNo.Text);
 

@@ -127,7 +127,7 @@
                     <asp:ListItem Value="1" Text=">0"></asp:ListItem>
                     <asp:ListItem Value="0" Text="=0"></asp:ListItem>
                 </asp:DropDownList>
-                供应商:<asp:TextBox ID="txtPOSupplier" runat="server"></asp:TextBox> <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
+                供应商简称:<asp:TextBox ID="txtPOSupplier" runat="server"></asp:TextBox> <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
             </td>
         </tr>
          <tr>
@@ -260,7 +260,7 @@
             <%--<asp:BoundField DataField="E_Remark" HeaderText="备注">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>--%>
-                <asp:TemplateField HeaderText="供应商" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
+                <asp:TemplateField HeaderText="供应商简称" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
                 <ItemTemplate>
                     <asp:Label ID="lblSupplierName" runat="server" Text='<%# Eval("SupplierName") %>'></asp:Label>
                 </ItemTemplate>

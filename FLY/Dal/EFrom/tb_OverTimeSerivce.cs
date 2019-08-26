@@ -353,8 +353,9 @@ namespace VAN_OA.Dal.EFrom
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
-            strSql.Append(" tb_OverTime.id,appUseId,reason,formTime,toTime,guestDai,loginName,loginIPosition,Address,SuixingRen,Reamrk,Time,proNo,Total,OverTimeType,POGuestName,PONo,POName,state  ");
+            strSql.Append("tb_OverTime.id,appUseId,reason,formTime,toTime,guestDai,loginName,loginIPosition,Address,SuixingRen,Reamrk,Time,tb_OverTime.proNo,Total,OverTimeType,POGuestName,tb_OverTime.PONo,tb_OverTime.POName,state ");
             strSql.Append(" from tb_OverTime left join tb_User on tb_User.id=tb_OverTime.appUseId");
+            strSql.Append("  left join CG_POOrder on CG_POOrder.PONo=tb_OverTime.PONo AND IFZhui=0 ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);

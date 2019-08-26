@@ -251,6 +251,21 @@ select pro_Id from A_ProInfo where pro_Type='用车明细表') and state='通过
                 ddlGuestProList.DataTextField = "GuestProString";
                 ddlGuestProList.DataValueField = "GuestPro";
 
+
+
+
+               
+                ddlGuestTypeList1.DataSource = dalList;
+                ddlGuestTypeList1.DataBind();
+                ddlGuestTypeList1.DataTextField = "GuestType";
+                ddlGuestTypeList1.DataValueField = "GuestType";
+
+           
+                ddlGuestProList1.DataSource = proList;
+                ddlGuestProList1.DataBind();
+                ddlGuestProList1.DataTextField = "GuestProString";
+                ddlGuestProList1.DataValueField = "GuestPro";
+
                 //List<VAN_OA.Model.User> user = new List<VAN_OA.Model.User>();
                 //VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService();
                 //user = userSer.getAllUserByPOList();
@@ -322,6 +337,8 @@ select pro_Id from A_ProInfo where pro_Type='用车明细表') and state='通过
                 List<tb_UseCar> UseCarServices_Si = new List<tb_UseCar>();
                 this.GvSi.DataSource = UseCarServices_Si;
                 this.GvSi.DataBind();
+
+             
             }
         }
 
@@ -406,6 +423,36 @@ select pro_Id from A_ProInfo where pro_Type='用车明细表') and state='通过
             }
             sql += string.Format(@" and tb_UseCar.id in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='私车公用申请单') and state='通过')");
+
+
+            //增加查询条件
+            if (ddlGuestTypeList1.SelectedValue != "全部")
+            {
+                sql += string.Format(" and GuestType='{0}'", ddlGuestTypeList1.SelectedValue);
+            }
+
+            if (ddlGuestProList1.SelectedValue != "-2")
+            {
+                sql += string.Format(" and GuestPro={0}", ddlGuestProList1.SelectedValue);
+            }
+
+            if (ddlClose1.Text != "-1")
+            {
+                sql += string.Format(" and IsClose={0} ", ddlClose1.Text);
+            }
+            if (ddlIsSelect1.Text != "-1")
+            {
+                sql += string.Format(" and IsSelected={0} ", ddlIsSelect1.Text);
+            }
+            if (ddlJieIsSelected1.Text != "-1")
+            {
+                sql += string.Format(" and JieIsSelected={0} ", ddlJieIsSelected1.Text);
+            }
+            if (ddlIsSpecial1.Text != "-1")
+            {
+                sql += string.Format(" and IsSpecial={0} ", ddlIsSpecial1.Text);
+            }
+
             decimal Total = 0;
             decimal Total1 = 0;
             List<tb_UseCar> UseCarServices = this.useCarSer_Si.GetListArray_Req(sql, out Total, out Total1);
@@ -415,6 +462,8 @@ select pro_Id from A_ProInfo where pro_Type='私车公用申请单') and state='
             lblSiTotalPrice.Text = Total1.ToString();
             this.GvSi.DataSource = UseCarServices;
             this.GvSi.DataBind();
+
+
         }
     }
 }

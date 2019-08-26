@@ -19,7 +19,7 @@ using VAN_OA.Dal.JXC;
 using VAN_OA.Dal.BaseInfo;
 namespace VAN_OA.EFrom
 {
-    public partial class MyEFormsTodo : BasePage
+    public partial class MyEFormsTodo_New : BasePage
     {
 
         private A_ProInfoService proSer = new A_ProInfoService();
@@ -234,6 +234,7 @@ where IsYuFu=1
                 poSQL += string.Format("   WHERE View_AllEform.myProId=tb_EForm_View.proId and View_AllEform.Id=tb_EForm_View.allE_id {0})", ponoSql);
 
             }
+
             #endregion
             tb_EFormService eformSer = new tb_EFormService();
             List<tb_EForm> allEForms = eformSer.GetListArray_ToDo(sql, poSQL, Convert.ToInt32(Session["currentUserId"]));
@@ -273,16 +274,40 @@ where IsYuFu=1
             }
 
 
-          
+            //proId 进行分类管理
+            // 1：常用，（就是除 项目订单、采购订单、预付款转支付单、销售发票修改、销售发票删除、用车明细表之外的所有单据），查询条件按原来 + 上述增加的一行条件。
+            var changyong_allEForms = allEForms.FindAll(t => t.proId != 19 && t.proId != 20 && t.proId != 26 && t.proId != 33 && t.proId != 34 && t.proId != 37 && t.proId != 5);
+            //2：项目订单及采购，包含项目订单和采购订单，查询条件，查询条件按原来 + 上述增加的一行条件。。
+            var pono_Cai_allEForms = allEForms.FindAll(t => t.proId == 19 || t.proId == 20);
+            //3：预付款转支付单，如图3，查询条件按原来 + 上述增加的一行条件。。
+            var yuZhuan_allEForms = allEForms.FindAll(t => t.proId == 33);
+            //4：销售发票，包含销售发票，销售发票修改、销售发票删除，查询条件按原来 + 上述增加的一行条件。。
+            var xiaoShou_allEForms = allEForms.FindAll(t => t.proId == 26 || t.proId == 34 || t.proId == 37);
+            //5：用车明细表，查询条件按原来 + 上述增加的一行条件。
+            var yongChe_allEForms = allEForms.FindAll(t => t.proId == 5);
+
             Session[Query] = QEForm;
-            AspNetPager1.RecordCount = allEForms.Count;
-            this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
-            this.gvList.DataSource = allEForms;
+             
+         
+            this.gvList.DataSource = changyong_allEForms;
             this.gvList.DataBind();
+
+            this.GridView2.DataSource = pono_Cai_allEForms;
+            this.GridView2.DataBind();
+
+            this.GridView3.DataSource = yuZhuan_allEForms;
+            this.GridView3.DataBind();
+
+            this.GridView4.DataSource = xiaoShou_allEForms;
+            this.GridView4.DataBind();
+
+            this.GridView5.DataSource = yongChe_allEForms;
+            this.GridView5.DataBind();
+
         }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
-            AspNetPager1.CurrentPageIndex = 1;
+           
             select();
         }
         protected void AspNetPager1_PageChanged(object src, EventArgs e)
@@ -359,24 +384,95 @@ where IsYuFu=1
         {
             tb_EFormService eformSer = new tb_EFormService();
             tb_EForm eform = eformSer.GetModel(Convert.ToInt32(this.gvList.DataKeys[e.NewEditIndex].Value.ToString()));
-
-
             if (eform != null)
             {
-                Session["backurl"] = "/EFrom/MyEFormsTodo.aspx";
+                Session["backurl"] = "/EFrom/MyEFormsTodo_New.aspx";
                 string type = eform.ProTyleName.ToString();
                 string url = eformSer.getUrl(eform.proId.ToString(), eform.allE_id.ToString(), gvList.DataKeys[e.NewEditIndex].Value.ToString(), type);
 
                 if (url != "")
                 {
+                    GetTabIndex();
                     Response.Redirect(url);
                 }
             }
-
-
-
         }
 
+        private void GetTabIndex()
+        {
+            Session["TabIndex"]= TabContainer1.ActiveTabIndex;
+        }
+
+        protected void GridView2_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            tb_EFormService eformSer = new tb_EFormService();
+            tb_EForm eform = eformSer.GetModel(Convert.ToInt32(this.GridView2.DataKeys[e.NewEditIndex].Value.ToString()));
+            if (eform != null)
+            {
+                Session["backurl"] = "/EFrom/MyEFormsTodo_New.aspx";
+                string type = eform.ProTyleName.ToString();
+                string url = eformSer.getUrl(eform.proId.ToString(), eform.allE_id.ToString(), GridView2.DataKeys[e.NewEditIndex].Value.ToString(), type);
+
+                if (url != "")
+                {
+                    GetTabIndex();
+                    Response.Redirect(url);
+                }
+            }
+        }
+
+        protected void GridView3_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            tb_EFormService eformSer = new tb_EFormService();
+            tb_EForm eform = eformSer.GetModel(Convert.ToInt32(this.GridView3.DataKeys[e.NewEditIndex].Value.ToString()));
+            if (eform != null)
+            {
+                Session["backurl"] = "/EFrom/MyEFormsTodo_New.aspx";
+                string type = eform.ProTyleName.ToString();
+                string url = eformSer.getUrl(eform.proId.ToString(), eform.allE_id.ToString(), GridView3.DataKeys[e.NewEditIndex].Value.ToString(), type);
+
+                if (url != "")
+                {
+                    GetTabIndex();
+                    Response.Redirect(url);
+                }
+            }
+        }
+
+        protected void GridView4_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            tb_EFormService eformSer = new tb_EFormService();
+            tb_EForm eform = eformSer.GetModel(Convert.ToInt32(this.GridView4.DataKeys[e.NewEditIndex].Value.ToString()));
+            if (eform != null)
+            {
+                Session["backurl"] = "/EFrom/MyEFormsTodo_New.aspx";
+                string type = eform.ProTyleName.ToString();
+                string url = eformSer.getUrl(eform.proId.ToString(), eform.allE_id.ToString(), GridView4.DataKeys[e.NewEditIndex].Value.ToString(), type);
+
+                if (url != "")
+                {
+                    GetTabIndex();
+                    Response.Redirect(url);
+                }
+            }
+        }
+        protected void GridView5_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            tb_EFormService eformSer = new tb_EFormService();
+            tb_EForm eform = eformSer.GetModel(Convert.ToInt32(this.GridView5.DataKeys[e.NewEditIndex].Value.ToString()));
+            if (eform != null)
+            {
+                Session["backurl"] = "/EFrom/MyEFormsTodo.aspx";
+                string type = eform.ProTyleName.ToString();
+                string url = eformSer.getUrl(eform.proId.ToString(), eform.allE_id.ToString(), GridView5.DataKeys[e.NewEditIndex].Value.ToString(), type);
+
+                if (url != "")
+                {
+                    GetTabIndex();
+                    Response.Redirect(url);
+                }
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!base.IsPostBack)
@@ -417,6 +513,10 @@ where IsYuFu=1
                 ddlProType.DataTextField = "pro_Type";
                 ddlProType.DataValueField = "pro_Id";
 
+                if (Session["TabIndex"] != null)
+                {
+                    TabContainer1.ActiveTabIndex = int.Parse( Session["TabIndex"].ToString());
+                }
                 //加载SESSION中的数据
                 if (Session[Query] != null)
                 {
@@ -480,50 +580,50 @@ where IsYuFu=1
                 }
                 else
                 {
-                    tb_EFormService eformSer = new tb_EFormService();
-                    List<tb_EForm> allEForms = eformSer.GetListArray_ToDo("","", Convert.ToInt32(Session["currentUserId"]));
+                    //tb_EFormService eformSer = new tb_EFormService();
+                    //List<tb_EForm> allEForms = eformSer.GetListArray_ToDo("", Convert.ToInt32(Session["currentUserId"]));
 
-                    string allIds = "", proIds = "", fukuandan = "0,", yufukuandan = "0,";
-                    for (int i = 0; i < allEForms.Count; i++)
-                    {
-                        allIds += allEForms[i].allE_id.ToString() + ",";
-                        proIds += allEForms[i].proId.ToString() + ",";
+                    //string allIds = "", proIds = "", fukuandan = "0,", yufukuandan = "0,";
+                    //for (int i = 0; i < allEForms.Count; i++)
+                    //{
+                    //    allIds += allEForms[i].allE_id.ToString() + ",";
+                    //    proIds += allEForms[i].proId.ToString() + ",";
 
-                        if (allEForms[i].ProTyleName == "供应商付款单")
-                        {
-                            fukuandan += allEForms[i].allE_id + ",";
-                        }
-                        if (allEForms[i].ProTyleName == "供应商预付款单")
-                        {
-                            yufukuandan += allEForms[i].allE_id + ",";
-                        }
-                    }
+                    //    if (allEForms[i].ProTyleName == "供应商付款单")
+                    //    {
+                    //        fukuandan += allEForms[i].allE_id + ",";
+                    //    }
+                    //    if (allEForms[i].ProTyleName == "供应商预付款单")
+                    //    {
+                    //        yufukuandan += allEForms[i].allE_id + ",";
+                    //    }
+                    //}
 
-                    allIds = allIds.Trim(',');
-                    proIds = proIds.Trim(',');
+                    //allIds = allIds.Trim(',');
+                    //proIds = proIds.Trim(',');
 
-                    fukuandan = fukuandan.Trim(',');
-                    yufukuandan = yufukuandan.Trim(',');
-
-
-                    if (fukuandan != "" || yufukuandan != "")
-                    {
-                        var superSer = new TB_SupplierAdvancePaymentService();
-                        SupplierInvoice_Names = superSer.GetSupplierName(yufukuandan, fukuandan);
-                    }
+                    //fukuandan = fukuandan.Trim(',');
+                    //yufukuandan = yufukuandan.Trim(',');
 
 
-                    if (allIds != "")
-                    {
-                        allAllWform = eformSer.GetView_AllEformList(proIds, allIds);
-                    }
+                    //if (fukuandan != "" || yufukuandan != "")
+                    //{
+                    //    var superSer = new TB_SupplierAdvancePaymentService();
+                    //    SupplierInvoice_Names = superSer.GetSupplierName(yufukuandan, fukuandan);
+                    //}
 
-                    AspNetPager1.RecordCount = allEForms.Count;
-                    this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
-                    this.gvList.DataSource = allEForms;
-                    this.gvList.DataBind();
 
-                  
+                    //if (allIds != "")
+                    //{
+                    //    allAllWform = eformSer.GetView_AllEformList(proIds, allIds);
+                    //}
+
+                    //AspNetPager1.RecordCount = allEForms.Count;
+                    //this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
+                    //this.gvList.DataSource = allEForms;
+                    //this.gvList.DataBind();
+
+                    select();
                 }
 
             }

@@ -781,7 +781,7 @@ left join
                 totalList.Add((decimal)dr[1]);
             }
 
-            string sql = " SELECT SUM(SumPOTotal) FROM POTotal_SumView WHERE PONo IN (select PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id";
+            string sql = " SELECT Isnull(SUM(SumPOTotal),0) FROM POTotal_SumView WHERE PONo IN (select PONO from Sell_OrderOutHouse left join Sell_OrderOutHouses on Sell_OrderOutHouse.Id=Sell_OrderOutHouses.Id";
             if (strWhere.Trim() != "")
             {
                 sql += " where " + strWhere;

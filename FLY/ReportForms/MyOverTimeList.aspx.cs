@@ -60,7 +60,7 @@ namespace VAN_OA.ReportForms
                 {
                     return;
                 }
-                sql += string.Format(" and ProNo like '%{0}%'", txtProNo.Text.Trim());
+                sql += string.Format(" and tb_OverTime.ProNo like '%{0}%'", txtProNo.Text.Trim());
             }
             if (txtPONo.Text.Trim() != "")
             {
@@ -68,7 +68,7 @@ namespace VAN_OA.ReportForms
                 {
                     return;
                 }
-                sql += string.Format(" and PONo like '%{0}%'", txtPONo.Text.Trim());
+                sql += string.Format(" and tb_OverTime.PONo like '%{0}%'", txtPONo.Text.Trim());
             }
 
             sql += " and appUseId=" + Session["currentUserId"].ToString();

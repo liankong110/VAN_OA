@@ -77,6 +77,7 @@
                     <asp:ListItem>备用金</asp:ListItem>
                     <asp:ListItem>差旅费</asp:ListItem>
                     <asp:ListItem>还款</asp:ListItem>
+                        <asp:ListItem>保证金</asp:ListItem>
                 </asp:DropDownList>
             </td>
         </tr>

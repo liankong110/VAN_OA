@@ -291,6 +291,12 @@ namespace VAN_OA.EFrom
                                                         "<script>alert('此项目已经关闭！');</script>");
                 return false;
             }
+            if (CG_POOrderService.IsSpecialPONO(txtPONo.Text, txtPOName.Text))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null,
+                                                        "<script>alert('特殊订单无法计入费用！');</script>");
+                return false;
+            }
 
             return true;
         }

@@ -181,7 +181,7 @@
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="供应商" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
+            <asp:TemplateField HeaderText="供应商简称" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
                 <ItemTemplate>
                     <asp:Label ID="lblSupplierName" runat="server" Text='<%# Eval("SupplierName") %>'></asp:Label>
                 </ItemTemplate>

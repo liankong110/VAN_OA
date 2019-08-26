@@ -130,6 +130,20 @@ namespace VAN_OA.JXC
             {
                 try
                 {
+                    if (Convert.ToDecimal(txtPOPayStype.Text) <= 0)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('输入结算方式格式不对，应为大于0 的整数！');</script>");
+                        txtPOPayStype.Focus();
+                        return false;
+                    }
+                    //判断结算方式是正整数
+                    System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-9]\d*$");
+                    if (reg1.IsMatch(txtPOPayStype.Text) == false)
+                    {
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('输入结算方式格式不对，应为大于0 的整数！');</script>");
+
+                        return false;
+                    }
                     if (Convert.ToDecimal(txtPOPayStype.Text) < 0 || Convert.ToDecimal(txtPOPayStype.Text) > 900)
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('结算方式只能在0-900取值！');</script>");
@@ -146,6 +160,9 @@ namespace VAN_OA.JXC
 
                 }
             }
+
+           
+
             if (ddlModel.Text == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请选择项目模型！');</script>");
@@ -162,6 +179,115 @@ namespace VAN_OA.JXC
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('计划完工天数 格式有误！');</script>");
                 return false;
             }
+            //这个计划完工天数必须是大于0 的 整数，否则 1.如果是零售 ，
+            //提示，“零售输入天数格式不对，应为大于0 的整数”， 
+            //2.如果是工程 ，提示，“工程输入天数格式不对，应为大于6 的整数”，点返回按钮 返回界面
+            if (ddlPOTyle.Text == "1")
+            {
+                if (Convert.ToInt32(txtPlanDays.Text) <= 0)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('零售输入天数格式不对，应为大于0 的整数！');</script>");
+                    return false;
+                }
+            }
+            if (ddlPOTyle.Text == "2")
+            {
+                if (Convert.ToInt32(txtPlanDays.Text) <= 6)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('工程输入天数格式不对，应为大于6 的整数！');</script>");
+                    return false;
+                }
+            }
+
+
+
+            string[] chats = new string[] { "（", "【","{", "《","￥", "……", "（）", "）", "——", "{}", "}", "【】", "】", "；", "‘’", "：", "“”", "，", "。", "《》", "》", "、", "？", "、", "|" };
+
+
+            //{
+            //    ",",".","/" , "`", ";", "'" , "[", "]", @"\" , "~", "！", "@" , "#", "￥", "%" , "……", "&", "*" , "（", "）", "《" , "》", "？",
+            //    "<" , ">", "?", "!" , "~", "@", "#" , "$", "%", "^","%","^","&","*" ,"(",")","{","}",":","'" ,"。","_","+","-","="  };
+
+            if (chats.ToList().FindAll(t=>t==txtPORemark.Text.Trim()).Count>0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('输入备注 方式格式不对，请调整！');</script>");
+                return false;
+            }
+            string resultRemark = txtPORemark.Text.Trim();
+            foreach (var s in chats)
+            {
+                resultRemark = resultRemark.Replace(s, "");
+            }
+            if (resultRemark == "")
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('输入备注 方式格式不对，请调整！');</script>");
+                return false;
+            }
+            //备注，还要帮我做一个判断，如果一个汉字都没有，提交后，提示，“输入备注 方式格式不对，请调整
+            //string text = txtPORemark.Text.Trim();
+            //var hanzi = false;
+            //for (int i = 0; i < text.Length; i++)
+            //{
+            //    if ((int)text[i] >127)
+            //    {
+            //        hanzi = true;
+            //    }                
+            //}
+            //if (hanzi == false)
+            //{
+            //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('输入备注 方式格式不对，请调整！');</script>");
+            //    return false;
+            //}
+
+            if (CommHelp.GetByteLen(txtPOName.Text) > 12 * 2)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过12个汉字符，请修正！');</script>");
+                txtPOPayStype.Focus();
+
+                return false;
+            }
+            //项目名称输入框，我考虑了一下， 输入按12个汉字（24个CHAR）来检验，如超过，屏幕提示，“项目名称长度不能超过12个汉字符，请修正”，点确定返回原界面
+
+            //string poName = txtPOName.Text.Trim();
+            //int ii=0;
+            //for (int i = 0; i < poName.Length; i++)
+            //{
+            //    if ((int)text[i] > 127)
+            //    {
+            //        ii++;
+            //    }
+            //}
+            //if (ii > 12)
+            //{
+            //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目名称长度不能超过12个汉字符，请修正！');</script>");
+            //    return false;
+            //}
+
+            string sqlModel = string.Format("select Model FROM CG_POOrder WHERE GuestName='{0}' and Model<>'' and status='通过' group by Model", txtGuestName.Text);
+
+            var models= string.Join(",", DBHelp.getDataTable(sqlModel).Select().Select(t => t[0].ToString()).ToArray());
+            //项目模型 选择时，当选模型0 时，如果历史模型中 有模型1或2，提示“模型选择有误，请重新选择”，当选模型1或2 时，如果历史模型中 有模型0，提示“模型选择有误，请重新选择”，
+            //点返回按钮 返回界面
+            //当选其他模型（3 - 8），如同样客户尚未有历史模型，则通过。如果同样客户已有历史模型，但没有 所选的模型，则提示“模型选择是否有误”，
+            //点确定提交 按钮就提交，点返回按钮 就返回原界面；
+            if (ddlModel.Text == "模型0"&&(models.Contains("模型1")|| models.Contains("模型2")))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('模型选择有误，请重新选择！');</script>");
+                return false;
+            }
+
+            if ((ddlModel.Text == "模型1"|| ddlModel.Text == "模型2") && models.Contains("模型0"))
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('模型选择有误，请重新选择！');</script>");
+                return false;
+            }
+            //if ((ddlModel.Text == "模型3"|| ddlModel.Text == "模型4"|| ddlModel.Text == "模型5"|| ddlModel.Text == "模型6"|| ddlModel.Text == "模型7"|| ddlModel.Text == "模型8" )
+            //    && (models!=""&& !models.Contains(ddlModel.Text)))
+            //{
+            //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('模型选择有误，请重新选择！');</script>");
+            //    return false;
+            //}
+
             if (txtAE.Text != txtName.Text)
             {
                 VAN_OA.Dal.ReportForms.TB_GuestTrackService guestTrackSer = new VAN_OA.Dal.ReportForms.TB_GuestTrackService();
@@ -212,14 +338,14 @@ namespace VAN_OA.JXC
             }
             if (Request["allE_id"] == null)
             {
-                if (txtPORemark.Text == "")
+                if (txtPORemark.Text.Trim() == "")
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写备注！');</script>");
                     txtPORemark.Focus();
                     return false;
                 }
 
-                if (CommHelp.GetByteLen(txtPORemark.Text)>50 * 2)
+                if (CommHelp.GetByteLen(txtPORemark.Text.Trim())>50 * 2)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('备注长度不能超过50个汉字符，请修正！');</script>");
                     txtPORemark.Focus();
@@ -359,6 +485,8 @@ namespace VAN_OA.JXC
 
         private void setEnable(bool result)
         {
+            
+            txtPlanDays.Enabled = false;
             //txtName.Enabled = false;
 
             //txtGuestNo.Enabled = false;
@@ -1002,6 +1130,11 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 {
                     GetHisModel(txtGuestName.Text);
                 }
+            }
+
+            if (txtGuestName.Text != "")
+            {
+                GetHisModel(txtGuestName.Text);
             }
         }
 
@@ -2071,6 +2204,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 dllFPstye.Enabled = true;
                 ddlPOTyle.Enabled = true;
                 ddlModel.Enabled = true;
+                txtPlanDays.Enabled = true;
             }
             else if (ddlIfZhui.SelectedItem.Value == "1")
             {
@@ -2085,6 +2219,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 cbIsPoFax.Enabled = false;
                 dllFPstye.Enabled = false;
                 ddlModel.Enabled = false;
+                txtPlanDays.Enabled = false;
             }
             txtPONo.Text = "";
             txtAE.Text = "";
@@ -2092,7 +2227,7 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
             txtGuestNo.Text = "";
             txtINSIDE.Text = "";
             txtPOName.Text = "";
-
+            txtPlanDays.Text = "";
             cbIsPoFax.Checked = true;
 
         }
@@ -2118,7 +2253,10 @@ where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_I
                 Session["Comm_CGPONo"] = null;
                 ddlPOTyle.Text = model.POType.ToString();
                 ddlModel.Text = model.Model;
+                txtPlanDays.Text = model.PlanDays.ToString();
                 SetColor(model.POType);
+                GetHisModel(model.GuestName);
+
             }
         }
 

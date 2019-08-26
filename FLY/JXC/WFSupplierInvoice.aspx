@@ -84,7 +84,7 @@
                     </tr>
                     <tr>
                         <td>
-                            供应商:
+                            供应商简称:
                         </td>
                         <td>
                             <asp:TextBox ID="txtSupplier" runat="server" Width="300px"></asp:TextBox>
@@ -356,7 +356,7 @@
                 </asp:DropDownList>
                         </td>
                         <td>
-                            供应商:
+                            供应商简称:
                         </td>
                         <td>
                             <asp:TextBox ID="txtAdvancePaymentSupplierName" runat="server" Width="350px"></asp:TextBox>

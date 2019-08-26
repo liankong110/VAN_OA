@@ -148,6 +148,24 @@
                     <asp:ListItem Value="2">未开全票</asp:ListItem>
                     <asp:ListItem Value="1">已开全票</asp:ListItem>
                 </asp:DropDownList>
+
+                <asp:TextBox ID="txtPlanDayForm" runat="server" Width="50px"></asp:TextBox>
+                <asp:DropDownList ID="ddlPlanDayForm" runat="server">
+                    <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                    <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                    <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                    <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                    <asp:ListItem Text="=" Value="="></asp:ListItem>
+                </asp:DropDownList>
+                计划完工天数
+                  <asp:DropDownList ID="ddlPlanDayTo" runat="server">
+                      <asp:ListItem Text=">" Value=">"></asp:ListItem>
+                      <asp:ListItem Text=">=" Value=">="></asp:ListItem>
+                      <asp:ListItem Text="<" Value="<"></asp:ListItem>
+                      <asp:ListItem Text="<=" Value="<="></asp:ListItem>
+                      <asp:ListItem Text="=" Value="="></asp:ListItem>
+                  </asp:DropDownList>
+                <asp:TextBox ID="txtPlanDayTo" runat="server" Width="50px"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -244,7 +262,7 @@
                             <%--  <asp:BoundField DataField="PONo" HeaderText="项目编码" SortExpression="PONo" ItemStyle-HorizontalAlign="Center" />--%>
                             <asp:BoundField DataField="POName" HeaderText="项目名称" SortExpression="POName" ItemStyle-HorizontalAlign="Center" />
                             <asp:BoundField DataField="PODate" HeaderText="项目日期" SortExpression="PODate" ItemStyle-HorizontalAlign="Center"
-                                DataFormatString="{0:yyyy-MM-dd}" />
+                                DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65" />
                             <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:f2}" />
                             <asp:BoundField DataField="POPayStype" HeaderText="结算" SortExpression="POPayStype"
                                 ItemStyle-HorizontalAlign="Center" />
@@ -254,7 +272,8 @@
                                 </ItemTemplate>
                                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
                             </asp:TemplateField>
-                            <asp:BoundField DataField="GuestNo" HeaderText="客户ID" SortExpression="GuestNo" ItemStyle-HorizontalAlign="Center" />
+                            <%--    <asp:BoundField DataField="GuestNo" HeaderText="客户ID" SortExpression="GuestNo" ItemStyle-HorizontalAlign="Center" />--%>
+                            <asp:BoundField DataField="PlanDays" HeaderText="计划完工天数" SortExpression="PlanDays" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="80" />
                             <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName"
                                 ItemStyle-HorizontalAlign="Center" />
                             <asp:BoundField DataField="GuestType" HeaderText="客户类型" SortExpression="GuestType"
@@ -326,15 +345,15 @@
     <asp:TextBox ID="txtNeiProNo" runat="server" Width="100px"></asp:TextBox>
     日期:
      <asp:TextBox ID="txtNeiFrom" runat="server" Width="70px"></asp:TextBox>
-                <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
-                -<asp:TextBox ID="txtNeiTo" runat="server" Width="70px"></asp:TextBox>
-                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
-                <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
-                    Format="yyyy-MM-dd" TargetControlID="txtNeiFrom">
-                </cc1:CalendarExtender>
-                <cc1:CalendarExtender ID="CalendarExtender4" PopupButtonID="ImageButton3" runat="server"
-                    Format="yyyy-MM-dd" TargetControlID="txtNeiTo">
-                </cc1:CalendarExtender>
+    <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+    -<asp:TextBox ID="txtNeiTo" runat="server" Width="70px"></asp:TextBox>
+    <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+    <cc1:CalendarExtender ID="CalendarExtender3" PopupButtonID="ImageButton2" runat="server"
+        Format="yyyy-MM-dd" TargetControlID="txtNeiFrom">
+    </cc1:CalendarExtender>
+    <cc1:CalendarExtender ID="CalendarExtender4" PopupButtonID="ImageButton3" runat="server"
+        Format="yyyy-MM-dd" TargetControlID="txtNeiTo">
+    </cc1:CalendarExtender>
 
     <asp:Button ID="Button1" runat="server" Text=" 查 询 "
         BackColor="Yellow" OnClick="Button1_Click" />
@@ -843,8 +862,8 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="HouseName" HeaderText="仓库" SortExpression="HouseName"  ItemStyle-Width="40px" />
-                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px"/>
+                                                <asp:BoundField DataField="HouseName" HeaderText="仓库" SortExpression="HouseName" ItemStyle-Width="40px" />
+                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px" />
                                                 <asp:TemplateField HeaderText="名称">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
@@ -854,10 +873,10 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" />
-                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec"  />
+                                                <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" />
 
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px"/>
-                                                <asp:BoundField DataField="RuTime" HeaderText="销退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="80px"  />
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px" />
+                                                <asp:BoundField DataField="RuTime" HeaderText="销退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="80px" />
                                                 <asp:TemplateField HeaderText="数量">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblNum" runat="server" Text='<%# Eval("GoodNum") %>'></asp:Label>
@@ -997,7 +1016,7 @@
                                                 </table>
                                             </EmptyDataTemplate>
                                             <Columns>
-                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px"/>
+                                                <asp:BoundField DataField="GoodNo" HeaderText="编码" SortExpression="GoodNo" ItemStyle-Width="30px" />
                                                 <asp:TemplateField HeaderText="名称" ItemStyle-Width="150px">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblGoodName" runat="server" Text='<%# Eval("GoodName") %>'></asp:Label>
@@ -1009,7 +1028,7 @@
                                                 <asp:BoundField DataField="GoodTypeSmName" HeaderText="小类" SortExpression="GoodTypeSmName" />
                                                 <asp:BoundField DataField="GoodSpec" HeaderText="规格" SortExpression="GoodSpec" />
                                                 <%--            <asp:BoundField DataField="Good_Model" HeaderText="型号" SortExpression="Good_Model" />--%>
-                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px"/>
+                                                <asp:BoundField DataField="GoodUnit" HeaderText="单位" SortExpression="GoodUnit" ItemStyle-Width="30px" />
                                                 <asp:BoundField DataField="RuTime" HeaderText="采退日期" SortExpression="RuTime" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="80px" />
                                                 <asp:TemplateField HeaderText="数量" ItemStyle-Width="60px">
                                                     <ItemTemplate>
@@ -1036,8 +1055,8 @@
                                                     </FooterTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="GoodRemark" HeaderText="备注" SortExpression="GoodRemark" />
-                                                <asp:BoundField DataField="QingGouPer" HeaderText="请购人" SortExpression="QingGouPer" ItemStyle-Width="50px"/>
-                                                <asp:BoundField DataField="Status" HeaderText="状态" SortExpression="Status" ItemStyle-Width="50px"/>
+                                                <asp:BoundField DataField="QingGouPer" HeaderText="请购人" SortExpression="QingGouPer" ItemStyle-Width="50px" />
+                                                <asp:BoundField DataField="Status" HeaderText="状态" SortExpression="Status" ItemStyle-Width="50px" />
                                             </Columns>
                                             <PagerStyle HorizontalAlign="Center" />
                                             <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />

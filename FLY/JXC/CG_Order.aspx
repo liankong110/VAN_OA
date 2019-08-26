@@ -86,6 +86,25 @@
         }
 
 
+        function CheckModel() {
+            if (confirm('确定要提交吗？')) {
+
+                var hisModel = document.getElementById('<%= lblHisModel.ClientID %>').innerText;
+                var ddlModel = document.getElementById('<%= ddlModel.ClientID %>').value;
+               
+                if (ddlModel == "模型3" || ddlModel == "模型4" || ddlModel == "模型5" || ddlModel == "模型6" || ddlModel == "模型7" || ddlModel == "模型8") {
+                    if (hisModel != "" && hisModel.indexOf(ddlModel) == -1) {
+                        if (confirm("模型选择是否有误,是否继续提交") == false) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
 
         function setColor(_parent) {
 
@@ -730,7 +749,7 @@
                 <asp:Button ID="btnReSubEdit" runat="server" Text="再次编辑" BackColor="Yellow" OnClick="btnReSubEdit_Click" />&nbsp;
                 &nbsp; &nbsp; &nbsp; &nbsp;
                 <asp:Button ID="btnSub" runat="server" Text="提交" BackColor="Yellow" OnClick="Button1_Click"
-                    Width="51px" OnClientClick="return confirm('确定要提交吗？')" />&nbsp; &nbsp; &nbsp;
+                    Width="51px" OnClientClick="return CheckModel();" />&nbsp; &nbsp; &nbsp;
                 &nbsp;
                 <asp:Button ID="btnClose" runat="server" Text=" 返回 " BackColor="Yellow" OnClick="btnClose_Click" />&nbsp;
                 <br />

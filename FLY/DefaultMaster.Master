@@ -120,6 +120,8 @@
                              &nbsp; &nbsp; &nbsp; &nbsp;|
                         <asp:LinkButton ID="btnExoInv" runat="server" Text="货品使用状态" 
                             ForeColor="Red" onclick="btnExoInv_Click"></asp:LinkButton>
+                            &nbsp; &nbsp; &nbsp; &nbsp;|
+                         <asp:LinkButton ID="lblMessTodoOld" runat="server" ForeColor="Red" OnClick="lblMessTodoOld_Click"></asp:LinkButton>
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
