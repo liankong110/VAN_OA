@@ -181,8 +181,15 @@
         <Columns>
             <asp:TemplateField HeaderText=" 查看">
                 <ItemTemplate>
+                         <asp:ImageButton ID="lblWarn" runat="server" ImageUrl="~/Image/warn.jpg"  Visible="false"
+                         />
+
+                             <%--  <asp:Label ID="lblWarn" runat="server" Text="！" ForeColor="Red" Visible="false"></asp:Label>--%>
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Image/IconEdit.gif" CommandName="Edit"
                         AlternateText="编辑" />
+                    
+         
+
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
@@ -224,6 +231,10 @@
                     <asp:Label ID="lblE_Remark" runat="server" Text='<%# Eval("E_Remark") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+
+              <asp:BoundField DataField="WarnDays" HeaderText="天数">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -272,8 +283,13 @@
         <Columns>
             <asp:TemplateField HeaderText=" 查看">
                 <ItemTemplate>
+                      <asp:ImageButton ID="lblWarn" runat="server" ImageUrl="~/Image/warn.jpg"  Visible="false"
+                         />
+
+                  <%--   <asp:Label ID="lblWarn" runat="server" Text="！" ForeColor="Red" Visible="false" style=""></asp:Label>--%>
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Image/IconEdit.gif" CommandName="Edit"
                         AlternateText="编辑" />
+                    
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
@@ -315,6 +331,9 @@
                     <asp:Label ID="lblE_Remark" runat="server" Text='<%# Eval("E_Remark") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+              <asp:BoundField DataField="WarnDays" HeaderText="天数">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -362,9 +381,13 @@
         </EmptyDataTemplate>
         <Columns>
             <asp:TemplateField HeaderText=" 查看">
-                <ItemTemplate>
+                <ItemTemplate>  
+                         <asp:ImageButton ID="lblWarn" runat="server" ImageUrl="~/Image/warn.jpg"  Visible="false"
+                         />
+                  <%--  <asp:Label ID="lblWarn" runat="server" Text="！" ForeColor="Red" Visible="false"> </asp:Label>--%>
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Image/IconEdit.gif" CommandName="Edit"
                         AlternateText="编辑" />
+                   
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
@@ -406,6 +429,9 @@
                     <asp:Label ID="lblE_Remark" runat="server" Text='<%# Eval("E_Remark") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+              <asp:BoundField DataField="WarnDays" HeaderText="天数">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -453,9 +479,13 @@
         </EmptyDataTemplate>
         <Columns>
             <asp:TemplateField HeaderText=" 查看">
-                <ItemTemplate>
+                <ItemTemplate> 
+                         <asp:ImageButton ID="lblWarn" runat="server" ImageUrl="~/Image/warn.jpg"  Visible="false"
+                         />
+                   <%-- <asp:Label ID="lblWarn" runat="server" Text="！" ForeColor="Red" Visible="false"></asp:Label>--%>
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Image/IconEdit.gif" CommandName="Edit"
                         AlternateText="编辑" />
+                    
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
@@ -497,6 +527,9 @@
                     <asp:Label ID="lblE_Remark" runat="server" Text='<%# Eval("E_Remark") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+              <asp:BoundField DataField="WarnDays" HeaderText="天数">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />
@@ -544,9 +577,13 @@
         </EmptyDataTemplate>
         <Columns>
             <asp:TemplateField HeaderText=" 查看">
-                <ItemTemplate>
+                <ItemTemplate> 
+                         <asp:ImageButton ID="lblWarn" runat="server" ImageUrl="~/Image/warn.jpg"  Visible="false"
+                         />
+                  <%--  <asp:Label ID="lblWarn" runat="server" Text="！" ForeColor="Red" Visible="false"></asp:Label>--%>
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Image/IconEdit.gif" CommandName="Edit"
                         AlternateText="编辑" />
+                   
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
@@ -588,6 +625,9 @@
                     <asp:Label ID="lblE_Remark" runat="server" Text='<%# Eval("E_Remark") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+              <asp:BoundField DataField="WarnDays" HeaderText="天数">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />
         <SelectedRowStyle BackColor="#B2C3E1" Font-Bold="True" ForeColor="White" Font-Size="12px" />

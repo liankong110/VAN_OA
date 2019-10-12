@@ -206,9 +206,9 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                 string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
                 sql += string.Format(" and exists (select id from CG_POOrder where IFZhui=0 and CG_POOrder.PONo=vAllCaiOrderList.PONo and AppName in(select id from tb_User where {0}))", where);
             }
-            if (txtGoodNo.Text != "")
+            if (txtGoodNo.Text.Trim() != "")
             {
-                sql += string.Format(" and GoodNo  like '%{0}%'", txtGoodNo.Text);
+                sql += string.Format(" and GoodNo  like '%{0}%'", txtGoodNo.Text.Trim());
             }
 
             if (txtLastSupplier.Text.Trim() != "")

@@ -355,7 +355,7 @@ isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOu
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append(@"select AllOutTotal, HadInvoice,GoodTotal,GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,GoodNo,GoodName,GoodSpec,GoodModel,
-GoodUnit,GoodTypeSmName,houseName,SumKuXuCai FROM TB_HouseGoods left join TB_Good on TB_Good.GoodId=TB_HouseGoods.GoodId 
+GoodUnit,GoodTypeSmName,houseName,SumKuXuCai,CaiNotCheckNum FROM TB_HouseGoods left join TB_Good on TB_Good.GoodId=TB_HouseGoods.GoodId 
  left join TB_HouseInfo on TB_HouseInfo.id=HouseId left join (select GooId,--支付单价/实采金额 *采购单价
 sum(SupplierInvoiceTotal) as HadInvoice, 
 sum(GoodNum*GoodPrice) as GoodTotal ,-sum(OutTotal) as AllOutTotal
@@ -384,7 +384,23 @@ where Status='通过' GROUP BY OrderCheckIds
 ) as caiOut ON caiOut.OrderCheckIds=CAI_OrderInHouses.Ids
 where status='通过'
 group by GooId) as Invoice on Invoice.GooId=TB_HouseGoods.GoodId 
-left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_HouseGoods.GoodId ");
+left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_HouseGoods.GoodId 
+left join 
+(
+select CAI_POCai.GoodId
+,sum(Num- isnull(totalOrderNum,0)) as CaiNotCheckNum
+from CAI_POCai 
+left join CAI_POOrder on CAI_POCai.Id=CAI_POOrder.Id
+left join 
+(
+select  CaiId,SUM(CheckNum) as totalOrderNum from CAI_OrderChecks left join CAI_OrderCheck on  CAI_OrderCheck.id=CAI_OrderChecks.CheckId
+where CaiId<>0  and CAI_OrderCheck.status='通过' 
+group by CaiId
+)
+as newtable on CAI_POCai.Ids=newtable.CaiId 
+where (CAI_POCai.Num>newtable.totalOrderNum or totalOrderNum is null)
+and status='通过' and lastSupplier<>'库存' group by CAI_POCai.GoodId
+) as CaiNotCheck on CaiNotCheck.GoodId=TB_HouseGoods.GoodId");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -436,6 +452,12 @@ left join CaiKuXuNumView on CaiKuXuNumView.GoodId=TB_HouseGoods.GoodId ");
                             model.SumKuXuCai = Convert.ToDecimal(ojb);
                         }
 
+                        ojb = dataReader["CaiNotCheckNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            //：滞留库存=库存数量-采购需出数+采购未检验数（包括在采购检验单执行中的数量
+                            model.CaiNotCheckNum = Convert.ToDecimal(ojb);
+                        }
                         list.Add(model);
                         i++;
                     }

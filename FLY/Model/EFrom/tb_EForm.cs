@@ -173,5 +173,13 @@ namespace VAN_OA.Model.EFrom
         public string SupplierName { get; set; }
 
         public DateTime? E_LastTime { get; set; }
+
+        public int WarnDays
+        {
+            get
+            {
+                return (DateTime.Now - createTime).Days;
+            }
+        }
     }
 }

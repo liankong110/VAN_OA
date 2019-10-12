@@ -22,7 +22,7 @@ namespace VAN_OA.Fin
                 txtSupplierCardNo.Text = model.SupplierBrandNo;
                 txtSupplierBrandName.Text = model.SupplierBrandName;
                 txtNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
-                txtDaTotal.Text = RMBCapitalization.RMBAmount(Convert.ToDouble(model.ActPay)); 
+                txtDaTotal.Text = RMBCapitalization.RMBAmount(Convert.ToDouble(model.ActPay.ToString("f2"))); 
                 txtUse.Text = model.ProNo;
 
                 TB_CompanyService companySer = new TB_CompanyService();

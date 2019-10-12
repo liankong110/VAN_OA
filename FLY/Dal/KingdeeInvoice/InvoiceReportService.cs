@@ -107,9 +107,9 @@ namespace VAN_OA.Dal.KingdeeInvoice
                 }
                 strSql = string.Format(@" select  Sell_OrderFP.id as FPId,invoice.id,FPNo,Sell_OrderFP.GuestNAME as OA_GuestName ,Sell_OrderFP.Total as OA_Total,RuTime,Sell_OrderFP.PONo,
 InvoiceNumber, invoice.GuestName,invoice.Total,CreateDate
- from Sell_OrderFP full join 
+ from (select *FROM  Sell_OrderFP WHERE Status='通过') AS Sell_OrderFP  full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate from 
-"+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice as invoice {0}  AND InvoiceNumber<>'') as invoice 
+" + InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice as invoice {0}  AND InvoiceNumber<>'') as invoice 
 on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total ))
 left join  CG_POOrder on  CG_POOrder.PONO=Sell_OrderFP.PONO  and ifzhui=0 ",  k_Sql);
 

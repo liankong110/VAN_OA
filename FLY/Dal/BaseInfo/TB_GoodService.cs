@@ -734,7 +734,23 @@ where Status='通过' GROUP BY OrderCheckIds
 ) as caiOut ON caiOut.OrderCheckIds=CAI_OrderInHouses.Ids
 where status='通过' 
 group by CAI_OrderInHouses.GooId
- ) AS Invoice on Invoice.GooId=Temp.GoodId  left join CaiKuXuNumView on CaiKuXuNumView.GoodId=Temp.GoodId ");
+ ) AS Invoice on Invoice.GooId=Temp.GoodId  left join CaiKuXuNumView on CaiKuXuNumView.GoodId=Temp.GoodId 
+left join 
+(
+select CAI_POCai.GoodId
+,sum(Num- isnull(totalOrderNum,0)) as CaiNotCheckNum
+from CAI_POCai 
+left join CAI_POOrder on CAI_POCai.Id=CAI_POOrder.Id
+left join 
+(
+select  CaiId,SUM(CheckNum) as totalOrderNum from CAI_OrderChecks left join CAI_OrderCheck on  CAI_OrderCheck.id=CAI_OrderChecks.CheckId
+where CaiId<>0  and CAI_OrderCheck.status='通过' 
+group by CaiId
+)
+as newtable on CAI_POCai.Ids=newtable.CaiId 
+where (CAI_POCai.Num>newtable.totalOrderNum or totalOrderNum is null)
+and status='通过' and lastSupplier<>'库存' group by CAI_POCai.GoodId
+) as CaiNotCheck on CaiNotCheck.GoodId=Temp.GoodId");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -776,6 +792,12 @@ group by CAI_OrderInHouses.GooId
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.SumKuXuCai = Convert.ToDecimal(ojb);
+                        }
+                        ojb = objReader["CaiNotCheckNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            //：滞留库存=库存数量-采购需出数+采购未检验数（包括在采购检验单执行中的数量
+                            model.CaiNotCheckNum = Convert.ToDecimal(ojb);
                         }
                         list.Add(model);
                     }

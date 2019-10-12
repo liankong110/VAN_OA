@@ -29,7 +29,7 @@ namespace VAN_OA.Fin
                     txtUse.Text = model.Use;
 
                     txtDaShouKuan.Text = model.SupplierName;
-                    txtDaTotal.Text = RMBCapitalization.RMBAmount(Convert.ToDouble(model.ActPay)); 
+                    txtDaTotal.Text = RMBCapitalization.RMBAmount(Convert.ToDouble(model.ActPay.ToString("f2"))); 
                     txtDaUse.Text = model.Use;
                     txtDaNum.Text = "¥" + model.ActPay.ToString("f2").Replace(".", "");
                     txtDaDate.Text = ConvertNum(DateTime.Now.Year.ToString()) + "      " +

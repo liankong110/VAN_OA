@@ -28,11 +28,15 @@ namespace VAN_OA.EFrom
 
         private List<SupplierInvoice_Name> SupplierInvoice_Names = new List<SupplierInvoice_Name>();
 
+        private List<VAN_OA.Model.BaseInfo.Base_WarnDays> WarnDays = new List<Model.BaseInfo.Base_WarnDays>();
 
         public string Query = "QueryEFormToDo";
 
         private void select()
         {
+
+            WarnDays = new Base_WarnDaysService().GetListArray("");
+
             string sql = " 1=1 ";
             //QueryEForms
             QuerySession.QueryEForm QEForm = new VAN_OA.QuerySession.QueryEForm();
@@ -89,7 +93,7 @@ namespace VAN_OA.EFrom
             QEForm.SPForm = txtSPForm.Text;
             QEForm.SPTo = txtSPTo.Text;
 
-            if (ddlProType.SelectedItem!=null&&ddlProType.SelectedItem.Text != "")
+            if (ddlProType.SelectedItem != null && ddlProType.SelectedItem.Text != "")
             {
                 sql += string.Format(" and proId={0}", ddlProType.SelectedItem.Value);
                 QEForm.ProTypeId = Convert.ToInt32(ddlProType.SelectedItem.Value);
@@ -105,7 +109,7 @@ namespace VAN_OA.EFrom
                 sql += string.Format(" and appTime<='{0} 23:59:59'", txtTo.Text);
                 QEForm.ToTime = txtTo.Text;
             }
-            
+
 
             if (txtApper.Text != "")
             {
@@ -238,15 +242,17 @@ where IsYuFu=1
             #endregion
             tb_EFormService eformSer = new tb_EFormService();
             List<tb_EForm> allEForms = eformSer.GetListArray_ToDo(sql, poSQL, Convert.ToInt32(Session["currentUserId"]));
-            string allIds = "", proIds = "",fukuandan="0,",yufukuandan="0,";
-            for (int i = 0; i < allEForms.Count ; i++)
+
+
+            string allIds = "", proIds = "", fukuandan = "0,", yufukuandan = "0,";
+            for (int i = 0; i < allEForms.Count; i++)
             {
                 allIds += allEForms[i].allE_id.ToString() + ",";
                 proIds += allEForms[i].proId.ToString() + ",";
 
                 if (allEForms[i].ProTyleName == "供应商付款单")
                 {
-                    fukuandan += allEForms[i].allE_id +",";
+                    fukuandan += allEForms[i].allE_id + ",";
                 }
                 if (allEForms[i].ProTyleName == "供应商预付款单")
                 {
@@ -261,7 +267,7 @@ where IsYuFu=1
             yufukuandan = yufukuandan.Trim(',');
 
 
-            if (fukuandan != "" || yufukuandan!="")
+            if (fukuandan != "" || yufukuandan != "")
             {
                 var superSer = new TB_SupplierAdvancePaymentService();
                 SupplierInvoice_Names = superSer.GetSupplierName(yufukuandan, fukuandan);
@@ -272,6 +278,7 @@ where IsYuFu=1
             {
                 allAllWform = eformSer.GetView_AllEformList(proIds, allIds);
             }
+
 
 
             //proId 进行分类管理
@@ -287,8 +294,8 @@ where IsYuFu=1
             var yongChe_allEForms = allEForms.FindAll(t => t.proId == 5);
 
             Session[Query] = QEForm;
-             
-         
+
+
             this.gvList.DataSource = changyong_allEForms;
             this.gvList.DataBind();
 
@@ -307,7 +314,7 @@ where IsYuFu=1
         }
         protected void btnSelect_Click(object sender, EventArgs e)
         {
-           
+
             select();
         }
         protected void AspNetPager1_PageChanged(object src, EventArgs e)
@@ -333,9 +340,17 @@ where IsYuFu=1
                 if (ef != null)
                 {
 
+                    var day = WarnDays.Find(t => t.Name == ef.ProTyleName);
+                    if (day != null && day.WarnDays <= ef.WarnDays)
+                    {
+                        ImageButton lblWarn = e.Row.FindControl("lblWarn") as ImageButton;
+                        lblWarn.Visible = true;
+                    }
+
+
                     if (ef.ProTyleName == "供应商付款单")
                     {
-                        var supplierNames= SupplierInvoice_Names.Where(t=>t.Type=="1"&&t.Id==ef.allE_id).Select(t=>t.LastSupplier).ToList<string>();
+                        var supplierNames = SupplierInvoice_Names.Where(t => t.Type == "1" && t.Id == ef.allE_id).Select(t => t.LastSupplier).ToList<string>();
                         if (supplierNames.Count > 0)
                         {
                             Label lblSupplierName = e.Row.FindControl("lblSupplierName") as Label;
@@ -400,7 +415,7 @@ where IsYuFu=1
 
         private void GetTabIndex()
         {
-            Session["TabIndex"]= TabContainer1.ActiveTabIndex;
+            Session["TabIndex"] = TabContainer1.ActiveTabIndex;
         }
 
         protected void GridView2_RowEditing(object sender, GridViewEditEventArgs e)
@@ -515,7 +530,7 @@ where IsYuFu=1
 
                 if (Session["TabIndex"] != null)
                 {
-                    TabContainer1.ActiveTabIndex = int.Parse( Session["TabIndex"].ToString());
+                    TabContainer1.ActiveTabIndex = int.Parse(Session["TabIndex"].ToString());
                 }
                 //加载SESSION中的数据
                 if (Session[Query] != null)
@@ -552,7 +567,7 @@ where IsYuFu=1
 
                         txtTo.Text = QEForm.ToTime;
                     }
-                    
+
 
                     if (QEForm.Apper != "")
                     {

@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BaseInfo\GoodTemp.aspx" />
+    <Content Include="BaseInfo\WFWarnDays.aspx" />
+    <Content Include="BaseInfo\WFWarnDaysList.aspx" />
     <Content Include="BaseInfo\WFFin_JieDate.aspx" />
     <Content Include="BaseInfo\WFFin_JieDatelList.aspx" />
     <Content Include="BaseInfo\WFProjectCost.aspx" />
@@ -672,6 +674,20 @@
     <Compile Include="BaseInfo\GuestProBaseInfoList.aspx.designer.cs">
       <DependentUpon>GuestProBaseInfoList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="BaseInfo\WFWarnDays.aspx.cs">
+      <DependentUpon>WFWarnDays.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFWarnDays.aspx.designer.cs">
+      <DependentUpon>WFWarnDays.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseInfo\WFWarnDaysList.aspx.cs">
+      <DependentUpon>WFWarnDaysList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BaseInfo\WFWarnDaysList.aspx.designer.cs">
+      <DependentUpon>WFWarnDaysList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="BaseInfo\WFFin_JieDate.aspx.cs">
       <DependentUpon>WFFin_JieDate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1051,6 +1067,7 @@
     </Compile>
     <Compile Include="Dal\AllObjsService.cs" />
     <Compile Include="Dal\BaseInfo\BaseKeyValueService.cs" />
+    <Compile Include="Dal\BaseInfo\Base_WarnDaysService.cs" />
     <Compile Include="Dal\BaseInfo\CAR_YearCheckService.cs" />
     <Compile Include="Dal\BaseInfo\ContractService.cs" />
     <Compile Include="Dal\BaseInfo\FIN_PropertyService.cs" />
@@ -2452,6 +2469,7 @@
     <Compile Include="Model\AllObjs.cs" />
     <Compile Include="Model\BaseInfo\BaseKeyValue.cs" />
     <Compile Include="Model\BaseInfo\Base_BusInfo.cs" />
+    <Compile Include="Model\BaseInfo\Base_WarnDays.cs" />
     <Compile Include="Model\BaseInfo\CAR_YearCheck.cs" />
     <Compile Include="Model\BaseInfo\Contract.cs" />
     <Compile Include="Model\BaseInfo\FIN_Property.cs" />

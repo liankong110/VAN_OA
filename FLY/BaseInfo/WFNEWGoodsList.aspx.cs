@@ -112,7 +112,7 @@ namespace VAN_OA.BaseInfo
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('滞留库存格式出错！');</script>");
                     return "";
                 }
-                sql += string.Format("and (isnull(GoodNum,0)-isnull(SumKuXuCai,0)){0}{1}", ddlZhiLiuNum.Text, txtZhiLiuNum.Text);
+                sql += string.Format("and (isnull(GoodNum,0)-isnull(SumKuXuCai,0)+isnull(CaiNotCheckNum,0)){0}{1}", ddlZhiLiuNum.Text, txtZhiLiuNum.Text);
             }
 
             if (ddlSpecial.Text != "-1")

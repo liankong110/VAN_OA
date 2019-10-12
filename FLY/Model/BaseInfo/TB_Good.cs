@@ -185,6 +185,8 @@ namespace VAN_OA.Model.BaseInfo
         /// 采库需出数
         /// </summary>
         public decimal SumKuXuCai { get; set; }
+
+        public decimal CaiNotCheckNum { get; set; }
         /// <summary>
         /// 滞留库存=库存数量-采库需出数
         /// </summary>
@@ -192,7 +194,7 @@ namespace VAN_OA.Model.BaseInfo
         {
             get
             {
-                return GoodNum - SumKuXuCai;
+                return GoodNum - SumKuXuCai+ CaiNotCheckNum;
             }
         }
 

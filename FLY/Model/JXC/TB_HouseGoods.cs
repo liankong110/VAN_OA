@@ -120,6 +120,8 @@ namespace VAN_OA.Model.JXC
         public decimal HadInvoice { get; set; }
         public decimal NoInvoice { get; set; }
 
+
+        public decimal CaiNotCheckNum { get; set; }
         /// <summary>
         /// 采库需出数
         /// </summary>
@@ -131,7 +133,7 @@ namespace VAN_OA.Model.JXC
         {
             get
             {
-                return GoodNum - SumKuXuCai;
+                return GoodNum - SumKuXuCai+ CaiNotCheckNum;
             }
         }
 
