@@ -785,6 +785,15 @@
                                         &nbsp;
                                         <asp:Label ID="lblTopPrice" runat="server" Text="" ForeColor="Blue"></asp:Label>
                                         <br />
+                                           &nbsp;
+                                        <asp:Label ID="lblZhiDaiNum" runat="server" Text=""></asp:Label>
+                                          &nbsp;
+                                        <asp:Label ID="lblKCIng" runat="server" Text=""></asp:Label>
+                                         &nbsp;
+                                        <asp:Label ID="lblKCNotRuKu" runat="server" Text=""></asp:Label>
+
+                                          <asp:Label ID="lblSumZhiTotal" runat="server" Text="0" Visible="false"></asp:Label>
+                                        <br />
                                         <asp:CheckBox ID="cbIsHanShui" runat="server" Text="º¬Ë°" ForeColor="Red" AutoPostBack="True"
                                             OnCheckedChanged="cbIsHanShui_CheckedChanged" />
                                         <asp:DropDownList ID="dllFPstye" runat="server" DataValueField="Id" DataTextField="FpType">

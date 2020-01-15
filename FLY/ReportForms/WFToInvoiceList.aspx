@@ -320,6 +320,13 @@
                     </ItemTemplate>
                     <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="lbtnDelete" runat="server" CommandName="Del" CommandArgument='<% #Eval("Id")%>'
+                            OnClientClick='return confirm( "确定要删除吗？") '>删除</asp:LinkButton>
+                    </ItemTemplate>
+                    <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" Width="30px" />
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="项目编号">
                     <ItemTemplate>
                         <asp:LinkButton ID="LinkButton1" runat="server" CommandName="select" Text='<% #Eval("PONo") %>'
@@ -333,7 +340,7 @@
                 <asp:BoundField DataField="MinPoDate" HeaderText="项目日期" SortExpression="MinPoDate"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:BoundField DataField="Model" HeaderText="模型" SortExpression="Model" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="45px"/>
+                <asp:BoundField DataField="AE" HeaderText="AE" SortExpression="AE" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="45px" />
                 <asp:TemplateField HeaderText="税">
                     <ItemTemplate>
                         <asp:CheckBox ID="cbIsPoFax" runat="server" Checked='<% #Eval("IsPoFax") %>' Enabled="false" />
@@ -343,7 +350,7 @@
                 <asp:BoundField DataField="MinOutTime" HeaderText="出库日期" SortExpression="MinOutTime"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:BoundField DataField="BusTypeStr" HeaderText="类型" SortExpression="BusTypeStr"
-                    ItemStyle-HorizontalAlign="Center" ItemStyle-Width="95px"/>
+                    ItemStyle-HorizontalAlign="Center" ItemStyle-Width="95px" />
                 <asp:BoundField DataField="FPDate" HeaderText="开票日期" SortExpression="FPDate"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:TemplateField HeaderText="未票天">
@@ -364,11 +371,11 @@
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" ItemStyle-Width="65px" />
                 <asp:BoundField DataField="POTotal" HeaderText="项目金额" SortExpression="POTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
                 <asp:BoundField DataField="Total" HeaderText="到款金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
-                <asp:BoundField DataField="DaoTotal" HeaderText="到款比例" SortExpression="DaoTotal" ItemStyle-HorizontalAlign="Center"  ItemStyle-Width="50px"/>
-                <asp:BoundField DataField="SumWeiDaoTotal" HeaderText="未到货款" SortExpression="WeiDaoTotal" ItemStyle-HorizontalAlign="Center"  DataFormatString="{0:n2}" />
+                <asp:BoundField DataField="DaoTotal" HeaderText="到款比例" SortExpression="DaoTotal" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px" />
+                <asp:BoundField DataField="SumWeiDaoTotal" HeaderText="未到货款" SortExpression="WeiDaoTotal" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
                 <asp:BoundField DataField="SumWeiDaoTotal1" HeaderText="未到货款" SortExpression="WeiDaoTotal1" Visible="false" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n2}" />
                 <asp:BoundField DataField="WeiDaoTotal" HeaderText="未到比例" SortExpression="WeiDaoTotal" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px" />
-                <asp:BoundField DataField="WeiDaoTotal1" HeaderText="未到比例" SortExpression="WeiDaoTotal1" Visible="false" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px"/>
+                <asp:BoundField DataField="WeiDaoTotal1" HeaderText="未到比例" SortExpression="WeiDaoTotal1" Visible="false" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="50px" />
                 <%--      <asp:BoundField DataField="Days" HeaderText="天数" SortExpression="Days" ItemStyle-HorizontalAlign="Center" />--%>
 
                 <asp:TemplateField HeaderText="天数">

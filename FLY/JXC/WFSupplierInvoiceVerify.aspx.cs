@@ -997,8 +997,15 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                             SupplierToInvoiceViewService supplierToInvoiceSer = new SupplierToInvoiceViewService();
                             orders = supplierToInvoiceSer.GetListArrayToVerify(string.Format(" CAI_OrderInHouses.ids in ({0}) and CAI_OrderInHouse.Status='通过' ", Session["SupplierInvoiceIds"]), Session["SupplierInvoiceIds"].ToString());
 
-
-
+                            //List<SupplierToInvoiceView> pOOrderList = supplierToInvoiceSer.GetListArray_New_Do(string.Format("CAI_OrderInHouses.Ids in ({0})", Session["SupplierInvoiceIds"]));
+                            //foreach (var oo in orders)
+                            //{
+                            //    var foo= pOOrderList.Find(t => t.Ids == oo.Ids);
+                            //    if (foo!=null&&foo.Ids>0)
+                            //    {
+                            //        oo.new_ShengYuZhiJia = foo.ShengYuZhiJia;
+                            //    }
+                            //}
                             //获取供应商名称
                             string lastSupplier = "";
                             string allRuids = "";
@@ -1163,6 +1170,18 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                        
                         TB_SupplierInvoicesService ordersSer = new TB_SupplierInvoicesService();
                         List<SupplierToInvoiceView> orders = ordersSer.GetListArray(" 1=1 and TB_SupplierInvoices.id=" + Request["allE_id"]);
+                       
+                        //SupplierToInvoiceViewService supplierToInvoiceSer = new SupplierToInvoiceViewService();
+                        //List<SupplierToInvoiceView> pOOrderList = supplierToInvoiceSer.GetListArray_New_Do(string.Format("CAI_OrderInHouses.Ids in ({0})",
+                        //    string.Join(",", orders.Select(t => t.Ids.ToString()).ToArray())));
+                        //foreach (var oo in orders)
+                        //{
+                        //    var foo = pOOrderList.Find(t => t.Ids == oo.Ids);
+                        //    if (foo != null && foo.Ids > 0)
+                        //    {
+                        //        oo.new_ShengYuZhiJia = foo.ShengYuZhiJia;
+                        //    }
+                        //}
                         #region  需要设置下SupplierInvoiceDate
                         string ruIds = "";
                         foreach (var m in orders)
@@ -1304,6 +1323,17 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                         TB_SupplierInvoicesService ordersSer = new TB_SupplierInvoicesService();
                         List<SupplierToInvoiceView> orders = ordersSer.GetListArray(" 1=1 and TB_SupplierInvoices.id=" + Request["allE_id"]);
 
+                        //SupplierToInvoiceViewService supplierToInvoiceSer = new SupplierToInvoiceViewService();
+                        //List<SupplierToInvoiceView> pOOrderList = supplierToInvoiceSer.GetListArray_New_Do(string.Format("CAI_OrderInHouses.Ids in ({0})",
+                        //    string.Join(",", orders.Select(t => t.Ids.ToString()).ToArray())));
+                        //foreach (var oo in orders)
+                        //{
+                        //    var foo = pOOrderList.Find(t => t.Ids == oo.Ids);
+                        //    if (foo != null && foo.Ids > 0)
+                        //    {
+                        //        oo.new_ShengYuZhiJia = foo.ShengYuZhiJia;
+                        //    }
+                        //}
 
                         #region  需要设置下SupplierInvoiceDate
                         string ruIds = "";

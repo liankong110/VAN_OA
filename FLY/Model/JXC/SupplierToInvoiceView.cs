@@ -376,5 +376,18 @@ namespace VAN_OA.Model.JXC
 
         public string Province { get; set; }
         public string City { get; set; }
+
+
+        public decimal new_ShengYuZhiJia { get; set; }
+
+
+        public decimal new_ShengYuZhiJia_1
+        {
+            get
+            {
+
+                return GoodPrice * ((GoodNum ?? 0) - (supplierTuiGoodNum ?? 0)) - HadSupplierInvoiceTotal;
+            }
+        }
     }
 }

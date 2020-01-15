@@ -15,7 +15,7 @@
         border="1">
         <tr>
             <td colspan="6" style="height: 20px; background-color: #336699; color: White;">
-                到款单-<asp:Label ID="lblProNo" runat="server" Text=""></asp:Label>
+                到款单<asp:Label ID="lblDelete" runat="server" Text="删除" ForeColor="Red" Visible="false"/>-<asp:Label ID="lblProNo" runat="server" Text=""></asp:Label>
                 <asp:DropDownList ID="ddlStyle" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlStyle_SelectedIndexChanged">
                     <asp:ListItem Value="0" Text="实际发票到款"></asp:ListItem>
                     <asp:ListItem Value="1" Text="预付款"></asp:ListItem>
@@ -221,7 +221,9 @@
                 <asp:BoundField DataField="DaoKuanDate" HeaderText="到款日期" SortExpression="DaoKuanDate"
                     ItemStyle-HorizontalAlign="Center" DataFormatString="{0:yyyy-MM-dd}" />
                 <asp:BoundField DataField="Total" HeaderText="到款金额" SortExpression="Total" ItemStyle-HorizontalAlign="Center" />
-                <asp:BoundField DataField="FPNo" HeaderText="发票号" SortExpression="FPNo" ItemStyle-HorizontalAlign="Left"
+                <asp:BoundField DataField="FPNo" HeaderText="原发票号" SortExpression="FPNo" ItemStyle-HorizontalAlign="Left"
+                    ItemStyle-CssClass="item" />
+                 <asp:BoundField DataField="NewFPNo" HeaderText="新发票号" SortExpression="NewFPNo" ItemStyle-HorizontalAlign="Left"
                     ItemStyle-CssClass="item" />
             </Columns>
             <PagerStyle HorizontalAlign="Center" />

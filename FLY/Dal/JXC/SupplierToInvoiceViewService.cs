@@ -11,6 +11,128 @@ namespace VAN_OA.Dal.JXC
 {
     public class SupplierToInvoiceViewService
     {
+
+        /// <summary>
+        /// 获得数据列表（比DataSet效率高，推荐使用）
+        /// </summary>
+        public List<SupplierToInvoiceView> GetListArray_New_Do(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select CAI_OrderInHouses.GoodNum,CaiNum,HadSupplierInvoiceTotal,HadFuShuTotal,CAI_OrderInHouses.CaiLastTruePrice,CAI_OrderInHouses.IsTemp,CAI_OrderInHouses.Ids,CAI_OrderInHouse.ProNo,RuTime,Supplier,houseName,PONo,POName,GoodNo,GoodName,GoodTypeSmName,GoodSpec,GoodUnit,GoodNum,supplierTuiGoodNum,GoodPrice,DoPer,ChcekProNo,CAI_OrderInHouse.Status,zhengTotal,jianTotal,PayStatus,0 as FuShuTotal ");
+            strSql.Append(" from CAI_OrderInHouse ");
+            strSql.Append(" left join CAI_OrderInHouses  on CAI_OrderInHouses.id=CAI_OrderInHouse.id ");
+            strSql.Append(" left join TB_HouseInfo on CAI_OrderInHouse.HouseID=TB_HouseInfo.id ");
+            strSql.Append(" left join TB_Good on TB_Good.GoodId=CAI_OrderInHouses.GooId ");
+            strSql.Append(@" 
+left join (SELECT CAI_POCai.Ids AS CAI_IDS,CAI_OrderChecks.Ids as CheckIds,CAI_POCai.Num as CaiNum FROM CAI_OrderChecks left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
+) as CheckOrders on CheckOrders.CheckIds=CAI_OrderInHouses.OrderCheckIds
+left join 
+(
+select TB_SupplierInvoices.RuIds,Sum(SupplierInvoiceTotal) as  HadSupplierInvoiceTotal from 
+TB_SupplierInvoices 
+left join TB_SupplierInvoice on TB_SupplierInvoice.id=TB_SupplierInvoices.id
+where ((status='通过' and IsYuFu=0) or  (status='通过' and IsYuFu=1)) and SupplierInvoiceTotal>0
+group by TB_SupplierInvoices.RuIds
+)
+as HadSupplierInvoice on HadSupplierInvoice.RuIds=CAI_OrderInHouses.Ids
+left join
+(
+select CAI_OrderInHouses.Ids,Sum(CAI_OrderOutHouses.GoodNum*CAI_OrderInHouses.CaiLastTruePrice) as  HadFuShuTotal from 
+CAI_OrderOutHouse 
+left join CAI_OrderOutHouses on CAI_OrderOutHouse.id=CAI_OrderOutHouses.id
+left join CAI_OrderInHouses on CAI_OrderInHouses.Ids=CAI_OrderOutHouses.OrderCheckIds
+where CAI_OrderOutHouse.status='通过' 
+group by CAI_OrderInHouses.Ids
+)
+as temp3 on temp3.Ids=CAI_OrderInHouses.Ids
+ 
+left join 
+(
+select sum(SupplierInvoiceTotal) as zhengTotal,ruIds
+from  TB_SupplierInvoice 
+left join TB_SupplierInvoices on  TB_SupplierInvoice.id=TB_SupplierInvoices.Id
+where TB_SupplierInvoice.status<>'不通过' and SupplierInvoiceTotal>0
+group by ruIds
+)
+as tb2 on tb2.ruIds=CAI_OrderInHouses.ids ");
+            strSql.Append(@" left join 
+(
+select sum(SupplierInvoiceTotal) as jianTotal,ruIds
+from  TB_SupplierInvoice 
+left join TB_SupplierInvoices on  TB_SupplierInvoice.id=TB_SupplierInvoices.Id
+where TB_SupplierInvoice.status<>'不通过' and SupplierInvoiceTotal<0
+group by ruIds
+)
+as tb3 on tb3.ruIds=CAI_OrderInHouses.ids ");
+            strSql.Append(" left join (");
+            strSql.Append(" select OrderCheckIds,sum(GoodNum) as supplierTuiGoodNum from CAI_OrderOutHouses group by OrderCheckIds ");
+            strSql.Append("  )");
+            strSql.Append(" as tb1 on tb1.OrderCheckIds=CAI_OrderInHouses.ids ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append("  order by  CAI_OrderInHouses.Ids desc");
+            List<SupplierToInvoiceView> list = new List<SupplierToInvoiceView>();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(strSql.ToString(), conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var model = ReaderBind(dataReader);
+                        model.LastTruePrice = (decimal)dataReader["CaiLastTruePrice"];
+
+                        object ojb;
+                        decimal CaiNum = 0;
+                        decimal HadSupplierInvoiceTotal = 0;
+                        decimal HadFuShuTotal = 0;
+                        decimal inGoodNum = 0;
+                        ojb = dataReader["CaiNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            CaiNum = (decimal)ojb;
+                        }
+                        ojb = dataReader["GoodNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            inGoodNum = (decimal)ojb;
+                        }
+                        ojb = dataReader["HadSupplierInvoiceTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            HadSupplierInvoiceTotal = (decimal)ojb;
+                        }
+                        ojb = dataReader["HadFuShuTotal"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            HadFuShuTotal = (decimal)ojb;
+                        }
+
+                        model.IsTemp = (bool)dataReader["IsTemp"];
+
+                        //剩余金额 =实采单价×总采购数量-已经支付的金额+负数合计
+                        var result = inGoodNum * model.LastTruePrice - HadSupplierInvoiceTotal - HadFuShuTotal;
+
+                        //var result = CaiNum * model.LastTruePrice - model.SupplierInvoiceTotal;
+                        if (result <= 0)
+                        {
+                            model.IsShow = false;
+                        }
+                        else
+                        {
+                            model.IsShow = true;
+                        }
+                        model.LastTotal = model.LastTruePrice * model.lastGoodNum;
+                        model.ResultTotal = result;
+                        list.Add(model);
+                    }
+                }
+            }
+            return list;
+        }
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>

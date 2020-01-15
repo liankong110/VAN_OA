@@ -54,6 +54,7 @@
                     <asp:ListItem>不通过</asp:ListItem>
                     <asp:ListItem>全部</asp:ListItem>
                 </asp:DropDownList>
+                邮寄编号：<asp:TextBox ID="txtPOSTNO" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -143,6 +144,15 @@
                 客户属性:<asp:DropDownList ID="ddlGuestProList" runat="server" DataValueField="GuestPro"
                     DataTextField="GuestProString" Style="left: 0px;">
                 </asp:DropDownList>
+                  <br />
+                 公交费发票号码:<asp:TextBox ID="txtBusFPNO" runat="server" Width="80px" ></asp:TextBox>
+                 餐饮发票号码:<asp:TextBox ID="txtRepastFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                  住宿发票号码:<asp:TextBox ID="txtHotelFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                 汽油发票号码:<asp:TextBox ID="txtOilFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                 过路费发票号码:<asp:TextBox ID="txtGuoBeginFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                  邮寄发票号码:<asp:TextBox ID="txtPostFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                小额采购发票号码:<asp:TextBox ID="txtCaiFPNO" runat="server"  Width="80px" ></asp:TextBox>
+                 其它费用发票号码:<asp:TextBox ID="txtOtherFPNO" runat="server"  Width="80px" ></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -151,6 +161,7 @@
             <td colspan="6">
                 <div align="right">
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;
+                        <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>
@@ -200,6 +211,13 @@
                 <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
 
+             <asp:TemplateField HeaderText="编辑发票号" >
+                <ItemTemplate>
+                    <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&&allE_id=<%# Eval("id") %>&IsEditFPNO=true" target="_blank">编辑发票号</a>
+                </ItemTemplate>
+                <ItemStyle HorizontalAlign="Center" />
+            </asp:TemplateField>
+
             <asp:TemplateField HeaderText="查看" ItemStyle-Width="30px">
                 <ItemTemplate>
                     <a href="/EFrom/DispatchList.aspx?<%# GetLink(Eval("PostTotal")) %>&allE_id=<%# Eval("id") %>" target="_blank">查看</a>
@@ -229,11 +247,21 @@
                 <ItemStyle HorizontalAlign="Right" BorderColor="#E5E5E5" />
             </asp:BoundField>
 
-            <asp:BoundField DataField="DispatchType" HeaderText="报销类型">
+         <%--   <asp:BoundField DataField="DispatchType" HeaderText="报销类型">
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+            </asp:BoundField>--%>
+             <asp:TemplateField HeaderText="报销类型" ItemStyle-CssClass="item" ItemStyle-HorizontalAlign="Left">
+                <ItemTemplate>
+                    <asp:Label ID="lblPONOS" runat="server" Text='<%# Eval("DispatchType") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:BoundField DataField="Post_No" HeaderText="邮寄编号">
                 <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
             </asp:BoundField>
+            
             <asp:BoundField DataField="ComName" HeaderText="所属公司">
-                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5" />
+                <ItemStyle HorizontalAlign="Center" BorderColor="#E5E5E5"  Width="150px"/>
             </asp:BoundField>
         </Columns>
         <PagerStyle HorizontalAlign="Center" />

@@ -153,7 +153,7 @@ namespace VAN_OA.Dal.JXC
         public List<VAN_OA.Model.JXC.TB_HouseGoods> GetListArrayByStocking(string strWhere, string fromDate, string endDate)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.AppendFormat(@"select GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,
+            strSql.AppendFormat(@"select CaiNotCheckNum,GoodAreaNumber,TB_HouseGoods.id,HouseId,TB_HouseGoods.GoodId,GoodAvgPrice,GoodNum,
 GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,houseName,SellOutNums as OutNums,CaiInNums as InNums,
 isnull(CaiInNums1,0)- isnull(SellOutNums1,0)+ isnull(SellInNums1,0)-isnull(CaiOutNums1,0) as Nums ,SumKuXuCai,QiMoNum
  FROM TB_Good left join TB_HouseGoods on TB_Good.GoodId=TB_HouseGoods.GoodId
@@ -212,7 +212,23 @@ union all
 select GooId,ISNULL(sum(GoodNum),0) as Nums from Sell_OrderInHouse left join Sell_OrderInHouses on Sell_OrderInHouse.Id=Sell_OrderInHouses.Id  where status='通过'
  and RuTime<='{1} 23:59:59' group by GooId
 ) as CaiOutInfo group by GooId
-) as CaiOutInfoView on CaiOutInfoView.GooId=TB_Good.GoodId", fromDate,endDate);
+) as CaiOutInfoView on CaiOutInfoView.GooId=TB_Good.GoodId
+left join 
+(
+select CAI_POCai.GoodId
+,sum(Num- isnull(totalOrderNum,0)) as CaiNotCheckNum
+from CAI_POCai 
+left join CAI_POOrder on CAI_POCai.Id=CAI_POOrder.Id
+left join 
+(
+select  CaiId,SUM(CheckNum) as totalOrderNum from CAI_OrderChecks left join CAI_OrderCheck on  CAI_OrderCheck.id=CAI_OrderChecks.CheckId
+where CaiId<>0  and CAI_OrderCheck.status='通过' 
+group by CaiId
+)
+as newtable on CAI_POCai.Ids=newtable.CaiId 
+where (CAI_POCai.Num>newtable.totalOrderNum or totalOrderNum is null)
+and status='通过' and lastSupplier<>'库存' group by CAI_POCai.GoodId
+) as CaiNotCheck on CaiNotCheck.GoodId=TB_Good.GoodId", fromDate,endDate);
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" WHERE " + strWhere);
@@ -255,6 +271,12 @@ select GooId,ISNULL(sum(GoodNum),0) as Nums from Sell_OrderInHouse left join Sel
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.QiMoNum = Convert.ToDecimal(ojb);
+                        }
+                        ojb = dataReader["CaiNotCheckNum"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            //：滞留库存=库存数量-采购需出数+采购未检验数（包括在采购检验单执行中的数量
+                            model.CaiNotCheckNum = Convert.ToDecimal(ojb);
                         }
                         list.Add(model);
                     }

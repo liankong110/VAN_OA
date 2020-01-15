@@ -321,6 +321,13 @@
                      <asp:ListItem Text="=" Value="="></asp:ListItem>
                  </asp:DropDownList>
                 <asp:TextBox ID="txtJingLi" runat="server" Width="80px"></asp:TextBox>
+
+                 项目含税:
+                <asp:DropDownList ID="ddlFax" runat="server">
+                      <asp:ListItem Value="-1">全部</asp:ListItem>
+                      <asp:ListItem Value="1">含税</asp:ListItem>                 
+                    <asp:ListItem Value="0">不含税</asp:ListItem>                   
+                </asp:DropDownList>
             </td>
         </tr>
         <tr>
@@ -487,15 +494,15 @@
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="MinDaoKuanTime_ZQ" HeaderText="首次实际到款日" SortExpression="MinDaoKuanTime_ZQ" DataFormatString="{0:yyyy-MM-dd}"
+                <asp:BoundField DataField="MinDaoKuanTime_ZQ" HeaderText="首次发票实际到款日" SortExpression="MinDaoKuanTime_ZQ" DataFormatString="{0:yyyy-MM-dd}"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="SecondDaoKuanDate" HeaderText="其次实际到款日" SortExpression="SecondDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
+                <asp:BoundField DataField="SecondDaoKuanDate" HeaderText="其次发票实际到款日" SortExpression="SecondDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="MaxDaoKuanDate" HeaderText="最近实际到款日" SortExpression="MaxDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
+                <asp:BoundField DataField="MaxDaoKuanDate" HeaderText="最近发票实际到款日" SortExpression="MaxDaoKuanDate" DataFormatString="{0:yyyy-MM-dd}"
                     ItemStyle-HorizontalAlign="Center">
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:BoundField>

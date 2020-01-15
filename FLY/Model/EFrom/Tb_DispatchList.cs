@@ -565,5 +565,17 @@ namespace VAN_OA.Model.EFrom
         public string ComName { get; set; }
 
         public string DispatchType { get; set; }
+
+        /// <summary>
+        /// 以下新增8个发票号
+        /// </summary>
+        public string BusFPNO { get; set; }
+        public string CaiFPNO { get; set; }
+        public string RepastFPNO { get; set; }
+        public string HotelFPNO { get; set; }
+        public string OilFPNO { get; set; }
+        public string GuoBeginFPNO { get; set; }
+        public string PostFPNO { get; set; }
+        public string OtherFPNO { get; set; }
     }
 }

@@ -204,6 +204,11 @@ namespace VAN_OA.BaseInfo
         {
             if (!base.IsPostBack)
             {
+                for (var i = 1; i < 100; i++)
+                {
+                    ddlL_Month.Items.Add(new ListItem { Text=i.ToString(),Value=i.ToString() });
+                }
+               
                 List<VAN_OA.Model.User> user = new List<VAN_OA.Model.User>();
                 VAN_OA.Dal.SysUserService userSer = new VAN_OA.Dal.SysUserService();
                 user = userSer.getAllUserByLoginName("");

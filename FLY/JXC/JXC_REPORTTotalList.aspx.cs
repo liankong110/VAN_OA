@@ -234,7 +234,10 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
             }
 
-
+            if (ddlFax.Text != "-1")
+            {
+                sql += string.Format(" and IsPoFax={0}", ddlFax.Text);
+            }
 
             if (ddlUser.Text == "-1")//显示所有用户
             {
@@ -353,7 +356,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目金额 格式错误！');</script>");
                     return;
                 }
-                fuhao += string.Format(" and SumPOTotal{0}{1}", ddlEquPOTotal.Text,txtEquTotal.Text);
+                fuhao += string.Format(" and SumPOTotal{0}{1}", ddlEquPOTotal.Text,Convert.ToDecimal(txtEquTotal.Text));
             }
 
            

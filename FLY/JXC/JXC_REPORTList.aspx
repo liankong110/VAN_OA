@@ -77,6 +77,13 @@
                      <asp:ListItem Value="1">特殊</asp:ListItem>
                      <asp:ListItem Value="-1">全部</asp:ListItem>
                 </asp:DropDownList>
+                项目含税:
+                <asp:DropDownList ID="ddlFax" runat="server">
+                      <asp:ListItem Value="-1">全部</asp:ListItem>
+                      <asp:ListItem Value="1">含税</asp:ListItem>                 
+                    <asp:ListItem Value="0">不含税</asp:ListItem>
+                   
+                </asp:DropDownList>
             </td>
         </tr>
         <tr>

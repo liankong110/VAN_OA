@@ -29,6 +29,80 @@ namespace VAN_OA.EFrom
             }
 
         }
+        protected void btnFPSave_Click(object sender, EventArgs e)
+        {
+            if (txtBusFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtBusFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('公交费发票号码 格式错误！');</script>");
+                return ;
+            }
+            if (txtRepastFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtRepastFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('餐饮发票号码 格式错误！');</script>");
+                return ;
+            }
+            if (txtHotelFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtHotelFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('住宿发票号码 格式错误！');</script>");
+                return ;
+            }
+            if (txtOilFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOilFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('汽油发票号码 格式错误！');</script>");
+                return ;
+            }
+            if (txtGuoBeginFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtGuoBeginFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('过路费发票号码 格式错误！');</script>");
+                return ;
+            }
+            if (txtPostFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtPostFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('邮寄发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtOtherFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOtherFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('其它费用发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtCaiFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtCaiFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('小额采购发票号码 格式错误！');</script>");
+                return;
+            }
+
+            Tb_DispatchList timeModel = new Tb_DispatchList();
+            try
+            {
+                timeModel.BusFPNO = txtBusFPNO.Text;
+                timeModel.RepastFPNO = txtRepastFPNO.Text;
+                timeModel.HotelFPNO = txtHotelFPNO.Text;
+                timeModel.OilFPNO = txtOilFPNO.Text;
+                timeModel.GuoBeginFPNO = txtGuoBeginFPNO.Text;
+                timeModel.PostFPNO = txtPostFPNO.Text;
+                timeModel.OtherFPNO = txtOtherFPNO.Text;
+                timeModel.CaiFPNO = txtCaiFPNO.Text;
+                timeModel.Id = Convert.ToInt32(Request["allE_id"]);
+            }
+            catch (Exception)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('你填写的格式有误,请检查后在提交！');</script>");
+                btnSub.Enabled = true;
+                return;
+            }
+
+            Tb_DispatchListService OverTimeSer = new Tb_DispatchListService();
+            if (OverTimeSer.Update_FPNO(timeModel))
+            { 
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+            }
+            else
+            {               
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存失败！');</script>");
+            }
+
+        }
 
         protected void btnSet_Click(object sender, EventArgs e)
         {
@@ -169,6 +243,14 @@ namespace VAN_OA.EFrom
                         timeModel.PostContext = txtPostContext.Text;
                         timeModel.PostToPer = txtPostToPer.Text;
 
+                        timeModel.BusFPNO = txtBusFPNO.Text;
+                        timeModel.RepastFPNO = txtRepastFPNO.Text;
+                        timeModel.HotelFPNO = txtHotelFPNO.Text;
+                        timeModel.OilFPNO = txtOilFPNO.Text;
+                        timeModel.GuoBeginFPNO = txtGuoBeginFPNO.Text;
+                        timeModel.PostFPNO = txtPostFPNO.Text;
+                        timeModel.OtherFPNO = txtOtherFPNO.Text;
+                        timeModel.CaiFPNO = txtCaiFPNO.Text;
                         //===
 
                         #endregion
@@ -196,7 +278,7 @@ namespace VAN_OA.EFrom
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('你填写的格式有误,请检查后在提交！');</script>");
                         btnSub.Enabled = true;
                         return;
-                    } 
+                    }
 
                     #region 本单据的ID
                     timeModel.Id = Convert.ToInt32(Request["allE_id"]);
@@ -208,7 +290,7 @@ namespace VAN_OA.EFrom
                     {
                         // btnSub.Enabled = true;
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
-                        
+
                     }
                     else
                     {
@@ -245,6 +327,46 @@ namespace VAN_OA.EFrom
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写事件发生日期！');</script>");
                 txtEvTime.Focus();
+                return false;
+            }
+            if (txtBusFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtBusFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('公交费发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtRepastFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtRepastFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('餐饮发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtHotelFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtHotelFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('住宿发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtOilFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOilFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('汽油发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtGuoBeginFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtGuoBeginFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('过路费发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtPostFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtPostFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('邮寄发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtOtherFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOtherFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('其它费用发票号码 格式错误！');</script>");
+                return false;
+            }
+            if (txtCaiFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtCaiFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('小额采购发票号码 格式错误！');</script>");
                 return false;
             }
 
@@ -318,7 +440,7 @@ namespace VAN_OA.EFrom
                                                         "<script>alert('此项目已经关闭！');</script>");
                 return false;
             }
-            if (CG_POOrderService.IsSpecialPONO(txtPONo.Text,txtPOName.Text))
+            if (CG_POOrderService.IsSpecialPONO(txtPONo.Text, txtPOName.Text))
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null,
                                                         "<script>alert('特殊订单无法计入费用！');</script>");
@@ -461,6 +583,14 @@ namespace VAN_OA.EFrom
             txtOilTotal.ReadOnly = result;
             txtOilRemark.ReadOnly = result;
 
+            txtBusFPNO.ReadOnly = !result;
+            txtRepastFPNO.ReadOnly = !result;
+            txtHotelFPNO.ReadOnly = !result;
+            txtOilFPNO.ReadOnly = !result;
+            txtGuoBeginFPNO.ReadOnly = !result;
+            txtPostFPNO.ReadOnly = !result;
+            txtOtherFPNO.ReadOnly = !result;
+            txtCaiFPNO.ReadOnly = !result;
             //lbtnSelNo1.Visible = false;
             //lbtnSelNo2.Visible = false;
             //DropDownList1.Visible = false;
@@ -622,6 +752,33 @@ namespace VAN_OA.EFrom
                             btnClose.Visible = false;
 
                         }
+                        //是否修改发票编号
+                        if (Request["IsEditFPNO"] != null)
+                        {
+
+                            btnFPSave.Visible = true;
+                            setEnableType(true);
+                            //所有的金额不能修改
+                            txtBusTotal.Enabled = false;
+                            txtRepastTotal.Enabled = false;
+                            txtHotelTotal.Enabled = false;
+                            txtOilTotal.Enabled = false;
+                            txtGuoTotal.Enabled = false;
+                            txtPostTotal.Enabled = false;
+                            txtPoTotal.Enabled = false;
+                            txtOtherTotal.Enabled = false;
+                            btnClose.Visible = false;
+
+                            txtBusFPNO.ReadOnly = false;
+                            txtRepastFPNO.ReadOnly = false;
+                            txtHotelFPNO.ReadOnly = false;
+                            txtOilFPNO.ReadOnly = false;
+                            txtGuoBeginFPNO.ReadOnly = false;
+                            txtPostFPNO.ReadOnly = false;
+                            txtOtherFPNO.ReadOnly = false;
+                            txtCaiFPNO.ReadOnly = false;
+
+                        }
                         #endregion
                     }
                     else//单据审批
@@ -659,6 +816,17 @@ namespace VAN_OA.EFrom
                         Tb_DispatchListService dispatchListSer = new Tb_DispatchListService();
 
                         Tb_DispatchList timeModel = dispatchListSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        txtBusFPNO.Text= timeModel.BusFPNO;
+                        txtRepastFPNO.Text= timeModel.RepastFPNO;
+                        txtHotelFPNO.Text = timeModel.HotelFPNO;
+                        txtOilFPNO.Text= timeModel.OilFPNO;
+                        txtGuoBeginFPNO.Text= timeModel.GuoBeginFPNO;
+                        txtPostFPNO.Text= timeModel.PostFPNO;
+                        txtOtherFPNO.Text= timeModel.OtherFPNO;
+                        txtCaiFPNO.Text= timeModel.CaiFPNO;
+
+
+
                         if (!string.IsNullOrEmpty(timeModel.PoNo))
                         {
                             string sql = string.Format("select AE FROM CG_POOrder WHERE IFZhui=0 AND PONo='{0}'", timeModel.PoNo);
@@ -934,6 +1102,34 @@ namespace VAN_OA.EFrom
                             txtOtherTotal.Enabled = false;
                             btnClose.Visible = false;
                         }
+
+                        //是否修改发票编号
+                        if (Request["IsEditFPNO"] != null)
+                        {
+
+                            btnFPSave.Visible = true;
+                            setEnableType(true);
+                            //所有的金额不能修改
+                            txtBusTotal.Enabled = false;
+                            txtRepastTotal.Enabled = false;
+                            txtHotelTotal.Enabled = false;
+                            txtOilTotal.Enabled = false;
+                            txtGuoTotal.Enabled = false;
+                            txtPostTotal.Enabled = false;
+                            txtPoTotal.Enabled = false;
+                            txtOtherTotal.Enabled = false;
+                            btnClose.Visible = false;
+
+                            txtBusFPNO.ReadOnly = false;
+                            txtRepastFPNO.ReadOnly = false;
+                            txtHotelFPNO.ReadOnly = false;
+                            txtOilFPNO.ReadOnly = false;
+                            txtGuoBeginFPNO.ReadOnly = false;
+                            txtPostFPNO.ReadOnly = false;
+                            txtOtherFPNO.ReadOnly = false;
+                            txtCaiFPNO.ReadOnly = false;
+
+                        }
                     }
                 }
 
@@ -1081,6 +1277,14 @@ namespace VAN_OA.EFrom
                         timeModel.PostContext = txtPostContext.Text;
                         timeModel.PostToPer = txtPostToPer.Text;
 
+                        timeModel.BusFPNO = txtBusFPNO.Text;
+                        timeModel.RepastFPNO = txtRepastFPNO.Text;
+                        timeModel.HotelFPNO = txtHotelFPNO.Text;
+                        timeModel.OilFPNO = txtOilFPNO.Text;
+                        timeModel.GuoBeginFPNO = txtGuoBeginFPNO.Text;
+                        timeModel.PostFPNO = txtPostFPNO.Text;
+                        timeModel.OtherFPNO = txtOtherFPNO.Text;
+                        timeModel.CaiFPNO = txtCaiFPNO.Text;
                         //===
 
                         #endregion

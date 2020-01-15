@@ -422,9 +422,20 @@ namespace VAN_OA.ReportForms
                 gvList.Columns[gvList.Columns.Count - 3].Visible = false;
                 gvList.Columns[gvList.Columns.Count - 4].Visible = true;
                 cars = this.toInvoSerSer.GetListArrayReport_HeBing(s, s1, sql2, FPTotal, isClose);
+
+                gvList.Columns[1].Visible = false;
+              
             }
             else
             {
+                if (NewShowAll_textName("到款单列表", "删除") == false)
+                {
+                    gvList.Columns[1].Visible = false;
+                }
+                else
+                {
+                    gvList.Columns[1].Visible = true;
+                }
                 gvList.Columns[gvList.Columns.Count - 5].Visible = true;
                 gvList.Columns[gvList.Columns.Count - 6].Visible = false;
 
@@ -681,6 +692,11 @@ namespace VAN_OA.ReportForms
                     gvList.Columns[0].Visible = false;
                 }
 
+                if (NewShowAll_textName("到款单列表", "删除") == false)
+                {
+                    gvList.Columns[1].Visible = false;
+                }
+
 
                 ddlUser.DataSource = user;
                 ddlUser.DataBind();
@@ -780,6 +796,38 @@ namespace VAN_OA.ReportForms
                 gvDetail.DataSource = DBHelp.getDataTable(sql);
                 gvDetail.DataBind();
                 //this.gvList.DataKeys[e.].Value.ToString()
+            }
+
+
+            if (e.CommandName == "Del")
+            {
+                //是否是此单据的申请人
+                var model = toInvoSerSer.GetModel(Convert.ToInt32(e.CommandArgument));
+
+                //if (Session["currentUserId"].ToString() != model.CreateUserId.ToString())
+                //{
+
+                //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('必须由原单据申请人 重新发起，其他人不能重新提交编辑！');</script>");
+                //    return;
+                //}
+
+                //首先单子要先通过
+                if (model != null && model.State == "执行中")
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('此单据还在执行中不能删除！');</script>");
+                    return;
+                }               
+                string type = "到款单";                
+                string sql = string.Format("select pro_Id from A_ProInfo where pro_Type='{0}'", type);
+                string efromId = string.Format("select id from tb_EForm where alle_id={0} and proId=(select pro_Id from A_ProInfo where pro_Type='{1}')", e.CommandArgument, type);
+                var id = DBHelp.ExeScalar(efromId).ToString();
+                var aa = DBHelp.ExeScalar(string.Format("select top 1 id from tb_EForm where allE_id={0} and proId=37", model.Id));
+                if (aa != null && aa != DBNull.Value)
+                {
+                    id = aa.ToString();
+                }
+                string url = "~/EFrom/WFToInvoice.aspx?ProId=38&allE_id=" + e.CommandArgument + "&EForm_Id=" + id + "&&IsDelete=true";
+                Response.Redirect(url);
             }
         }
 

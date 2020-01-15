@@ -93,6 +93,7 @@
             <td colspan="5">
                 <asp:TextBox ID="txtBusFromAddress" runat="server" Width="220px"></asp:TextBox>&nbsp;&nbsp;至&nbsp;&nbsp;<asp:TextBox ID="txtBusToAddress"
                     runat="server" Width="221px"></asp:TextBox>
+                公交费发票号码:<asp:TextBox ID="txtBusFPNO" runat="server" ></asp:TextBox>
             </td>
             <td>金额
             </td>
@@ -154,6 +155,7 @@
             </td>
             <td colspan="5">
                 <asp:TextBox ID="txtRepastAddress" runat="server" Width="220px"></asp:TextBox>
+                餐饮发票号码:<asp:TextBox ID="txtRepastFPNO" runat="server" ></asp:TextBox>
             </td>
             <td>金额
             </td>
@@ -209,6 +211,7 @@
             </td>
             <td colspan="2">
                 <asp:TextBox ID="txtHotelAddress" runat="server" Width="220px"></asp:TextBox>
+                 住宿发票号码:<asp:TextBox ID="txtHotelFPNO" runat="server" ></asp:TextBox>
             </td>
 
             <td colspan="3">酒店名称：
@@ -256,6 +259,7 @@
             <td colspan="4">
                 <asp:TextBox ID="txtOilFromAddress" runat="server" Width="220px"></asp:TextBox>至
                 <asp:TextBox ID="txtOilToAddress" runat="server" Width="220px"></asp:TextBox>
+                 汽油发票号码:<asp:TextBox ID="txtOilFPNO" runat="server" ></asp:TextBox>
             </td>
 
             <td>里程： 
@@ -292,6 +296,7 @@
             <td colspan="5">
                 <asp:TextBox ID="txtGuoBeginAddress" runat="server" Width="220px"></asp:TextBox>至
                 <asp:TextBox ID="txtGuoToAddress" runat="server" Width="220px"></asp:TextBox>
+                  过路费发票号码:<asp:TextBox ID="txtGuoBeginFPNO" runat="server" ></asp:TextBox>
             </td>
 
 
@@ -317,27 +322,22 @@
             <td colspan="8" style="height: 20px; background-color: #D7E8FF;">邮寄费<asp:LinkButton
                 ID="lbtnPostNo" runat="server" Style="color: Red;"
                 OnClick="lbtnPostNo_Click"></asp:LinkButton>
-                <asp:Label ID="lblPost_Id" runat="server" Visible="False"></asp:Label>
-
-
+                <asp:Label ID="lblPost_Id" runat="server" Visible="False"></asp:Label>               
             </td>
         </tr>
 
         <tr>
             <td>邮寄编号：</td>
             <td>
-
                 <asp:TextBox ID="txtPostNo" runat="server"></asp:TextBox>
             </td>
             <td>快递公司：</td>
             <td>
                 <asp:TextBox ID="txtPostCompany" runat="server"></asp:TextBox></td>
-
-
             <td>内容：</td>
             <td>
-
-                <asp:TextBox ID="txtPostContext" runat="server" Style="width: 95%"></asp:TextBox>
+                <asp:TextBox ID="txtPostContext" runat="server" Style="width: 85%"></asp:TextBox>
+                 
             </td>
 
             <td>寄件人：
@@ -363,6 +363,7 @@
                 <asp:CheckBox ID="cbPostTo" runat="server" Text="到付" Style="margin-right: 10px" />
 
                 <asp:TextBox ID="txtPostToAddress" runat="server" Width="220px"></asp:TextBox>至苏州
+                 邮寄发票号码:<asp:TextBox ID="txtPostFPNO" runat="server" ></asp:TextBox>
             </td>
 
 
@@ -388,6 +389,7 @@
             <td colspan="8" style="height: 20px; background-color: #D7E8FF;">小额采购---&nbsp;入库单号：<asp:LinkButton
                 ID="lbtnCaiNo" runat="server" Style="color: Red;" OnClick="lbtnCaiNo_Click"></asp:LinkButton>
                 <asp:Label ID="lblCaiID" runat="server" Visible="False"></asp:Label>
+                   
             </td>
         </tr>
 
@@ -397,7 +399,7 @@
             <td>内容：
             </td>
             <td colspan="5">
-                <asp:TextBox ID="txtPoContext" runat="server" Width="90%"></asp:TextBox>
+                <asp:TextBox ID="txtPoContext" runat="server" Width="60%"></asp:TextBox>小额采购发票号码:<asp:TextBox ID="txtCaiFPNO" runat="server" ></asp:TextBox>
             </td>
 
 
@@ -430,7 +432,8 @@
             <td>内容：
             </td>
             <td colspan="5">
-                <asp:TextBox ID="txtOtherContext" runat="server" Width="90%"></asp:TextBox>
+                <asp:TextBox ID="txtOtherContext" runat="server" Width="60%"></asp:TextBox>
+                  其它费用发票号码:<asp:TextBox ID="txtOtherFPNO" runat="server" ></asp:TextBox>
             </td>
 
 
@@ -494,6 +497,8 @@
 
         <tr>
             <td colspan="8" align="center">
+                <asp:Button ID="btnFPSave" runat="server" Text="保存" Visible="false" BackColor="Yellow"
+                    Width="51px" OnClick="btnFPSave_Click" />
 
                 <asp:Button ID="btnSave" runat="server" Text="保存" Visible="false" BackColor="Yellow"
                     Width="51px" OnClick="btnSet_Click" />

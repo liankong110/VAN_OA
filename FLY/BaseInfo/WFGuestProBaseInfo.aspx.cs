@@ -73,7 +73,7 @@ namespace VAN_OA.BaseInfo
             {
                 model.Id = Convert.ToInt32(Request["Id"]);
             }
-             
+            model.GuestMonth = Convert.ToInt32(ddlMonth.Text);
             return model;
         }
         protected void btnUpdate_Click(object sender, EventArgs e)
@@ -154,7 +154,7 @@ namespace VAN_OA.BaseInfo
                     this.ddlGuestPro.Text = model.GuestPro.ToString();
                     this.txtPayXiShu.Text = model.JiLiXiShu.ToString();
                     ddlXiShu.Text = model.XiShu.ToString();
-                   
+                    ddlMonth.Text = model.GuestMonth.ToString();
                 }
                 else
                 {

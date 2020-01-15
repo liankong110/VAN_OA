@@ -16,7 +16,8 @@ using VAN_OA.Model.ReportForms;
 using System.Data.SqlClient;
 using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.EFrom;
-
+using VAN_OA.Model.BaseInfo;
+using VAN_OA.Dal.BaseInfo;
 
 namespace VAN_OA.ReportForms
 {
@@ -30,12 +31,13 @@ namespace VAN_OA.ReportForms
         protected void btnCopy_Click(object sender, EventArgs e)
         {
           
+
             if (ddlYears.Text+ddlOrl.Text ==ddlNextYears.Text+ ddlBar.Text)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('原季度不能等于目标季度！');</script>");
                 return;
             }
-
+            List<GuestProBaseInfo> guestProBaseInfos = new GuestProBaseInfoService().GetListArray("GuestPro=1");
             string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}' ", ddlYears.Text, ddlOrl.Text);
             sql += string.Format(@" and (TB_GuestTrack.id in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') and state='通过') or TB_GuestTrack.id not in (select allE_id from tb_EForm where proId in (
@@ -55,11 +57,35 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
                     objCommand.Parameters.Clear();
                     foreach (var model in GuestTracks)
                     {
+                        //客户属性 每个季度需要复制到下一季度，但有一个是需要 特别关注的，就是每年的四季度 如果某个客户的客户属性是 自我开拓，
+                        //来年的一季度，这个客户的客户属性 必须变成 原有资源！！！
+                        //if (ddlOrl.Text == "4"&& ddlBar.Text=="1")
+                        //{
+                        //    if (model.MyGuestProString == "自我开拓")
+                        //    {
+                        //        model.MyGuestPro = 2;
+                        //    }
+                        //}
                         model.QuartNo = ddlBar.Text;
                         model.YearNo = ddlNextYears.Text;
-                        string add = GuestTrackSer.AddToString(model);
+                      
                         string update = GuestTrackSer.UpdateToString(model, model.GuestId, ddlNextYears.Text, ddlBar.Text);
-                     
+                        if (model.MyGuestProString == "自我开拓")
+                        {
+                            //我们的系统在每个季度的最后一天的晚上12点会自动同步客户信息到下一个季度，我们定义
+                            //．  如该客户目前的属性是自我开拓，该客户从登记之日起，加上自我开拓的有效期月数数字对应的日期，
+                            //如小于（<） 新季度第一天，新季度的客户的属性变成 原有资源，否则 还是自我开拓
+                            if (DateTime.Now.Month == 3 || DateTime.Now.Month == 6 || DateTime.Now.Month == 9 || DateTime.Now.Month == 12)
+                            {
+                                if (DateTime.Now.Day == DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
+                                    && model.Time.AddMonths(guestProBaseInfos[0].GuestMonth) < Convert.ToDateTime(ddlNextYears.Text + "-" + ddlBar.Text + "-01"))
+                                {
+                                    model.MyGuestPro = 2;
+                                }
+                            }
+                        }
+                        string add = GuestTrackSer.AddToString(model);
+
                         string updateSql =
                             string.Format(
                                 "if not exists(select id from TB_GuestTrack where guestId='{0}' and yearNo='{1}' and QuartNo='{2}') begin {3} end else begin {4} end ",

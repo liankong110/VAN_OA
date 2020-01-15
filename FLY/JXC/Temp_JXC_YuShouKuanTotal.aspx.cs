@@ -207,6 +207,10 @@ namespace VAN_OA.JXC
             {
                 isColse += " and Temp_YuShouKuan.IsSelected=" + ddlIsSelect.Text;
             }
+            if (ddlFax.Text != "-1")
+            {
+                isColse += string.Format(" and IsPoFax={0}", ddlFax.Text);
+            }
             if (ddlPOTyle.Text != "-1")
             {
                 isColse += " and POType=" + ddlPOTyle.Text;
@@ -895,7 +899,10 @@ namespace VAN_OA.JXC
                 isColse += " and CG_POOrder.POType=" + ddlPOTyle.Text;
             }
 
-
+            if (ddlFax.Text != "-1")
+            {
+                isColse += string.Format(" and CG_POOrder.IsPoFax={0}", ddlFax.Text);
+            }
             if (ddlJieIsSelected.Text != "-1")
             {
                 isColse += " and JieIsSelected=" + ddlJieIsSelected.Text;

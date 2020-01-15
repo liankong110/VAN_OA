@@ -32,19 +32,42 @@ namespace VAN_OA.Dal.JXC
                 {
                     model.State = eform.state;
                     objCommand.Parameters.Clear();
-
                     model.UpAccount = accountXishu(model, eform, objCommand);
                     Update(model, objCommand);
 
-
                     tb_EFormService eformSer = new tb_EFormService();
-
                     eformSer.Update(eform, objCommand);
-
-
                     tb_EFormsService eformsSer = new tb_EFormsService();
                     eformsSer.Add(forms, objCommand);
+                    //判断是否是删除 -到款单删除
+                    if (eform.proId == 38&& eform.state == "通过")
+                    {
+                        //及到款单删除会有两个层面，
+                        //1，预付款模式，这时只需要在审批的最后一个流程总经理点确定时，删除相应的到款单；并弹出一个提示框，该预付到款单已删除，点确定，完成。
+                        //2，发票到款模式，我们需要在最后一个审批流程点确定时，删除相应项目编号针对该发票号的发票签回单（如果有在审批执行中或已完成审批的），再删除该项目编号针对该发票号的到款单，
+                        //并弹出一个提示框，该发票到款单已删除，点确定，完成。
+                        if (model.BusType == 0)//实际发票到款
+                        {
+                            //删除发票签回单（如果有）
+                            string deleteFPBack = string.Format("delete tb_EForms where e_Id in (select id from tb_EForm where proId=29 and allE_id in (select id from Sell_OrderFPBack where PId={0}));", model.FPId);
+                            deleteFPBack += string.Format("delete tb_EForm where proId=29 and allE_id in (select id from Sell_OrderFPBack where PId={0});", model.FPId);
+                            deleteFPBack += string.Format("delete Sell_OrderFPBacks  where Id in (select id from Sell_OrderFPBack where PId={0});delete Sell_OrderFPBack  where PId={0};", model.FPId);
 
+                            objCommand.CommandText = deleteFPBack;
+                            objCommand.ExecuteNonQuery();                            
+                        }
+
+                        //删除发票删除单 审批流
+                        string deleteFPDelete = string.Format("delete tb_EForms where e_Id in (select id from tb_EForm where proId in (26,34,37) and allE_id={0});", model.Id);
+                        deleteFPDelete += string.Format("delete tb_EForm where proId in (27,38) and allE_id={0};", model.Id);
+                        objCommand.CommandText = deleteFPDelete;
+                        objCommand.ExecuteNonQuery();
+
+                        string DeleteAll = string.Format("delete from [TB_ToInvoice] where id={0};", model.Id);
+                        objCommand.CommandText = DeleteAll;
+                        objCommand.ExecuteNonQuery();
+
+                    }
 
                     tan.Commit();
                 }
@@ -54,6 +77,8 @@ namespace VAN_OA.Dal.JXC
                     return false;
 
                 }
+
+               
 
             }
 
@@ -236,7 +261,7 @@ namespace VAN_OA.Dal.JXC
                 strSql1.Append("TempGuid,");
                 strSql2.Append("'" + model.TempGuid + "',");
             }
-            
+
 
             strSql.Append("insert into TB_ToInvoice(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
@@ -354,8 +379,8 @@ namespace VAN_OA.Dal.JXC
                     {
                         model = ReaderBind(dataReader);
                         model.TempGuid = dataReader["TempGuid"].ToString();
-                        model.LastPayTotal =Convert.ToDecimal(dataReader["LastPayTotal"]);
-                        
+                        model.LastPayTotal = Convert.ToDecimal(dataReader["LastPayTotal"]);
+
                     }
                 }
             }
@@ -412,8 +437,8 @@ namespace VAN_OA.Dal.JXC
         public List<TB_ToInvoice> GetListArray_History(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select Id,ProNo,CreateUser,AppleDate,DaoKuanDate,Total,UpAccount,PoNo,PoName,GuestName,Remark,State,ZhangQi,FPNo,FPId,BusType ");
-            strSql.Append(" FROM TB_ToInvoice_History ");
+            strSql.Append("select Id,ProNo,CreateUser,AppleDate,DaoKuanDate,Total,UpAccount,PoNo,PoName,GuestName,Remark,State,ZhangQi,FPNo,FPId,BusType,NewFPNo ");
+            strSql.Append(" FROM TB_ToInvoice_History left join (select id as sellFP_Id,FPNo as NewFPNo  from Sell_OrderFP) as FP  on FP.sellFP_Id=TB_ToInvoice_History.fpid");
 
             if (strWhere.Trim() != "")
             {
@@ -431,6 +456,7 @@ namespace VAN_OA.Dal.JXC
                     while (dataReader.Read())
                     {
                         var model = ReaderBind(dataReader);
+
                         if (model.BusType == 0)
                         {
                             model.BusTypeStr = "实际发票到款";
@@ -439,6 +465,12 @@ namespace VAN_OA.Dal.JXC
                         {
                             model.BusTypeStr = "预付款";
                         }
+                        var ojb = dataReader["NewFPNo"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.NewFPNo = (string)ojb;
+                        }
+                        
                         list.Add(model);
                     }
                 }
@@ -517,7 +549,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
                         {
                             model.IsPoFax = Convert.ToBoolean(ojb);
                         }
-                        
+
 
                         model.PoNo = dataReader["PoNo"].ToString();
                         model.PoName = dataReader["PoName"].ToString();
@@ -546,7 +578,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
 
                                     model.Days = ts.Days;
                                 }
-                                
+
                             }
                             ojb = dataReader["Total"];
                             if (ojb != null && ojb != DBNull.Value)
@@ -635,7 +667,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
                             {
                                 //如该项目某天开出发票了，未开票天数=（某天-该项目第一笔的出库日期）-1
                                 TimeSpan ts = model.FPDate.Value.Date - Convert.ToDateTime(model.MinOutTime.Value.ToString("yyyy-MM-dd"));
-                                model.WeiFPDays = ts.Days ;
+                                model.WeiFPDays = ts.Days;
                             }
                             else
                             {
@@ -652,7 +684,7 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
         }
 
 
-        public List<TB_ToInvoice> GetListArrayReport_HeBing(string strWhere, string strWhere2,string strWhere3,string fpTotal,string isColse)
+        public List<TB_ToInvoice> GetListArrayReport_HeBing(string strWhere, string strWhere2, string strWhere3, string fpTotal, string isColse)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.AppendFormat(@"select Model,FPDate,CG_POOrder.AE,MaxDaoKuanDate,MinDaoKuanDate,CG_POOrder.IsPoFax,minProNo,minOutTime,FPTotal,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,CG_POOrder.PODate as minPoDate,Total,newtable1.PoName,newtable1.GuestName from(
@@ -713,7 +745,7 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                         {
                             model.HadFpTotal = Convert.ToDecimal(ojb);
                         }
-                        
+
                         ojb = dataReader["MinPoDate"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -736,7 +768,7 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
 
                             model.Days = ts.Days;
 
-                            
+
                         }
                         //在到款单列表（见第二画面），出库单已经开具的情况下，如果项目金额=0，则 不管到款金额合并 是否打勾，该项目的天数 一律显示0,表示不需要到款。
                         //这个逻辑 也需要在 销售业绩帐期考核、销售报表汇总、项目费用汇总统计  的 天数或实际到款期 中 同步修改
@@ -763,12 +795,12 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                             model.ProNo = ojb.ToString();
                         }
                         ojb = dataReader["MaxDaoKuanDate"];
-                        if (ojb != null && ojb != DBNull.Value && model.MinOutTime.HasValue&&model.POTotal != 0 && model.POTotal <= model.Total)
+                        if (ojb != null && ojb != DBNull.Value && model.MinOutTime.HasValue && model.POTotal != 0 && model.POTotal <= model.Total)
                         {
-                            TimeSpan ts = (Convert.ToDateTime(Convert.ToDateTime(ojb).ToString("yyyy-MM-dd")) -Convert.ToDateTime( model.MinOutTime.Value.ToString("yyyy-MM-dd")));
+                            TimeSpan ts = (Convert.ToDateTime(Convert.ToDateTime(ojb).ToString("yyyy-MM-dd")) - Convert.ToDateTime(model.MinOutTime.Value.ToString("yyyy-MM-dd")));
 
                             model.Days = ts.Days;
-                          
+
                             //model.Days = Convert.ToDateTime(ojb).Subtract(model.MinOutTime.Value).Days; 
                         }
                         if (model.POTotal <= model.Total)
@@ -886,8 +918,8 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
         /// <returns></returns>
         public decimal GetPayTotal(string pono, decimal total)
         {
-            string sql = string.Format("select isnull(sum(Total),0) from TB_ToInvoice where BusType=1 and PoNo='{0}' and State='通过'",pono);
-            var payTotal= Convert.ToDecimal(DBHelp.ExeScalar(sql));
+            string sql = string.Format("select isnull(sum(Total),0) from TB_ToInvoice where BusType=1 and PoNo='{0}' and State='通过'", pono);
+            var payTotal = Convert.ToDecimal(DBHelp.ExeScalar(sql));
             if (payTotal > 0)
             {
                 if (payTotal <= total)
@@ -903,7 +935,7 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
         /// 预付款结转 生成 实际到款单
         /// </summary>
         /// <returns></returns>
-        public bool YuPay_CreateInvoice(Sell_OrderFP model,decimal PayTotal)
+        public bool YuPay_CreateInvoice(Sell_OrderFP model, decimal PayTotal)
         {
             DateTime daoKuanDate = Convert.ToDateTime("1900-1-1");
             using (SqlConnection conn = DBHelp.getConn())
@@ -917,9 +949,9 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                 var result_payTotal = Convert.ToDecimal(objCommand.ExecuteScalar());
 
 
-               
+
                 objCommand.CommandText = string.Format("select isnull(max(DaoKuanDate),getdate()) from TB_ToInvoice where BusType=1 and PoNo='{0}' and State='通过'", model.PONo);
-                 daoKuanDate = Convert.ToDateTime(objCommand.ExecuteScalar());
+                daoKuanDate = Convert.ToDateTime(objCommand.ExecuteScalar());
 
                 if (PayTotal < model.Total || (PayTotal == model.Total && result_payTotal == PayTotal))
                 {
@@ -947,7 +979,7 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                             }
                             catch (Exception)
                             {
-                                
+
                             }
                             invoList.Add(invM);
                             if (invoList.Sum(t => t.Total) > PayTotal)
@@ -975,40 +1007,40 @@ left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice wh
                 }
                 tan.Commit();
             }
-                //生成预付款单
-                TB_ToInvoice toInvoic_model = new TB_ToInvoice();
-                toInvoic_model.AppleDate = DateTime.Now;
-                toInvoic_model.CreateUser = "admin";
-                toInvoic_model.DaoKuanDate = daoKuanDate;
-                toInvoic_model.GuestName =model.GuestName;
-                toInvoic_model.PoName = model.POName;
-                toInvoic_model.PoNo = model.PONo;
-                toInvoic_model.Total = PayTotal;
-                toInvoic_model.UpAccount =0;
-                toInvoic_model.FPNo = model.FPNo;
-                string sql = string.Format("select top 1 guestDays from TB_GuestTrack where guestName='{0}'", model.GuestName);
-                object ob = DBHelp.ExeScalar(sql);
-                toInvoic_model.ZhangQi = ob is DBNull ? 0 : Convert.ToDecimal(ob);
-                toInvoic_model.FPId = model.Id;
-                toInvoic_model.BusType =0;
-                toInvoic_model.State = "通过";
-                toInvoic_model.Remark = "";
+            //生成预付款单
+            TB_ToInvoice toInvoic_model = new TB_ToInvoice();
+            toInvoic_model.AppleDate = DateTime.Now;
+            toInvoic_model.CreateUser = "admin";
+            toInvoic_model.DaoKuanDate = daoKuanDate;
+            toInvoic_model.GuestName = model.GuestName;
+            toInvoic_model.PoName = model.POName;
+            toInvoic_model.PoNo = model.PONo;
+            toInvoic_model.Total = PayTotal;
+            toInvoic_model.UpAccount = 0;
+            toInvoic_model.FPNo = model.FPNo;
+            string sql = string.Format("select top 1 guestDays from TB_GuestTrack where guestName='{0}'", model.GuestName);
+            object ob = DBHelp.ExeScalar(sql);
+            toInvoic_model.ZhangQi = ob is DBNull ? 0 : Convert.ToDecimal(ob);
+            toInvoic_model.FPId = model.Id;
+            toInvoic_model.BusType = 0;
+            toInvoic_model.State = "通过";
+            toInvoic_model.Remark = "";
 
-                VAN_OA.Model.EFrom.tb_EForm eform = new tb_EForm();              
-                eform.appPer = 1;
-                eform.appTime = DateTime.Now;
-                eform.createPer = 1;
-                eform.createTime = DateTime.Now;
-                eform.proId = 27;
-                eform.state = "通过";
-                eform.toPer = 0;
-                eform.toProsId = 0;
-                if (addTran(toInvoic_model, eform) > 0)
-                {
-                    new CG_POOrderService().GetOrder_ToInvoiceAndUpdatePoStatus(toInvoic_model.PoNo);
-                }
-                return true;
-           
+            VAN_OA.Model.EFrom.tb_EForm eform = new tb_EForm();
+            eform.appPer = 1;
+            eform.appTime = DateTime.Now;
+            eform.createPer = 1;
+            eform.createTime = DateTime.Now;
+            eform.proId = 27;
+            eform.state = "通过";
+            eform.toPer = 0;
+            eform.toProsId = 0;
+            if (addTran(toInvoic_model, eform) > 0)
+            {
+                new CG_POOrderService().GetOrder_ToInvoiceAndUpdatePoStatus(toInvoic_model.PoNo);
+            }
+            return true;
+
         }
 
     }

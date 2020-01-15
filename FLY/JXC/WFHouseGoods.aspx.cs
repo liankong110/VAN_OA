@@ -91,6 +91,7 @@ namespace VAN_OA.JXC
         Dal.JXC.TB_HouseGoodsService houseSer = new VAN_OA.Dal.JXC.TB_HouseGoodsService();
         private void Show()
         {
+            SumOrders = new TB_HouseGoods();
             if (!string.IsNullOrEmpty(txtNum.Text))
             {
                 try

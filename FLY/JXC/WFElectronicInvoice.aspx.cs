@@ -19,6 +19,7 @@ namespace VAN_OA.JXC
         List<Invoice_BillType> billTypeList = new List<Invoice_BillType>();
         List<Invoice_Person> personList = new List<Invoice_Person>();
         System.Collections.Hashtable hb = new System.Collections.Hashtable();
+        List<Base_UseType> warnList = new List<Base_UseType>();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -60,6 +61,10 @@ namespace VAN_OA.JXC
 
                 billTypeList = new Invoice_BillTypeService().GetListArray(" IsStop=0");
                 personList = new Invoice_PersonService().GetListArray(" IsStop=0");
+
+
+                warnList = new Base_UseTypeService().GetListArray("Type=1");
+                
             }
         }
 
@@ -203,6 +208,7 @@ namespace VAN_OA.JXC
         }
         private void Show()
         {
+            warnList = new Base_UseTypeService().GetListArray("Type=1");
             var list = GetData();
             if (list == null)
             {
@@ -264,14 +270,35 @@ namespace VAN_OA.JXC
 
 
 
+                DropDownList dllUse = (DropDownList)e.Row.FindControl("dllUse");
+                dllUse.DataSource = warnList;
+                dllUse.DataTextField = "Name";
+                dllUse.DataValueField = "Name";
+                dllUse.DataBind();
+
 
                 var model = e.Row.DataItem as ElectronicInvoice;
 
-                DropDownList dllUse = (DropDownList)e.Row.FindControl("dllUse");
+                //DropDownList dllUse = (DropDownList)e.Row.FindControl("dllUse");
+                //在供应商特性为个人时，分两种情况，供应商为本部门开头的名称时，用途缺省为备用金，否则其他缺省为还款。
                 if (model.Peculiarity == "个人")
                 {
-                    dllUse.Text = "备用金";
+                    if (model.SupplieSimpeName.Contains("本部门"))
+                    {
+                        dllUse.Text = "备用金";
+                    }
+                    else
+                    {
+                        dllUse.Text = "还款";
+                    }
+                 
                 }
+                //如遇供应商特性为非个人（厂家、代理商、总代理）时，用途下拉框缺省为货款，
+                if (model.Peculiarity == "厂家"|| model.Peculiarity == "代理商" || model.Peculiarity == "总代理")
+                {
+                    dllUse.Text = "货款";
+                }
+             
 
                 if (hb.ContainsKey(model.busType + model.ProNo))
                 {

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Dal.ReportForms;
+using VAN_OA.Model.BaseInfo;
 using VAN_OA.Model.JXC;
 
 namespace VAN_OA.Fin
@@ -16,6 +17,8 @@ namespace VAN_OA.Fin
         {
             if (!IsPostBack)
             {
+
+                
                 var billTypeList = new Invoice_BillTypeService().GetListArray(" IsStop=0");
                 var personList = new Invoice_PersonService().GetListArray(" IsStop=0");
                 dllBillType.DataSource = billTypeList;
@@ -27,7 +30,16 @@ namespace VAN_OA.Fin
                 dllPerson.DataTextField = "Name";
                 dllPerson.DataValueField = "Id";
                 dllPerson.DataBind();
-               
+
+
+                List<Base_UseType> warnList = new Base_UseTypeService().GetListArray("Type=2");
+                dllUse.DataSource = warnList;
+                dllUse.DataTextField = "Name";
+                dllUse.DataValueField = "Name";
+                dllUse.DataBind();
+                
+
+
             }
         }
 

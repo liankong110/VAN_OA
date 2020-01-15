@@ -100,6 +100,16 @@ namespace VAN_OA
             return decimal.TryParse(num, out result);
         }
 
+        public static bool VerifesToNum_NoString(string num)
+        {
+            if ( num.Contains("。") || num.Contains("."))
+            {
+                return false;
+            }
+            decimal result;
+            return decimal.TryParse(num, out result);
+        }
+
         #region desc加密
         /// <summary>
         /// DES加密

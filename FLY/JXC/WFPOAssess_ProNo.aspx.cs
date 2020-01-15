@@ -14,6 +14,8 @@ using VAN_OA.Dal.JXC;
 using System.Collections;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Dal.KingdeeInvoice;
+using VAN_OA.Model.JXC;
+
 namespace VAN_OA.JXC
 {
     public partial class WFPOAssess_ProNo : BasePage
@@ -25,7 +27,7 @@ namespace VAN_OA.JXC
         protected DataSet ds;
         protected DataTable dt_Fund;
         public DataTable dt_GetSumPOTotal;
-
+        public List<JXC_REPORTTotal> pOOrderList;
 
         protected void ddlCompany_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -170,62 +172,69 @@ namespace VAN_OA.JXC
             resut_SellGoodsList.Sort();
 
             dt_Fund = DBHelp.getDataTable(GetFundWrong());
-            dt_GetSumPOTotal = DBHelp.getDataTable(GetSumPOTotal());
+            GetSumPOTotal();
+            //dt_GetSumPOTotal = DBHelp.getDataTable();
         }
         /// <summary>
         /// 罗列销售报表汇总中项目金额<>销售金额的项目编号
         /// </summary>
         /// <returns></returns>
-        public string GetSumPOTotal()
+        public void GetSumPOTotal()
         {
-            string where = "";
+            string sql = " ";
+         
             if (txtFrom.Text != "")
             {
-                where += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00'", txtFrom.Text);
+                sql += string.Format(" and CG_POOrder.PODate>='{0} 00:00:00'", txtFrom.Text);
             }
             if (txtTo.Text != "")
             {
-                where += string.Format(" and CG_POOrder.PODate<='{0} 23:59:59'", txtTo.Text);
+                sql += string.Format(" and CG_POOrder.PODate<='{0} 23:59:59'", txtTo.Text);
             }
             if (ddlCompany.Text == "-1" && ddlUser.Text != "-1")
             {
-                where += string.Format(" and exists (select id from tb_User where ID={0} and CG_POOrder.appName=id)", ddlUser.Text);
+                sql += string.Format(" and CG_POOrder.AppName={0}", ddlUser.Text);
             }
+
             if (ddlCompany.Text != "-1")
             {
-                string where1 = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[0]);
-
-                if (ddlUser.Text != "-1")
-                {
-                    where1 += string.Format(" and ID={0} ", ddlUser.Text);
-                }
-                where += string.Format(" and exists (select id from tb_User where {0} and CG_POOrder.appName=id)", where1);
+                string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
+                sql += string.Format(" and exists (select id from tb_User where IFZhui=0 and {0} and CG_POOrder.appName=id)", where);
             }
+            
             if (ddlIsClose.Text != "-1")
             {
-                where += " and IsClose=" + ddlIsClose.Text;
+                sql += " and IsClose=" + ddlIsClose.Text;
             }
             if (ddlJieIsSelected.Text != "-1")
             {
-                where += " and JieIsSelected=" + ddlJieIsSelected.Text;
+                sql += " and JieIsSelected=" + ddlJieIsSelected.Text;
             }
+            if (ddlSpecial.Text != "-1")
+            {
+                sql += string.Format(" and CG_POOrder.IsSpecial={0}", ddlSpecial.Text);
+            }
+            pOOrderList = new JXC_REPORTService().GetListArray_Total(sql, "", " where SumPOTotal <> isnull(goodSellTotal,0)");
+
+           
+           
+          
+           
+           
             //if (cbIsSpecial.Checked)
             //{
             //    where += " and IsSpecial=0";
             //}
 
-            if (ddlSpecial.Text != "-1")
-            {
-                where += string.Format(" and CG_POOrder.IsSpecial={0}", ddlSpecial.Text);
-            }
+           
 
-            string sql = string.Format(@"SELECT tb.PONo,CG_POOrder.AE FROM 
-( select PONo,sum(goodSellTotal) as goodSellTotal from JXC_REPORT group by PONo) as tb
-left join POTotal_SumView on POTotal_SumView.PONo=tb.PONo
-left join CG_POOrder on CG_POOrder.PONo=tb.PONo and ifzhui=0  and CG_POOrder.Status='通过' 
-where SumPOTotal <> goodSellTotal {0}
-ORDER BY  tb.PONo", where);
-            return sql;
+//            string sql = string.Format(@"SELECT tb.PONo,CG_POOrder.AE FROM 
+//( select PONo,sum(goodSellTotal) as goodSellTotal from JXC_REPORT group by PONo) as tb
+//left join POTotal_SumView on POTotal_SumView.PONo=tb.PONo
+//left join CG_POOrder on CG_POOrder.PONo=tb.PONo and ifzhui=0  and CG_POOrder.Status='通过' 
+//where SumPOTotal <> goodSellTotal {0}
+//ORDER BY  tb.PONo", where);
+//            return sql;
         }
 
         /// <summary>
@@ -292,14 +301,16 @@ tb_EForm
 left join tb_EForms  on tb_EForm.id=tb_EForms.e_Id
 left join tb_FundsUse  on tb_FundsUse.id=tb_EForm.allE_id
 left join CG_POOrder on CG_POOrder.pono=tb_FundsUse.PONo and Status='通过' and IFZhui=0 
-where proId=9 and tb_EForm.state='不通过'  and  roleName='财务' {0}
+where proId=9 and tb_EForm.state='不通过'  --and  roleName='财务'
+{0}
 union all
 select proId,CG_POOrder.AE,Tb_DispatchList.PONo,allE_id,tb_EForm.id from
 tb_EForm 
 left join tb_EForms  on tb_EForm.id=tb_EForms.e_Id
 left join Tb_DispatchList  on Tb_DispatchList.id=tb_EForm.allE_id
 left join CG_POOrder on CG_POOrder.pono=Tb_DispatchList.PONo and Status='通过' and IFZhui=0 
-where proId=12 and tb_EForm.state='不通过' and  roleName='财务' {0}) as t order by PONO  ", where);
+where proId=12 and tb_EForm.state='不通过' --and  roleName='财务' 
+{0}) as t order by PONO  ", where);
             return sql;
         }
 

@@ -10,7 +10,8 @@ using VAN_OA.Model.ReportForms;
 using System.Collections.Generic;
 using VAN_OA.Dal.JXC;
 using VAN_OA.Model.JXC;
-
+using VAN_OA.Model.BaseInfo;
+using VAN_OA.Dal.BaseInfo;
 
 namespace VAN_OA
 {
@@ -82,7 +83,8 @@ namespace VAN_OA
                         //{
                         //    return;
                         //}
-
+                        List<GuestProBaseInfo> guestProBaseInfos = new GuestProBaseInfoService().GetListArray("GuestPro=1");
+                       
                         TB_GuestTrackService GuestTrackSer = new TB_GuestTrackService();
                         string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}' ", currentYear, currentZhangQi);
                         sql += string.Format(@" and (TB_GuestTrack.id in (select allE_id from tb_EForm where proId in (
@@ -102,13 +104,37 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
 
                                 objCommand.Parameters.Clear();
                                 foreach (var model in GuestTracks)
-                                {
+                                { //客户属性 每个季度需要复制到下一季度，但有一个是需要 特别关注的，就是每年的四季度 如果某个客户的客户属性是 自我开拓，
+                                  //来年的一季度，这个客户的客户属性 必须变成 原有资源！！！
+                                    //if (currentZhangQi == 4)
+                                    //{
+                                    //    if (model.MyGuestProString == "自我开拓")
+                                    //    {
+                                    //        model.MyGuestPro = 2;
+                                    //    }
+                                    //}
+
                                     model.QuartNo = nextZhangQi.ToString();
                                     model.YearNo = nextYear.ToString();
                                     model.CreateTime = DateTime.Now;
-                                    string update = GuestTrackSer.AddToString(model);
+                                  
 
                                     string secondUpdate = GuestTrackSer.UpdateToString(model, model.GuestId, nextYear.ToString(), nextZhangQi.ToString());
+                                    if (model.MyGuestProString == "自我开拓")
+                                    {
+                                        //我们的系统在每个季度的最后一天的晚上12点会自动同步客户信息到下一个季度，我们定义
+                                        //．  如该客户目前的属性是自我开拓，该客户从登记之日起，加上自我开拓的有效期月数数字对应的日期，
+                                        //如小于（<） 新季度第一天，新季度的客户的属性变成 原有资源，否则 还是自我开拓
+                                        if (DateTime.Now.Month == 3 || DateTime.Now.Month == 6 || DateTime.Now.Month == 9 || DateTime.Now.Month == 12)
+                                        {
+                                            if (DateTime.Now.Day == DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
+                                                && model.Time.AddMonths(guestProBaseInfos[0].GuestMonth) < Convert.ToDateTime(nextYear + "-" + nextMonth + "-01"))
+                                            {
+                                                model.MyGuestPro = 2;
+                                            }
+                                        }
+                                    }
+                                    string update = GuestTrackSer.AddToString(model);
 
                                     string updateSql = string.Format("if not exists(select id from TB_GuestTrack where guestId='{0}' and yearNo='{1}' and QuartNo='{2}')begin {3} end else begin {4} end",
                                         model.GuestId, nextYear.ToString(), nextZhangQi.ToString(), update, secondUpdate);

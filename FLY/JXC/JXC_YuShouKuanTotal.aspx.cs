@@ -238,7 +238,10 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and GuestPro={0}", ddlGuestProList.SelectedValue);
             }
 
-
+            if (ddlFax.Text != "-1")
+            {
+                sql += string.Format(" and IsPoFax={0}", ddlFax.Text);
+            }
 
             if (ddlUser.Text == "-1")//显示所有用户
             {
@@ -247,14 +250,14 @@ namespace VAN_OA.JXC
                     sql += string.Format(" and IsSpecial={1} {0} ", isColse, ddlIsSpecial.Text);
                     //sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=0 AND PONO=JXC_REPORT.PONO {0})", isColse);
                 }
-
-                //else
-                //{
-                //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=1 AND PONO=JXC_REPORT.PONO {0})", isColse);
-                //}
-                //var model = Session["userInfo"] as User;
-                //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
-            }
+                
+                    //else
+                    //{
+                    //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=1 AND PONO=JXC_REPORT.PONO {0})", isColse);
+                    //}
+                    //var model = Session["userInfo"] as User;
+                    //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
+                }
             else if (ddlUser.Text == "0")//显示部门信息
             {
                 var model = Session["userInfo"] as User;

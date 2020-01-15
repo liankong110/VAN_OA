@@ -1694,23 +1694,23 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and Status<>'不通过'");
             }
 
-            if (txtGoodNo1.Text != "" || txtNameOrTypeOrSpec1.Text != "" || txtNameOrTypeOrSpecTwo1.Text != "" || ddlGoodUnit.Text != "全部")
+            if (txtGoodNo1.Text.Trim() != "" || txtNameOrTypeOrSpec1.Text.Trim() != "" || txtNameOrTypeOrSpecTwo1.Text.Trim() != "" || ddlGoodUnit.Text != "全部")
             {
                 string goodInfo = "";
-                if (txtGoodNo1.Text != "")
+                if (txtGoodNo1.Text.Trim() != "")
                 {
-                    goodInfo += string.Format(" and TB_Good.GoodNo like '%{0}%'", txtGoodNo1.Text);
+                    goodInfo += string.Format(" and TB_Good.GoodNo like '%{0}%'", txtGoodNo1.Text.Trim());
                 }
-                if (txtNameOrTypeOrSpec1.Text != "" && txtNameOrTypeOrSpecTwo1.Text != "")
+                if (txtNameOrTypeOrSpec1.Text.Trim() != "" && txtNameOrTypeOrSpecTwo1.Text.Trim() != "")
                 {
                     goodInfo += string.Format(" and ((GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%') or (GoodTypeSmName like '%{1}%' or GoodName  like '%{1}%' or GoodSpec like '%{1}%'))",
-                       txtNameOrTypeOrSpec1.Text, txtNameOrTypeOrSpecTwo1.Text);
+                       txtNameOrTypeOrSpec1.Text.Trim(), txtNameOrTypeOrSpecTwo1.Text.Trim());
                 }
-                else if (txtNameOrTypeOrSpec1.Text != "" || txtNameOrTypeOrSpecTwo1.Text != "")
+                else if (txtNameOrTypeOrSpec1.Text.Trim() != "" || txtNameOrTypeOrSpecTwo1.Text.Trim() != "")
                 {
                     var NameOrTypeOrSpec = "";
-                    if (txtNameOrTypeOrSpec1.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpec1.Text;
-                    if (txtNameOrTypeOrSpecTwo1.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpecTwo1.Text;
+                    if (txtNameOrTypeOrSpec1.Text.Trim() != "") NameOrTypeOrSpec = txtNameOrTypeOrSpec1.Text.Trim();
+                    if (txtNameOrTypeOrSpecTwo1.Text.Trim() != "") NameOrTypeOrSpec = txtNameOrTypeOrSpecTwo1.Text.Trim();
 
                     goodInfo += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
                        NameOrTypeOrSpec);
@@ -1736,9 +1736,9 @@ namespace VAN_OA.JXC
             }
             ViewState["selPONo"] = pono;
 
-            if (!string.IsNullOrEmpty(txtRemark.Text))
+            if (!string.IsNullOrEmpty(txtRemark.Text.Trim()))
             {
-                sql += string.Format(" and CG_POOrder.PORemark like '%{0}%'", txtRemark.Text);
+                sql += string.Format(" and CG_POOrder.PORemark like '%{0}%'", txtRemark.Text.Trim());
             }
             string proNo = "";
             if (!string.IsNullOrEmpty(txtNeiProNo.Text.Trim()))
@@ -1753,25 +1753,25 @@ namespace VAN_OA.JXC
             }
             
             string time = "";
-            if (txtNeiFrom.Text != "")
+            if (txtNeiFrom.Text.Trim() != "")
             {
-                if (CommHelp.VerifesToDateTime(txtNeiFrom.Text) == false)
+                if (CommHelp.VerifesToDateTime(txtNeiFrom.Text.Trim()) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
                     return;
                 }
 
-                time += string.Format(" and PODate>='{0} 00:00:00'", txtNeiFrom.Text);
+                time += string.Format(" and PODate>='{0} 00:00:00'", txtNeiFrom.Text.Trim());
             }
             
-            if (txtNeiTo.Text != "")
+            if (txtNeiTo.Text.Trim() != "")
             {
-                if (CommHelp.VerifesToDateTime(txtNeiTo.Text) == false)
+                if (CommHelp.VerifesToDateTime(txtNeiTo.Text.Trim()) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目日期 格式错误！');</script>");
                     return;
                 }
-                time += string.Format(" and PODate<='{0} 23:59:59'", txtNeiTo.Text);
+                time += string.Format(" and PODate<='{0} 23:59:59'", txtNeiTo.Text.Trim());
             }
 
             List<CG_POOrders> orders = ordersSer.GetListArrayToList(" 1=1 and CG_POOrder.PONo='" + pono + "' " + sql + chenben+ proNo+ time);

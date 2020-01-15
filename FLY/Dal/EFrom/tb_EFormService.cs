@@ -651,7 +651,7 @@ else begin update CG_POOrder set POStatue6='{1}' where PONo=@oldPONo end", CG_PO
                 url = "~/JXC/WFSell_OrderFP.aspx?ProId=" + proId + "&allE_id=" + allE_id + "&EForm_Id=" + EForm_Id;
             }
 
-            if (type == "到款单")
+            if (type == "到款单"|| type == "到款单删除")
             {
                 url = "~/EFrom/WFToInvoice.aspx?ProId=" + proId + "&allE_id=" + allE_id + "&EForm_Id=" + EForm_Id;
             }

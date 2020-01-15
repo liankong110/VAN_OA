@@ -251,5 +251,7 @@ namespace VAN_OA.Model.JXC
         public int? WeiFPDays { get; set; }
 
         public string Model { get; set; }
+
+        public string NewFPNo { get; set; }
     }
 }

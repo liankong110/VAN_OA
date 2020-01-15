@@ -69,7 +69,7 @@ function GetTotal() {
             </td>
             <td>
                 <asp:TextBox ID="txtPONo" runat="server" ReadOnly="true"></asp:TextBox>
-                <asp:LinkButton ID="lbtnSelectPONo" runat="server" OnClientClick="javascript:window.showModalDialog('../JXC/DioCommPOList.aspx',null,'dialogWidth:700px;dialogHeight:450px;help:no;status:no')"
+                <asp:LinkButton ID="lbtnSelectPONo" runat="server" OnClientClick="javascript:window.showModalDialog('../JXC/DioCommPOList.aspx?AE=1',null,'dialogWidth:700px;dialogHeight:450px;help:no;status:no')"
                     ForeColor="Red" OnClick="LinkButton1_Click1">
         选择</asp:LinkButton>
             </td>

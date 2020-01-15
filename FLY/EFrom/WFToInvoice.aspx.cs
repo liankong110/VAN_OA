@@ -348,6 +348,11 @@ namespace VAN_OA.EFrom
 
                 if (base.Request["ProId"] != null)
                 {
+                    if (Request["ProId"].ToString() == "38")
+                    {
+                        lblDelete.Visible = true;
+                    }
+
                     //加载基本数据
                     VAN_OA.Model.User use = Session["userInfo"] as VAN_OA.Model.User;
                     txtName.Text = use.LoginName;
@@ -379,17 +384,17 @@ namespace VAN_OA.EFrom
                                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('此项目存在到款单正在执行中，请稍后再试！');</script>");
                                 return;
                             }
-                          
+
                             txtPOName.Text = HttpUtility.UrlDecode(Request["POName"]);
                             txtPONo.Text = Request["NewPONO"];
                             lblFPNo.Text = Request["FPNo"];
                             lblFPId.Text = Request["FPId"];
                             txtTotal.Text = Request["weiDao"];
-                            txtSupplier.Text = HttpUtility.UrlDecode( Request["GuestName"]);
+                            txtSupplier.Text = HttpUtility.UrlDecode(Request["GuestName"]);
 
                             string sql = string.Format("select top 1 guestDays from TB_GuestTrack where guestName='{0}'", Request["GuestName"]);
                             object ob = DBHelp.ExeScalar(sql);
-                            txtZhangQi.Text = ob is DBNull ? "0" : ob.ToString();                          
+                            txtZhangQi.Text = ob is DBNull ? "0" : ob.ToString();
                             GetTotal();
 
                             TB_ToInvoiceService invoiceSer = new TB_ToInvoiceService();
@@ -421,7 +426,7 @@ namespace VAN_OA.EFrom
                             //    return;
                             //}
                         }
-                        
+
 
                         if (eformSer.ifHasNodes(Convert.ToInt32(Request["ProId"])))
                         {
@@ -585,6 +590,95 @@ namespace VAN_OA.EFrom
 
 
                     }
+                    else if (Request["IsDelete"] != null)//提交删除信息
+                    {
+                        lblDelete.Visible = true;
+                        var proId = 38;
+                        //加载已经审批的数据
+                        tb_EFormsService eformsSer = new tb_EFormsService();
+                        List<VAN_OA.Model.EFrom.tb_EForms> eforms = eformsSer.GetListArray(string.Format(" e_Id in (select id from tb_EForm where proId={0} and allE_id={1})",
+                            Convert.ToInt32(proId), Convert.ToInt32(Request["allE_id"])));
+                        if (eforms.Count > 0)
+                        {
+                            string mess = @"<table cellpadding='0' cellspacing='0' width='100%' bordercolorlight='#999999' bordercolordark='#FFFFFF' border='1' ><tr><td colspan='6' style=' height:20px; background-color:#336699; color:White;'>流程图</td></tr>";
+
+
+                            for (int i = 0; i < eforms.Count; i++)
+                            {
+                                string per = "";
+                                if (eforms[i].consignor != null && eforms[i].consignor != 0)
+                                {
+                                    per = eforms[i].Consignor_Name + "(委托人：" + eforms[i].Audper_Name + ")";
+                                }
+                                else
+                                {
+                                    per = eforms[i].Audper_Name;
+                                }
+                                mess += string.Format("<tr><td align='center'>第{0}步</td><td>序号{0}：{1}</td><td><span style='color:red;'>{2}</span>[<span style='color:blue;'>{3} {4}</span>]<br/>意见：{5}</td></tr>",
+                                    i + 1, eforms[i].RoleName
+, per, eforms[i].resultState, eforms[i].doTime, eforms[i].idea);
+                            }
+                            mess += "</table>";
+                            lblMess.Text = mess;
+                        }
+
+                        ViewState["EformsCount"] = eforms.Count;
+
+                        #region 到款单
+
+
+                        TB_ToInvoiceService ToInvoiceSer = new TB_ToInvoiceService();
+
+
+
+                        TB_ToInvoice toInvoiceModel = ToInvoiceSer.GetModel(Convert.ToInt32(Request["allE_id"]));
+                        txtDaoKuanDate.Text = toInvoiceModel.DaoKuanDate.ToString();
+                        //txtDateTime.Text = toInvoiceModel.AppleDate.ToString();
+                        txtName.Text = toInvoiceModel.CreateUser;
+                        txtPOName.Text = toInvoiceModel.PoName;
+                        txtPONo.Text = toInvoiceModel.PoNo;
+                        txtRemark.Text = toInvoiceModel.Remark;
+                        txtSupplier.Text = toInvoiceModel.GuestName;
+                        txtTotal.Text = toInvoiceModel.Total.ToString();
+                        txtUpAccount.Text = toInvoiceModel.UpAccount.ToString();
+                        lblProNo.Text = toInvoiceModel.ProNo;
+                        txtZhangQi.Text = toInvoiceModel.ZhangQi.ToString();
+                        lblFPNo.Text = toInvoiceModel.FPNo;
+                        lblFPId.Text = toInvoiceModel.FPId.ToString();
+                        ddlStyle.Text = toInvoiceModel.BusType.ToString();
+                        lblLastPayTotal.Text = toInvoiceModel.LastPayTotal.ToString();
+                        GetTotal();
+                        #endregion
+                        
+                        if (eformSer.ifHasNodes(Convert.ToInt32(Request["ProId"])))
+                        {
+                            //获取审批人
+                            int pro_IDs = 0;
+                            int ids = 0;
+                            List<A_Role_User> roleUserList = eformSer.getFristNodeUsers(Convert.ToInt32(Session["currentUserId"].ToString()), proId, out ids);
+
+                            ViewState["ids"] = ids;
+                            if (roleUserList != null)
+                            {
+                                ddlPers.DataSource = roleUserList;
+                                ddlPers.DataBind();
+                                ddlPers.DataTextField = "UserName";
+                                ddlPers.DataValueField = "UserId";
+
+                            }
+                            else
+                            {
+                                lblPer.Visible = false;
+                                ddlPers.Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            lblPer.Visible = false;
+                            ddlPers.Visible = false;
+                        }
+                        setEnable(false);
+                    }
                     else//单据审批
                     {
 
@@ -623,13 +717,13 @@ namespace VAN_OA.EFrom
 
                         TB_ToInvoiceService ToInvoiceSer = new TB_ToInvoiceService();
 
-                       
+
 
                         TB_ToInvoice toInvoiceModel = ToInvoiceSer.GetModel(Convert.ToInt32(Request["allE_id"]));
 
                         if (toInvoiceModel.TempGuid != "")
                         {
-                            this.gvList.DataSource = new TB_ToInvoiceService().GetListArray_History(string.Format(" TempGuid='{0}'",toInvoiceModel.TempGuid));
+                            this.gvList.DataSource = new TB_ToInvoiceService().GetListArray_History(string.Format(" TempGuid='{0}'", toInvoiceModel.TempGuid));
                             this.gvList.DataBind();
                         }
                         txtDaoKuanDate.Text = toInvoiceModel.DaoKuanDate.ToString();
@@ -651,7 +745,7 @@ namespace VAN_OA.EFrom
 
                         var sql = string.Format("select Total from [KingdeeInvoice].[dbo].[Invoice]  where InvoiceNumber='{0}'", toInvoiceModel.FPNo);
                         object ob = DBHelp.ExeScalar(sql);
-                        lblInvoiceTotal.Text = (ob is DBNull||ob==null) ? "0" : ob.ToString();
+                        lblInvoiceTotal.Text = (ob is DBNull || ob == null) ? "0" : ob.ToString();
 
                         #endregion
                         //判断单据是否已经结束
@@ -922,7 +1016,7 @@ namespace VAN_OA.EFrom
                             forms.consignor = 0;
                         }
 
-                        if (Request["ReAudit"] == null)
+                        if (Request["ReAudit"] == null && Request["IsDelete"] == null)
                         {
                             if (fromSer.ifAudiPerAndCon(Convert.ToInt32(Session["currentUserId"]), Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])) == false)
                             {
@@ -950,42 +1044,37 @@ namespace VAN_OA.EFrom
                         }
                         if (ddlPers.Visible == false)//说明为最后一次审核
                         {
-
-
-
-
-
                             eform.state = ddlResult.Text;
                             eform.toPer = 0;
                             eform.toProsId = 0;
-
-
-
-
-
-
                         }
                         else
                         {
                             if (ddlResult.Text == "不通过")
                             {
-
                                 eform.state = ddlResult.Text;
                                 eform.toPer = 0;
                                 eform.toProsId = 0;
-
-
-
-
                             }
                             else
                             {
-
                                 eform.state = "执行中";
                                 eform.toPer = Convert.ToInt32(ddlPers.SelectedItem.Value);
                                 eform.toProsId = Convert.ToInt32(ViewState["ids"]);
-
                             }
+                        }
+
+                       
+                        //提交IsDelete  //判断之前有没有申请过此单据
+                        if (eform.proId == 38 && Request["IsDelete"] != null
+                            && Convert.ToInt32(DBHelp.ExeScalar(string.Format("select count(*) from tb_EForm where allE_id={0} and proId=38", model.Id))) == 0)
+                        {
+                            tb_EFormService eformSer = new tb_EFormService();
+                            eform.appTime = DateTime.Now;
+                            eform.createTime = DateTime.Now;
+                            eform.createPer = Convert.ToInt32(Session["currentUserId"].ToString());
+                            eform.E_No = lblProNo.Text;
+                            eform.id = eformSer.Add(eform);
                         }
                         TB_ToInvoiceService carSer = new TB_ToInvoiceService();
                         if (carSer.updateTran(model, eform, forms))
@@ -998,8 +1087,16 @@ namespace VAN_OA.EFrom
                             {
                                 new CG_POOrderService().GetOrder_ToInvoiceAndUpdatePoStatus(txtPONo.Text);
                             }
-                            // btnSub.Enabled = true;
-                            base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
+                            //判断是否是删除 -到款单删除
+                            if (eform.proId == 38)
+                            {
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('该发票到款单已删除！');</script>");
+                            }
+                            else
+                            {
+                                // btnSub.Enabled = true;
+                                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('提交成功！');</script>");
+                            }
                             if (Session["backurl"] != null)
                             {
                                 base.Response.Redirect("~" + Session["backurl"]);

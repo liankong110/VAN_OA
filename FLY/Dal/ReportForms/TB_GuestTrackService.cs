@@ -2109,16 +2109,15 @@ select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))"));
             //strSql.Append(" FROM TB_GuestTrack left join tb_User on TB_GuestTrack.CreateUser=tb_User.ID");
             strSql.Append(" SimpGuestName,MyGuestPro,MyGuestType,TB_GuestTrack.Id,Time,GuestName,Phone,LikeMan,Job,FoxOrEmail,IfSave,QQMsn,FristMeet,SecondMeet,FaceMeet,Price,IfSuccess,MyAppraise,ManAppraise,CreateUser,CreateTime,tb_User.loginName,YearNo,QuartNo,AEPer,INSIDEPer,IsSpecial,AA.ID as AddId ");
             strSql.Append(",GuestId,GuestAddress,GuestHttp,GuestShui,GuestGong,GuestBrandNo,GuestBrandName,AE,INSIDE,GuestTotal,GuestLiRun,GuestDays,Remark ,ProNo");
-            strSql.Append(",AEUser.loginName as AEloginName,INSIDEUser.loginName as INSIDEloginName,INSIDERemark");
+            strSql.Append(",AEUser.loginName as AEloginName,INSIDEUser.loginName as INSIDEloginName,INSIDERemark,TopId");
             strSql.Append(" from TB_GuestTrack left join tb_User on TB_GuestTrack.CreateUser=tb_User.ID");
             strSql.Append(" left join tb_User as AEUser on TB_GuestTrack.AE=AEUser.ID");
             strSql.Append(" left join tb_User as INSIDEUser on TB_GuestTrack.INSIDE=INSIDEUser.ID");
             List<int> zhangqi = GetCurrentZhangQi(ddlSelectYears, ddlJidu);
             strSql.AppendFormat(@" left join (
-select A.Id from 
-(SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{0}' and YearNo='{1}') AS A 
-LEFT JOIN (SELECT ID,SimpGuestName FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.SimpGuestName=B.SimpGuestName
-where B.SimpGuestName IS NULL
+select A.Id,b.Id as TopId from 
+(SELECT ID,GuestName FROM TB_GuestTrack where QuartNo='{0}' and YearNo='{1}') AS A 
+LEFT JOIN (SELECT ID,GuestName FROM TB_GuestTrack where QuartNo='{2}' and YearNo='{3}') AS B on A.GuestName=B.GuestName
 ) AS AA on AA.ID=TB_GuestTrack.ID", zhangqi[0], zhangqi[1], zhangqi[2], zhangqi[3]);
 
             if (strWhere.Trim() != "")
@@ -2128,12 +2127,12 @@ where B.SimpGuestName IS NULL
             //选 新增时，当前季度新增的客户（上季度没有的）将被筛选出来；
             if (dllAddGuest == "1")
             {
-                strSql.AppendFormat(@" and  AA.ID>0");
+                strSql.AppendFormat(@" and  AA.TopId is null");
             }
             //选原有，本季度有的客户，上季度也有的客户将被筛选出来；
             if (dllAddGuest == "2")
             {
-                strSql.AppendFormat(@" and  AA.ID is null");
+                strSql.AppendFormat(@" and  AA.TopId>0");                
             }
             //当前季度客户类型 和 上季度 不同的，将被筛选出来
             if (ddlDiffMyGuestType == "1")
@@ -2185,14 +2184,14 @@ where A.MyGuestPro=b.MyGuestPro)"
                     while (objReader.Read())
                     {
                         var model = ReaderBind(objReader);
-                        var ojb = objReader["AddId"];
+                        var ojb = objReader["TopId"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
-                            model.IsAddGuest = "是";
+                            model.IsAddGuest = "否";
                         }
                         else
                         {
-                            model.IsAddGuest = "否";
+                            model.IsAddGuest = "是";
                         }
                         list.Add(model);
                     }

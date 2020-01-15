@@ -13,6 +13,8 @@ using System.Xml.Linq;
 using VAN_OA.Model.JXC;
 using System.Collections.Generic;
 using VAN_OA.Dal.JXC;
+using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Model.BaseInfo;
 
 namespace VAN_OA.JXC
 {
@@ -140,7 +142,15 @@ namespace VAN_OA.JXC
             var nums=goodsSer.GetGoodNum(goodId);
             lblGoodNum.Text = nums[0].ToString();
             lblCaiKuNum.Text= nums[1].ToString();
-            lblZhiLiuNum.Text = (nums[0]- nums[1]).ToString();
+
+            List<TB_Good> goodList = new TB_GoodService().GetListArray_New(string.Format(" Temp.GoodId={0}", goodId));
+            decimal ZhiLiuKuCun = 0;
+            if (goodList.Count > 0)
+            {
+                ZhiLiuKuCun = goodList[0].ZhiLiuKuCun;
+            }
+
+            lblZhiLiuNum.Text = ZhiLiuKuCun.ToString();
             
             if (models.Count == 1)
             {

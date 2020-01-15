@@ -1,52 +1,35 @@
 ﻿using System;
-using System.Data;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Data.SqlClient;
+using System.Text;
+using System.Data;
 
 namespace VAN_OA.Dal.BaseInfo
 {
-    public class GuestProBaseInfoService
+    public class Base_UseTypeService
     {
         /// <summary>
         /// 增加一条数据
         /// </summary>
-        public int Add(VAN_OA.Model.BaseInfo.GuestProBaseInfo model)
+        public int Add(VAN_OA.Model.BaseInfo.Base_UseType model)
         {
             StringBuilder strSql = new StringBuilder();
             StringBuilder strSql1 = new StringBuilder();
             StringBuilder strSql2 = new StringBuilder();
-            if (model.GuestPro != null)
+
+            if (model.Name != null)
             {
-                strSql1.Append("GuestPro,");
-                strSql2.Append("" + model.GuestPro + ",");
+                strSql1.Append("Name,");
+                strSql2.Append("'" + model.Name + "',");
             }
-            if (model.JiLiXiShu != null)
-            {
-                strSql1.Append("JiLiXiShu,");
-                strSql2.Append("" + model.JiLiXiShu + ",");
-            }
-            if (model.XiShu != null)
-            {
-                strSql1.Append("XiShu,");
-                strSql2.Append("" + model.XiShu + ",");
-            }
-            if (model.GuestMonth != null)
-            {
-                strSql1.Append("GuestMonth,");
-                strSql2.Append("" + model.GuestMonth + ",");
-            }
-            
-            strSql.Append("insert into GuestProBaseInfo(");
+
+            strSql1.Append("Type,");
+            strSql2.Append("" + model.Type + ",");
+
+
+            strSql.Append("insert into Base_UseType(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
             strSql.Append(")");
             strSql.Append(" values (");
@@ -66,26 +49,15 @@ namespace VAN_OA.Dal.BaseInfo
         /// <summary>
         /// 更新一条数据
         /// </summary>
-        public bool Update(VAN_OA.Model.BaseInfo.GuestProBaseInfo model)
+        public bool Update(VAN_OA.Model.BaseInfo.Base_UseType model)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("update GuestProBaseInfo set ");
-            if (model.GuestPro != null)
+            strSql.Append("update Base_UseType set ");
+            if (model.Name != null)
             {
-                strSql.Append("GuestPro=" + model.GuestPro + ",");
+                strSql.Append("Name='" + model.Name + "',");
             }
-            if (model.JiLiXiShu != null)
-            {
-                strSql.Append("JiLiXiShu=" + model.JiLiXiShu + ",");
-            }
-            if (model.XiShu != null)
-            {
-                strSql.Append("XiShu=" + model.XiShu + ",");
-            }
-            if (model.GuestMonth != null)
-            {
-                strSql.Append("GuestMonth=" + model.GuestMonth + ",");
-            }
+            strSql.Append("Type='" + model.Type + "',");
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -99,22 +71,22 @@ namespace VAN_OA.Dal.BaseInfo
         public bool Delete(int ID)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("delete from GuestProBaseInfo ");
+            strSql.Append("delete from Base_UseType ");
             strSql.Append(" where Id=" + ID + "");
             return DBHelp.ExeCommand(strSql.ToString());
         }
         /// <summary>
         /// 得到一个对象实体
         /// </summary>
-        public VAN_OA.Model.BaseInfo.GuestProBaseInfo GetModel(int ID)
+        public VAN_OA.Model.BaseInfo.Base_UseType GetModel(int ID)
         {
             StringBuilder strSql = new StringBuilder();
-           strSql.Append("select Id,GuestPro,JiLiXiShu,XiShu,GuestMonth ");
-			strSql.Append(" FROM GuestProBaseInfo ");
-		 
+
+            strSql.Append("select Id,Name,Type ");
+            strSql.Append(" FROM Base_UseType ");
             strSql.Append(" where ID=" + ID + "");
 
-            VAN_OA.Model.BaseInfo.GuestProBaseInfo model = null;
+            VAN_OA.Model.BaseInfo.Base_UseType model = null;
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();
@@ -133,18 +105,18 @@ namespace VAN_OA.Dal.BaseInfo
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
-        public List<VAN_OA.Model.BaseInfo.GuestProBaseInfo> GetListArray(string strWhere)
+        public List<VAN_OA.Model.BaseInfo.Base_UseType> GetListArray(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select Id,GuestPro,JiLiXiShu,XiShu,GuestMonth ");
-            strSql.Append(" FROM GuestProBaseInfo ");
+            strSql.Append("select Id,Name,Type ");
+            strSql.Append(" FROM Base_UseType ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
             }
 
             strSql.Append(" order by Id desc ");
-            List<VAN_OA.Model.BaseInfo.GuestProBaseInfo> list = new List<VAN_OA.Model.BaseInfo.GuestProBaseInfo>();
+            List<VAN_OA.Model.BaseInfo.Base_UseType> list = new List<VAN_OA.Model.BaseInfo.Base_UseType>();
 
             using (SqlConnection conn = DBHelp.getConn())
             {
@@ -168,44 +140,18 @@ namespace VAN_OA.Dal.BaseInfo
         /// <summary>
         /// 对象实体绑定数据
         /// </summary>
-        public VAN_OA.Model.BaseInfo.GuestProBaseInfo ReaderBind(IDataReader dataReader)
+        public VAN_OA.Model.BaseInfo.Base_UseType ReaderBind(IDataReader dataReader)
         {
-            VAN_OA.Model.BaseInfo.GuestProBaseInfo model = new VAN_OA.Model.BaseInfo.GuestProBaseInfo();
+            VAN_OA.Model.BaseInfo.Base_UseType model = new VAN_OA.Model.BaseInfo.Base_UseType();
             object ojb;
             ojb = dataReader["Id"];
             if (ojb != null && ojb != DBNull.Value)
             {
                 model.Id = (int)ojb;
             }
-            ojb = dataReader["GuestPro"];
-            if (ojb != null && ojb != DBNull.Value)
-            {
-                model.GuestPro = (int)ojb;
-            }
-            ojb = dataReader["JiLiXiShu"];
-            if (ojb != null && ojb != DBNull.Value)
-            {
-                model.JiLiXiShu = (decimal)ojb;
-            }
-            ojb = dataReader["XiShu"];
-            if (ojb != null && ojb != DBNull.Value)
-            {
-                model.XiShu = (int)ojb;
-            }
-            ojb = dataReader["GuestMonth"];
-            if (ojb != null && ojb != DBNull.Value)
-            {
-                model.GuestMonth = (int)ojb;
-            }
-            
-            //if (model.GuestPro == 1)
-            //{
-            //    model.GuestProString = "";
-            //}
-            //else if (model.GuestPro == 0)
-            //{ 
-
-            //}
+            model.Name = dataReader["Name"].ToString();
+            model.Type =Convert.ToInt32(dataReader["Type"]);
+            model.Type_String = model.Type==1? "电子票据A" : "电子票据B";
             return model;
         }
     }

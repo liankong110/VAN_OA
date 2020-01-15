@@ -73,6 +73,10 @@ namespace VAN_OA.Model.BaseInfo
             get { return _xishu; }
         }
         #endregion Model
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        public int GuestMonth { get; set; }
 
     }
 }

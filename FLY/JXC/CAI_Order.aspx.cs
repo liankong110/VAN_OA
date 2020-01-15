@@ -339,7 +339,48 @@ namespace VAN_OA.JXC
                                     return false;
                                 }
 
+                                List<TB_Good> goodList = new TB_GoodService().GetListArray_New(string.Format(" Temp.GoodId={0}", m.GoodId));
+                                decimal ZhiLiuKuCun = 0;
+                                if (goodList.Count > 0)
+                                {
+                                    lblZhiDaiNum.Text = string.Format("滞留库存数量:{0}", goodList[0].ZhiLiuKuCun);
+                                    ZhiLiuKuCun = goodList[0].ZhiLiuKuCun;
+                                }
+                                string sqlZhiLiu = string.Format("select isnull(sum(Num),0) as CaiIng FROM CAI_POOrder " +
+                                    "left join CAI_POCai on CAI_POOrder.Id=CAI_POCai.Id where Status='执行中' and GoodId={0} and BusType=1 ", m.GoodId);
+                                var kcIng = Convert.ToDecimal(DBHelp.ExeScalar(sqlZhiLiu));
+                                lblKCIng.Text = string.Format("KC采购中数量:{0}", kcIng);
 
+                                sqlZhiLiu = string.Format(@"select 
+isnull(sum(Num - isnull(totalOrderNum, 0)),0) as CaiNotCheckNum
+from CAI_POCai
+left join CAI_POOrder on CAI_POCai.Id = CAI_POOrder.Id
+left
+join
+(
+select CaiId, SUM(CheckNum) as totalOrderNum from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderCheck.id = CAI_OrderChecks.CheckId
+where CaiId <> 0  and CAI_OrderCheck.status = '通过'
+group by CaiId
+)
+as newtable on CAI_POCai.Ids = newtable.CaiId
+where(CAI_POCai.Num > newtable.totalOrderNum or totalOrderNum is null)
+and status = '通过' and lastSupplier<>'库存' and BusType = 1 and CAI_POCai.GoodId={0}", m.GoodId);
+                                var KCNotRuKu = Convert.ToDecimal(DBHelp.ExeScalar(sqlZhiLiu));
+                                lblKCNotRuKu.Text = string.Format("KC采购完成未入库数量:{0}", KCNotRuKu);
+
+                                //滞留库存数量+KC采购中数量+KC采购完成未入库数量=0
+                               var sumZhiTotal = (ZhiLiuKuCun + kcIng + KCNotRuKu);
+
+                                if (ddlBusType.Text == "0" && Convert.ToDecimal(sumZhiTotal) == 0 && m.Supplier == "库存")
+                                { 
+                                    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('滞留库存数量+KC采购中数量+KC采购完成未入库数量=0，该商品允许外采！！');</script>"));
+                                    return false;
+                                }
+                                else if (ddlBusType.Text == "0" && Convert.ToDecimal(sumZhiTotal) != 0 && m.Supplier != "库存")
+                                { 
+                                    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('滞留库存数量+KC采购中数量+KC采购完成未入库数量<>0，该商品只能出库存！');</script>"));
+                                    return false;
+                                }
 
                                 if (ddlBusType.Text == "1" && (m.Supplier.Trim() == "库存" || m.Supplier1.Trim() == "库存" || m.Supplier2.Trim() == "库存"))
                                 {
@@ -435,14 +476,14 @@ namespace VAN_OA.JXC
                                     {
                                         //当采购在第二步选择供应商时，如果他采购的商品 在库存中的数量>0 , 而采购在选择供应商时没有 选库存，
                                         //则 你需要提示一个窗口，提示 “库存内有该商品，请选择库存”，退回原界面
-                                        string checkHouse = "select GoodNum from TB_HouseGoods where GoodId=" + m.GoodId;
-                                        var goodHouseCount = DBHelp.ExeScalar(checkHouse);
-                                        if (!((goodHouseCount is DBNull) || goodHouseCount == null) && Convert.ToInt32(goodHouseCount) > 0)
-                                        {
-                                            base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('库存内有该商品，请选择库存 商品[{0}]\规格[{1}]\型号[{2}]！');</script>",
-                                              m.GoodName, m.GoodSpec, m.Good_Model));
-                                            return false;
-                                        }
+                                        //string checkHouse = "select GoodNum from TB_HouseGoods where GoodId=" + m.GoodId;
+                                        //var goodHouseCount = DBHelp.ExeScalar(checkHouse);
+                                        //if (!((goodHouseCount is DBNull) || goodHouseCount == null) && Convert.ToInt32(goodHouseCount) > 0)
+                                        //{
+                                        //    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('库存内有该商品，请选择库存 商品[{0}]\规格[{1}]\型号[{2}]！');</script>",
+                                        //      m.GoodName, m.GoodSpec, m.Good_Model));
+                                        //    return false;
+                                        //}
                                     }
 
                                 }
@@ -2425,6 +2466,39 @@ where caiIds in (select Ids from CAI_POCai where ID={0}) and Status<>'不通过'
 
                 btnSave.Enabled = true;
 
+
+               
+                List<TB_Good> goodList = new TB_GoodService().GetListArray_New(string.Format(" Temp.GoodId={0}", model.GoodId));
+                decimal ZhiLiuKuCun = 0;
+                if (goodList.Count > 0)
+                {
+                    lblZhiDaiNum.Text = string.Format("滞留库存数量:{0}", goodList[0].ZhiLiuKuCun);
+                    ZhiLiuKuCun = goodList[0].ZhiLiuKuCun;
+                }
+                string sqlZhiLiu = string.Format("select isnull(sum(Num),0) as CaiIng FROM CAI_POOrder " +
+                    "left join CAI_POCai on CAI_POOrder.Id=CAI_POCai.Id where Status='执行中' and GoodId={0} and BusType=1 ", model.GoodId);
+                var kcIng = Convert.ToDecimal(DBHelp.ExeScalar(sqlZhiLiu));
+                lblKCIng.Text = string.Format("KC采购中数量:{0}", kcIng);
+
+                sqlZhiLiu = string.Format(@"select 
+isnull(sum(Num - isnull(totalOrderNum, 0)),0) as CaiNotCheckNum
+from CAI_POCai
+left join CAI_POOrder on CAI_POCai.Id = CAI_POOrder.Id
+left
+join
+(
+select CaiId, SUM(CheckNum) as totalOrderNum from CAI_OrderChecks left join CAI_OrderCheck on CAI_OrderCheck.id = CAI_OrderChecks.CheckId
+where CaiId <> 0  and CAI_OrderCheck.status = '通过'
+group by CaiId
+)
+as newtable on CAI_POCai.Ids = newtable.CaiId
+where(CAI_POCai.Num > newtable.totalOrderNum or totalOrderNum is null)
+and status = '通过' and lastSupplier<>'库存' and BusType = 1 and CAI_POCai.GoodId={0}", model.GoodId);
+                var KCNotRuKu = Convert.ToDecimal(DBHelp.ExeScalar(sqlZhiLiu));
+                lblKCNotRuKu.Text = string.Format("KC采购完成未入库数量:{0}", KCNotRuKu);
+
+                //滞留库存数量+KC采购中数量+KC采购完成未入库数量=0
+                lblSumZhiTotal.Text=( ZhiLiuKuCun + kcIng + KCNotRuKu).ToString();
                 if (model.TopPrice != 0)
                 {
                     lblTopPrice.Text = string.Format("上次提交价格:{0}", model.TopPrice);
@@ -2738,40 +2812,58 @@ select @caiTotalNum-@checkTotalNum", model.GoodId);
                 }
                 if (txtSupperPrice.Text != "")
                 {
+                    if (txtSupplier.Text != "")
+                    {
+                        if (ddlBusType.Text == "1" && txtSupplier.Text == "库存")
+                        {
+                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('库存采购 ，供应商就不能用库存！');"), true);
+                            return false;
+                        }
+                        if (ddlBusType.Text == "0"&&Convert.ToDecimal(lblSumZhiTotal.Text)==0&&txtSupplier.Text=="库存")
+                        {
+                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('滞留库存数量+KC采购中数量+KC采购完成未入库数量=0，该商品允许外采！');"), true);
+                            return false;
+                        }
+                        else if(ddlBusType.Text == "0" && Convert.ToDecimal(lblSumZhiTotal.Text) != 0 && txtSupplier.Text != "库存")
+                        {
+                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('滞留库存数量+KC采购中数量+KC采购完成未入库数量<>0，该商品只能出库存！');"), true);
+                            return false;
+                        }
+                    }
                     if (txtSupplier.Text == "库存" && kucun1.Visible && kucun1.Checked == false)
                     {
                         ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('库存请选择 打勾！');"), true);
                         return false;
                     }
                     //2.     如果供应商是 库存，实采单价 和采购单价 提交时，自动 都= 库存单价
-                    if (txtSupplier.Text == "库存")
-                    {
-                        //检查库存是否存在
-                        //string goodAvgPriceSQL = "select GoodAvgPrice from TB_HouseGoods where GoodId=" + model.GoodId;
-                        //var goodHousePrice = DBHelp.ExeScalar(goodAvgPriceSQL);
-                        //if ((goodHousePrice is DBNull) || goodHousePrice == null)
-                        //{
-                        //    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('当前商品库存不存在 ！');</script>"));
-                        //    return false;
-                        //}
-                        //txtSupperPrice.Text = goodHousePrice.ToString();
-                        //txtTureSupperPrice1.Text = goodHousePrice.ToString();
-                    }
-                    else
-                    {
-                        //3.如果该产品 有库存数量(>=1)，填入的供应商只要有 不是 库存的，提交时，提示“该产品有库存，请重新填写”，返回原界面
-                        //检查库存是否存在
-                        string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
-                        var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
-                        if (!((goodHouseNum is DBNull) || goodHouseNum == null))
-                        {
-                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
-                            if (ddlBusType.Text == "0")
-                            {
-                                return false;
-                            }
-                        }
-                    }
+                    //if (txtSupplier.Text == "库存")
+                    //{
+                    //    //检查库存是否存在
+                    //    //string goodAvgPriceSQL = "select GoodAvgPrice from TB_HouseGoods where GoodId=" + model.GoodId;
+                    //    //var goodHousePrice = DBHelp.ExeScalar(goodAvgPriceSQL);
+                    //    //if ((goodHousePrice is DBNull) || goodHousePrice == null)
+                    //    //{
+                    //    //    base.ClientScript.RegisterStartupScript(base.GetType(), null, string.Format(@"<script>alert('当前商品库存不存在 ！');</script>"));
+                    //    //    return false;
+                    //    //}
+                    //    //txtSupperPrice.Text = goodHousePrice.ToString();
+                    //    //txtTureSupperPrice1.Text = goodHousePrice.ToString();
+                    //}
+                    //else
+                    //{
+                    //    //3.如果该产品 有库存数量(>=1)，填入的供应商只要有 不是 库存的，提交时，提示“该产品有库存，请重新填写”，返回原界面
+                    //    //检查库存是否存在
+                    //    string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
+                    //    var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
+                    //    if (!((goodHouseNum is DBNull) || goodHouseNum == null))
+                    //    {
+                    //        ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
+                    //        if (ddlBusType.Text == "0")
+                    //        {
+                    //            return false;
+                    //        }
+                    //    }
+                    //}
 
                     //需要判断 如果 采购商品是不含税的，实采单价 和采购询价的值 一旦一样，汉中和我 在提交时 都需要 提示 “价格有可能有问题，请核对”，返回原界面。
                     if (txtSupplier.Text != "库存")

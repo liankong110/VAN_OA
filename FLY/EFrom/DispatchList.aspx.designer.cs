@@ -175,6 +175,15 @@ namespace VAN_OA.EFrom {
         protected global::System.Web.UI.WebControls.TextBox txtBusToAddress;
         
         /// <summary>
+        /// txtBusFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBusFPNO;
+        
+        /// <summary>
         /// txtBusTotal 控件。
         /// </summary>
         /// <remarks>
@@ -274,6 +283,15 @@ namespace VAN_OA.EFrom {
         protected global::System.Web.UI.WebControls.TextBox txtRepastAddress;
         
         /// <summary>
+        /// txtRepastFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRepastFPNO;
+        
+        /// <summary>
         /// txtRepastTotal 控件。
         /// </summary>
         /// <remarks>
@@ -335,6 +353,15 @@ namespace VAN_OA.EFrom {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtHotelAddress;
+        
+        /// <summary>
+        /// txtHotelFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtHotelFPNO;
         
         /// <summary>
         /// txtHotelName 控件。
@@ -400,6 +427,15 @@ namespace VAN_OA.EFrom {
         protected global::System.Web.UI.WebControls.TextBox txtOilToAddress;
         
         /// <summary>
+        /// txtOilFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOilFPNO;
+        
+        /// <summary>
         /// txtOilLiCheng 控件。
         /// </summary>
         /// <remarks>
@@ -443,6 +479,15 @@ namespace VAN_OA.EFrom {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGuoToAddress;
+        
+        /// <summary>
+        /// txtGuoBeginFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGuoBeginFPNO;
         
         /// <summary>
         /// txtGuoTotal 控件。
@@ -553,6 +598,15 @@ namespace VAN_OA.EFrom {
         protected global::System.Web.UI.WebControls.TextBox txtPostToAddress;
         
         /// <summary>
+        /// txtPostFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPostFPNO;
+        
+        /// <summary>
         /// txtPostTotal 控件。
         /// </summary>
         /// <remarks>
@@ -598,6 +652,15 @@ namespace VAN_OA.EFrom {
         protected global::System.Web.UI.WebControls.TextBox txtPoContext;
         
         /// <summary>
+        /// txtCaiFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCaiFPNO;
+        
+        /// <summary>
         /// txtPoTotal 控件。
         /// </summary>
         /// <remarks>
@@ -623,6 +686,15 @@ namespace VAN_OA.EFrom {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOtherContext;
+        
+        /// <summary>
+        /// txtOtherFPNO 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOtherFPNO;
         
         /// <summary>
         /// txtOtherTotal 控件。
@@ -704,6 +776,15 @@ namespace VAN_OA.EFrom {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResultRemark;
+        
+        /// <summary>
+        /// btnFPSave 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFPSave;
         
         /// <summary>
         /// btnSave 控件。

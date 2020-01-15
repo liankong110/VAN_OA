@@ -363,13 +363,13 @@
                 </td>
                 <td style="vertical-align: top;">
                     <%
-                        if (dt_GetSumPOTotal != null)
+                        if (pOOrderList != null)
                         {
-                            foreach (DataRow dr in dt_GetSumPOTotal.Rows)
+                            foreach (VAN_OA.Model.JXC.JXC_REPORTTotal mm in pOOrderList)
                             {                            
                     %>
-                    <a href="/JXC/JXC_REPORTTotalList.aspx?PONo=<%=dr[0]%>" target="_blank">
-                        <%=dr[0]%>-<%=dr[1]%></a><br />
+                    <a href="/JXC/JXC_REPORTTotalList.aspx?PONo=<%=mm.PONo%>" target="_blank">
+                        <%=mm.PONo%>-<%=mm.AE%></a><br />
                     <%
                         }
                     }

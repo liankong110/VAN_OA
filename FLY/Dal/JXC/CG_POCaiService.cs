@@ -351,9 +351,10 @@ namespace VAN_OA.Dal.JXC
             //strSql.Append(" FROM CG_POCai ");
             strSql.Append("select   ");
             strSql.Append(@" Ids,CG_POCai.Id,CaiTime,Supplier,SupperPrice,UpdateUser,Idea,Supplier1,SupperPrice1,Supplier2,SupperPrice2,GuestName,InvName,Num ,
-FinPrice1,FinPrice2,FinPrice3 ,CG_POCai.GoodId,GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,CaiKuXuNumView.SumKuXuCai,TB_HouseGoods.housegoodnum");
+FinPrice1,FinPrice2,FinPrice3 ,CG_POCai.GoodId,GoodNo,GoodName,GoodSpec,GoodModel,GoodUnit,GoodTypeSmName,TB_HouseGoods.housegoodnum");
             strSql.Append(" from CG_POCai left join TB_Good on TB_Good.GoodId=CG_POCai.GoodId ");
-            strSql.Append(@" left join CaiKuXuNumView on CaiKuXuNumView.GoodId=CG_POCai.GoodId
+            //left join CaiKuXuNumView on CaiKuXuNumView.GoodId=CG_POCai.GoodId 优化下 把这个单独去查
+            strSql.Append(@" 
 left join (select goodid,sum(goodnum) as housegoodnum from TB_HouseGoods group by goodid ) as TB_HouseGoods on TB_HouseGoods.goodid=CG_POCai.GoodId");
 
             if (strWhere.Trim() != "")
@@ -372,11 +373,11 @@ left join (select goodid,sum(goodnum) as housegoodnum from TB_HouseGoods group b
                     {
                         var model = ReaderBind(dataReader);
                         object ojb;
-                        ojb = dataReader["SumKuXuCai"];
-                        if (ojb != null && ojb != DBNull.Value)
-                        {
-                            model.SumKuXuCai =Convert.ToDecimal(ojb);
-                        }
+                        //ojb = dataReader["SumKuXuCai"];
+                        //if (ojb != null && ojb != DBNull.Value)
+                        //{
+                        //    model.SumKuXuCai =Convert.ToDecimal(ojb);
+                        //}
                         ojb = dataReader["housegoodnum"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -386,6 +387,36 @@ left join (select goodid,sum(goodnum) as housegoodnum from TB_HouseGoods group b
                     }
                 }
             }
+            if (list.Count > 0)
+            {
+                string sumSQL = string.Format("select * FROM CaiKuXuNumView WHERE GoodId IN ({0})", string.Join(",",list.Select(t=>t.GoodId.ToString()).ToArray()));
+
+                using (SqlConnection conn = DBHelp.getConn())
+                {
+                    conn.Open();
+                    SqlCommand objCommand = new SqlCommand(sumSQL, conn);
+                    using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            var GoodId = 0;
+                            object ojb;
+                            ojb = dataReader["GoodId"];
+                            if (ojb != null && ojb != DBNull.Value)
+                            {
+                                GoodId = Convert.ToInt32(ojb);
+                            }
+                            
+                            ojb = dataReader["SumKuXuCai"];
+                            if (ojb != null && ojb != DBNull.Value)
+                            {
+                                list.Find(t=>t.GoodId== GoodId).SumKuXuCai = Convert.ToDecimal(ojb);                               
+                            } 
+                        }
+                    }
+                }
+            }
+
             return list;
         }
 

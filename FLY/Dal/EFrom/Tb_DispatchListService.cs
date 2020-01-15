@@ -402,6 +402,23 @@ namespace VAN_OA.Dal.EFrom
                 strSql1.Append("State,");
                 strSql2.Append("'" + model.State + "',");
             }
+            strSql1.Append("BusFPNO,");
+            strSql2.Append("'" + model.BusFPNO + "',");
+            strSql1.Append("RepastFPNO,");
+            strSql2.Append("'" + model.RepastFPNO + "',");
+            strSql1.Append("HotelFPNO,");
+            strSql2.Append("'" + model.HotelFPNO + "',");
+            strSql1.Append("OilFPNO,");
+            strSql2.Append("'" + model.OilFPNO + "',");
+            strSql1.Append("GuoBeginFPNO,");
+            strSql2.Append("'" + model.GuoBeginFPNO + "',");
+            strSql1.Append("PostFPNO,");
+            strSql2.Append("'" + model.PostFPNO + "',");
+            strSql1.Append("OtherFPNO,");
+            strSql2.Append("'" + model.OtherFPNO + "',");
+            strSql1.Append("CaiFPNO,");
+            strSql2.Append("'" + model.CaiFPNO + "',");
+
 
             strSql.Append("insert into Tb_DispatchList(");
             strSql.Append(strSql1.ToString().Remove(strSql1.Length - 1));
@@ -717,8 +734,15 @@ namespace VAN_OA.Dal.EFrom
             {
                 strSql.Append("State= null ,");
             }
+            strSql.Append("BusFPNO='" + model.BusFPNO + "',");
+            strSql.Append("RepastFPNO='" + model.RepastFPNO + "',");
+            strSql.Append("HotelFPNO='" + model.HotelFPNO + "',");
+            strSql.Append("OilFPNO='" + model.OilFPNO + "',");
+            strSql.Append("GuoBeginFPNO='" + model.GuoBeginFPNO + "',");
+            strSql.Append("PostFPNO='" + model.PostFPNO + "',");
+            strSql.Append("OtherFPNO='" + model.OtherFPNO + "',");
+            strSql.Append("CaiFPNO='" + model.CaiFPNO + "',");
 
-           
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -726,6 +750,23 @@ namespace VAN_OA.Dal.EFrom
             objCommand.ExecuteNonQuery();
         }
 
+        public bool Update_FPNO(VAN_OA.Model.EFrom.Tb_DispatchList model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update Tb_DispatchList set ");
+            strSql.Append("BusFPNO='" + model.BusFPNO + "',");
+            strSql.Append("RepastFPNO='" + model.RepastFPNO + "',");
+            strSql.Append("HotelFPNO='" + model.HotelFPNO + "',");
+            strSql.Append("OilFPNO='" + model.OilFPNO + "',");
+            strSql.Append("GuoBeginFPNO='" + model.GuoBeginFPNO + "',");
+            strSql.Append("PostFPNO='" + model.PostFPNO + "',");
+            strSql.Append("OtherFPNO='" + model.OtherFPNO + "',");
+            strSql.Append("CaiFPNO='" + model.CaiFPNO + "',");
+            int n = strSql.ToString().LastIndexOf(",");
+            strSql.Remove(n, 1);
+            strSql.Append(" where Id=" + model.Id + "");
+            return DBHelp.ExeCommand(strSql.ToString());
+        }
 
         public bool Update(VAN_OA.Model.EFrom.Tb_DispatchList model)
         {
@@ -1029,6 +1070,15 @@ namespace VAN_OA.Dal.EFrom
             strSql.Append("PoRemark='" + model.PoRemark + "',");
             strSql.Append("OtherRemark='" + model.OtherRemark + "',");
 
+            strSql.Append("BusFPNO='" + model.BusFPNO + "',");
+            strSql.Append("RepastFPNO='" + model.RepastFPNO + "',");
+            strSql.Append("HotelFPNO='" + model.HotelFPNO + "',");
+            strSql.Append("OilFPNO='" + model.OilFPNO + "',");
+            strSql.Append("GuoBeginFPNO='" + model.GuoBeginFPNO + "',");
+            strSql.Append("PostFPNO='" + model.PostFPNO + "',");
+            strSql.Append("OtherFPNO='" + model.OtherFPNO + "',");
+            strSql.Append("CaiFPNO='" + model.CaiFPNO + "',");
+
             int n = strSql.ToString().LastIndexOf(",");
             strSql.Remove(n, 1);
             strSql.Append(" where Id=" + model.Id + "");
@@ -1055,7 +1105,7 @@ namespace VAN_OA.Dal.EFrom
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select   ");
 
-            strSql.Append("loginName, Tb_DispatchList.Id,UserId,EvTime,CreateTime,CardNo,BusFromAddress,BusToAddress,BusTotal,IfTexi,IfBus,BusFromTime,BusToTime,RepastAddress,RepastTotal,RepastPerNum,RepastPers,RepastType,HotelAddress,HotelName,HotelTotal,HotelType,OilFromAddress,OilToAddress,OilLiCheng,OilTotal,OilXiShu,GuoBeginAddress,GuoToAddress,GuoTotal,PostFrom,PostFromAddress,PostTo,PostToAddress,PostTotal,PoContext,PoTotal,OtherContext,OtherTotal ,BusRemark,RepastRemark,HotelRemark,OilRemark,GuoRemark,PostRemark,PoRemark,OtherRemark,PostNo,PostCompany,PostContext,PostToPer,Post_Id,Post_No,state ");
+            strSql.Append("BusFPNO,RepastFPNO,HotelFPNO,OilFPNO,GuoBeginFPNO,PostFPNO,OtherFPNO,CaiFPNO,loginName, Tb_DispatchList.Id,UserId,EvTime,CreateTime,CardNo,BusFromAddress,BusToAddress,BusTotal,IfTexi,IfBus,BusFromTime,BusToTime,RepastAddress,RepastTotal,RepastPerNum,RepastPers,RepastType,HotelAddress,HotelName,HotelTotal,HotelType,OilFromAddress,OilToAddress,OilLiCheng,OilTotal,OilXiShu,GuoBeginAddress,GuoToAddress,GuoTotal,PostFrom,PostFromAddress,PostTo,PostToAddress,PostTotal,PoContext,PoTotal,OtherContext,OtherTotal ,BusRemark,RepastRemark,HotelRemark,OilRemark,GuoRemark,PostRemark,PoRemark,OtherRemark,PostNo,PostCompany,PostContext,PostToPer,Post_Id,Post_No,state ");
             strSql.Append(" ,PoNo,PoName,GuestName,CaiPoNo,CaiId ");
             strSql.Append(" from Tb_DispatchList left join tb_User on tb_User.id=Tb_DispatchList.UserId");
             strSql.Append(" where Tb_DispatchList.Id=" + id + "");
@@ -1386,7 +1436,15 @@ namespace VAN_OA.Dal.EFrom
             {
                 model.State = ojb.ToString();
             }
-             
+
+            model.BusFPNO = dataReader["BusFPNO"].ToString();
+            model.RepastFPNO = dataReader["RepastFPNO"].ToString();
+            model.HotelFPNO = dataReader["HotelFPNO"].ToString();
+            model.OilFPNO = dataReader["OilFPNO"].ToString();
+            model.GuoBeginFPNO = dataReader["GuoBeginFPNO"].ToString();
+            model.PostFPNO = dataReader["PostFPNO"].ToString();
+            model.OtherFPNO = dataReader["OtherFPNO"].ToString();
+            model.CaiFPNO = dataReader["CaiFPNO"].ToString(); 
 
             return model;
         }
@@ -1397,7 +1455,8 @@ namespace VAN_OA.Dal.EFrom
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append(@"select Tb_DispatchList.id,Tb_DispatchList.CardNo,Tb_DispatchList.CreateTime,Tb_DispatchList.PONo,Tb_DispatchList.POName,Tb_DispatchList.GuestName,AE,
-TB_Company.ComName,BusTotal,RepastTotal,HotelTotal,OilTotal,GuoTotal,PostTotal,Tb_DispatchList.PoTotal,OtherTotal 
+TB_Company.ComName,BusTotal,RepastTotal,HotelTotal,OilTotal,GuoTotal,Tb_DispatchList.PostTotal,Tb_DispatchList.PoTotal,OtherTotal,Post_No,BusFPNO,RepastFPNO,HotelFPNO,OilFPNO,GuoBeginFPNO,PostFPNO,
+OtherFPNO,CaiFPNO,PostNo
 from Tb_DispatchList left join tb_User on tb_User.id=Tb_DispatchList.UserId
 left join TB_Company on TB_Company.ComCode=tb_User.CompanyCode
 left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
@@ -1428,6 +1487,12 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.AE = ojb.ToString();
                         }
+                        ojb = dataReader["PostNo"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Post_No = ojb.ToString();
+                        }
+                        
                         ojb = dataReader["ComName"];
                         if (ojb != null && ojb != DBNull.Value)
                         {
@@ -1446,7 +1511,16 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                             model.BusTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
 
-                            model.DispatchType += string.Format("公交费{0}|", model.BusTotal);
+                            ojb = dataReader["BusFPNO"];
+                            if (ojb != null && ojb != DBNull.Value&& ojb.ToString()!="")
+                            {
+                               
+                                model.DispatchType += string.Format("公交费[<span style='color:Red;'>{0}</span>]{1}|", ojb,model.BusTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("公交费{0}|", model.BusTotal);
+                            }                                
                         }
                           
                       
@@ -1455,7 +1529,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.RepastTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("餐饮费{0}|", model.RepastTotal);
+                            //model.DispatchType += string.Format("餐饮费{0}|", model.RepastTotal);
+
+                            ojb = dataReader["RepastFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("餐饮费[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.RepastTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("餐饮费{0}|", model.RepastTotal);
+                            }
                         }
                        
                         ojb = dataReader["HotelTotal"];
@@ -1463,7 +1547,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.HotelTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("住宿费{0}|", model.HotelTotal);
+                            //model.DispatchType += string.Format("住宿费{0}|", model.HotelTotal);
+
+                            ojb = dataReader["HotelFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("住宿费[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.HotelTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("住宿费{0}|", model.HotelTotal);
+                            }
                         }                   
                        
                         ojb = dataReader["OilTotal"];
@@ -1471,7 +1565,18 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.OilTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("汽油补贴{0}|", model.OilTotal);
+                            //model.DispatchType += string.Format("汽油补贴{0}|", model.OilTotal);
+
+                            ojb = dataReader["OilFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("汽油补贴[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.OilTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("汽油补贴{0}|", model.OilTotal);
+                            }
+
                         }
                         
                         ojb = dataReader["GuoTotal"];
@@ -1479,7 +1584,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.GuoTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("过路费{0}|", model.GuoTotal);
+                            //model.DispatchType += string.Format("过路费{0}|", model.GuoTotal);
+
+                            ojb = dataReader["GuoBeginFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("过路费[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.GuoTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("过路费{0}|", model.GuoTotal);
+                            }
                         }                      
                         
                       
@@ -1488,7 +1603,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.PostTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("邮寄费{0}|", model.PostTotal);
+                            //model.DispatchType += string.Format("邮寄费{0}|", model.PostTotal);
+
+                            ojb = dataReader["PostFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("邮寄费[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.PostTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("邮寄费{0}|", model.PostTotal);
+                            }
                         }
                        
                         ojb = dataReader["PoTotal"];
@@ -1496,7 +1621,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.PoTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("小额采购{0}|", model.PoTotal);
+                            //model.DispatchType += string.Format("小额采购{0}|", model.PoTotal);
+
+                            ojb = dataReader["CaiFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("小额采购[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.PoTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("小额采购{0}|", model.PoTotal);
+                            }
                         }
                      
                         ojb = dataReader["OtherTotal"];
@@ -1504,7 +1639,17 @@ left join CG_POOrder on CG_POOrder.PONo=Tb_DispatchList.PONo AND IFZhui=0 ");
                         {
                             model.OtherTotal = (decimal)ojb;
                             model.Total += (decimal)ojb;
-                            model.DispatchType += string.Format("其他费用{0}|", model.OtherTotal);
+                            //model.DispatchType += string.Format("其他费用{0}|", model.OtherTotal);
+
+                            ojb = dataReader["OtherFPNO"];
+                            if (ojb != null && ojb != DBNull.Value && ojb.ToString() != "")
+                            {
+                                model.DispatchType += string.Format("其他费用[<span style='color:Red;'>{0}</span>]{1}|", ojb, model.OtherTotal);
+                            }
+                            else
+                            {
+                                model.DispatchType += string.Format("其他费用{0}|", model.OtherTotal);
+                            }
                         }
 
                         if (model.DispatchType != null)

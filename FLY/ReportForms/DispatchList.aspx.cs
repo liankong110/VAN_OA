@@ -18,6 +18,7 @@ using VAN_OA.Model.EFrom;
 using VAN_OA.Dal.BaseInfo;
 using VAN_OA.Model;
 using VAN_OA.Model.BaseInfo;
+using System.IO;
 
 namespace VAN_OA.ReportForms
 {
@@ -39,22 +40,102 @@ namespace VAN_OA.ReportForms
             return "ProId=13";
         }
 
-        private void Show()
+        private void Show(bool isPrint = false)
         {
             string sql = " 1=1 ";
+
+            if (txtBusFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtBusFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('公交费发票号码 格式错误！');</script>");
+                return;
+            }
+
+            if (txtRepastFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtRepastFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('餐饮发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtHotelFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtHotelFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('住宿发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtOilFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOilFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('汽油发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtGuoBeginFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtGuoBeginFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('过路费发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtPostFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtPostFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('邮寄发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtOtherFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtOtherFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('其它费用发票号码 格式错误！');</script>");
+                return;
+            }
+            if (txtCaiFPNO.Text.Trim() != "" && CommHelp.VerifesToNum_NoString(txtCaiFPNO.Text.Trim()) == false)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('小额采购发票号码 格式错误！');</script>");
+                return;
+            }
+
+
+            if (txtBusFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and BusFPNO like '%{0}%'", txtBusFPNO.Text.Trim());
+            }
+
+            if (txtRepastFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and RepastFPNO like '%{0}%'", txtRepastFPNO.Text.Trim());
+            }
+            if (txtHotelFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and HotelFPNO like '%{0}%'", txtHotelFPNO.Text.Trim());
+            }
+            if (txtOilFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and OilFPNO like '%{0}%'", txtOilFPNO.Text);
+            }
+            if (txtGuoBeginFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and GuoBeginFPNO like '%{0}%'", txtGuoBeginFPNO.Text.Trim());
+            }
+            if (txtPostFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and PostFPNO like '%{0}%'", txtPostFPNO.Text.Trim());
+            }
+            if (txtOtherFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and OtherFPNO like '%{0}%'", txtOtherFPNO.Text.Trim());
+            }
+            if (txtCaiFPNO.Text.Trim() != "")
+            {
+                sql += string.Format(" and CaiFPNO like '%{0}%'", txtCaiFPNO.Text.Trim());
+
+            }
+
+
             if (txtFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('日期 格式错误！');</script>");
-                    return ;
+                    return;
                 }
                 sql += string.Format(" and Tb_DispatchList.CreateTime>='{0} 00:00:00'", txtFrom.Text);
             }
 
             if (txtTo.Text != "")
             {
-                if ( CommHelp.VerifesToDateTime(txtTo.Text) == false)
+                if (CommHelp.VerifesToDateTime(txtTo.Text) == false)
                 {
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('日期 格式错误！');</script>");
                     return;
@@ -77,7 +158,7 @@ namespace VAN_OA.ReportForms
                     return;
                 }
                 sql += string.Format(" and Tb_DispatchList.PONo like '%{0}%'", txtPONO.Text.Trim());
-            } 
+            }
             if (ddlFuHao.Text != "-1" && !string.IsNullOrEmpty(txtTotal.Text))
             {
                 if (CommHelp.VerifesToNum(txtTotal.Text) == false)
@@ -97,7 +178,7 @@ namespace VAN_OA.ReportForms
             }
             if (ddlFundType.Text != "-1")
             {
-                
+
                 if (ddlFundType.Text == "0")//公交费
                 {
                     sql += string.Format(" and BusTotal is not null and BusTotal>0", ddlFundType.Text);
@@ -133,7 +214,7 @@ namespace VAN_OA.ReportForms
             }
             if (ddlCompany.Text != "-1")
             {
-                sql += string.Format(" and TB_Company.ComCode='{0}'", ddlCompany.Text.Split(',')[2]);                
+                sql += string.Format(" and TB_Company.ComCode='{0}'", ddlCompany.Text.Split(',')[2]);
             }
 
             if (ddlUser.Text != "-1")
@@ -188,10 +269,19 @@ or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like 
             {
                 sql += string.Format(" and CG_POOrder.IsSpecial={0} ", ddlIsSpecial.Text);
             }
-            
 
+            if (!string.IsNullOrEmpty(txtPOSTNO.Text.Trim()))
+            {
+                sql += string.Format(" and PostNo LIKE '%{0}%' ", txtPOSTNO.Text.Trim());
+            }
             List<Tb_DispatchList> dispatchList = this.dispatchSer.GetListArrayReport(sql);
-
+            if (isPrint)
+            {
+                
+                Tb_DispatchList sumTotal = new Tb_DispatchList();
+                sumTotal.Total = dispatchList.Sum(t => t.Total);
+                dispatchList.Add(sumTotal);
+            }
             lblTotal.Text = dispatchList.Sum(t => t.Total).ToString();
 
             AspNetPager1.RecordCount = dispatchList.Count;
@@ -220,19 +310,25 @@ or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like 
             {
                 e.Row.Attributes.Add("onmouseover", "currentcolor=this.style.backgroundColor;this.style.backgroundColor='#EAF1FD',this.style.fontWeight='';");
                 e.Row.Attributes.Add("onmouseout", "this.style.backgroundColor=currentcolor,this.style.fontWeight='';");
+
+                if (e.Row.RowIndex > -1)
+                {                    
+                    e.Row.Cells[11].Attributes.Add("style", "vnd.ms-excel.numberformat:@");    
+                }
             }
+
         }
 
         protected void gvList_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
 
-           
+
 
         }
 
         protected void gvList_RowEditing(object sender, GridViewEditEventArgs e)
         {
-           
+
 
         }
 
@@ -276,6 +372,15 @@ or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like 
                 {
                     gvList.Columns[0].Visible = false;
                 }
+
+                if (!NewShowAll_textName("预期报销单列表", "编辑发票号"))
+                {
+                    gvList.Columns[1].Visible = false; btnExcel.Visible = false;
+                }
+                else
+                {
+                    btnExcel.Visible = true;
+                }
                 ddlUser.DataSource = user;
                 ddlUser.DataBind();
                 ddlUser.DataTextField = "LoginName";
@@ -302,6 +407,52 @@ or [PostCompany] like '%{0}%' or [PostContext] like '%{0}%' or [PostToPer] like 
                 ddlGuestProList.DataValueField = "GuestPro";
 
             }
+        }
+
+
+        protected void btnExcel_Click(object sender, EventArgs e)
+        {
+            var a = gvList.Columns[0].Visible;
+            var b = gvList.Columns[1].Visible;
+            var c = gvList.Columns[2].Visible;
+
+            gvList.AllowPaging = false;
+            gvList.Columns[0].Visible = false;
+            gvList.Columns[1].Visible = false;
+            gvList.Columns[2].Visible = false;
+            Show(true);
+            toExcel();
+            gvList.AllowPaging = false;
+            gvList.Columns[0].Visible = a;
+            gvList.Columns[1].Visible = b;
+            gvList.Columns[2].Visible = c;
+            Show();
+        }
+
+
+        void toExcel()
+        {
+            Response.Charset = "GB2312";
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+
+            string fileName = "export.xls";
+            string style = @"<style> .text { mso-number-format:\@; } </script> ";
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            Response.ContentType = "application/excel";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            this.gvList.RenderControl(htw);
+            Response.Write(style);
+            Response.Write(sw.ToString());
+            Response.End();
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            // Confirms that an HtmlForm control is rendered for
+
+            //为了保险期间还可以在这里加入判断条件防止HTML中已经存在该ID
         }
     }
 }

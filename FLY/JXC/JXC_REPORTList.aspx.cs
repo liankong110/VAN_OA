@@ -203,6 +203,10 @@ namespace VAN_OA.JXC
             {
                 poWhere = string.Format(" and IsSpecial={0}", ddlIsSpecial.Text);
             }
+            if (ddlFax.Text != "-1")
+            {
+                poWhere += string.Format(" and IsPoFax={0}", ddlFax.Text);
+            }
             if (ddlPOTyle.Text != "-1")
             {
                 poWhere +=" and POType="+ddlPOTyle.Text;
