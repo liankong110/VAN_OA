@@ -172,10 +172,7 @@ from CG_POOrder  left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo
 where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
 left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) 
 as ntb2 on CG_POOrder.PONo=ntb2.PONo where ifzhui=0  and CG_POOrder.Status='通过' 
- and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1} and 
- EXISTS (select ID from CG_POOrder where
-PONO=JXC_REPORT.PONO  
-and IsSpecial=0 ) GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
+ and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
 group by AE;
 select AE,sum(goodSellTotal) as goodSellTotal,sum(maoliTotal) as maoliTotal,sum(InvoTotal)-sum(goodTotal) as TrueLiRun,sum(SellFPTotal) as SellFPTotal,SUM(SumPOTotal) AS SumPOTotal from (
 select CG_POOrder.PONo,  
@@ -187,10 +184,7 @@ from CG_POOrder  left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo
 where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
 left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) 
 as ntb2 on CG_POOrder.PONo=ntb2.PONo where ifzhui=0  and CG_POOrder.Status='通过' 
- and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='企业用户' and
- EXISTS (select ID from CG_POOrder where --AppName=9 AND 
-PONO=JXC_REPORT.PONO  
-and IsSpecial=0 ) GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
+ and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='企业用户'  GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
 group by AE;
 select AE,sum(goodSellTotal) as goodSellTotal,sum(maoliTotal) as maoliTotal,sum(InvoTotal)-sum(goodTotal) as TrueLiRun,sum(SellFPTotal) as SellFPTotal,SUM(SumPOTotal) AS SumPOTotal from (
 select CG_POOrder.PONo,  
@@ -202,10 +196,7 @@ from CG_POOrder  left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo
 where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo 
 left join (select SUM(total) as SellFPTotal,PONo from Sell_OrderFP where Status='通过' group by PONo) 
 as ntb2 on CG_POOrder.PONo=ntb2.PONo where ifzhui=0  and CG_POOrder.Status='通过' 
- and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='政府部门' and
- EXISTS (select ID from CG_POOrder where --AppName=9 AND 
-PONO=JXC_REPORT.PONO  
-and IsSpecial=0 ) GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
+ and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='政府部门'  GROUP BY  CG_POOrder.PONo,AE ) as allNewTb  left join POTotal_SumView on  allNewTb.PONo=POTotal_SumView.pono
 group by AE;
 select AE,sum(goodSellTotal) as goodSellTotal,sum(maoliTotal) as maoliTotal,sum(InvoTotal)-sum(goodTotal) as TrueLiRun,sum(SellFPTotal) as SellFPTotal from (
 select CG_POOrder.PONo,  
@@ -220,7 +211,7 @@ as ntb2 on CG_POOrder.PONo=ntb2.PONo where ifzhui=0  and CG_POOrder.Status='通�
  and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='企业用户' and
  EXISTS (select ID from CG_POOrder where --AppName=9 AND 
 PONO=JXC_REPORT.PONO  
-and IsSpecial=0  and IsSelected=1) GROUP BY  CG_POOrder.PONo,AE) as allNewTb 
+ and IsSelected=1) GROUP BY  CG_POOrder.PONo,AE) as allNewTb 
 group by AE;
 select AE,sum(goodSellTotal) as goodSellTotal,sum(maoliTotal) as maoliTotal,sum(InvoTotal)-sum(goodTotal) as TrueLiRun,sum(SellFPTotal) as SellFPTotal from (
 select CG_POOrder.PONo,  
@@ -235,11 +226,11 @@ as ntb2 on CG_POOrder.PONo=ntb2.PONo where ifzhui=0  and CG_POOrder.Status='通�
  and CG_POOrder.PODate<='{0} 23:59:59' and CG_POOrder.PODate>='{2} 00:00:00' {1}  and GuestType='政府部门' and
  EXISTS (select ID from CG_POOrder where --AppName=9 AND 
 PONO=JXC_REPORT.PONO  
-and IsSpecial=0 and IsSelected=1) GROUP BY  CG_POOrder.PONo,AE) as allNewTb 
+and IsSelected=1) GROUP BY  CG_POOrder.PONo,AE) as allNewTb 
 group by AE;", txtTo.Text, aeSql, txtFrom.Text));
 
             var from= Convert.ToDateTime(txtFrom.Text);
-            var to= Convert.ToDateTime(txtFrom.Text);
+            var to= Convert.ToDateTime(txtTo.Text);
             TimeSpan ts = to - from;
             var promiseTotalList= new AEPromiseTotalService().GetListArray(string.Format(" yearno='{0}'", from.Year));
 

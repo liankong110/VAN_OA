@@ -80,7 +80,7 @@ namespace VAN_OA.JXC
 
             if (Request["AE"] != null)
             {
-                sql += string.Format(" and AE='{0}'  ", Session["LoginName"]);
+                sql += string.Format(" and (AE='{0}' OR AppName={1})  ", Session["LoginName"], Session["currentUserId"]);
             }
 
             if (Request["sell"] != null)

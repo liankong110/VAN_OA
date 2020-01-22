@@ -221,8 +221,34 @@ namespace VAN_OA.JXC
             {
                 ponoWhere += string.Format(" and PONO LIKE 'P%'");
             }
+
+
+            //增加 商品现在有库存的 并且 有AE的KC项目 ，全部列举
+            var  ck_sql = @"select  ROW_NUMBER() OVER(PARTITION BY GooId,AE ORDER BY CreateTime DESC) as rowid,CAI_POOrder.PONo,CAI_POOrder.AE,TB_HouseGoods.GoodId,CAI_OrderInHouse.CreateTime from
+TB_HouseGoods  
+left join CAI_OrderInHouses on CAI_OrderInHouses.GooId=TB_HouseGoods.GoodId
+left join CAI_OrderInHouse on CAI_OrderInHouse.Id=CAI_OrderInHouses.id
+left join CAI_POOrder on CAI_POOrder.PONo=CAI_OrderInHouse.PONo
+where CAI_OrderInHouse.Status='通过' 
+AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
+            
+            if (ddlCompany.Text != "-1")
+            {
+                string where1 = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
+                ck_sql += string.Format(" and CAI_POOrder.ae IN(select loginName from tb_User where {0})", where1);
+            }
+            if (ddlUser.Text != "-1")
+            {
+                ck_sql += string.Format(" and CAI_POOrder.AE='{0}'", ddlUser.Text);
+            }
+             
+
+            ck_sql = string.Format("select * from ({0}) as temp where rowid=1 ", ck_sql);
+
+            var Ck_HS = _dal.GetCkHs(ck_sql);
+
             var resultList = _dal.GetListNoSellAndCaiGoods(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where, company
-                , (ddlKCType.Text == "1" ? true : false), poNoSql);
+                , (ddlKCType.Text == "1" ? true : false), poNoSql, Ck_HS);
             if (ddlZhifa.Text == "0")
             {
                 resultList = resultList.FindAll(t=>string.IsNullOrEmpty(t.ZHIFA));

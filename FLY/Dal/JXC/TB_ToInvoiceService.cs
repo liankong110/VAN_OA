@@ -481,7 +481,7 @@ namespace VAN_OA.Dal.JXC
         public List<TB_ToInvoice> GetListArrayReport(string strWhere, string strWhere2, string isColse)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.AppendFormat(@"select FPDate,sumTotal,sumFPTotal,CG_POOrder.AE,CG_POOrder.IsPoFax,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,minOutTime,CG_POOrder.PODate as minPoDate,
+            strSql.AppendFormat(@"select Model,FPDate,sumTotal,sumFPTotal,CG_POOrder.AE,CG_POOrder.IsPoFax,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,minOutTime,CG_POOrder.PODate as minPoDate,
 TB_ToInvoice.Id,TB_ToInvoice.ProNo,DaoKuanDate,Total,UpAccount,newtable1.PoName,newtable1.GuestName,State,FPNo,FPId,BusType,CreateUser,AppleDate,Remark,newtable1.AppName from(
 select PONo,sum(POTotal) AS POTotal,PoName,GuestName,AppName  from CG_POOrder where Status='通过' {0} {1} group by PONo,PoName,GuestName,AppName  ) as newtable1
 left join(select PONo ,sum(TuiTotal) as TuiTotal from Sell_OrderInHouse where Status='通过'  group by PONo) as newtable2 on newtable1.PONo= newtable2.PONo
@@ -523,6 +523,11 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
                         if (ojb != null && ojb != DBNull.Value)
                         {
                             model.AE = Convert.ToString(ojb);
+                        }
+                        ojb = dataReader["Model"];
+                        if (ojb != null && ojb != DBNull.Value)
+                        {
+                            model.Model = Convert.ToString(ojb);
                         }
                         ojb = dataReader["HadFpTotal"];
                         if (ojb != null && ojb != DBNull.Value)

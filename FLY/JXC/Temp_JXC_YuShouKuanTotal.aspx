@@ -337,7 +337,7 @@
                     &nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnSelect" runat="server" Text=" 查 询 " BackColor="Yellow" OnClick="btnSelect_Click" />&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnExcel" runat="server" Text=" 导 出 " BackColor="Yellow" OnClick="btnExcel_Click" />&nbsp;&nbsp;&nbsp;
-                      <asp:Button ID="Button1" runat="server" Text=" 缓存 "  BackColor="Yellow" OnClick="Button1_Click"  />&nbsp;&nbsp;&nbsp;
+                      <asp:Button ID="Button1" runat="server" Text=" 缓存 "  BackColor="Yellow" OnClick="Button1_Click"  OnClientClick="return confirm('确定要缓存吗？');"/>&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>

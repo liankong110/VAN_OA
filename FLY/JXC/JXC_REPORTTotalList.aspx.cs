@@ -246,11 +246,11 @@ namespace VAN_OA.JXC
                     sql += string.Format(" and IsSpecial={1} {0} ", isColse,ddlIsSpecial.Text);
                     //sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=0 AND PONO=JXC_REPORT.PONO {0})", isColse);
                 }
-                
-                //else
-                //{
-                //    sql += string.Format(" and EXISTS (select ID from CG_POOrder where IsSpecial=1 AND PONO=JXC_REPORT.PONO {0})", isColse);
-                //}
+
+                else
+                {
+                    sql += string.Format(" {0}", isColse);
+                }
                 //var model = Session["userInfo"] as User;
                 //sql += string.Format(" and EXISTS (select ID from CG_POOrder where AppName in (select ID from tb_User where 1=1 and loginName<>'admin' and loginStatus<>'离职') AND PONO=JXC_REPORT.PONO )", Session["currentUserId"]);
             }

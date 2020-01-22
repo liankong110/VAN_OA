@@ -1187,70 +1187,84 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
         public void CatchData()
         {
             DBHelp.ExeCommand("truncate table Temp_YuShouKuan;");
-            List<JXC_REPORTTotal> pOOrderList = YuShouKuan_GetListArray_Total("", "", "");
-            DataTable dataTable = GetTableSchema();
 
-            foreach (var model in pOOrderList)
+
+
+            for (int i = 2012; i <= DateTime.Now.Year; i++)
             {
-                var dataRow = dataTable.NewRow();
-                dataRow[1] = model.SumPOTotal;
-                dataRow[2] = 0;
-                dataRow[3] = model.MinDaoKuanDate;
-                dataRow[4] = model.MinOutDate;
-                dataRow[5] = model.MaxDaoKuanDate;
-                dataRow[6] = model.IsClose;
-                dataRow[7] = model.PONo;
-                dataRow[8] = model.POName;
-                dataRow[9] = model.PODate;
-                dataRow[10] = model.GuestName;
-                dataRow[11] = model.GuestType;
-                dataRow[12] = model.GuestPro;
-                dataRow[13] = model.goodSellTotal;
-                dataRow[14] = model.goodTotal;
-                dataRow[15] = model.maoliTotal;
-                dataRow[16] = model.FPTotal;
-                dataRow[17] = model.ZhangQiTotal;
-                dataRow[18] = model.AE;
-                dataRow[19] = model.INSIDE;
-                dataRow[20] = model.AEPer;
-                dataRow[21] = model.INSIDEPer;
-                dataRow[22] = model.InvoiceTotal;
-                dataRow[23] = model.SellFPTotal;
-                dataRow[24] = model.Model;
-                dataRow[25] = model.BillDate;
-                dataRow[26] = model.DaoKuanNumber;
-                dataRow[27] = model.Avg_ZQ;
-                dataRow[28] = model.ZQ;
-                dataRow[29] = model.MinDaoKuanTime_ZQ;
-                dataRow[30] = model.MinBillDate;
-                dataRow[31] = model.MinFPTime;
-                dataRow[32] = model.SecondDaoKuanDate;
-                dataRow[33] = model.YuGuDaoKuanTotal;
-                dataRow[34] = model.YuGuDaoKuanDate;
-                dataRow[35] = model.DaoKuanNumber;
-                dataRow[36] = model.JSKaiPiaoDate;
-                dataRow[37] = model.trueZhangQi;
-                dataRow[38] = model.JingLi;
+                var sql = string.Format(" and CG_POOrder.PODate>='{0}-1-1 00:00:00'", i);
+                i = i + 2;
+                sql += string.Format(" and CG_POOrder.PODate<='{0}-12-31 23:59:59'", i);
 
-                var m = model;
+                List<JXC_REPORTTotal> pOOrderList = YuShouKuan_GetListArray_Total(sql, "", "");
+                DataTable dataTable = GetTableSchema();
 
-                if ((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
-                    || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0))
+                foreach (var model in pOOrderList)
                 {
-                    dataRow[39] = 1;
+                    if (model.PONo == "P201901483")
+                    {
+
+                    }
+                    var dataRow = dataTable.NewRow();
+                    dataRow[1] = model.SumPOTotal;
+                    dataRow[2] = 0;
+                    dataRow[3] = model.MinDaoKuanDate;
+                    dataRow[4] = model.MinOutDate;
+                    dataRow[5] = model.MaxDaoKuanDate;
+                    dataRow[6] = model.IsClose;
+                    dataRow[7] = model.PONo;
+                    dataRow[8] = model.POName;
+                    dataRow[9] = model.PODate;
+                    dataRow[10] = model.GuestName;
+                    dataRow[11] = model.GuestType;
+                    dataRow[12] = model.GuestPro;
+                    dataRow[13] = model.goodSellTotal;
+                    dataRow[14] = model.goodTotal;
+                    dataRow[15] = model.maoliTotal;
+                    dataRow[16] = model.FPTotal;
+                    dataRow[17] = model.ZhangQiTotal;
+                    dataRow[18] = model.AE;
+                    dataRow[19] = model.INSIDE;
+                    dataRow[20] = model.AEPer;
+                    dataRow[21] = model.INSIDEPer;
+                    dataRow[22] = model.InvoiceTotal;
+                    dataRow[23] = model.SellFPTotal;
+                    dataRow[24] = model.Model;
+                    dataRow[25] = model.BillDate;
+                    dataRow[26] = model.DaoKuanNumber;
+                    dataRow[27] = model.Avg_ZQ;
+                    dataRow[28] = model.ZQ;
+                    dataRow[29] = model.MinDaoKuanTime_ZQ;
+                    dataRow[30] = model.MinBillDate;
+                    dataRow[31] = model.MinFPTime;
+                    dataRow[32] = model.SecondDaoKuanDate;
+                    dataRow[33] = model.YuGuDaoKuanTotal;
+                    dataRow[34] = model.YuGuDaoKuanDate;
+                    dataRow[35] = model.DaoKuanNumber;
+                    dataRow[36] = model.JSKaiPiaoDate;
+                    dataRow[37] = model.trueZhangQi;
+                    dataRow[38] = model.JingLi;
+
+                    var m = model;
+
+                    if ((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                        || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0))
+                    {
+                        dataRow[39] = 1;
+                    }
+                    if (!((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
+                         || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)))
+                    {
+                        dataRow[39] = 2;
+                    }
+
+                    dataTable.Rows.Add(dataRow);
                 }
-                if (!((m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.Model != "模型8")
-                     || (m.Model == "模型8" && m.YuGuDaoKuanDate != null && m.YuGuDaoKuanDate < DateTime.Now && m.YuGuDaoKuanTotal > 0)))
+
+                if (dataTable.Rows.Count > 0)
                 {
-                    dataRow[39] = 2;
+                    BatchSaveData(dataTable, "Temp_YuShouKuan");
                 }
-
-                dataTable.Rows.Add(dataRow);
-            }
-
-            if (dataTable.Rows.Count > 0)
-            {
-                BatchSaveData(dataTable, "Temp_YuShouKuan");
             }
         }
         /// <summary>
@@ -1265,7 +1279,7 @@ sum(SellFPTotal) as SellFPTotal,sum(SumPOTotal) as SumPOTotal,sum(SellFPTotal) a
             strSql.Append(" sum(goodSellTotal) as goodSellTotal,sum(goodTotal)+sum(t_goodTotalChas) as goodTotal, ");
             strSql.Append(" isnull(sum(maoli),0) as maoliTotal,FPTotal,ZhangQiTotal, ");
             //strSql.Append(" ZhangQi as trueZhangQi,AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal  from CG_POOrder ");
-            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,Model,IsPoFax  from CG_POOrder ");
+            strSql.Append(" AE,INSIDE,AEPer as AEPer,INSIDEPer as INSIDEPer,isnull(avg(InvoTotal),0) as InvoTotal,avg(SellFPTotal) as SellFPTotal,Model,IsPoFax,PlanDays  from CG_POOrder ");
 
             strSql.Append(" left join JXC_REPORT on CG_POOrder.PONo=JXC_REPORT.PONo ");
             strSql.Append(" left join (select max(DaoKuanDate)  as MaxDaoKuanDate,PoNo,SUM(Total) as InvoTotal,min(DaoKuanDate)  as MinDaoKuanDate,sum(case WHEN BUSTYPE=0 THEN 1 ELSE 0 end) AS DaOKuanCount from  TB_ToInvoice  where  TB_ToInvoice.state='通过' group by PoNo) as newtable1 on CG_POOrder.PONo=newtable1.PONo");
@@ -1280,7 +1294,7 @@ on Sell_OrderOutHouse.id=Sell_OrderOutHouses.id where  Status='通过' group by 
                 strSql.Append(strWhere);
             }
 
-            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model ,MinDaoKuanDate,DaOKuanCount,IsPoFax ");
+            strSql.Append(" GROUP BY  CG_POOrder.PONo,CG_POOrder.POName,CG_POOrder.PODate ,CG_POOrder.GuestName ,AE,INSIDE,FPTotal,AEPer,INSIDEPer,MinOutDate,MaxDaoKuanDate,ZhangQiTotal,CG_POOrder.IsClose,CG_POOrder.GuestType, CG_POOrder.GuestPro,Model ,MinDaoKuanDate,DaOKuanCount,IsPoFax,PlanDays ");
 
             if (having != "")
             {
@@ -1652,7 +1666,15 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                                     //项目订单的计划完工天数 缺省你按 10
                                     if (MinDaoKuanDate != null && MinDaoKuanDate != DBNull.Value)
                                     {
-                                        model.YuGuDaoKuanDate = Convert.ToDateTime(MinDaoKuanDate).AddDays(model.Avg_ZQ + 10);
+                                        int PlanDays = 0;
+                                        ojb = dataReader["PlanDays"];
+                                        if (ojb != null && ojb != DBNull.Value)
+                                        {
+                                            PlanDays = Convert.ToInt32(ojb);
+                                        }
+                                        
+                                        //model.YuGuDaoKuanDate = Convert.ToDateTime(MinDaoKuanDate).AddDays(model.Avg_ZQ + 10);
+                                        model.YuGuDaoKuanDate = Convert.ToDateTime(MinDaoKuanDate).AddDays(model.Avg_ZQ+ PlanDays);
                                         model.DaoKuanNumber = 3;
                                     }
                                 }
@@ -1702,7 +1724,7 @@ LEFT JOIN MODEL_ZQ ON allNewTb.PONO=MODEL_ZQ.PONO
                                     if (model.MinDaoKuanTime_ZQ != null)
                                     {
                                         model.DaoKuanNumber = 2;
-                                        var result = invSimpDetailList.FindAll(t => t.DaoKuanDate >= model.MinDaoKuanTime_ZQ.Value.AddDays(30));
+                                        var result = invSimpDetailList.FindAll(t => t.DaoKuanDate >= model.MinDaoKuanTime_ZQ.Value.AddDays(30)&&t.PONO==model.PONo);
                                         if (result.Count > 0)
                                         {
                                             var fristDate = result[0].DaoKuanDate;

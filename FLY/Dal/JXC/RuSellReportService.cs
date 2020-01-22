@@ -30,8 +30,8 @@ namespace VAN_OA.Dal.JXC
             string sql = string.Format(@"select GoodId,PONo,lastSupplier from CAI_POOrder
 left join  CAI_POCai on CAI_POOrder.id=CAI_POCai.id where  Status='通过' and pono in ({0}) and goodid in ({1}) "
                 , ponos, goodIds);
-          
-           
+
+
             using (SqlConnection conn = DBHelp.getConn())
             {
                 conn.Open();
@@ -106,7 +106,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
                         model.GoodAreaNumber = dataReader["GoodAreaNumber"].ToString();
                         list.Add(model);
 
-                      
+
                     }
                 }
             }
@@ -182,19 +182,49 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
             {
                 model.IsHanShui = (int)ojb;
             }
-            
+
 
             return model;
         }
 
+        public Hashtable GetCkHs(string sql)
+        {
+            Hashtable hs = new Hashtable();
+            using (SqlConnection conn = DBHelp.getConn())
+            {
+                conn.Open();
+                SqlCommand objCommand = new SqlCommand(sql, conn);
+                using (SqlDataReader dataReader = objCommand.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        JXCDetail model = new JXCDetail();
 
+                        model.PONo = dataReader["PONo"].ToString();
+                        model.AE = dataReader["AE"].ToString();
+                        model.GoodId = Convert.ToInt32(dataReader["GoodId"]);
+                        model.CreateTime = Convert.ToDateTime(dataReader["CreateTime"]);
+                        if (!hs.Contains(model.PONo + model.GoodId))
+                        {
+                            hs.Add(model.PONo + model.GoodId, model.AE);
+                        }
+
+                    }
+                }
+            }
+
+            return hs;
+        }
 
         /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
         public List<NoSellAndCaiGoods> GetListNoSellAndCaiGoods(string ponoWhere, string userId,
-            string goodNoWhere, string guestWhere, string ruTimeWhere, string poTimeWhere, string where,string company,bool isJingjian,string poNoSql)
+            string goodNoWhere, string guestWhere, string ruTimeWhere, string poTimeWhere, string where, string company, bool isJingjian, string poNoSql,
+            Hashtable Ck_HS)
         {
+
+
             List<NoSellAndCaiGoods> list = new List<NoSellAndCaiGoods>();
             StringBuilder strSql = new StringBuilder();
 
@@ -203,7 +233,7 @@ GoodAvgPrice,avgSellPrice,minRuTime,minPODate,LastNum,outNum,GoodNum,CaiDate,sel
 from 
 NoSellAndCaiGoods
 left join TB_Good on TB_Good.GoodId=[NoSellAndCaiGoods].GoodId
-left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6} {7} " + where+ " order by PONo desc ",
+left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  where 1=1 {0} {1} {2} {3} {4} {5} {6} {7} " + where + " order by PONo desc ",
                                                                                                      userId == "" ? "" : string.Format(" and AE='{0}'", userId)
                                                                                                     , goodNoWhere,
                          guestWhere, ruTimeWhere, poTimeWhere, ponoWhere, company, poNoSql);
@@ -218,14 +248,29 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
                 {
                     while (dataReader.Read())
                     {
+                        var PONo = dataReader["PONo"].ToString();
+                        var GoodId = 0;
+                        var ojb1 = dataReader["GoodId"];
+                        if (ojb1 != null && ojb1 != DBNull.Value)
+                        {
+                            GoodId = (int)ojb1;
+                        }
+                        if (PONo.StartsWith("KC"))
+                        {
+                            if (!Ck_HS.Contains(PONo + GoodId))
+                            {
+                                continue;
+                            }
+                        }
                         var model = ReaderBindNoSellAndCaiGoods(dataReader);
+
                         model.GoodAreaNumber = dataReader["GoodAreaNumber"].ToString();
                         var ojb = dataReader["ZHIFA"];
-                        if (ojb != null && ojb != DBNull.Value&&Convert.ToInt32( ojb)>0)
+                        if (ojb != null && ojb != DBNull.Value && Convert.ToInt32(ojb) > 0)
                         {
                             model.ZHIFA = "直发";
                         }
-                        if (isJingjian&&model.PONo.StartsWith("KC"))
+                        if (isJingjian && model.PONo.StartsWith("KC"))
                         {
                             if (!sh.ContainsKey(model.GoodId))
 
@@ -237,7 +282,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
                                 continue;
                             }
                         }
-                         
+
 
                         list.Add(model);
                     }
@@ -254,9 +299,9 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
         {
             NoSellAndCaiGoods model = new NoSellAndCaiGoods();
             object ojb;
-            model.GoodTypeSmName= dataReader["GoodTypeSmName"].ToString();
+            model.GoodTypeSmName = dataReader["GoodTypeSmName"].ToString();
             model.PONo = dataReader["PONo"].ToString();
-            model.POName= dataReader["POName"].ToString();
+            model.POName = dataReader["POName"].ToString();
             model.AE = dataReader["AE"].ToString();
             model.GuestName = dataReader["GuestName"].ToString();
             ojb = dataReader["GoodId"];
@@ -343,7 +388,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
             {
                 model.WaiCaiNum = (decimal)ojb;
             }
-            
+
             ojb = dataReader["sellTuiNum"];
             if (ojb != null && ojb != DBNull.Value)
             {
@@ -398,11 +443,11 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
 
 
 
-        public Hashtable getHT(string AE, string poNo, string company,string special,string modelwhere)
+        public Hashtable getHT(string AE, string poNo, string company, string special, string modelwhere)
         {
             Hashtable hs = new Hashtable();
             var sql = string.Format("select NoSellAndCaiGoods.PONo,allCaiNum,kuCaiNum,waiCaiNum,NoSellAndCaiGoods.AE,LastNum,outNum,sellTuiNum,caiTuiNum from NoSellAndCaiGoods ");
-            if (special != "-1"|| modelwhere != "全部")
+            if (special != "-1" || modelwhere != "全部")
             {
                 sql += "left join CG_POOrder on CG_POOrder.PONo=NoSellAndCaiGoods.PONo and CG_POOrder.IFZhui=0";
             }
@@ -415,7 +460,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
             }
             if (special != "-1")
             {
-                sql += string.Format(" and CG_POOrder.IsSpecial="+special);
+                sql += string.Format(" and CG_POOrder.IsSpecial=" + special);
             }
             if (modelwhere != "全部")
             {
@@ -430,7 +475,7 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=[NoSellAndCaiGoods].GoodId  wher
                 {
                     while (dataReader.Read())
                     {
-                        Get_YueKaohe(dataReader,hs);
+                        Get_YueKaohe(dataReader, hs);
                     }
                 }
             }
@@ -450,7 +495,7 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
             }
             if (AE != "")
             {
-                sql += string.Format(" and CAI_POOrder.AE='{0}'",AE);
+                sql += string.Format(" and CAI_POOrder.AE='{0}'", AE);
             }
             if (poNo != "")
             {
@@ -467,19 +512,19 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
                 {
                     while (dataReader.Read())
                     {
-                        JXCDetail model = new JXCDetail();                        
-                     
+                        JXCDetail model = new JXCDetail();
+
                         model.PONo = dataReader["PONo"].ToString();
                         model.AE = dataReader["AE"].ToString();
                         model.GoodId = Convert.ToInt32(dataReader["GoodId"]);
-                        model.CreateTime =Convert.ToDateTime(dataReader["CreateTime"]);
+                        model.CreateTime = Convert.ToDateTime(dataReader["CreateTime"]);
 
                         allDetailList.Add(model);
 
                     }
                 }
             }
-            CheckHouseNum(allDetailList,hs);
+            CheckHouseNum(allDetailList, hs);
 
             return hs;
         }
@@ -489,7 +534,7 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
         /// 检查出库情况
         /// </summary>
         public void CheckHouseNum(List<JXCDetail> allDetailList, Hashtable hs)
-        {           
+        {
 
             using (SqlConnection conn = DBHelp.getConn())
             {
@@ -504,18 +549,18 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
                     paras[0] = new SqlParameter("@HouseId", 1);
                     paras[1] = new SqlParameter("@GoodId", detail.GoodId);
                     paras[2] = new SqlParameter("@FromDate", detail.CreateTime);
-                    paras[3] = new SqlParameter("@ToDate",DateTime.Now);
+                    paras[3] = new SqlParameter("@ToDate", DateTime.Now);
                     objCommand.Parameters.AddRange(paras);
                     var result = true;
                     using (SqlDataReader dataReader = objCommand.ExecuteReader())
                     {
-                         
+
                         decimal iniNum = 0;
                         while (dataReader.Read())
-                        {                            
+                        {
                             var GoodInNum = Convert.ToDecimal(dataReader["GoodInNum"]);
-                            var GoodOutNum = Convert.ToDecimal(dataReader["GoodOutNum"]);                            
-                            iniNum =iniNum+ GoodInNum - GoodOutNum;
+                            var GoodOutNum = Convert.ToDecimal(dataReader["GoodOutNum"]);
+                            iniNum = iniNum + GoodInNum - GoodOutNum;
                             if (iniNum == 0)
                             {
                                 result = false;
@@ -527,12 +572,12 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
                     {
                         if (!hs.ContainsKey(detail.PONo))
                         {
-                            hs.Add(detail.PONo,detail.AE);
-                        }        
+                            hs.Add(detail.PONo, detail.AE);
+                        }
                     }
                 }
             }
-            
+
         }
 
         public Hashtable getHT(string where)
@@ -559,7 +604,7 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
         /// <summary>
         /// 对象实体绑定数据
         /// </summary>
-        public void Get_YueKaohe(IDataReader dataReader,Hashtable hs)
+        public void Get_YueKaohe(IDataReader dataReader, Hashtable hs)
         {
             NoSellAndCaiGoods model = new NoSellAndCaiGoods();
             object ojb;
@@ -567,13 +612,13 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
             if (!hs.Contains(model.PONo))
             {
                 model.AE = dataReader["AE"].ToString();
-               
+
                 ojb = dataReader["LastNum"];
                 if (ojb != null && ojb != DBNull.Value)
                 {
                     model.totalNum = (decimal)ojb;
-                }             
-               
+                }
+
 
                 ojb = dataReader["outNum"];
                 if (ojb != null && ojb != DBNull.Value)
@@ -649,7 +694,7 @@ AND CAI_POOrder.AE<>'' and CAI_OrderInHouse.PONo like 'KC%'";
 
                 if (model.RuChuNum != 0 || model.CaIKuNum != 0 || model.CaiGouNum != 0)
                 {
-                    hs.Add(model.PONo,model.AE);
+                    hs.Add(model.PONo, model.AE);
                 }
             }
         }

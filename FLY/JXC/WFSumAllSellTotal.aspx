@@ -23,7 +23,6 @@
                 <cc1:CalendarExtender ID="CalendarExtender2" PopupButtonID="ImageButton1" runat="server"
                     Format="yyyy-MM-dd" TargetControlID="txtTo">
                 </cc1:CalendarExtender>
-
             </td>
             <td>公司名称：
             </td>
@@ -160,7 +159,7 @@
                 <td>
                     <%=model.AE %>
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:lightgreen">
                     <%=model.SumPOTotal.ToString("n2") %>
                 </td>
                  <td align="right">
@@ -178,18 +177,18 @@
                 <td align="right">
                     <%=model.PoLiRunTotal.ToString("n2") %>
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:Khaki">
                     <%=(allPoLiRunTotal!=0?(model.PoLiRunTotal/allPoLiRunTotal):0).ToString("n2") %>
                 </td>
                 <%-- 2 --%>
-                <td align="right">
+                <td align="right" style="background-color:lightgreen">
                     <%=model.SumPOTotal_QZ.ToString("n2") %>
                 </td>
 
                 <td align="right">
                     <%=model.MaoLi_QZ.ToString("n2") %>
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:Khaki">
                     <%=(allMaoLi_QZ!=0?(model.MaoLi_QZ/allMaoLi_QZ):0).ToString("n2") %>                   
                 </td>
                 <td align="right">
@@ -203,13 +202,13 @@
                 </td>
                 <%-- 3 --%>
 
-                <td align="right">
+                <td align="right" style="background-color:lightgreen"> 
                     <%=model.SumPOTotal_ZZ.ToString("n2") %>
                 </td>
                 <td align="right">
                     <%=model.MaoLi_ZZ.ToString("n2") %>
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:Khaki">
                     <%=(allMaoLi_ZZ!=0?(model.MaoLi_ZZ/allMaoLi_ZZ):0).ToString("n2") %>
                    
                 </td>
@@ -251,7 +250,7 @@
             <tr>
                 <td>合计
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:lightgreen">
                     <%= allList.Sum(t => t.SumPOTotal).ToString("n2")%>
                 </td>
                 <td></td>
@@ -264,7 +263,7 @@
                     <%=allList.Sum(t => t.PoLiRunTotal).ToString("n2")%>
                 </td>
                 <td></td>
-                <td align="right">
+                <td align="right" style="background-color:lightgreen">
                     <%=allList.Sum(t => t.SumPOTotal_QZ).ToString("n2")%>
                 </td>
                 <td align="right">
@@ -280,7 +279,7 @@
                 <td align="right">
                     <%=allList.Sum(t => t.sellFPTotal_QZ).ToString("n2")%>
                 </td>
-                <td align="right">
+                <td align="right" style="background-color:lightgreen">
                     <%=allList.Sum(t => t.SumPOTotal_ZZ).ToString("n2")%>
                 </td>
                 <td align="right">

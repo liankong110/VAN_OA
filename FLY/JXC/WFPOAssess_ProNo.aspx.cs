@@ -198,7 +198,7 @@ namespace VAN_OA.JXC
 
             if (ddlCompany.Text != "-1")
             {
-                string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[2]);
+                string where = string.Format(" CompanyCode='{0}'", ddlCompany.Text.Split(',')[0]);
                 sql += string.Format(" and exists (select id from tb_User where IFZhui=0 and {0} and CG_POOrder.appName=id)", where);
             }
             
