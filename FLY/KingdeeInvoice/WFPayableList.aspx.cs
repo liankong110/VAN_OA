@@ -43,7 +43,7 @@ namespace VAN_OA.KingdeeInvoice
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('时间 格式错误！');</script>");
                     return;
                 }
-                 
+
                 sql += string.Format(" and CreateDate>='{0} 00:00:00'", txtFrom.Text);
             }
 
@@ -56,7 +56,7 @@ namespace VAN_OA.KingdeeInvoice
                 }
                 sql += string.Format(" and CreateDate<='{0} 23:59:59'", txtTo.Text);
             }
-            
+
             if (txtBillDateFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtBillDateFrom.Text) == false)
@@ -67,7 +67,7 @@ namespace VAN_OA.KingdeeInvoice
 
                 sql += string.Format(" and BillDate>='{0} 00:00:00'", txtBillDateFrom.Text);
             }
-            
+
             if (txtBillDateTo.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtBillDateTo.Text) == false)
@@ -125,34 +125,34 @@ namespace VAN_OA.KingdeeInvoice
             string invoiceServer = "";
             if (ddlIsDeleted.Text == "0")
             {
-                //sql += " and IsDeleted=0";
+                sql += " and IsDeleted=0";
             }
 
             if (ddlIsDeleted.Text == "1")//已经删除
             {
                 sql += " and IsDeleted=1";
-                invoiceServer = "KIS.";
-               
+                //invoiceServer = "KIS.";
+
             }
-          
+
             if (ddlEQTotal.Text != "-1")
             {
-                sql += string.Format(" AND Received{0}Total",ddlEQTotal.Text);
+                sql += string.Format(" AND Received{0}Total", ddlEQTotal.Text);
             }
             List<Payable> invoiceList = new List<Payable>();
             //全部
             if (ddlIsDeleted.Text == "-1")
             {
                 invoiceList = this._payableSer.GetListArray(sql, invoiceServer);
-                sql += " and IsDeleted=1";
-                invoiceServer = "KIS.";
-                invoiceList.AddRange(this._payableSer.GetListArray(sql, invoiceServer));
+                //sql += " and IsDeleted=1";
+                //invoiceServer = "KIS.";
+                //invoiceList.AddRange(this._payableSer.GetListArray(sql, invoiceServer));
             }
             else
             {
                 invoiceList = this._payableSer.GetListArray(sql, invoiceServer);
             }
-           
+
             AspNetPager1.RecordCount = invoiceList.Count;
             this.gvList.PageIndex = AspNetPager1.CurrentPageIndex - 1;
 
@@ -162,8 +162,8 @@ namespace VAN_OA.KingdeeInvoice
             var sumReceived = invoiceList.Sum(t => t.Received);
             if (sumTotal != 0)
             {
-                lblDaoKuanBLTotal.Text =string.Format("{0:n2}", sumReceived/ sumTotal*100);
-                lblWeiDaoKuanBLTotal.Text = string.Format("{0:n2}", (sumTotal-sumReceived)/ sumTotal*100);
+                lblDaoKuanBLTotal.Text = string.Format("{0:n2}", sumReceived / sumTotal * 100);
+                lblWeiDaoKuanBLTotal.Text = string.Format("{0:n2}", (sumTotal - sumReceived) / sumTotal * 100);
             }
             else
             {
@@ -172,7 +172,7 @@ namespace VAN_OA.KingdeeInvoice
             }
             lblAllTotal.Text = sumTotal.ToString();
             lblDaoTotal.Text = sumReceived.ToString();
-            lblWeiDaoTotal.Text = (invoiceList.Sum(t => t.Total)- invoiceList.Sum(t => t.Received)).ToString();
+            lblWeiDaoTotal.Text = (invoiceList.Sum(t => t.Total) - invoiceList.Sum(t => t.Received)).ToString();
         }
 
         protected void gvList_DataBinding(object sender, EventArgs e)
@@ -211,7 +211,7 @@ namespace VAN_OA.KingdeeInvoice
                 this.gvList.DataSource = invoiceList;
                 this.gvList.DataBind();
 
-             
+
                 #region 是否有删除功能
                 if (Session["currentUserId"] != null)
                 {
@@ -231,7 +231,7 @@ namespace VAN_OA.KingdeeInvoice
                 if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "Isorder可编辑") == false)
                 {
                     ViewState["cbIsIsorder"] = false;
-                  
+
                     gvList.Columns[2].Visible = false;
                 }
                 if (VAN_OA.JXC.SysObj.NewShowAll_textName("金蝶应付发票清单", Session["currentUserId"], "删除标记") == false)
@@ -300,15 +300,15 @@ namespace VAN_OA.KingdeeInvoice
                 for (int i = 0; i < this.gvList.Rows.Count; i++)
                 {
                     Label lblIds = (gvList.Rows[i].FindControl("Id")) as Label;
-                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditGuestName")) as TextBox;
+                    TextBox EditGuestName = (gvList.Rows[i].FindControl("EditSupplierName")) as TextBox;
                     TextBox EditReceived = (gvList.Rows[i].FindControl("EditReceived")) as TextBox;
                     if (CommHelp.VerifesToNum(EditReceived.Text) == false)
                     {
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('到款金额格式错误！');</script>");
+                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('付款金额格式错误！');</script>");
                         return;
                     }
-                    where.AppendFormat("update KIS.[KingdeeInvoice].[dbo].[Payable] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
-                    where.AppendFormat("update [KingdeeInvoice].[dbo].[Payable] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+                    //where.AppendFormat("update KIS.[KingdeeInvoice].[dbo].[Payable] set GuestName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
+                    where.AppendFormat("update [KingdeeInvoice].[dbo].[Payable] set SupplierName='{1}',Received={2} where Id={0};", lblIds.Text, EditGuestName.Text, EditReceived.Text);
 
                 }
                 if (where.ToString() != "")
@@ -339,8 +339,8 @@ namespace VAN_OA.KingdeeInvoice
                 if (where != " Id  in (")
                 {
                     where = where.Substring(0, where.Length - 1) + ")";
-                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set Isorder=1 where " + where;
-                    sql += ";update [KingdeeInvoice].[dbo].[Payable] set Isorder=1 where " + where;
+                    //var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set Isorder=1 where " + where;
+                    var sql = "update [KingdeeInvoice].[dbo].[Payable] set Isorder=1 where " + where;
                     DBHelp.ExeCommand(sql);
                     //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
@@ -348,8 +348,8 @@ namespace VAN_OA.KingdeeInvoice
                 if (expWhere != " Id  in (")
                 {
                     expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
-                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set Isorder=null where " + expWhere;
-                    sql += ";update [KingdeeInvoice].[dbo].[Payable] set Isorder=null where " + expWhere;
+                    //var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set Isorder=null where " + expWhere;
+                    var sql = "update [KingdeeInvoice].[dbo].[Payable] set Isorder=null where " + expWhere;
                     DBHelp.ExeCommand(sql);
                     // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
@@ -361,47 +361,47 @@ namespace VAN_OA.KingdeeInvoice
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
-            string sql = string.Format(@"SELECT   [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received],COUNT(*) as cou    
-FROM KIS.KingdeeInvoice.[dbo].[Payable]  group by  [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received]
-having COUNT(*)>1");
-            var oriData = DBHelp.getDataTable(sql);
-            if (oriData.Rows.Count > 0)
-            {
-                using (SqlConnection conn = DBHelp.getConn())
-                {
-                    conn.Open();
-                    SqlTransaction tan = conn.BeginTransaction();
-                    SqlCommand objCommand = conn.CreateCommand();
-                    objCommand.Transaction = tan;
-                    try
-                    {
-                        foreach (DataRow dr in oriData.Rows)
-                        {
-                            sql = string.Format(@"update KIS.KingdeeInvoice.[dbo].[Payable]  set IsDeleted=1 where id in (select top {5} id from KIS.KingdeeInvoice.[dbo].[Payable] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4});
-                            delete from KingdeeInvoice.[dbo].[Payable] where id in (select top {5} id from KingdeeInvoice.[dbo].[Payable] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4})",
-                            dr[0], dr[1], dr[2], dr[3], dr[4], (Convert.ToInt32(dr[5]) - 1));
-                            objCommand.CommandText = sql;
-                            objCommand.ExecuteNonQuery();
-                        }
-                        tan.Commit();
+            //            string sql = string.Format(@"SELECT   [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received],COUNT(*) as cou    
+            //FROM KIS.KingdeeInvoice.[dbo].[Payable]  group by  [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received]
+            //having COUNT(*)>1");
+            //            var oriData = DBHelp.getDataTable(sql);
+            //            if (oriData.Rows.Count > 0)
+            //            {
+            //                using (SqlConnection conn = DBHelp.getConn())
+            //                {
+            //                    conn.Open();
+            //                    SqlTransaction tan = conn.BeginTransaction();
+            //                    SqlCommand objCommand = conn.CreateCommand();
+            //                    objCommand.Transaction = tan;
+            //                    try
+            //                    {
+            //                        foreach (DataRow dr in oriData.Rows)
+            //                        {
+            //                            sql = string.Format(@"update KIS.KingdeeInvoice.[dbo].[Payable]  set IsDeleted=1 where id in (select top {5} id from KIS.KingdeeInvoice.[dbo].[Payable] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4});
+            //                            delete from KingdeeInvoice.[dbo].[Payable] where id in (select top {5} id from KingdeeInvoice.[dbo].[Payable] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4})",
+            //                            dr[0], dr[1], dr[2], dr[3], dr[4], (Convert.ToInt32(dr[5]) - 1));
+            //                            objCommand.CommandText = sql;
+            //                            objCommand.ExecuteNonQuery();
+            //                        }
+            //                        tan.Commit();
 
-                    }
-                    catch (Exception)
-                    {
+            //                    }
+            //                    catch (Exception)
+            //                    {
 
-                        tan.Rollback();
-                        conn.Close();
-                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除失败!');</script>");
-                        return;
-                    }
-                    conn.Close();
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除成功!');</script>");
-                }
-            }
-            else
-            {
-                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有重复数据!');</script>");
-            }
+            //                        tan.Rollback();
+            //                        conn.Close();
+            //                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除失败!');</script>");
+            //                        return;
+            //                    }
+            //                    conn.Close();
+            //                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除成功!');</script>");
+            //                }
+            //            }
+            //            else
+            //            {
+            //                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有重复数据!');</script>");
+            //            }
         }
 
         protected void btnDeleted_Click(object sender, EventArgs e)
@@ -429,9 +429,9 @@ having COUNT(*)>1");
                 if (where != " Id  in (")
                 {
                     where = where.Substring(0, where.Length - 1) + ")";
-                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set IsDeleted=1 where " + where;
-                    sql += ";delete [KingdeeInvoice].[dbo].[Payable]  where " + where;
-                    DBHelp.ExeCommand(sql);                   
+                    var sql = "update [KingdeeInvoice].[dbo].[Payable] set IsDeleted=1 where " + where;
+                    //var sql = "delete [KingdeeInvoice].[dbo].[Payable]  where " + where;
+                    DBHelp.ExeCommand(sql);
                     //base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
 
@@ -439,30 +439,30 @@ having COUNT(*)>1");
                 if (expWhere != " Id  in (")
                 {
                     expWhere = expWhere.Substring(0, expWhere.Length - 1) + ")";
-                    var sql = "update KIS.[KingdeeInvoice].[dbo].[Payable] set IsDeleted=0 where " + expWhere;                   
+                    var sql = "update [KingdeeInvoice].[dbo].[Payable] set IsDeleted=0 where " + expWhere;
                     DBHelp.ExeCommand(sql);
 
-                    string batchSql =string.Format(@"
-INSERT INTO KingdeeInvoice.[dbo].[Payable]
-           (ID,[SupplierName]
-           ,[InvoiceNumber]
-           ,[Total]
-           ,[CreateDate]
-           ,[IsAccount]
-           ,[Received]
-           ,[Isorder])
-SELECT ID,[GuestName]
-      ,[InvoiceNumber]
-      ,[Total]
-      ,[CreateDate]
-      ,[IsAccount]
-      ,[Received]
-      ,[Isorder]
-  FROM KIS.[KingdeeInvoice].[dbo].[Payable] where IsDeleted=0 and {0}", expWhere);
-                    DBHelp.ExeCommand(batchSql);
-                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
+                    //                    string batchSql =string.Format(@"
+                    //INSERT INTO KingdeeInvoice.[dbo].[Payable]
+                    //           (ID,[SupplierName]
+                    //           ,[InvoiceNumber]
+                    //           ,[Total]
+                    //           ,[CreateDate]
+                    //           ,[IsAccount]
+                    //           ,[Received]
+                    //           ,[Isorder])
+                    //SELECT ID,[GuestName]
+                    //      ,[InvoiceNumber]
+                    //      ,[Total]
+                    //      ,[CreateDate]
+                    //      ,[IsAccount]
+                    //      ,[Received]
+                    //      ,[Isorder]
+                    //  FROM KIS.[KingdeeInvoice].[dbo].[Payable] where IsDeleted=0 and {0}", expWhere);
+                    //                    DBHelp.ExeCommand(batchSql);
+                    //                    // base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 }
-                
+
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
                 Show();
             }

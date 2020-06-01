@@ -294,8 +294,19 @@
                         <asp:Label ID="lblHadSupplierInvoiceTotal" runat="server" Text='<%# Eval("HadSupplierInvoiceTotal") %>'></asp:Label>
                     </FooterTemplate>
                 </asp:TemplateField>
-                 <asp:BoundField DataField="new_ShengYuZhiJia_1" HeaderText="未支付" SortExpression="new_ShengYuZhiJia_1"
-                                ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n4}" />
+
+				 <asp:TemplateField HeaderText="未支付" HeaderStyle-Width="3%">
+                    <ItemTemplate>
+                        <asp:Label ID="lblnew_ShengYuZhiJia_1" runat="server" Text='<%# Eval("new_ShengYuZhiJia_1") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                        <asp:Label ID="lblnew_ShengYuZhiJia_1" runat="server" Text='<%# Eval("new_ShengYuZhiJia_1") %>'></asp:Label>
+                    </FooterTemplate>
+                </asp:TemplateField>
+
+                <%-- <asp:BoundField DataField="new_ShengYuZhiJia_1" HeaderText="未支付" SortExpression="new_ShengYuZhiJia_1"
+                                ItemStyle-HorizontalAlign="Center" DataFormatString="{0:n4}" />--%>
+
                 <asp:TemplateField HeaderText="供应商全称" HeaderStyle-Width="5%">
                     <ItemTemplate>
                         <asp:Label ID="lblSupplierAllName" runat="server" Text='<%# Eval("SupplierAllName") %>'></asp:Label>

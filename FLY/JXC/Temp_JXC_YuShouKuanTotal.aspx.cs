@@ -37,7 +37,7 @@ namespace VAN_OA.JXC
                 txtYuGuDaoKuan_1.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
                 var _modelList = modelService.GetListArray("");
-                _modelList.Add(new TB_Model { Id=-2,ModelName=""});
+                _modelList.Add(new TB_Model { Id = -2, ModelName = "" });
                 _modelList.Insert(0, new TB_Model { Id = -1, ModelName = "全部" });
                 ddlModel.DataSource = _modelList;
                 ddlModel.DataBind();
@@ -671,7 +671,7 @@ namespace VAN_OA.JXC
         {
             if (ViewState["ChuanTong"] != null && Convert.ToBoolean(ViewState["ChuanTong"]))
             {
-                ViewState["ChuanTong"] = ViewState["ChuanTong"];               
+                ViewState["ChuanTong"] = ViewState["ChuanTong"];
                 ChuanTongShow();
             }
             else
@@ -693,7 +693,7 @@ namespace VAN_OA.JXC
                 Show();
             }
 
-           
+
         }
 
         protected void gvMain_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -830,6 +830,14 @@ namespace VAN_OA.JXC
 
         protected void btnChuanTong_Click(object sender, EventArgs e)
         {
+            if (txtPONo.Text.Trim() != "")
+            {
+                if (txtFrom.Text == ""&& txtTo.Text == "" )
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请输入项目日期的任一边，在点传统查询！');</script>");
+                    return;
+                }
+            }
             AspNetPager1.CurrentPageIndex = 1;
             ViewState["ChuanTong"] = true;
             ChuanTongShow();

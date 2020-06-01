@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VAN_OA", "FLY\VAN_OA.csproj", "{6EBC984A-97A3-4FA8-9D1B-B13765A44780}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportExcel", "ImportExcel\ImportExcel.csproj", "{448525F4-7ADD-4892-81CC-9B57FAAC0CFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring", "Monitoring\Monitoring.csproj", "{11EBC6DC-956A-4B95-9375-095C6F51E6DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIS", "KIS\KIS.csproj", "{43A236EC-56D3-4F72-92F0-10C38B08E8AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,11 +65,24 @@ Global
 		{11EBC6DC-956A-4B95-9375-095C6F51E6DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{11EBC6DC-956A-4B95-9375-095C6F51E6DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{11EBC6DC-956A-4B95-9375-095C6F51E6DE}.Release|x86.Build.0 = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{43A236EC-56D3-4F72-92F0-10C38B08E8AE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {1CE1DBD3-0374-476E-866F-AA3CC44FBEFC}
 	EndGlobalSection
 EndGlobal

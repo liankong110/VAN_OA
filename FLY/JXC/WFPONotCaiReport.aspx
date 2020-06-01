@@ -61,6 +61,10 @@
                 <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="100PX"></asp:TextBox>
                 或者
                 <asp:TextBox ID="txtNameOrTypeOrSpecTwo" runat="server" Width="100PX"></asp:TextBox>
+				名称/小类/规格:
+                <asp:TextBox ID="txtNameOrTypeOrSpec2" runat="server" Width="100PX"></asp:TextBox>
+				和
+                <asp:TextBox ID="txtNameOrTypeOrSpecTwo2" runat="server" Width="100PX"></asp:TextBox>
                 &nbsp;&nbsp;&nbsp; 供应商简称:  <asp:TextBox ID="txtSupplier" runat="server" Width="200px"></asp:TextBox>
                   <asp:CheckBox ID="cbPiPei" runat="server" Text="全匹配" />
                 <asp:CheckBox ID="cbZero" runat="server" Checked="true" Text="需采数量不为0" />

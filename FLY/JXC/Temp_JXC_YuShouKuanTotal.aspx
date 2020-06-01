@@ -331,7 +331,10 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4">
+            <td colspan="2"> 注释：项目编号的传统查询必须输入项目日期任一边起始条件
+                </td>
+            <td colspan="2">
+               
                 <div align="right">
                     <asp:Button ID="btnChuanTong" runat="server" Text=" 传统查询 " BackColor="Yellow" OnClick="btnChuanTong_Click"  />
                     &nbsp;&nbsp;&nbsp;

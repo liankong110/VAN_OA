@@ -409,11 +409,11 @@ select tb.PONo,AE,3 as T from ( select  PONo from
  and exists(select id from CG_POOrder where Status='通过' and IsSpecial=0  
  {0} and  CG_POOrder.PONO=Sell_OrderFP.PONO  and ifzhui=0) ) as Sell_OrderFP full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate from 
- " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice as invoice  where 1=1  and Isorder is null  ) as invoice  
+ " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice_View as invoice  where 1=1  and Isorder is null  ) as invoice  
 on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName 
 or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total )) where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP where  Status='通过' group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total 
+INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total 
 WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo) 
 ) as tb left join CG_POOrder on tb.PONo=CG_POOrder.PONo and IFZhui=0 where tb.PONo is not null
 ) as tb where 1=1 ", DateWhere);

@@ -265,6 +265,24 @@ namespace VAN_OA.ReportForms {
         protected global::System.Web.UI.WebControls.TextBox txtNameOrTypeOrSpecTwo;
         
         /// <summary>
+        /// txtNameOrTypeOrSpec2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNameOrTypeOrSpec2;
+        
+        /// <summary>
+        /// txtNameOrTypeOrSpecTwo2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNameOrTypeOrSpecTwo2;
+        
+        /// <summary>
         /// ddlCaiNum 控件。
         /// </summary>
         /// <remarks>

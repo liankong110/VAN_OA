@@ -4,7 +4,7 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SampleContent">
-
+    <script src="../Scripts/jquery-1.5.1.min.js"></script>
     <script type="text/javascript"> 
     
  function CheckId() {
@@ -19,7 +19,42 @@
              document.getElementById('<%= txtSupplier.ClientID %>').value = arr[1];           
          }
      }
- }
+        }
+
+        function CheckFPType() {
+
+            if (confirm('确定要提交吗？')) {
+
+
+            var selectFPStyle =  document.getElementById('<%= dllFPstye.ClientID %>').value;
+            var PONO = document.getElementById('<%= txtPONo.ClientID %>').value;
+            if (PONO == "") {
+                alert("请选择项目");
+                return false;
+            }
+            if (selectFPStyle == "") {
+                alert("请选择发票类型");
+                return false;
+            }
+                //alert("我要开始测试你的浏览器了！");
+                //var PONO = "P201200023";
+                //var selectFPStyle = "1234555";
+                //获取现在的项目的发票号 进行对比
+                var fpStyle = $.ajax({ url: "/API/JXC.ashx?name=getfptype&PONO=" + PONO + "&ver=" + Math.random(), async: false });
+                //alert("调用接口返回" + fpStyle.responseText+","+selectFPStyle);
+                console.log(fpStyle.responseText);
+                if (selectFPStyle != fpStyle.responseText) {
+                    return confirm("该发票类型【" + selectFPStyle + "】和项目的发票类型【" + fpStyle.responseText + "】不一致，请核查,点击【确认】继续提交单据，点击【取消】不提交！");
+                } else {
+
+                    return true;
+                }
+
+                 
+                
+            }
+            return false;
+        }
  
     </script>
 
@@ -410,7 +445,7 @@
         <tr>
             <td colspan="4" align="center">
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <asp:Button ID="btnSub" runat="server" Text="提交" OnClientClick="return confirm('确定要提交吗？')" BackColor="Yellow" OnClick="Button1_Click"
+                <asp:Button ID="btnSub" runat="server" Text="提交" OnClientClick="return CheckFPType();" BackColor="Yellow" OnClick="Button1_Click"
                     Width="51px" />&nbsp; &nbsp; &nbsp; &nbsp;
                 <asp:Button ID="btnClose" runat="server" Text=" 返回 " BackColor="Yellow" OnClick="btnClose_Click" />&nbsp;
                 <br />

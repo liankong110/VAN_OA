@@ -204,8 +204,24 @@ namespace VAN_OA.JXC
                 sql += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
                    NameOrTypeOrSpec);
             }
+			if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+			{
+				if (txtNameOrTypeOrSpec2.Text != "" && txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					sql += string.Format(" and ((GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%') and (GoodTypeSmName like '%{1}%' or GoodName  like '%{1}%' or GoodSpec like '%{1}%'))",
+					   txtNameOrTypeOrSpec2.Text, txtNameOrTypeOrSpecTwo2.Text);
+				}
+				else if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					var NameOrTypeOrSpec = "";
+					if (txtNameOrTypeOrSpec2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpec2.Text;
+					if (txtNameOrTypeOrSpecTwo2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpecTwo2.Text;
 
-            if (ddlArea.Text != "")
+					sql += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
+					   NameOrTypeOrSpec);
+				}
+			}
+			if (ddlArea.Text != "")
             {
                 sql += string.Format(" and GoodArea='{0}'", ddlArea.Text);
             }

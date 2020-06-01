@@ -59,9 +59,13 @@
             <td>名称/小类/规格:
             </td>
             <td colspan="3">
-                <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="400PX"></asp:TextBox>
+                <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="200PX"></asp:TextBox>
                 或者
-                <asp:TextBox ID="txtNameOrTypeOrSpecTwo" runat="server" Width="400PX"></asp:TextBox>
+                <asp:TextBox ID="txtNameOrTypeOrSpecTwo" runat="server" Width="200PX"></asp:TextBox>
+				名称/小类/规格:
+                <asp:TextBox ID="txtNameOrTypeOrSpec2" runat="server" Width="200PX"></asp:TextBox>
+				和
+                <asp:TextBox ID="txtNameOrTypeOrSpecTwo2" runat="server" Width="200PX"></asp:TextBox>
             </td>
         </tr>
         <tr>

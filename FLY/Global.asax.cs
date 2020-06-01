@@ -6,15 +6,19 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Hosting;
 using System.IO;
+using VAN_OA.Quartz.net;
+using VAN_OA.Log;
+using Common.Logging;
 
 namespace VAN_OA
 {
     public class Global : System.Web.HttpApplication
     {
-        /// <summary>
-        /// 日志句柄
-        /// </summary>
-        public static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		LoggerManager log1 = new LoggerManager();
+		/// <summary>
+		/// 日志句柄
+		/// </summary>
+		public static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IQuartz demo;
 
         /// <summary>
@@ -53,13 +57,17 @@ namespace VAN_OA
             {
                 ServiceAppSetting.LoggerHander = WriteLog;
 
-                //demo = new MYQuartz();
-                //demo.Run();
+				log1.Write("监测程序正在运行,每到设定好的时间就会自动执行“Job程序”");
 
-                MinuteJobManager.Instance.SetMinuteJob(typeof(MinuteJob));
-                MinuteJobManager.Instance.Start();
 
-                ServiceAppSetting.LoggerHander.Invoke("启动成功", "Error");
+				QuartzManage.scheduler.Start();
+				//demo = new MYQuartz();
+				//demo.Run();
+
+				//MinuteJobManager.Instance.SetMinuteJob(typeof(MinuteJob));
+				//MinuteJobManager.Instance.Start();
+
+				ServiceAppSetting.LoggerHander.Invoke("启动成功", "Error");
 
             }
             catch (Exception ex)
@@ -89,8 +97,8 @@ namespace VAN_OA
             var objErr = Server.GetLastError().GetBaseException();
             var error = "发生异常页: " + Request.Url + "\r\n";
             error += "异常信息: " + objErr.Message;
-            //log.Error(error);
-            ServiceAppSetting.LoggerHander.Invoke(error, "Error");
+			//log.Error(error);
+			log1.Write(error);
         }
 
         protected void Session_End(object sender, EventArgs e)

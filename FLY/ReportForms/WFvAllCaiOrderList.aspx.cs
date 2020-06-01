@@ -256,7 +256,25 @@ OR EXISTS  (select id from CAI_POOrder where PONo like 'KC%' AND CAI_POOrder.PON
                        NameOrTypeOrSpec);
                 }
             }
-            if (txtCaiNum.Text.Trim() != "")
+
+			if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+			{
+				if (txtNameOrTypeOrSpec2.Text != "" && txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					sql += string.Format(" and ((GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%') and (GoodTypeSmName like '%{1}%' or GoodName  like '%{1}%' or GoodSpec like '%{1}%'))",
+					   txtNameOrTypeOrSpec2.Text, txtNameOrTypeOrSpecTwo2.Text);
+				}
+				else if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					var NameOrTypeOrSpec = "";
+					if (txtNameOrTypeOrSpec2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpec2.Text;
+					if (txtNameOrTypeOrSpecTwo2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpecTwo2.Text;
+
+					sql += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
+					   NameOrTypeOrSpec);
+				}
+			}
+			if (txtCaiNum.Text.Trim() != "")
             {
                 sql += string.Format(" and Num{0} {1}", ddlCaiNum.Text, txtCaiNum.Text.Trim());
             }

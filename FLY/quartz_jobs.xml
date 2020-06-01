@@ -1,0 +1,76 @@
+﻿<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <schedule>
+
+    <job>
+      <!--作业名字，随便取-->
+      <name>Job1</name>
+      <!--组名，随便取-->
+      <group>group1</group>
+      <!--描述-->
+      <description>job1</description>
+      <!--作业类，要定位到我们代码中创建的作业，命名空间.类名-->
+      <job-type>VAN_OA.Quartz.net.Job1, VAN_OA</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+
+    </job>
+
+    <trigger>
+      <!--cron表达式触发器-->
+      <cron>
+        <!--触发器名字，随便取-->
+        <name>Trigger1</name>
+        <!--组名-->
+        <group>group1</group>
+        <!--描述-->
+        <description>trigger</description>
+        <!--作业名，触发哪个作业-->
+        <job-name>Job1</job-name>
+        <!--作业的组名，与作业对应-->
+        <job-group>group1</job-group>
+        <misfire-instruction>DoNothing</misfire-instruction>
+        <!--每10秒运行一次-->
+        <cron-expression>0 */1 * * * ?</cron-expression>
+      </cron>
+    </trigger>
+
+    <job>
+      <!--作业名字，随便取-->
+      <name>Job2</name>
+      <!--组名，随便取-->
+      <group>group2</group>
+      <!--描述-->
+      <description>job2</description>
+      <!--作业类，要定位到我们代码中创建的作业，命名空间.类名-->
+      <job-type>VAN_OA.Quartz.net.Job2, VAN_OA</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+
+    <trigger>
+      <!--cron表达式触发器-->
+      <cron>
+        <!--触发器名字，随便取-->
+        <name>Trigger2</name>
+        <!--组名-->
+        <group>group2</group>
+        <!--描述-->
+        <description>trigger</description>
+        <!--作业名，触发哪个作业-->
+        <job-name>Job2</job-name>
+        <!--作业的组名，与作业对应-->
+        <job-group>group2</job-group>
+        <misfire-instruction>DoNothing</misfire-instruction>
+        <!--每10秒运行一次-->
+        <cron-expression>0/10 * * * * ?</cron-expression>
+      </cron>
+    </trigger>
+
+
+  </schedule>
+</job-scheduling-data>

@@ -69,7 +69,7 @@ namespace VAN_OA
         {
             if (_scheduler != null && _scheduler.IsStarted)
             {
-                _scheduler.PauseJob(jobName, groupName);
+                //_scheduler.PauseJob(jobName, groupName);
             }
         }
 
@@ -88,7 +88,7 @@ namespace VAN_OA
         {
             if (_scheduler != null && _scheduler.IsStarted)
             {
-                _scheduler.DeleteJob(jobName, groupName);
+                //_scheduler.DeleteJob(jobName, groupName);
             }
         }
 
@@ -107,7 +107,7 @@ namespace VAN_OA
         {
             if (_scheduler != null && _scheduler.IsStarted)
             {
-                _scheduler.PauseJob(jobName, groupName);
+                //_scheduler.PauseJob(jobName, groupName);
             }
         }
 
@@ -129,7 +129,7 @@ namespace VAN_OA
             var jobNames = new string[100];
             if (_scheduler != null)
             {
-                jobNames = _scheduler.GetJobNames(groupName);
+                //jobNames = _scheduler.GetJobNames(groupName);
             }
             return jobNames;
         }
@@ -148,9 +148,9 @@ namespace VAN_OA
             ISchedulerFactory shFactory = new StdSchedulerFactory();
             _scheduler = shFactory.GetScheduler();
 
-            var getfaxjob = new JobDetail(arrJob[0, 0].ToString(), arrJob[0, 1].ToString(), (Type)arrJob[0, 2]);
-            var getfaxtrigger = new CronTrigger(arrJob[0, 3].ToString(), arrJob[0, 1].ToString(), arrJob[0, 4].ToString());
-            _scheduler.ScheduleJob(getfaxjob, getfaxtrigger);
+            //var getfaxjob = new JobDetail(arrJob[0, 0].ToString(), arrJob[0, 1].ToString(), (Type)arrJob[0, 2]);
+            //var getfaxtrigger = new CronTrigger(arrJob[0, 3].ToString(), arrJob[0, 1].ToString(), arrJob[0, 4].ToString());
+            //_scheduler.ScheduleJob(getfaxjob, getfaxtrigger);
         }
 
         /// <summary>
@@ -168,11 +168,11 @@ namespace VAN_OA
                     status = JobStatus.ShutDown;
                 if (_scheduler.IsJobGroupPaused("MinuteJobGroup"))
                     status = JobStatus.Suspend;
-                if (!_scheduler.JobGroupNames.Contains("MinuteJobGroup"))
-                {
-                    if (!_scheduler.GetJobNames("MinuteJobGroup").Contains("MinuteJob"))
-                        status = JobStatus.DeleteJob;
-                }
+                //if (!_scheduler.JobGroupNames.Contains("MinuteJobGroup"))
+                //{
+                //    if (!_scheduler.GetJobNames("MinuteJobGroup").Contains("MinuteJob"))
+                //        status = JobStatus.DeleteJob;
+                //}
             }
             return status;
         }

@@ -174,11 +174,11 @@ namespace VAN_OA.JXC
             }
 
             string sql = string.Format(@"select InvoiceNumber,datediff(d,CreateDate,getdate()) as diffDays,loginName from 
- " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice as invoice 
+ " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice_View as invoice 
  left join TB_GuestTrack on TB_GuestTrack.GuestName=invoice.GuestName and YearNo='{0}' and QuartNo={1}
  LEFT JOIN tb_User on tb_User.id=TB_GuestTrack.AE 
   where  Isorder is null and not exists(SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP where  Status='通过' group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE  invoice.InvoiceNumber=TB.FPNo)", DateTime.Now.Year, QuartNo);
+INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE  invoice.InvoiceNumber=TB.FPNo)", DateTime.Now.Year, QuartNo);
 
             if (ae != "-1" && ae != "全部" && !string.IsNullOrEmpty(ae))
             {
@@ -358,7 +358,7 @@ select Sell_OrderFP.PONo,AE,3 as T  from Sell_OrderFP left join CG_POOrder on Se
 where Sell_OrderFP.Status='通过' and Isorder=0 and CG_POOrder.Status='通过'  
 and not exists(SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP 
 where  Status='通过' and Isorder=0 group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total 
+INNER JOIN  " + InvoiceService.InvoiceServer + @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total 
 WHERE Sell_OrderFP.FPNo=TB.FPNo ) 
 ) as tb where 1=1 ", (DateTime.Now.Year-1));
             

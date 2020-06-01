@@ -12,16 +12,18 @@ using VAN_OA.Dal.JXC;
 using VAN_OA.Model.JXC;
 using VAN_OA.Model.BaseInfo;
 using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Dal.KingdeeInvoice;
+using System.Threading;
 
 namespace VAN_OA
 {
-    public class MinuteJob : IJob
+    public class MinuteJob
     {
         private static readonly object Tclock = new object();
 
         private static readonly object Tclock1 = new object();
 
-        public void Execute(JobExecutionContext context)
+        public void Execute()
         {          
             try
             {                 
@@ -29,133 +31,210 @@ namespace VAN_OA
                 var content = DateTime.Now.ToString() + "do ！\r\n";
                 lock (Tclock)
                 {
-                    //OA系统每天晚上23:55，准时发起，一个任务，就是点击缓存按钮的动作，这样我们可以获得 当天的数据的快速列表印象。
-                    if (DateTime.Now.Hour == 19 && DateTime.Now.Minute == 45)
-                    {
-                        ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-缓存! 1- {0}", DateTime.Now), "");
-                        new JXC_REPORTService().CatchData();
-                        ServiceAppSetting.LoggerHander.Invoke(string.Format("结束-缓存! 1- {0}", DateTime.Now), "");
-                    }
+                    //增加金蝶发票处理工具
 
-                    //每天早上1，2，3点处理最高值
-                    //  if (DateTime.Now.Hour ==10 && DateTime.Now.Minute == 40)
-                    if (DateTime.Now.Hour == 2 && DateTime.Now.Minute == 00)
-                    {
-                        //ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-最高金额! - {0}", DateTime.Now), "");
-                        content += "执行最高金额";
-                        CashFlowService cashFlowService = new CashFlowService();
-                        //List<CashFlow> cashFlowList = cashFlowService.GetListArray(" and IsClose=0");
-                        List<CashFlow> cashFlowList = cashFlowService.GetListArray("");
+                    var kISModel = new KISService().GetKIS();
+                    var invoiceDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd") + " " + kISModel.InvoiceDate);
+                    var payableDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd") + " " + kISModel.PayableDate);
 
-                        using (SqlConnection conn = DBHelp.getConn())
+                    if (DateTime.Now.Hour == invoiceDate.Hour && DateTime.Now.Minute == invoiceDate.Minute)
+                    {
+                        var invoiceJob = new Thread(delegate ()
                         {
-                            conn.Open();
-                            SqlCommand objCommand = conn.CreateCommand();
                             try
                             {
-                                objCommand.Parameters.Clear();
-                                foreach (var model in cashFlowList)
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Invoice_Proc-开始! - {0}", DateTime.Now), "");
+
+                                var kisServer = new KISService();
+                                var invoicesList = kisServer.GetInvoiceErrorInfo(kISModel.AccountName);
+                                if (invoicesList.Count > 0)
                                 {
-                                    cashFlowService.Update(model, objCommand);
+                                    ServiceAppSetting.LoggerHander.Invoke(string.Format("Invoice_Proc-存在重复发票号数据，JOB 停止！", DateTime.Now), "");
+                                    return;
                                 }
 
+                                //获取选中的数据库连接
+                                string newConn = new KISService().GetKISDBConn().Replace("AcctCtl", kISModel.AccountName);
+                                KISService.ExeCommand("Invoice_Proc", newConn, Convert.ToDateTime(kISModel.InvoiceFrom), Convert.ToDateTime(kISModel.InvoiceTo));
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Invoice_Proc-结束! - {0}", DateTime.Now), "");
+
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                content += "【异常】最高金额";
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Invoice_Proc-结束! - {0}，执行异常，请检查！错误信息:{1}", DateTime.Now, ex.Message), "");
                             }
-                        }                      
-                        content += "结束-最高金额";
+
+                        })
+                        { IsBackground = true };
+                        invoiceJob.Start();
                     }
-                    if (DateTime.Now.Hour == 23 && DateTime.Now.Minute == 0)
+
+                    if (DateTime.Now.Hour == payableDate.Hour && DateTime.Now.Minute == payableDate.Minute)
                     {
+                        var payableJob = new Thread(delegate ()
+                        {
+                            try
+                            {
+                                var kisServer = new KISService();
+                                var payableList = kisServer.GetPayaleErrorInfo(kISModel.AccountName);
+                                if (payableList.Count > 0)
+                                {
+                                    ServiceAppSetting.LoggerHander.Invoke(string.Format("Payable_Proc-存在重复发票号数据，JOB 停止！", DateTime.Now), "");
+                                    return;
+                                }
 
-                        content += "开始-客户联系跟踪表";
-                        int currentYear = DateTime.Now.Year;
-                        int currentMonth = DateTime.Now.Month;
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Payable_Proc-开始! - {0}", DateTime.Now), "");
+                                //获取选中的数据库连接
+                                string newConn = new KISService().GetKISDBConn().Replace("AcctCtl", kISModel.AccountName);
+                                KISService.ExeCommand("Payable_Proc", newConn, Convert.ToDateTime(kISModel.PayableFrom), Convert.ToDateTime(kISModel.PayableTo));
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Payable_Proc-结束! - {0}", DateTime.Now), "");
+                            }
+                            catch (Exception ex)
+                            {
+                                ServiceAppSetting.LoggerHander.Invoke(string.Format("Payable_Proc-结束! - {0}，执行异常，请检查！错误信息:{1}", DateTime.Now, ex.Message), "");
+                            }
+                        })
+                        { IsBackground = true };
+                        payableJob.Start();
+                    }
 
-                        int nextYear = DateTime.Now.AddMonths(1).Year;
-                        int nextMonth = DateTime.Now.AddMonths(1).Month;
+                    try
+                    {
+                        //OA系统每天晚上23:55，准时发起，一个任务，就是点击缓存按钮的动作，这样我们可以获得 当天的数据的快速列表印象。
+                        if (DateTime.Now.Hour == 19 && DateTime.Now.Minute == 45)
+                        {
+                            ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-缓存! 1- {0}", DateTime.Now), "");
+                            new JXC_REPORTService().CatchData();
+                            ServiceAppSetting.LoggerHander.Invoke(string.Format("结束-缓存! 1- {0}", DateTime.Now), "");
+                        }
 
-                        int currentZhangQi = GetZhouQi(currentMonth);
-                        int nextZhangQi = GetZhouQi(nextMonth);
-                        //if (currentZhangQi == nextZhangQi && currentYear == nextYear)
-                        //{
-                        //    return;
-                        //}
-                        List<GuestProBaseInfo> guestProBaseInfos = new GuestProBaseInfoService().GetListArray("GuestPro=1");
-                       
-                        TB_GuestTrackService GuestTrackSer = new TB_GuestTrackService();
-                        string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}' ", currentYear, currentZhangQi);
-                        sql += string.Format(@" and (TB_GuestTrack.id in (select allE_id from tb_EForm where proId in (
+                        //每天早上1，2，3点处理最高值
+                        //  if (DateTime.Now.Hour ==10 && DateTime.Now.Minute == 40)
+                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute == 00)
+                        {
+                            //ServiceAppSetting.LoggerHander.Invoke(string.Format("执行-最高金额! - {0}", DateTime.Now), "");
+                            content += "执行最高金额";
+                            CashFlowService cashFlowService = new CashFlowService();
+                            //List<CashFlow> cashFlowList = cashFlowService.GetListArray(" and IsClose=0");
+                            List<CashFlow> cashFlowList = cashFlowService.GetListArray("");
+
+                            using (SqlConnection conn = DBHelp.getConn())
+                            {
+                                conn.Open();
+                                SqlCommand objCommand = conn.CreateCommand();
+                                try
+                                {
+                                    objCommand.Parameters.Clear();
+                                    foreach (var model in cashFlowList)
+                                    {
+                                        cashFlowService.Update(model, objCommand);
+                                    }
+
+                                }
+                                catch (Exception)
+                                {
+                                    content += "【异常】最高金额";
+                                }
+                            }
+                            content += "结束-最高金额";
+                        }
+                        if (DateTime.Now.Hour == 23 && DateTime.Now.Minute == 0)
+                        {
+
+                            content += "开始-客户联系跟踪表";
+                            int currentYear = DateTime.Now.Year;
+                            int currentMonth = DateTime.Now.Month;
+
+                            int nextYear = DateTime.Now.AddMonths(1).Year;
+                            int nextMonth = DateTime.Now.AddMonths(1).Month;
+
+                            int currentZhangQi = GetZhouQi(currentMonth);
+                            int nextZhangQi = GetZhouQi(nextMonth);
+                            //if (currentZhangQi == nextZhangQi && currentYear == nextYear)
+                            //{
+                            //    return;
+                            //}
+                            List<GuestProBaseInfo> guestProBaseInfos = new GuestProBaseInfoService().GetListArray("GuestPro=1");
+
+                            TB_GuestTrackService GuestTrackSer = new TB_GuestTrackService();
+                            string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}' ", currentYear, currentZhangQi);
+                            sql += string.Format(@" and (TB_GuestTrack.id in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') and state='通过') or TB_GuestTrack.id not in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");
-                        List<TB_GuestTrack> GuestTracks = GuestTrackSer.GetListArray(sql);
+                            List<TB_GuestTrack> GuestTracks = GuestTrackSer.GetListArray(sql);
 
-                        using (SqlConnection conn = DBHelp.getConn())
-                        {
-                            conn.Open();
-                            SqlTransaction tan = conn.BeginTransaction();
-                            SqlCommand objCommand = conn.CreateCommand();
-                            objCommand.Transaction = tan;
-
-                            try
+                            using (SqlConnection conn = DBHelp.getConn())
                             {
+                                conn.Open();
+                                SqlTransaction tan = conn.BeginTransaction();
+                                SqlCommand objCommand = conn.CreateCommand();
+                                objCommand.Transaction = tan;
 
-                                objCommand.Parameters.Clear();
-                                foreach (var model in GuestTracks)
-                                { //客户属性 每个季度需要复制到下一季度，但有一个是需要 特别关注的，就是每年的四季度 如果某个客户的客户属性是 自我开拓，
-                                  //来年的一季度，这个客户的客户属性 必须变成 原有资源！！！
-                                    //if (currentZhangQi == 4)
-                                    //{
-                                    //    if (model.MyGuestProString == "自我开拓")
-                                    //    {
-                                    //        model.MyGuestPro = 2;
-                                    //    }
-                                    //}
+                                try
+                                {
 
-                                    model.QuartNo = nextZhangQi.ToString();
-                                    model.YearNo = nextYear.ToString();
-                                    model.CreateTime = DateTime.Now;
-                                  
+                                    objCommand.Parameters.Clear();
+                                    foreach (var model in GuestTracks)
+                                    { //客户属性 每个季度需要复制到下一季度，但有一个是需要 特别关注的，就是每年的四季度 如果某个客户的客户属性是 自我开拓，
+                                      //来年的一季度，这个客户的客户属性 必须变成 原有资源！！！
+                                      //if (currentZhangQi == 4)
+                                      //{
+                                      //    if (model.MyGuestProString == "自我开拓")
+                                      //    {
+                                      //        model.MyGuestPro = 2;
+                                      //    }
+                                      //}
 
-                                    string secondUpdate = GuestTrackSer.UpdateToString(model, model.GuestId, nextYear.ToString(), nextZhangQi.ToString());
-                                    if (model.MyGuestProString == "自我开拓")
-                                    {
-                                        //我们的系统在每个季度的最后一天的晚上12点会自动同步客户信息到下一个季度，我们定义
-                                        //．  如该客户目前的属性是自我开拓，该客户从登记之日起，加上自我开拓的有效期月数数字对应的日期，
-                                        //如小于（<） 新季度第一天，新季度的客户的属性变成 原有资源，否则 还是自我开拓
-                                        if (DateTime.Now.Month == 3 || DateTime.Now.Month == 6 || DateTime.Now.Month == 9 || DateTime.Now.Month == 12)
+                                        model.QuartNo = nextZhangQi.ToString();
+                                        model.YearNo = nextYear.ToString();
+                                        model.CreateTime = DateTime.Now;
+
+
+                                        string secondUpdate = GuestTrackSer.UpdateToString(model, model.GuestId, nextYear.ToString(), nextZhangQi.ToString());
+                                        if (model.MyGuestProString == "自我开拓")
                                         {
-                                            if (DateTime.Now.Day == DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
-                                                && model.Time.AddMonths(guestProBaseInfos[0].GuestMonth) < Convert.ToDateTime(nextYear + "-" + nextMonth + "-01"))
+                                            //我们的系统在每个季度的最后一天的晚上12点会自动同步客户信息到下一个季度，我们定义
+                                            //．  如该客户目前的属性是自我开拓，该客户从登记之日起，加上自我开拓的有效期月数数字对应的日期，
+                                            //如小于（<） 新季度第一天，新季度的客户的属性变成 原有资源，否则 还是自我开拓
+                                            if (DateTime.Now.Month == 3 || DateTime.Now.Month == 6 || DateTime.Now.Month == 9 || DateTime.Now.Month == 12)
                                             {
-                                                model.MyGuestPro = 2;
+                                                if (DateTime.Now.Day == DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
+                                                    && model.Time.AddMonths(guestProBaseInfos[0].GuestMonth) < Convert.ToDateTime(nextYear + "-" + nextMonth + "-01"))
+                                                {
+                                                    model.MyGuestPro = 2;
+                                                }
                                             }
                                         }
-                                    }
-                                    string update = GuestTrackSer.AddToString(model);
+                                        string update = GuestTrackSer.AddToString(model);
 
-                                    string updateSql = string.Format("if not exists(select id from TB_GuestTrack where guestId='{0}' and yearNo='{1}' and QuartNo='{2}')begin {3} end else begin {4} end",
-                                        model.GuestId, nextYear.ToString(), nextZhangQi.ToString(), update, secondUpdate);
-                                    objCommand.CommandText = updateSql;
-                                    objCommand.ExecuteNonQuery();
+                                        string updateSql = string.Format("if not exists(select id from TB_GuestTrack where guestId='{0}' and yearNo='{1}' and QuartNo='{2}')begin {3} end else begin {4} end",
+                                            model.GuestId, nextYear.ToString(), nextZhangQi.ToString(), update, secondUpdate);
+                                        objCommand.CommandText = updateSql;
+                                        objCommand.ExecuteNonQuery();
+                                    }
+
+                                    tan.Commit();
+                                    content += "结束-客户联系跟踪表";
+                                    //ServiceAppSetting.LoggerHander.Invoke(string.Format("执行成功! - {0}", DateTime.Now), "");
+                                }
+                                catch (Exception)
+                                {
+                                    tan.Rollback();
+                                    content += "【异常】账期执行失败";
+                                    //ServiceAppSetting.LoggerHander.Invoke(string.Format("账期执行失败! - {0}", DateTime.Now), "Error");
                                 }
 
-                                tan.Commit();
-                                content += "结束-客户联系跟踪表";
-                                //ServiceAppSetting.LoggerHander.Invoke(string.Format("执行成功! - {0}", DateTime.Now), "");
                             }
-                            catch (Exception)
-                            {
-                                tan.Rollback();
-                                content += "【异常】账期执行失败";
-                                //ServiceAppSetting.LoggerHander.Invoke(string.Format("账期执行失败! - {0}", DateTime.Now), "Error");
-                            }
-
                         }
                     }
- 
+                    catch (Exception)
+                    { 
+
+                    }
+
+
+                   
+
                 }
 
                

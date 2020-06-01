@@ -473,5 +473,6 @@ namespace VAN_OA.Model.JXC
         public DateTime DaoKuanDate { get; set; }
 
         public string PONO { get; set; }
+        public string Model { get; set; }
     }
 }

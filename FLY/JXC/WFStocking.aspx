@@ -58,6 +58,10 @@
                 <asp:TextBox ID="txtNameOrTypeOrSpec" runat="server" Width="400PX"></asp:TextBox>
                 或者
                 <asp:TextBox ID="txtNameOrTypeOrSpecTwo" runat="server" Width="400PX"></asp:TextBox>
+					名称/小类/规格:
+                <asp:TextBox ID="txtNameOrTypeOrSpec2" runat="server" Width="100PX"></asp:TextBox>
+				和
+                <asp:TextBox ID="txtNameOrTypeOrSpecTwo2" runat="server" Width="100PX"></asp:TextBox>
             </td>
         </tr>
         <tr>

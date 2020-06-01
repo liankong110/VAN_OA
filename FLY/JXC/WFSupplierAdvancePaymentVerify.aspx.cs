@@ -565,7 +565,8 @@ where status='通过' and  SupplierInvoiceTotal<0 and RuIds={0} ", m.Ids);
                     else
                     {
                         VAN_OA.Model.User use = Session["userInfo"] as VAN_OA.Model.User;
-                        if (use != null&&use.LoginName== "成金妹")
+                       
+                        if (use != null&& VAN_OA.JXC.SysObj.NewShowAll_textName("支付单列表", Session["currentUserId"], "不能修改新票据号")==false)
                         {
                             txtSecondFPNo.Enabled = true;
                         }

@@ -109,7 +109,7 @@ namespace VAN_OA.Dal.KingdeeInvoice
 InvoiceNumber, invoice.GuestName,invoice.Total,CreateDate
  from (select *FROM  Sell_OrderFP WHERE Status='通过') AS Sell_OrderFP  full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate from 
-" + InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice as invoice {0}  AND InvoiceNumber<>'') as invoice 
+" + InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View as invoice {0}  AND InvoiceNumber<>'') as invoice 
 on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total ))
 left join  CG_POOrder on  CG_POOrder.PONO=Sell_OrderFP.PONO  and ifzhui=0 ",  k_Sql);
 
@@ -117,14 +117,14 @@ left join  CG_POOrder on  CG_POOrder.PONO=Sell_OrderFP.PONO  and ifzhui=0 ",  k_
                 {
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP where  Status='通过' group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
                 }
                 else
                 {
 
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM  Sell_OrderFP AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
 WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
           
                 }
@@ -148,7 +148,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
 
 
                 strSql = string.Format(@"SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total FROM (
- select FPNo,GuestNAME,sum(Total) as Total from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,GuestNAME,sum(Total) as Total from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.GuestNAME=TB1.GuestName AND TB.Total=TB1.Total where 1=1 ", where);
 
                 if (InvoFormDate != "")
@@ -216,7 +216,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
                 //{
 
                     strSql += string.Format(@" UNION  SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total FROM (
- select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total where 1=1 ", where);
                 //}
 
@@ -537,20 +537,20 @@ InvoiceNumber, invoice.GuestName,invoice.Total,CreateDate
 (select id,Sell_OrderFP.FPNo,GuestNAME,Total,RuTime,PONo,AccountTotal from Sell_OrderFP Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on Sell_OrderFP.FPNo=new_tb.FPNo {0} ) as Sell_OrderFP
 full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate,Received from 
-"+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice as invoice {1} ) as invoice  on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total )) ", where, k_Sql);
+"+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View as invoice {1} ) as invoice  on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total )) ", where, k_Sql);
                
                 if (isInvoTotalToge)
                 {
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP where  Status='通过' group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
                 }
                 else
                 {
 
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM  Sell_OrderFP AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
 WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
 
                 }
@@ -579,7 +579,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
 
 
                 strSql = string.Format(@"SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total,AccountTotal,TB1.Received,TB.MaxRuTime FROM (
- select FPNo,GuestNAME,sum(Total) as Total,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,GuestNAME,sum(Total) as Total,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.GuestNAME=TB1.GuestName AND TB.Total=TB1.Total Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on TB.FPNo=new_tb.FPNo where 1=1 ", where);
 
                 if (InvoFormDate != "")
@@ -653,7 +653,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
                 //{
 
                 strSql += string.Format(@" UNION  SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total,AccountTotal,TB1.Received,TB.MaxRuTime FROM (
- select FPNo,sum(Total) as Total,GuestNAME,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,sum(Total) as Total,GuestNAME,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on TB.FPNo=new_tb.FPNo where 1=1 ", where);
                 //}
 
@@ -763,6 +763,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
             {
                 conn.Open();
                 SqlCommand objCommand = new SqlCommand(strSql, conn);
+                objCommand.CommandTimeout = 500;
                 using (SqlDataReader objReader = objCommand.ExecuteReader())
                 {
                     if (compareType == "0")//不匹配
@@ -868,20 +869,20 @@ InvoiceNumber, invoice.GuestName,invoice.Total,CreateDate
 (select id,Sell_OrderFP.FPNo,GuestNAME,Total,RuTime,PONo,AccountTotal from Sell_OrderFP Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on Sell_OrderFP.FPNo=new_tb.FPNo {0} ) as Sell_OrderFP
 full join 
 (select id,InvoiceNumber,GuestName,Total,CreateDate,Received from 
-"+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice as invoice {1} ) as invoice  on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total )) ", where, k_Sql);
+"+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View as invoice {1} ) as invoice  on Sell_OrderFP.FPNo=Invoice.InvoiceNumber and (Sell_OrderFP.GuestNAME<>invoice.GuestName or (Sell_OrderFP.GuestNAME=invoice.GuestName and Sell_OrderFP.Total<>invoice.Total )) ", where, k_Sql);
 
                 if (isInvoTotalToge)
                 {
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM ( select FPNo,sum(Total) as Total,GuestNAME  from Sell_OrderFP where  Status='通过' group by FPNo,GuestNAME  ) AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total WHERE Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
                 }
                 else
                 {
 
                     strSql += string.Format(@" where not exists( 
 SELECT TB.FPNo AS InvoiceNumber FROM  Sell_OrderFP AS TB 
-INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
+INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total and TB.GuestNAME=TB1.GuestName
 WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB.FPNo)");
 
                 }
@@ -910,7 +911,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
 
 
                 strSql = string.Format(@"SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total,AccountTotal,TB1.Received,TB.MaxRuTime FROM (
- select FPNo,GuestNAME,sum(Total) as Total,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,GuestNAME,sum(Total) as Total,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.GuestNAME=TB1.GuestName AND TB.Total=TB1.Total Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on TB.FPNo=new_tb.FPNo where 1=1 ", where);
 
                 if (InvoFormDate != "")
@@ -959,7 +960,7 @@ WHERE  Status='通过' and Sell_OrderFP.FPNo=TB.FPNo OR invoice.InvoiceNumber=TB
                 //{
 
                 strSql += string.Format(@" UNION  SELECT TB.FPNo AS InvoiceNumber,TB.GuestNAME,TB.Total,AccountTotal,TB1.Received,TB.MaxRuTime FROM (
- select FPNo,sum(Total) as Total,GuestNAME,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+@"KingdeeInvoice.dbo.Invoice
+ select FPNo,sum(Total) as Total,GuestNAME,MAX(RuTime) as MaxRuTime from Sell_OrderFP {0} group by FPNo,GuestNAME  ) AS TB INNER JOIN "+InvoiceService.InvoiceServer+ @"KingdeeInvoice.dbo.Invoice_View
  AS TB1 ON TB.FPNo=TB1.InvoiceNumber AND TB.Total=TB1.Total Left join (select FPNo,sum(Total) as AccountTotal from TB_ToInvoice where State='通过' group by FPNo) as new_tb on TB.FPNo=new_tb.FPNo where 1=1 ", where);
                 //}
 

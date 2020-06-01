@@ -39,8 +39,8 @@ namespace VAN_OA.Dal.KingdeeInvoice
             StringBuilder strSql = new StringBuilder();
             strSql.Append("delete from " + InvoiceServer + "[KingdeeInvoice].[dbo].[Payable] ");
             strSql.Append(" where Id=" + ID + ";");
-            strSql.Append("delete KIS.[KingdeeInvoice].[dbo].[Payable] ");
-            strSql.Append(" where Id=" + ID + ";");
+            //strSql.Append("delete KIS.[KingdeeInvoice].[dbo].[Payable] ");
+            //strSql.Append(" where Id=" + ID + ";");
             return DBHelp.ExeCommand(strSql.ToString());
         }
 
@@ -50,7 +50,7 @@ namespace VAN_OA.Dal.KingdeeInvoice
         public List<VAN_OA.Model.KingdeeInvoice.Payable> GetListArray(string strWhere,string invoiceServer)
         {           
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select Isorder,Id,SupplierName,InvoiceNumber,Total,CreateDate,IsAccount,Received,BillDate,CaiFpType ");
+            strSql.Append("select IsDeleted,Isorder,Id,SupplierName,InvoiceNumber,Total,CreateDate,IsAccount,Received,BillDate,CaiFpType ");
             strSql.Append(" FROM " + invoiceServer + "[KingdeeInvoice].[dbo].[Payable] ");
             strSql.Append(@" left join
 (
@@ -76,10 +76,10 @@ where Status='通过' group by SupplierFPNo,CaiFpType
                     while (objReader.Read())
                     {
                         var model=ReaderBind(objReader);
-                        if (!string.IsNullOrEmpty(invoiceServer))
-                        {
-                            model.IsDeleted = true;
-                        }
+                        //if (!string.IsNullOrEmpty(invoiceServer))
+                        //{
+                        //    model.IsDeleted = true;
+                        //}
                        
                         list.Add(model);
                     }
@@ -129,8 +129,15 @@ where Status='通过' group by SupplierFPNo,CaiFpType
                 if (ojb.ToString() == "1")
                 {
                     model.Isorder = true;
+                }               
+            }
+            ojb = dataReader["IsDeleted"];
+            if (ojb != null && ojb != DBNull.Value)
+            {
+                if (ojb.ToString() == "1")
+                {
+                    model.IsDeleted = true;
                 }
-               
             }
             ojb = dataReader["BillDate"];
             if (ojb != null && ojb != DBNull.Value)

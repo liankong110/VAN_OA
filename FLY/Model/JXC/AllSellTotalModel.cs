@@ -15,7 +15,9 @@ namespace VAN_OA.Model.JXC
     public class AllSellTotalModel
     {
 
-        public decimal PV { get; set; }
+	 
+
+		public decimal PV { get; set; }
         public decimal SPI { get; set; }
         public decimal SumPOTotal { get; set; }
         public decimal SumPOTotal_QZ { get; set; }
@@ -78,5 +80,7 @@ namespace VAN_OA.Model.JXC
         public decimal sellFPTotal_ZXZ { get; set; }
 
         public decimal KouTotal_ZXZ { get; set; }
-    }
+		 
+
+	}
 }

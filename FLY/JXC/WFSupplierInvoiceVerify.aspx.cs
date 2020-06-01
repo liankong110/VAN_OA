@@ -1766,7 +1766,10 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
         }
 
         SupplierToInvoiceView SumOrders = new SupplierToInvoiceView();
-        protected void gvList_RowDataBound(object sender, GridViewRowEventArgs e)
+		decimal new_ShengYuZhiJia_1 = 0;
+
+
+		protected void gvList_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -1778,8 +1781,9 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                 SumOrders.ActPay += model.ActPay;
                 SumOrders.FuShuTotal += model.FuShuTotal;
                 SumOrders.HadSupplierInvoiceTotal += model.HadSupplierInvoiceTotal;
+				new_ShengYuZhiJia_1 += model.new_ShengYuZhiJia_1;
 
-                if (model.IfCheck == false)
+				if (model.IfCheck == false)
                 {
                     e.Row.BackColor = System.Drawing.Color.Yellow;
 
@@ -1826,9 +1830,10 @@ where CAI_OrderInHouse.status='通过' and CAI_OrderInHouses.ids in ({0})  ", id
                 setValue(e.Row.FindControl("lblActPay") as Label, SumOrders.ActPay.ToString());//数量  
                 setValue(e.Row.FindControl("lblActPay2") as Label, SumOrders.ActPay.ToString());//数量  
                 setValue(e.Row.FindControl("lblFuShuTotal") as Label, SumOrders.FuShuTotal.ToString());//数量 
-                setValue(e.Row.FindControl("lblHadSupplierInvoiceTotal") as Label, SumOrders.HadSupplierInvoiceTotal.ToString());//数量                 
+                setValue(e.Row.FindControl("lblHadSupplierInvoiceTotal") as Label, SumOrders.HadSupplierInvoiceTotal.ToString());//数量  
+				setValue(e.Row.FindControl("lblnew_ShengYuZhiJia_1") as Label, new_ShengYuZhiJia_1.ToString());//数量  
 
-            }
+			}
 
         }
 

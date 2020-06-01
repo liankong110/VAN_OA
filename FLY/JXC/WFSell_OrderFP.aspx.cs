@@ -37,8 +37,7 @@ namespace VAN_OA.JXC
 
 
         }
-
-
+         
 
         public bool FormCheck()
         {
@@ -177,12 +176,12 @@ namespace VAN_OA.JXC
                     return false;
                 }
 
-                string checkFPType = string.Format("select FpType from CG_POOrder WHERE IFZhui=0 and PONo='{0}' AND Status='通过'", txtPONo.Text);
-                if (DBHelp.ExeScalar(checkFPType).ToString() != dllFPstye.Text)
-                {
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('该发票类型和项目的发票类型不一致！');</script>");
-                    return false;
-                }
+                //string checkFPType = string.Format("select FpType from CG_POOrder WHERE IFZhui=0 and PONo='{0}' AND Status='通过'", txtPONo.Text);
+                //if (DBHelp.ExeScalar(checkFPType).ToString() != dllFPstye.Text)
+                //{
+                //    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('该发票类型和项目的发票类型不一致！');</script>");
+                //    return false;
+                //}
                 //                string sqlFpStyleCheck = string.Format(@"if exists(select id from Sell_OrderFP where pono='{0}' and Status<>'不通过')
                 //begin
                 //SELECT count(*) FROM [Sell_OrderFP] where PONo='{0}' and FPNoStyle='{1}' and Status<>'不通过'

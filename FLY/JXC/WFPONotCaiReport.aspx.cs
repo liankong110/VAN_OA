@@ -146,9 +146,26 @@ namespace VAN_OA.JXC
                     where += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
                        NameOrTypeOrSpec);
                 }
-            }           
+            }
+			if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+			{
+				if (txtNameOrTypeOrSpec2.Text != "" && txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					where += string.Format(" and ((GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%') and (GoodTypeSmName like '%{1}%' or GoodName  like '%{1}%' or GoodSpec like '%{1}%'))",
+					   txtNameOrTypeOrSpec2.Text, txtNameOrTypeOrSpecTwo2.Text);
+				}
+				else if (txtNameOrTypeOrSpec2.Text != "" || txtNameOrTypeOrSpecTwo2.Text != "")
+				{
+					var NameOrTypeOrSpec = "";
+					if (txtNameOrTypeOrSpec2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpec2.Text;
+					if (txtNameOrTypeOrSpecTwo2.Text != "") NameOrTypeOrSpec = txtNameOrTypeOrSpecTwo2.Text;
 
-            if (ddlUser.Text == "-1")//显示所有用户
+					where += string.Format(" and (GoodTypeSmName like '%{0}%' or GoodName  like '%{0}%' or GoodSpec like '%{0}%')",
+					   NameOrTypeOrSpec);
+				}
+			}
+
+			if (ddlUser.Text == "-1")//显示所有用户
             {
 
             }
