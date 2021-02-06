@@ -39,12 +39,12 @@ namespace VAN_OA.Fin
 
         private bool Check()
         {
-            if (CommHelp.VerifesToNum(txtZhangQi.Text) == false||Convert.ToDecimal(txtZhangQi.Text)<0)
+            if (CommHelp.VerifesToNum(txtZhangQi.Text) == false || Convert.ToDecimal(txtZhangQi.Text) < 0)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('项目财务成本账期 格式有问题！');</script>");
                 return false;
             }
-            if (CommHelp.VerifesToNum(txtCeSuanDian.Text) == false || Convert.ToDecimal(txtCeSuanDian.Text) < 0 || Convert.ToDecimal(txtCeSuanDian.Text) >1)
+            if (CommHelp.VerifesToNum(txtCeSuanDian.Text) == false || Convert.ToDecimal(txtCeSuanDian.Text) < 0 || Convert.ToDecimal(txtCeSuanDian.Text) > 1)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('财务成本测算点 格式有问题！');</script>");
                 return false;
@@ -53,6 +53,20 @@ namespace VAN_OA.Fin
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('财务成本月利率 格式有问题！');</script>");
                 return false;
+            }
+            if (txtFrom.Text == "")
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('考核前期日期 不能为空！');</script>");
+                return false;
+
+            }
+            if (txtFrom.Text != "")
+            {
+                if (CommHelp.VerifesToDateTime(txtFrom.Text) == false)
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('考核前期日期 格式错误！');</script>");
+                    return false;
+                }
             }
             return true;
         }
@@ -63,7 +77,7 @@ namespace VAN_OA.Fin
             lblSimpName.Text = comModel.ComSimpName;
             lblDate.Text = ddlYear.Text + ddlMonth.Text;
             lblAE.Text = ddlUser.SelectedItem.Text;
-            propertyList = this.FIN_PropertyService.GetListArray_SpecCost(ddlYear.Text + ddlMonth.Text, ddlCompany.Text,ddlUser.Text);
+            propertyList = this.FIN_PropertyService.GetListArray_SpecCost(ddlYear.Text + ddlMonth.Text, ddlCompany.Text, ddlUser.Text);
 
 
             //DateTime fristDate = Convert.ToDateTime(ddlYear.Text+"-"+ddlMonth.Text+"-1");
@@ -89,8 +103,8 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
             ViewState["OverTimeMonth"] = DBHelp.ExeScalar(sql);
             GetGoodTotal();
 
-            lblYear.Text = string.Format("{0}-01",ddlYear.Text);
-            lblMonth.Text= string.Format("{0}-{1}", ddlYear.Text,ddlMonth.Text);
+            lblYear.Text = string.Format("{0}-01", ddlYear.Text);
+            lblMonth.Text = string.Format("{0}-{1}", ddlYear.Text, ddlMonth.Text);
         }
 
 
@@ -127,8 +141,11 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
             //var year = ds.Tables[0];
             //var month = ds.Tables[1];
 
-            var sql = string.Format("and year(CG_POOrder.PODate)={1} and IsSpecial=0 and CG_POOrder.AE='{0}' ",
-                ddlUser.SelectedItem.Text, ddlYear.Text);
+            //var sql = string.Format("and year(CG_POOrder.PODate)={1} and IsSpecial=0 and CG_POOrder.AE='{0}' ",
+            //    ddlUser.SelectedItem.Text, ddlYear.Text);
+
+            var sql = string.Format("and CG_POOrder.PODate>='{1} 00:00:00' AND CG_POOrder.PODate<='{2}  00:00:00' and IsSpecial=0 and CG_POOrder.AE='{0}' ",
+              ddlUser.SelectedItem.Text, txtFrom.Text, Convert.ToDateTime(ddlYear.Text + "-" + ddlMonth.Text+"-1").AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd"));
             List<JXC_REPORTTotal> pOOrderList = this.POSer.NEW_GetListArray_Total(sql, "", "where 1=1 ", DateTime.Now.Date, "", "", "", "", "-1", -1);
 
 
@@ -171,7 +188,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                     }
                 }
                 selectedPoType = selectedPoType.Trim(',');
-              
+
                 if (cbAll.Checked)
                 {
                     selectedPoType = "1,2,3";
@@ -179,7 +196,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                 foreach (var model in pOOrderList)
                 {
                     decimal chengben = 0;
-                    if ( !zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype) && model.ChengBenJiLiangString)
+                    if (!zeroList.ContainsKey(model.PONo) && model.MinOutDate != null && selectedPoType.Contains(model.potype) && model.ChengBenJiLiangString)
                     {
                         var T = model.MinOutDate.Value.AddDays(D + 1);
 
@@ -239,7 +256,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
             }
 
             ViewState["yearGoodTotal"] = string.Format("{0:n5}", pOOrderList.Sum(t => t.CaiWuChengBen));
-            ViewState["monthGoodTotal"] = string.Format("{0:n5}", pOOrderList.Where(t=>t.PODate.Month==Convert.ToInt32(ddlMonth.Text)).Sum(t => t.CaiWuChengBen));
+            ViewState["monthGoodTotal"] = string.Format("{0:n5}", pOOrderList.Where(t => t.PODate.Month == Convert.ToInt32(ddlMonth.Text)).Sum(t => t.CaiWuChengBen));
         }
 
         protected void gvList_DataBinding(object sender, EventArgs e)
@@ -282,9 +299,9 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                 ddlCompany.DataSource = comList;
                 ddlCompany.DataBind();
 
-//                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='个性费用-可修改保存'
-//where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='项目结算') and sys_Object.AutoID is not null", Session["currentUserId"]);
-//                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) > 0)
+                //                string sql = string.Format(@"select COUNT(*) from role_sys_form left join sys_Object on sys_Object.FormID=role_sys_form.sys_form_Id and sys_Object.roleId=role_sys_form.role_Id and textName='个性费用-可修改保存'
+                //where  role_Id in (select roleId from Role_User where userId={0}) and sys_form_Id in(select formID from sys_form where displayName='项目结算') and sys_Object.AutoID is not null", Session["currentUserId"]);
+                //                if (Convert.ToInt32(DBHelp.ExeScalar(sql)) > 0)
                 if (NewShowAll_textName("项目结算", "个性费用-可修改保存") == false)
                 {
                     btnSave.Visible = false;
@@ -296,7 +313,7 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                 cbListPoType.DataValueField = "Id";
 
                 TB_ProjectCostService _projectCostService = new TB_ProjectCostService();
-                var projectCosts=_projectCostService.GetListArray("");
+                var projectCosts = _projectCostService.GetListArray("");
                 if (projectCosts.Count > 0)
                 {
                     var model = projectCosts[0];
@@ -304,6 +321,8 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                     txtCeSuanDian.Text = model.CeSuanDian.ToString();
                     txtMonthLiLv.Text = model.MonthLiLv.ToString();
                 }
+
+                GetJieSuanDate();
             }
         }
 
@@ -315,15 +334,15 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
         protected void btnSave_Click(object sender, EventArgs e)
         {
             var propertyList = this.FIN_PropertyService.GetListArray(" MyProperty='个性'");
-           List<FIN_SpecCost> commCostList = new List<FIN_SpecCost>();
-           foreach (var m in propertyList)
-           {
-               if (!string.IsNullOrEmpty(Request["pro_" + m.Id]))
-               {
-                   var newM = new FIN_SpecCost();
-                   newM.CaiYear = ddlYear.Text + ddlMonth.Text;
-                   newM.CompId = Convert.ToInt32(ddlCompany.Text);
-                   newM.CostTypeId = m.Id;
+            List<FIN_SpecCost> commCostList = new List<FIN_SpecCost>();
+            foreach (var m in propertyList)
+            {
+                if (!string.IsNullOrEmpty(Request["pro_" + m.Id]))
+                {
+                    var newM = new FIN_SpecCost();
+                    newM.CaiYear = ddlYear.Text + ddlMonth.Text;
+                    newM.CompId = Convert.ToInt32(ddlCompany.Text);
+                    newM.CostTypeId = m.Id;
 
                     if (CommHelp.VerifesToNum(Request["pro_" + m.Id].ToString()) == false)
                     {
@@ -332,11 +351,11 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
                     }
 
                     newM.Total = Convert.ToDecimal(Request["pro_" + m.Id]);
-                   newM.UserID =Convert.ToInt32(ddlUser.Text);
-                   commCostList.Add(newM);
-               }
-           }
-            FIN_SpecCostService commSer=new FIN_SpecCostService ();
+                    newM.UserID = Convert.ToInt32(ddlUser.Text);
+                    commCostList.Add(newM);
+                }
+            }
+            FIN_SpecCostService commSer = new FIN_SpecCostService();
             commSer.AddList(commCostList);
 
             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
@@ -369,6 +388,23 @@ select pro_Id from A_ProInfo where pro_Type='加班单') and state='通过')", d
             {
                 cbListPoType.Enabled = true;
             }
+        }
+
+        private void GetJieSuanDate()
+        {
+            List<Fin_JieDate> list = new Fin_JieDateService().GetListArray(string.Format("Jyear= {0}", Convert.ToInt32(ddlYear.Text) - 1));
+            if (list.Count == 0)
+            {
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有获取到年结算日！');</script>");
+                txtFrom.Text = "";
+                return;
+            }
+            txtFrom.Text = list[0].JDate.AddDays(-120).ToString("yyyy-MM-dd");
+        }
+
+        protected void ddlYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetJieSuanDate();
         }
     }
 }

@@ -59,8 +59,8 @@ namespace VAN_OA
 
 				log1.Write("监测程序正在运行,每到设定好的时间就会自动执行“Job程序”");
 
-
-				QuartzManage.scheduler.Start();
+                //new VAN_OA.Quartz.net.Job2().Execute(null);
+                QuartzManage.scheduler.Start();
 				//demo = new MYQuartz();
 				//demo.Run();
 

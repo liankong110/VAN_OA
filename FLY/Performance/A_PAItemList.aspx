@@ -64,13 +64,13 @@
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" Width="50px" />
              </asp:TemplateField>
-             <asp:TemplateField HeaderText="删除">
+           <%--  <asp:TemplateField HeaderText="删除">
                 <ItemTemplate>
                     <asp:ImageButton ID="btnDel" runat="server" ImageUrl="~/Image/IconDelete.gif" AlternateText="删除"  CommandName="Delete" 
                     OnClientClick='return confirm( "确定删除吗？") ' />
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" Width="50px" />
-             </asp:TemplateField>
+             </asp:TemplateField>--%>
         
             
              

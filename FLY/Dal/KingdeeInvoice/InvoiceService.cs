@@ -54,7 +54,12 @@ namespace VAN_OA.Dal.KingdeeInvoice
             strSql.Append(" FROM " + invoiceServer + "[KingdeeInvoice].[dbo].[Invoice] ");
             strSql.Append(@" left join
 (
+select *from (
+select *,
+ROW_NUMBER() over(partition by FPNo order by FPNoStyle desc) rowNum from
+(
 select FPNo,FPNoStyle from Sell_OrderFP where status='通过' group By FPNo,FPNoStyle
+) as FP ) as FP where rowNum=1
 ) AS TB ON TB.FPNo=[Invoice].InvoiceNumber ");
             if (strWhere.Trim() != "")
             {

@@ -89,7 +89,7 @@
         </div>
         
         <div id="master_content" style="width: 95%; margin-top: 0px;">
-            <div id="state" style="width: 100%; background-color: White; height: 40px; color: Black;
+            <div id="state" style="width: 100%; background-color: White; height: 60px; color: Black;
                 margin-top: 0px">
                 欢迎你:<asp:Label ID="lblLoginName" runat="server" Text=""></asp:Label>
                 <label id="Clock" style="margin-left: 100px">
@@ -97,7 +97,7 @@
                 <asp:LinkButton ID="LinkButton2" runat="server" Style="margin-left: 50px" PostBackUrl="~/UpdatePwd.aspx">密码修改</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton1" runat="server" Style="margin-left: 200px; vertical-align: top"
                     OnClick="LinkButton1_Click">注销</asp:LinkButton>
-                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server" >
                     <ContentTemplate>
                         <asp:Timer ID="Timer1" runat="server" Interval="300000" OnTick="Timer1_Tick">
                         </asp:Timer>
@@ -110,6 +110,11 @@
                         &nbsp; &nbsp;
                         <asp:LinkButton ID="lblCaiSuccess" runat="server" ForeColor="Red" OnClick="lblCaiSuccess_Click"></asp:LinkButton>
                         &nbsp; &nbsp; &nbsp; &nbsp;|
+                        
+                         <asp:LinkButton ID="lbtnX" runat="server" ForeColor="Red" 
+                            OnClick="lbtnX_Click"></asp:LinkButton>
+                        &nbsp; &nbsp; &nbsp; &nbsp;
+                        |<br />
                         <asp:LinkButton ID="lblContract" runat="server" ForeColor="Red" 
                             OnClick="lblContract_Click"></asp:LinkButton>
                         &nbsp; &nbsp; &nbsp; &nbsp;|<asp:LinkButton ID="lblFail" runat="server" ForeColor="Red" OnClick="lblFail_Click"></asp:LinkButton>
@@ -122,6 +127,7 @@
                             ForeColor="Red" onclick="btnExoInv_Click"></asp:LinkButton>
                             &nbsp; &nbsp; &nbsp; &nbsp;|
                          <asp:LinkButton ID="lblMessTodoOld" runat="server" ForeColor="Red" OnClick="lblMessTodoOld_Click"></asp:LinkButton>
+                        <br />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>

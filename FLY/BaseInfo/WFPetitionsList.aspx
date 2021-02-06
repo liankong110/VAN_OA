@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation = "false" CodeBehind="WFPetitionsList.aspx.cs"
+﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation="false" CodeBehind="WFPetitionsList.aspx.cs"
     Inherits="VAN_OA.BaseInfo.WFPetitionsList" MasterPageFile="~/DefaultMaster.Master"
     Title="签呈单档案管理" %>
 
@@ -86,8 +86,8 @@
                 </asp:DropDownList>
             </td>
             <td colspan="2">
-            
-                  <asp:TextBox ID="txtTotalFrom" runat="server" Width="80px"></asp:TextBox>
+
+                <asp:TextBox ID="txtTotalFrom" runat="server" Width="80px"></asp:TextBox>
                 <asp:DropDownList ID="ddlTotal" runat="server">
                     <asp:ListItem Value=">">></asp:ListItem>
                     <asp:ListItem Value="<"><</asp:ListItem>
@@ -103,7 +103,7 @@
                     <asp:ListItem Value="<="><=</asp:ListItem>
                     <asp:ListItem Value="=">=</asp:ListItem>
                     <asp:ListItem Value="<>"><></asp:ListItem>
-                </asp:DropDownList> 
+                </asp:DropDownList>
                 <asp:TextBox ID="txtTotalTo" runat="server" Width="80px"></asp:TextBox>
             </td>
         </tr>
@@ -140,7 +140,7 @@
                     <asp:ListItem Value="<"><</asp:ListItem>
                     <asp:ListItem Value=">=">>=</asp:ListItem>
                     <asp:ListItem Value="<="><=</asp:ListItem>
-                    <asp:ListItem Value="=">=</asp:ListItem>    
+                    <asp:ListItem Value="=">=</asp:ListItem>
                     <asp:ListItem Value="<>"><></asp:ListItem>
                 </asp:DropDownList>
                 <asp:TextBox ID="txtSumCount" runat="server" Width="50px"></asp:TextBox>
@@ -160,7 +160,8 @@
              <asp:DropDownList ID="ddlAE" runat="server" DataTextField="LoginName"
                  DataValueField="LoginName">
              </asp:DropDownList>
-                项目模型:  <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
+                项目模型: 
+                <asp:DropDownList ID="ddlModel" DataTextField="ModelName" DataValueField="ModelName" runat="server"></asp:DropDownList>
             </td>
         </tr>
         <tr>
@@ -218,6 +219,11 @@
                     <asp:ListItem Value="2018">2018</asp:ListItem>
                     <asp:ListItem Value="2019">2019</asp:ListItem>
                     <asp:ListItem Value="2020">2020</asp:ListItem>
+                    <asp:ListItem Value="2021">2021</asp:ListItem>
+                    <asp:ListItem Value="2022">2022</asp:ListItem>
+                    <asp:ListItem Value="2023">2023</asp:ListItem>
+                    <asp:ListItem Value="2024">2024</asp:ListItem>
+                    <asp:ListItem Value="2025">2025</asp:ListItem>
                 </asp:DropDownList>
                 <asp:DropDownList ID="ddlL_Month" runat="server">
                     <asp:ListItem Value="-1">全部</asp:ListItem>
@@ -264,7 +270,7 @@
                         </td>
                         <td>删除
                         </td>
-                      
+
                         <td height="25" align="center">序号
                         </td>
                         <td height="25" align="center">签呈单类型
@@ -330,12 +336,12 @@
                     <ItemStyle HorizontalAlign="Center" Width="50px" />
                 </asp:TemplateField>
                 <asp:BoundField DataField="IsRequireString" HeaderText="过单" SortExpression="IsRequireString" ItemStyle-HorizontalAlign="Center" />
-               
+
                 <asp:BoundField DataField="No" HeaderText="序号" SortExpression="No" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Type" HeaderText="签呈单类型" SortExpression="Type" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="PoNo" HeaderText="项目编号" SortExpression="PoNo" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Number" HeaderText="签呈单编号" SortExpression="Number" ItemStyle-HorizontalAlign="Center" />
-                 <asp:BoundField DataField="OldIndex" HeaderText="老编号" SortExpression="OldIndex" ItemStyle-HorizontalAlign="Center" />                
+                <asp:BoundField DataField="OldIndex" HeaderText="老编号" SortExpression="OldIndex" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="GuestName" HeaderText="客户名称" SortExpression="GuestName" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Name" HeaderText="签呈单名称" SortExpression="Name" ItemStyle-HorizontalAlign="Center" />
                 <asp:BoundField DataField="Summary" HeaderText="摘要" SortExpression="Summary" ItemStyle-HorizontalAlign="Center" />
@@ -377,6 +383,6 @@
         PageSize="10" CurrentPageIndex="1" FirstPageText="首页" LastPageText="尾页" PrevPageText="上页"
         NextPageText="下页" OnPageChanged="AspNetPager1_PageChanged">
     </webdiyer:AspNetPager>
-       采购总金额合计:
+    采购总金额合计:
     <asp:Label ID="lblTotal" runat="server" Text="0" ForeColor="Red"></asp:Label>&nbsp;&nbsp;
 </asp:Content>

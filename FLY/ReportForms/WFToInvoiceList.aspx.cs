@@ -71,7 +71,12 @@ namespace VAN_OA.ReportForms
                 s += string.Format(" and DaoKuanDate<='{0} 23:59:59'", txtTo.Text);
             }
 
-            if (txtPoDateFrom.Text != "")
+            if (txtFrom.Text != "" || txtTo.Text != "")
+            {
+                s1 += string.Format(" and newtable4.PONo is not null");
+            }
+
+                if (txtPoDateFrom.Text != "")
             {
                 if (CommHelp.VerifesToDateTime(txtPoDateFrom.Text) == false)
                 {
@@ -194,7 +199,7 @@ namespace VAN_OA.ReportForms
             }
             if (ddlJinECha.Text != "-1")
             {
-                s1 += " and ISNULL(Total,0) " + ddlJinECha.Text + "newtable1.POTotal-isnull(TuiTotal,0)";
+                s1 += " and ISNULL(Total,0) " + ddlJinECha.Text + "POTotal_SumView.SUMPOTotal";
             }
 
             if (ddlFPState.Text == "2")//未开全票

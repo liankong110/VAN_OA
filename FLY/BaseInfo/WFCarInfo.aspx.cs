@@ -79,6 +79,7 @@ namespace VAN_OA.BaseInfo
             {
                 model.NianJian = Convert.ToDateTime(txtNianJian.Text);
             }
+            model.IsStop = ddlIsStop.Text == "0" ? false : true;
             model.CaiXingShiNo = txtCaiXingShiNo.Text;
             model.CarEngine = txtCarEngine.Text;
             model.CarJiaNo = txtCarJiaNo.Text;
@@ -218,6 +219,7 @@ namespace VAN_OA.BaseInfo
                     txtCarNo.Text = model.CarNo;
                     txtCarShiBieNO.Text = model.CarShiBieNO;
                     txtOilNumber.Text = model.OilNumber.ToString();
+                    this.ddlIsStop.Text = model.IsStop ? "1" : "0";
                 }
                 else
                 {

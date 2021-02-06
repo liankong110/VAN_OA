@@ -157,7 +157,7 @@ namespace VAN_OA
                             List<GuestProBaseInfo> guestProBaseInfos = new GuestProBaseInfoService().GetListArray("GuestPro=1");
 
                             TB_GuestTrackService GuestTrackSer = new TB_GuestTrackService();
-                            string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}' ", currentYear, currentZhangQi);
+                            string sql = string.Format(" 1=1 and QuartNo='{1}' and YearNo='{0}'  ", currentYear, currentZhangQi);
                             sql += string.Format(@" and (TB_GuestTrack.id in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') and state='通过') or TB_GuestTrack.id not in (select allE_id from tb_EForm where proId in (
 select pro_Id from A_ProInfo where pro_Type='客户联系跟踪表') ))");

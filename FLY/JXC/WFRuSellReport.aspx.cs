@@ -70,6 +70,11 @@ namespace VAN_OA.JXC
                         cbRuZero.Checked = true;
                         Show();
                     }
+
+                    if (Request["X"] != null)
+                    {
+                        Show();
+                    }
                 }
             }
         }
@@ -218,6 +223,11 @@ namespace VAN_OA.JXC
             if (ddlModel.Text != "全部")
             {
                 where += string.Format(" and EXISTS (select ID from CG_POOrder where Model='{0}' AND PONO=NoSellOutGoods_1.PONO) ", ddlModel.Text);
+            }
+
+            if (Request["X"] != null)
+            {
+                where += " and GoodNum >= LastNum and GoodNum>0";
             }
             var list = _dal.GetListArray(ponoWhere, userId, goodNoWhere, guestWhere, ruTimeWhere, poTimeWhere, where);
             AspNetPager1.RecordCount = list.Count;

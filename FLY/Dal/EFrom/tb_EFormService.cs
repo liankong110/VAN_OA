@@ -977,7 +977,7 @@ else begin update CG_POOrder set POStatue6='{1}' where PONo=@oldPONo end", CG_PO
         {
 
             A_Role_UserService RoleUserSer = new A_Role_UserService();
-            string sql = string.Format("select toProsId from tb_EForm where allE_id=" + allE_id + " and proId=" + pro_Id);
+            string sql = string.Format("select TOP 1 toProsId from tb_EForm where allE_id=" + allE_id + " and proId=" + pro_Id);
 
             string getIDS = "select top 1 IDS from A_ProInfos where pro_Id=" + pro_Id + " and a_index>( select a_index from A_ProInfos where ids=( " + sql + "))  order by a_index";
             ids = Convert.ToInt32(DBHelp.ExeScalar(getIDS));

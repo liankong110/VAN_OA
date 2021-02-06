@@ -692,14 +692,16 @@ left join (SELECT FPId AS TempFPId,sumTotal,Total AS sumFPTotal FROM (SELECT FPI
         public List<TB_ToInvoice> GetListArrayReport_HeBing(string strWhere, string strWhere2, string strWhere3, string fpTotal, string isColse)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.AppendFormat(@"select Model,FPDate,CG_POOrder.AE,MaxDaoKuanDate,MinDaoKuanDate,CG_POOrder.IsPoFax,minProNo,minOutTime,FPTotal,newtable1.PONo,newtable1.POTotal-isnull(TuiTotal,0) as POTotal,hadFpTotal,CG_POOrder.PODate as minPoDate,Total,newtable1.PoName,newtable1.GuestName from(
-select PONo,sum(POTotal) AS POTotal,PoName,GuestName from CG_POOrder where Status='通过' {0} {2} {3} group by PONo,PoName,GuestName ) as newtable1
+            strSql.AppendFormat(@"select Model,FPDate,CG_POOrder.AE,MaxDaoKuanDate,MinDaoKuanDate,CG_POOrder.IsPoFax,minProNo,minOutTime,FPTotal,newtable1.PONo,
+POTotal_SumView.SUMPOTotal as POTotal,hadFpTotal,CG_POOrder.PODate as minPoDate,Total,newtable1.PoName,newtable1.GuestName from(
+select PONo,PoName,GuestName from CG_POOrder where Status='通过'and IFZhui=0 {0} {2} {3} group by PONo,PoName,GuestName ) as newtable1
 left join(select PONo ,sum(TuiTotal) as TuiTotal from Sell_OrderInHouse where Status='通过'  group by PONo) as newtable2 on newtable1.PONo= newtable2.PONo
 left join( select PONo, sum(Total) as hadFpTotal,min(ruTime) as FPDate from Sell_OrderFP where Status='通过' group by PONo) as newtable3 on newtable1.PONo= newtable3.PONo
 left join (select pono ,sum(Total) as Total,Min(ProNo) as minProNo,min(DaoKuanDate) as MinDaoKuanDate from  TB_ToInvoice where {1} group by PONo )as newtable4 on newtable1.PONo= newtable4.PONo 
 left join( select min(RuTime) as minOutTime, PONo from Sell_OrderOutHouse group by PONo) as newtable5 on newtable1.PONo= newtable5.PONo
 left join CG_POOrder on CG_POOrder.pono=newtable1.PONo and Status='通过' and IFZhui=0 
-left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice where State='通过' group by PONo )as newtable6 on newtable1.PONo= newtable6.PONo ", strWhere3, strWhere, fpTotal, isColse);
+left join (select pono ,max(DaoKuanDate) as MaxDaoKuanDate from  TB_ToInvoice where State='通过' group by PONo )as newtable6 on newtable1.PONo= newtable6.PONo 
+LEFT JOIN POTotal_SumView ON POTotal_SumView.PONo=newtable1.PONo ", strWhere3, strWhere, fpTotal, isColse);
 
             if (strWhere.Trim() != "")
             {

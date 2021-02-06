@@ -375,48 +375,66 @@ namespace VAN_OA.KingdeeInvoice
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
-//            string sql = string.Format(@"SELECT   [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received],COUNT(*) as cou    
-//FROM KIS.KingdeeInvoice.[dbo].[Invoice]  group by  [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received]
-//having COUNT(*)>1");
-//            var oriData = DBHelp.getDataTable(sql);
-//            if (oriData.Rows.Count > 0)
-//            {
-//                using (SqlConnection conn = DBHelp.getConn())
-//                {
-//                    conn.Open();
-//                    SqlTransaction tan = conn.BeginTransaction();
-//                    SqlCommand objCommand = conn.CreateCommand();
-//                    objCommand.Transaction = tan;
-//                    try
-//                    {
-//                        foreach (DataRow dr in oriData.Rows)
-//                        {
-//                            sql = string.Format(@"update KIS.KingdeeInvoice.[dbo].[Invoice]  set IsDeleted=1 where id in (select top {5} id from KIS.KingdeeInvoice.[dbo].[Invoice] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4});
-//                            delete from KingdeeInvoice.[dbo].[Invoice] where id in (select top {5} id from KingdeeInvoice.[dbo].[Invoice] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4})",
-//                            dr[0], dr[1], dr[2], dr[3], dr[4], (Convert.ToInt32(dr[5]) - 1));
-//                            objCommand.CommandText = sql;
-//                            objCommand.ExecuteNonQuery();
-//                        }
-//                        tan.Commit();
+			string checkSql = @"SELECT COUNT(*) FROM (
+SELECT ROW_NUMBER() over(partition by GuestName, InvoiceNumber, Total, BillDate, received order by InvoiceNumber) rowNum
+      ,ID
+  FROM[KingdeeInvoice].[dbo].[Invoice] ) AS newInvoice WHERE ROWNUM>1";
+			if (Convert.ToInt32(DBHelp.ExeScalar(checkSql)) ==0)
+			{
+				base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有发现重复发票记录!');</script>");
+				return;
+			}
 
-//                    }
-//                    catch (Exception)
-//                    {
+			string sql = @"delete from [KingdeeInvoice].[dbo].[Invoice] where id in (
+SELECT id FROM (
+SELECT ROW_NUMBER() over(partition by GuestName,InvoiceNumber,Total,BillDate,received order by InvoiceNumber) rowNum 
+      ,ID
+  FROM [KingdeeInvoice].[dbo].[Invoice] ) AS newInvoice WHERE ROWNUM>1)";
+			DBHelp.ExeCommand(sql);
+			base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('已删除重复发票记录!');</script>");
 
-//                        tan.Rollback();
-//                        conn.Close();
-//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除失败!');</script>");
-//                        return;
-//                    }
-//                    conn.Close();
-//                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除成功!');</script>");
-//                }
-//            }
-//            else
-//            {
-//                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有重复数据!');</script>");
-//            }
-        }
+			//            string sql = string.Format(@"SELECT   [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received],COUNT(*) as cou    
+			//FROM KIS.KingdeeInvoice.[dbo].[Invoice]  group by  [InvoiceNumber],[Total],[CreateDate],[IsAccount],[Received]
+			//having COUNT(*)>1");
+			//            var oriData = DBHelp.getDataTable(sql);
+			//            if (oriData.Rows.Count > 0)
+			//            {
+			//                using (SqlConnection conn = DBHelp.getConn())
+			//                {
+			//                    conn.Open();
+			//                    SqlTransaction tan = conn.BeginTransaction();
+			//                    SqlCommand objCommand = conn.CreateCommand();
+			//                    objCommand.Transaction = tan;
+			//                    try
+			//                    {
+			//                        foreach (DataRow dr in oriData.Rows)
+			//                        {
+			//                            sql = string.Format(@"update KIS.KingdeeInvoice.[dbo].[Invoice]  set IsDeleted=1 where id in (select top {5} id from KIS.KingdeeInvoice.[dbo].[Invoice] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4});
+			//                            delete from KingdeeInvoice.[dbo].[Invoice] where id in (select top {5} id from KingdeeInvoice.[dbo].[Invoice] where [InvoiceNumber]='{0}' and [Total]={1} and [CreateDate]='{2}' and [IsAccount]={3} and [Received]={4})",
+			//                            dr[0], dr[1], dr[2], dr[3], dr[4], (Convert.ToInt32(dr[5]) - 1));
+			//                            objCommand.CommandText = sql;
+			//                            objCommand.ExecuteNonQuery();
+			//                        }
+			//                        tan.Commit();
+
+			//                    }
+			//                    catch (Exception)
+			//                    {
+
+			//                        tan.Rollback();
+			//                        conn.Close();
+			//                        base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除失败!');</script>");
+			//                        return;
+			//                    }
+			//                    conn.Close();
+			//                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('删除成功!');</script>");
+			//                }
+			//            }
+			//            else
+			//            {
+			//                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('没有重复数据!');</script>");
+			//            }
+		}
 
         protected void btnDeleted_Click(object sender, EventArgs e)
         {

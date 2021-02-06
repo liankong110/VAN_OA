@@ -54,12 +54,16 @@ namespace VAN_OA.Dal.KingdeeInvoice
             strSql.Append(" FROM " + invoiceServer + "[KingdeeInvoice].[dbo].[Payable] ");
             strSql.Append(@" left join
 (
+select *from (
+select *,
+ROW_NUMBER() over(partition by SupplierFPNo order by CaiFpType desc) rowNum from
+(
 selecT SupplierFPNo,CaiFpType FROM TB_SupplierInvoice
 LEFT JOIN TB_SupplierInvoices ON TB_SupplierInvoice.Id=TB_SupplierInvoices.Id
 left join CAI_OrderInHouses on CAI_OrderInHouses.Ids=TB_SupplierInvoices.RuIds
 left join CAI_OrderChecks on CAI_OrderChecks.ids=CAI_OrderInHouses.OrderCheckIds
 left join CAI_POCai on CAI_POCai.Ids=CAI_OrderChecks.CaiId
-where Status='通过' group by SupplierFPNo,CaiFpType
+where Status='通过' group by SupplierFPNo,CaiFpType) as FP ) as FP where rowNum=1
 ) AS TB ON TB.SupplierFPNo=[Payable].InvoiceNumber ");
             if (strWhere.Trim() != "")
             {

@@ -204,7 +204,7 @@ namespace VAN_OA.ReportForms
         {
             if (!base.IsPostBack)
             {
-                DataTable carInfos = DBHelp.getDataTable("select ''as CarNO union select CarNO from TB_CarInfo");
+                DataTable carInfos = DBHelp.getDataTable("select ''as CarNO union select CarNO from TB_CarInfo where IsStop=0 ");
                 ddlCarNo.DataSource = carInfos;
                 ddlCarNo.DataBind();
                 ddlCarNo.Text = "";

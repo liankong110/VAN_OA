@@ -52,6 +52,22 @@ left join  CAI_POCai on CAI_POOrder.id=CAI_POCai.id where  Status='通过' and p
         }
 
         /// <summary>
+        /// 根据AE 获取当前有多少条商品信息 出现问题
+        /// </summary>
+        /// <param name="ae"></param>
+        /// <returns></returns>
+        public int GetCountByAE(string ae)
+        {
+            string sql = string.Format(@"select COUNT(*)
+from
+[NoSellOutGoods_1]
+left join TB_Good on TB_Good.GoodId = NoSellOutGoods_1.GooId
+left join TB_HouseGoods on TB_HouseGoods.GoodId = NoSellOutGoods_1.GooId where 1 = 1  and AE = '{0}'  and PONo like 'P%'  and LastNum > 0
+and GoodNum >= LastNum and GoodNum>0", ae);
+
+            return Convert.ToInt32(DBHelp.ExeScalar(sql));
+        }
+        /// <summary>
         /// 获得数据列表（比DataSet效率高，推荐使用）
         /// </summary>
         public List<RuSellReport> GetListArray(string ponoWhere, string userId,
@@ -105,8 +121,6 @@ left join TB_HouseGoods on TB_HouseGoods.GoodId=NoSellOutGoods_1.GooId where 1=1
                         var model = ReaderBind(dataReader);
                         model.GoodAreaNumber = dataReader["GoodAreaNumber"].ToString();
                         list.Add(model);
-
-
                     }
                 }
             }

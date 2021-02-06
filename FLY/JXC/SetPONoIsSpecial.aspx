@@ -316,6 +316,8 @@
                 <ItemTemplate>
                     <asp:CheckBox ID="cbIsSpecial" runat="server" Checked='<% #Eval("IsSpecial") %>'
                         Enabled="<%# IsSpecialEdit() %>" />
+
+                       <asp:CheckBox ID="cbMustSpecial" runat="server"  BackColor="Red" />
                 </ItemTemplate>
                 <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>

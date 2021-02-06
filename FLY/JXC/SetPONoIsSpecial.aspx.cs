@@ -727,7 +727,8 @@ namespace VAN_OA.JXC
                 for (int i = 0; i < this.gvMain.Rows.Count; i++)
                 {
                     CheckBox cb = (gvMain.Rows[i].FindControl("cbIsSpecial")) as CheckBox;
-                    if (cb.Checked)
+                    CheckBox cbMustSpecial = (gvMain.Rows[i].FindControl("cbMustSpecial")) as CheckBox;
+                    if (cb.Checked && !cbMustSpecial.Checked)
                     {
                         Label lblIds = (gvMain.Rows[i].FindControl("PONo")) as Label;
                         sqlComm.CommandText = string.Format(@"declare  @AllCount  int=0 ;

@@ -17,6 +17,7 @@ using VAN_OA.Dal.EFrom;
 using VAN_OA.Model.EFrom;
 using Newtonsoft.Json;
 using VAN_OA.Dal.BaseInfo;
+using System.Text.RegularExpressions;
 
 namespace VAN_OA.ReportForms
 {
@@ -293,14 +294,31 @@ namespace VAN_OA.ReportForms
                 this.txtSupplierBrandNo.Focus();
                 return false;
             }
+            else
+            {
+                if (!Regex.IsMatch(txtSupplierBrandNo.Text.Trim(), @"^\d+$", RegexOptions.IgnoreCase))
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('银行账号必须全部都是阿拉伯数字！');</script>");
+                    this.txtSupplierBrandNo.Focus();
+                    return false;
+                }
+            }
 
             if (this.txtSupplierBrandName.Text.Trim().Length == 0)
             {
-
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('开户行不能为空！');</script>");
                 this.txtSupplierBrandName.Focus();
                 return false;
-            } 
+            }
+            else 
+            {
+                if (!Regex.IsMatch(txtSupplierBrandName.Text.Trim(), @"^[\u4e00-\u9fa5A-Za-z]*$", RegexOptions.IgnoreCase))
+                {
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('开户行不能有阿拉伯数字！');</script>");
+                    this.txtSupplierBrandName.Focus();
+                    return false;
+                }
+            }
             if (this.txtLikeMan.Text.Trim().Length == 0)
             {
                

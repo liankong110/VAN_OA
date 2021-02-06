@@ -2953,16 +2953,16 @@ select @caiTotalNum-@checkTotalNum", model.GoodId);
                     {
                         //3.如果该产品 有库存数量(>=1)，填入的供应商只要有 不是 库存的，提交时，提示“该产品有库存，请重新填写”，返回原界面
                         //检查库存是否存在
-                        string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
-                        var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
-                        if (!((goodHouseNum is DBNull) || goodHouseNum == null))
-                        {
-                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
-                            if (ddlBusType.Text == "0")
-                            {
-                                return false;
-                            }
-                        }
+                        //string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
+                        //var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
+                        //if (!((goodHouseNum is DBNull) || goodHouseNum == null))
+                        //{
+                        //    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
+                        //    if (ddlBusType.Text == "0")
+                        //    {
+                        //        return false;
+                        //    }
+                        //}
                     }
                     //需要判断 如果 采购商品是不含税的，实采单价 和采购询价的值 一旦一样，汉中和我 在提交时 都需要 提示 “价格有可能有问题，请核对”，返回原界面。
                     if (txtSupper2.Text != "库存")
@@ -3051,16 +3051,16 @@ select @caiTotalNum-@checkTotalNum", model.GoodId);
                     {
                         //3.如果该产品 有库存数量(>=1)，填入的供应商只要有 不是 库存的，提交时，提示“该产品有库存，请重新填写”，返回原界面
                         //检查库存是否存在
-                        string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
-                        var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
-                        if (!((goodHouseNum is DBNull) || goodHouseNum == null))
-                        {
-                            ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
-                            if (ddlBusType.Text == "0")
-                            {
-                                return false;
-                            }
-                        }
+                        //string goodNumSQL = "select GoodNum from TB_HouseGoods where GoodId=" + model.GoodId;
+                        //var goodHouseNum = DBHelp.ExeScalar(goodNumSQL);
+                        //if (!((goodHouseNum is DBNull) || goodHouseNum == null))
+                        //{
+                        //    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), "a", string.Format("alert('该产品有库存，请重新填写!');"), true);
+                        //    if (ddlBusType.Text == "0")
+                        //    {
+                        //        return false;
+                        //    }
+                        //}
                     }
                     //需要判断 如果 采购商品是不含税的，实采单价 和采购询价的值 一旦一样，汉中和我 在提交时 都需要 提示 “价格有可能有问题，请核对”，返回原界面。
                     if (txtSupper3.Text != "库存")

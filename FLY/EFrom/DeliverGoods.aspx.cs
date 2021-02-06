@@ -86,46 +86,49 @@ namespace VAN_OA.EFrom
 
                 return false;
             }
-            txtGoTime.Text = txtGoTime.Text.Trim().Replace('：', ':');
-            txtGoTime.Text = txtGoTime.Text.Trim().Replace('。', ':');
-            txtGoTime.Text = txtGoTime.Text.Trim().Replace('.', ':');
 
-            txtBackTime.Text = txtBackTime.Text.Trim().Replace('：', ':');
-            txtBackTime.Text = txtBackTime.Text.Trim().Replace('.', ':');
-            txtBackTime.Text = txtBackTime.Text.Trim().Replace('。', ':');
-            if (ddlPers.Visible == false && ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text=="通过")
+            if (txtGoTime.Text.Trim() == "")
             {
 
-                if (txtGoTime.Text.Trim() == "")
+                base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写外出时间！');</script>");
+                txtGoTime.Focus();
+                return false;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(txtGoTime.Text) && CommHelp.VerifesToDateTime(txtGoTime.Text) == false)
                 {
-
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写外出时间！');</script>");
-                    txtGoTime.Focus();
+                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('外出时间 格式错误！');</script>");
                     return false;
                 }
-                else
-                {                  
-                    txtGoTime.Text.Trim().Replace('：', ':');
+            }
+            //txtGoTime.Text = txtGoTime.Text.Trim().Replace('：', ':');
+            //txtGoTime.Text = txtGoTime.Text.Trim().Replace('。', ':');
+            //txtGoTime.Text = txtGoTime.Text.Trim().Replace('.', ':');
+
+            //txtBackTime.Text = txtBackTime.Text.Trim().Replace('：', ':');
+            //txtBackTime.Text = txtBackTime.Text.Trim().Replace('.', ':');
+            //txtBackTime.Text = txtBackTime.Text.Trim().Replace('。', ':');
+            if (ddlPers.Visible == false && ddlResult.SelectedItem != null && ddlResult.SelectedItem.Text == "通过")
+            {
+
+               
+
+                if (txtBackTime.Text.Trim() != "")
+                {
+                    //txtGoTime.Text.Trim().Replace('：', ':');
                     if (CommHelp.VerifesToDateTime(txtGoTime.Text) == false)
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('外出时间 格式错误！');</script>");
                         return false;
                     }
-                }
-
-                if (txtBackTime.Text.Trim() == "")
-                {
-
-                    base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写回来时间！');</script>");
-                    txtBackTime.Focus();
-
-                    return false;
+                     
                 }
                 else
                 {
-                    txtBackTime.Text.Trim().Replace('：', ':');
+                    //txtBackTime.Text.Trim().Replace('：', ':');
 
-                    if (CommHelp.VerifesToDateTime(txtDateTime.Text) == false)
+                    if (!string.IsNullOrEmpty(txtDateTime.Text) && CommHelp.VerifesToDateTime(txtDateTime.Text) == false)
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('回来时间 格式错误！');</script>");
                         return false;
@@ -143,20 +146,20 @@ namespace VAN_OA.EFrom
 
             try
             {
-                if (txtGoTime.Text != "")
-                {
-                    Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
-                }
-                
+                //if (txtGoTime.Text != "")
+                //{
+                //    Convert.ToDateTime(Convert.ToDateTime( txtDateTime.Text).ToString("yyyy-MM-dd") + " " + txtGoTime.Text);
+                //}
 
-                if (txtBackTime.Text != "")
-                {
-                    Convert.ToDateTime(txtDateTime.Text + " " + txtBackTime.Text);
-                }
 
-                if (txtBackTime.Text != ""&&txtGoTime.Text!="")
+                //if (txtBackTime.Text != "")
+                //{
+                //    Convert.ToDateTime(Convert.ToDateTime(txtDateTime.Text).ToString("yyyy-MM-dd") + " " + txtBackTime.Text);
+                //}
+
+                if (txtBackTime.Text != "" && txtGoTime.Text != "")
                 {
-                    if (Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text) >= Convert.ToDateTime(txtDateTime.Text + " " + txtBackTime.Text))
+                    if (Convert.ToDateTime(txtGoTime.Text) >= Convert.ToDateTime(txtBackTime.Text))
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('外出时间不能大于回来时间！');</script>");
                         txtGoTime.Focus();
@@ -165,7 +168,7 @@ namespace VAN_OA.EFrom
 
                     }
                 }
-                Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
+                //Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
             }
             catch (Exception)
             {
@@ -192,41 +195,46 @@ namespace VAN_OA.EFrom
 
         private void setEnable(bool result)
         {
+            if (result && Request["allE_id"]!=null)
+            {
+                txtBackTime.Enabled = true;
+            }
             txtDepartName.ReadOnly = !result;
             txtSongHuo.ReadOnly = !result;
             //txtName.ReadOnly =true;
             txtInvName.ReadOnly = !result;
-            txtGoTime.ReadOnly = !result;
+            //txtGoTime.ReadOnly = !result;
             txtDepartName.ReadOnly = !result;
             txtDateTime.ReadOnly = true;
             txtCompName.ReadOnly = !result;
-            txtBackTime.ReadOnly = !result;
+            //txtBackTime.ReadOnly = !result;
             txtAddress.ReadOnly = !result;
             //Image1.Enabled = result;
             if (result == true)
             {
                 btnEdit.Visible = true;
             }
-            if (result == true)
-            {
-                if (txtGoTime.Text == "")
-                {
-                    txtGoTime.ReadOnly = false;
-                    txtBackTime.ReadOnly = true;
-                }
-                else if (txtBackTime.Text == "")
-                {
-                    txtGoTime.ReadOnly = true;
-                    txtBackTime.ReadOnly = false;
-                }
-            }
+            //if (result == true)
+            //{
+            //    if (txtGoTime.Text == "")
+            //    {
+            //        txtGoTime.ReadOnly = false;
+            //        txtBackTime.ReadOnly = true;
+            //    }
+            //    else if (txtBackTime.Text == "")
+            //    {
+            //        txtGoTime.ReadOnly = true;
+            //        txtBackTime.ReadOnly = false;
+            //    }
+            //}
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-             
+
             if (!base.IsPostBack)
             {
-                //请假单子              
+                //请假单子   
+               
 
                 btnEdit.Visible = false;
                 if (base.Request["ProId"] != null)
@@ -235,15 +243,17 @@ namespace VAN_OA.EFrom
                     VAN_OA.Model.User use = Session["userInfo"] as VAN_OA.Model.User;
                     txtName.Text = use.LoginName;
 
-                    txtGoTime.ReadOnly = true;
-                    txtBackTime.ReadOnly = true;
+                    txtGoTime.Enabled = false;
+                    txtBackTime.Enabled = false;
+                    //txtGoTime.ReadOnly = true;
+                    //txtBackTime.ReadOnly = true;
                     txtDepartName.Text = use.LoginIPosition;
 
                     tb_EFormService eformSer = new tb_EFormService();
                     if (Request["allE_id"] == null)//单据增加
                     {
-
-                        txtDateTime.Text = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+                        txtGoTime.Enabled = true;
+                        txtDateTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         //检查自己是否在请假单中流程设置中，来确定自己下一个审批人
 
                         lblResult.Visible = false;
@@ -263,26 +273,6 @@ namespace VAN_OA.EFrom
                             ViewState["ids"] = ids;
                             if (roleUserList != null)
                             {
-                                //从获取出的审核中 获取上级信息
-                                //List<A_Role_User> newList = new List<A_Role_User>();
-                                //for (int i = 0; i < roleUserList.Count; i++)
-                                //{
-                                //    if (roleUserList[i].UserId == use.ReportTo)
-                                //    {
-                                //        A_Role_User a = roleUserList[i];
-                                //        newList.Add(a);
-                                //        break;
-                                //    }
-                                //}
-
-                                //if (newList.Count > 0)
-                                //{
-                                //    ddlPers.DataSource = newList;
-                                //}
-                                //else
-                                //{
-                                //    ddlPers.DataSource = roleUserList;
-                                //}
                                 ddlPers.DataSource = roleUserList;
                                 ddlPers.DataBind();
                                 ddlPers.DataTextField = "UserName";
@@ -352,20 +342,20 @@ namespace VAN_OA.EFrom
 
                         txtAddress.Text = goodmodel.Address;
 
-                        if (goodmodel.BackTime!=null)
-                        txtBackTime.Text = goodmodel.BackTime.Value.ToShortTimeString().ToString();
+                        if (goodmodel.BackTime != null)
+                            txtBackTime.Text = goodmodel.BackTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
                         txtCompName.Text = goodmodel.CompName;
 
-                        txtDateTime.Text = goodmodel.dateTime.ToString("yyyy-MM-dd hh:mm:ss");
+                        txtDateTime.Text = goodmodel.dateTime.ToString("yyyy-MM-dd HH:mm:ss");
                         txtDepartName.Text = goodmodel.DepartName;
 
                         if (goodmodel.GoTime != null)
-                        txtGoTime.Text = goodmodel.GoTime.Value.ToShortTimeString().ToString();
+                            txtGoTime.Text = goodmodel.GoTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
                         txtInvName.Text = goodmodel.InvName;
                         txtName.Text = goodmodel.Name;
                         txtSongHuo.Text = goodmodel.SongHuo;
                         lblProNo.Text = goodmodel.ProNo;
- 
+
                         #endregion
                         //判断单据是否已经结束
                         if (eformSer.ifFinish(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])))
@@ -377,15 +367,10 @@ namespace VAN_OA.EFrom
                             lblYiJian.Visible = false;
                             ddlResult.Visible = false;
                             txtResultRemark.Visible = false;
-
-
-
-
-
                             setEnable(false);
                         }
                         else
-                        {
+                        {                           
                             //是否为审核人
                             if (eformSer.ifAudiPer(Convert.ToInt32(Session["currentUserId"]), Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])))
                             {
@@ -404,6 +389,7 @@ namespace VAN_OA.EFrom
                                     ViewState["ids"] = ids;
                                     if (roleUserList != null)
                                     {
+                                       
                                         //从获取出的审核中 获取上级信息
                                         //List<A_Role_User> newList = new List<A_Role_User>();
                                         //for (int i = 0; i < roleUserList.Count; i++)
@@ -435,12 +421,13 @@ namespace VAN_OA.EFrom
                                         }
                                         catch (Exception)
                                         {
-                                            
-                                             
+
+
                                         }
                                     }
-                                    
-                                }setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
+
+                                }
+                                setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
 
                             }
                             else
@@ -496,8 +483,9 @@ namespace VAN_OA.EFrom
 
                                             }
                                         }
-                                       
-                                    } setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
+
+                                    }
+                                    setEnable(eformSer.ifEdit(Convert.ToInt32(Request["ProId"]), Convert.ToInt32(Request["allE_id"])));
                                 }
                                 else
                                 {
@@ -542,18 +530,18 @@ namespace VAN_OA.EFrom
                     goodInfo.Address = txtAddress.Text;
                     if (txtBackTime.Text != "")
                     {
-                        goodInfo.BackTime = Convert.ToDateTime(txtDateTime.Text+" "+ txtBackTime.Text);
+                        goodInfo.BackTime = Convert.ToDateTime(txtBackTime.Text);
                     }
                     goodInfo.CompName = txtCompName.Text;
                     goodInfo.dateTime = Convert.ToDateTime(txtDateTime.Text);
                     goodInfo.DepartName = txtDepartName.Text;
 
-                    if (txtGoTime.Text!="")
-                    goodInfo.GoTime = Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
+                    if (txtGoTime.Text != "")
+                        goodInfo.GoTime = Convert.ToDateTime(txtGoTime.Text);
                     goodInfo.InvName = txtInvName.Text;
                     goodInfo.Name = txtName.Text;
                     goodInfo.SongHuo = txtSongHuo.Text;
-                    
+
                     #endregion
                     if (Request["allE_id"] == null)//单据增加
                     {
@@ -606,7 +594,7 @@ namespace VAN_OA.EFrom
 
 
 
-                        
+
                         #region 本单据的ID
                         goodInfo.id = Convert.ToInt32(Request["allE_id"]);
                         #endregion
@@ -717,21 +705,21 @@ namespace VAN_OA.EFrom
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写部门！');</script>");
                 txtDepartName.Focus();
 
-                return ;
+                return;
             }
             if (txtName.Text.Trim() == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写姓名！');</script>");
                 txtName.Focus();
 
-                return ;
+                return;
             }
             if (txtDateTime.Text == "")
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写日期！');</script>");
                 txtDateTime.Focus();
 
-                return ;
+                return;
             }
             else
             {
@@ -744,7 +732,7 @@ namespace VAN_OA.EFrom
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('你填写的时间格式有误！');</script>");
                     txtDateTime.Focus();
 
-                    return ;
+                    return;
 
                 }
             }
@@ -754,7 +742,7 @@ namespace VAN_OA.EFrom
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写公司名称！');</script>");
                 txtCompName.Focus();
 
-                return ;
+                return;
             }
 
 
@@ -763,48 +751,34 @@ namespace VAN_OA.EFrom
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('请填写货物名称！');</script>");
                 txtInvName.Focus();
 
-                return ;
+                return;
             }
 
-            txtGoTime.Text=txtGoTime.Text.Trim().Replace('：', ':');
-            txtGoTime.Text = txtGoTime.Text.Trim().Replace('。', ':');
-            txtGoTime.Text = txtGoTime.Text.Trim().Replace('.', ':');
 
-            txtBackTime.Text=txtBackTime.Text.Trim().Replace('：', ':');
-            txtBackTime.Text = txtBackTime.Text.Trim().Replace('.', ':');
-            txtBackTime.Text = txtBackTime.Text.Trim().Replace('。', ':');
-         
+
             try
             {
-                if (txtGoTime.Text != "")
-                {
-                    Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
-                }
 
-                if (txtBackTime.Text != "")
-                {
-                    Convert.ToDateTime(txtDateTime.Text + " " + txtBackTime.Text);
-                }
 
                 if (txtBackTime.Text != "" && txtGoTime.Text != "")
                 {
-                    if (Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text) >= Convert.ToDateTime(txtDateTime.Text + " " + txtBackTime.Text))
+                    if (Convert.ToDateTime(txtGoTime.Text) >= Convert.ToDateTime(txtBackTime.Text))
                     {
                         base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('外出时间不能大于回来时间！');</script>");
                         txtGoTime.Focus();
 
-                        return ;
+                        return;
 
                     }
                 }
-                Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
+
             }
             catch (Exception)
             {
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('你填写的时间格式有误！');</script>");
                 txtGoTime.Focus();
 
-                return ;
+                return;
 
             }
             if (DBHelp.ExeScalar(string.Format("select ID from tb_User where loginName='{0}'", txtName.Text)) == null)
@@ -812,7 +786,7 @@ namespace VAN_OA.EFrom
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('你填写申请用户不存在！');</script>");
                 txtName.Focus();
 
-                return ;
+                return;
             }
 
             #region 获取单据基本信息
@@ -820,13 +794,13 @@ namespace VAN_OA.EFrom
             goodInfo.Address = txtAddress.Text;
             if (txtBackTime.Text != "")
             {
-                goodInfo.BackTime = Convert.ToDateTime(txtDateTime.Text + " " + txtBackTime.Text);
+                goodInfo.BackTime = Convert.ToDateTime(txtBackTime.Text);
             }
             goodInfo.CompName = txtCompName.Text;
             goodInfo.dateTime = Convert.ToDateTime(txtDateTime.Text);
             goodInfo.DepartName = txtDepartName.Text;
             if (txtGoTime.Text != "")
-            goodInfo.GoTime = Convert.ToDateTime(txtDateTime.Text + " " + txtGoTime.Text);
+                goodInfo.GoTime = Convert.ToDateTime(txtGoTime.Text);
             goodInfo.InvName = txtInvName.Text;
             goodInfo.Name = txtName.Text;
             goodInfo.SongHuo = txtSongHuo.Text;
@@ -834,11 +808,9 @@ namespace VAN_OA.EFrom
             #region 本单据的ID
             goodInfo.id = Convert.ToInt32(Request["allE_id"]);
             #endregion
-            
+
             tb_DeliverGoodsService googdSer = new tb_DeliverGoodsService();
             googdSer.Update(goodInfo);
-
-
             base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('保存成功！');</script>");
 
 
@@ -850,12 +822,12 @@ namespace VAN_OA.EFrom
 
 
             //base.ClientScript.RegisterStartupScript(base.GetType(), null,string.Format( "<script>alert('{0}！');</script>",TextBox3.Text));
-            
 
-            
+
+
         }
 
 
-        
+
     }
 }

@@ -39,6 +39,7 @@
                     <td>
                         删除
                     </td>
+
                     <td height="25" align="center">
                         车牌号
                     </td>
@@ -100,6 +101,13 @@
                         CommandName="Delete" OnClientClick='return confirm( "确定删除吗？") ' />
                 </ItemTemplate>
                 <ItemStyle HorizontalAlign="Center" Width="50px" />
+            </asp:TemplateField>
+            
+             <asp:TemplateField HeaderText="是否停用">               
+                <ItemTemplate>
+                    <asp:CheckBox ID="IsStop" runat="server" Checked='<% #Eval("IsStop") %>'   />
+                </ItemTemplate>
+                <ItemStyle BorderColor="#E5E5E5" HorizontalAlign="Center" />
             </asp:TemplateField>
             <asp:BoundField DataField="CarNo" HeaderText="车牌号" SortExpression="CarNo" ItemStyle-HorizontalAlign="Center" />
             <asp:BoundField DataField="CarModel" HeaderText="品牌型号" SortExpression="CarModel"

@@ -454,7 +454,7 @@ namespace VAN_OA.EFrom
 
             
 
-                DataTable carInfos = DBHelp.getDataTable("select CarNO from TB_CarInfo");
+                DataTable carInfos = DBHelp.getDataTable("select CarNO from TB_CarInfo where IsStop=0");
                 ddlCarNo.DataSource = carInfos;
                 ddlCarNo.DataBind();
                 

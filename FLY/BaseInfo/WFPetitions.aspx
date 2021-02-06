@@ -54,7 +54,7 @@
                 </asp:DropDownList>
             </td>
         </tr>
-          <tr>
+        <tr>
             <td height="25" width="30%" align="right">项目编号<span class="myspan">*</span> ：
             </td>
             <td height="25" width="*" align="left">
@@ -63,7 +63,7 @@
                     OnClientClick="javascript:window.showModalDialog('../JXC/DioSimpPOList.aspx',null,'dialogWidth:700px;dialogHeight:450px;help:no;status:no')"
                     ForeColor="Red" OnClick="LinkButton1_Click1">
        选择</asp:LinkButton>
-               
+
                 <asp:Label ID="lblError" runat="server" Text="" ForeColor="Red"></asp:Label>
             </td>
         </tr>
@@ -134,14 +134,13 @@
                 <asp:TextBox ID="txtBCount" runat="server" Width="200px">1</asp:TextBox>
             </td>
         </tr>
-       <tr>
+        <tr>
             <td height="25" width="30%" align="right">过单<span class="myspan">*</span> ：
             </td>
             <td height="25" width="*" align="left">
-                 <asp:CheckBox ID="cbIsRequire" runat="server" Text="过单"
-                     />
-                </td>
-           </tr>
+                <asp:CheckBox ID="cbIsRequire" runat="server" Text="过单" />
+            </td>
+        </tr>
         <tr>
             <td height="25" width="30%" align="right">AE<span class="myspan">*</span> ：
             </td>
@@ -210,6 +209,11 @@
                     <asp:ListItem Value="2018">2018</asp:ListItem>
                     <asp:ListItem Value="2019">2019</asp:ListItem>
                     <asp:ListItem Value="2020">2020</asp:ListItem>
+                  <asp:ListItem Value="2021">2021</asp:ListItem>
+                    <asp:ListItem Value="2022">2022</asp:ListItem>
+                    <asp:ListItem Value="2023">2023</asp:ListItem>
+                    <asp:ListItem Value="2024">2024</asp:ListItem>
+                    <asp:ListItem Value="2025">2025</asp:ListItem>
                 </asp:DropDownList>
                 <asp:DropDownList ID="ddlL_Month" runat="server">
                     <asp:ListItem Value="1">1</asp:ListItem>
@@ -224,7 +228,7 @@
                     <asp:ListItem Value="10">10</asp:ListItem>
                     <asp:ListItem Value="11">11</asp:ListItem>
                     <asp:ListItem Value="12">12</asp:ListItem>
-                    
+
                 </asp:DropDownList>
             </td>
         </tr>

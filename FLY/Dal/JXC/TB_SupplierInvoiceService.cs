@@ -213,7 +213,9 @@ SELECT @allFpNo", supplierAdvancePayments.ids);
 
                             try
                             {
-                                Global.log.Info(string.Format("num:{0},price:{1},total:{2},resultTotal:{3}", supplierAdvancePayments.CheckNum, supplierAdvancePayments.lastPrice, supplierAdvancePayments.SupplierInvoiceTotal, resultTotal));
+                                Global.log.Info(string.Format("num:{0},price:{1},total:{2},resultTotal:{3}",
+                                    supplierAdvancePayments.CheckNum, supplierAdvancePayments.lastPrice, 
+                                    supplierAdvancePayments.SupplierInvoiceTotal, resultTotal));
                             }
                             catch (Exception)
                             {
@@ -900,10 +902,12 @@ where  status='通过' and CAI_OrderInHouses.ids={0};", supplierAdvancePayments.
                     tan.Commit();
                   
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     tan.Rollback();
-                    return 0;
+                    Global.log.Info("addTran系统异常:", ex);
+                    throw new Exception("支付单保存到数据库失败，请联系管理员进行补单！");
+                    //return 0;
 
                 }
                 return id;

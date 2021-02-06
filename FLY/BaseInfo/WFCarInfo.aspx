@@ -89,6 +89,18 @@
                 <asp:TextBox ID="txtOilNumber" runat="server" Width="200px" Text="0"></asp:TextBox>
             </td>
         </tr>
+
+            <tr>
+                <td height="25" width="30%" align="right">
+                    是否停用 ：
+                </td>
+                <td height="25" width="*" align="left">
+                    <asp:DropDownList ID="ddlIsStop" runat="server">
+                        <asp:ListItem Text="否" Value="0"></asp:ListItem>
+                        <asp:ListItem Text="是" Value="1"></asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+            </tr>
         <tr>
             <td align="center" colspan="2">
                 <asp:Button ID="btnAdd" runat="server" Text=" 添加 " BackColor="Yellow" OnClick="btnAdd_Click" />&nbsp;

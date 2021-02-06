@@ -15,6 +15,8 @@ using VAN_OA.Model;
 using System.Collections.Generic;
 using VAN_OA.Model.ReportForms;
 using System.Data.SqlClient;
+using VAN_OA.Dal.BaseInfo;
+using VAN_OA.Quartz.net;
 
 namespace VAN_OA
 {
@@ -46,6 +48,8 @@ namespace VAN_OA
                     {
                         if (u != null)
                         {
+
+
                             Session["userInfo"] = u;
                             this.Session["currentUserId"] = u.Id;
                             this.Session["LoginName"] = u.LoginName;
@@ -59,6 +63,40 @@ namespace VAN_OA
                                 return;
                             }
                         }
+                        //判断上一个季度是否执行了
+                        DateTime crrentDate = DateTime.Now;
+                        //3 6 9 12
+                        DateTime jiDuDate = DateTime.MinValue;
+                        int jiDu = 0;
+                        if (crrentDate.Month >= 1 && crrentDate.Month <= 3)
+                        {
+                            jiDuDate = Convert.ToDateTime(crrentDate.Year - 1 + "-" + "12-31");                           
+                        }
+                        if (crrentDate.Month >= 4 && crrentDate.Month <= 6)
+                        {
+                            jiDuDate = Convert.ToDateTime(crrentDate.Year + "-" + "4-1").AddDays(-1);                           
+                        }
+                        if (crrentDate.Month >= 7 && crrentDate.Month <= 9)
+                        {
+                            jiDuDate = Convert.ToDateTime(crrentDate.Year + "-" + "7-1").AddDays(-1);                            
+                        }
+                        if (crrentDate.Month >= 10 && crrentDate.Month <= 12)
+                        {
+                            jiDuDate = Convert.ToDateTime(crrentDate.Year+ "-" + "10-1").AddDays(-1);                           
+                        }
+
+                        var result = new JobInfoService().GetListArray(
+                             string.Format("JobTime>='{0} 00:00:00' and JobTime<='{0} 23:59:59'", jiDuDate.ToString("yyyy-MM-dd")));
+
+                        if (result.Count == 0)
+                        {
+                            new Job2().DoGuestJob(jiDuDate);
+                        }
+
+                        //new Dal.JXC.TB_SupplierInvoiceService().AddSupplierInvoice("70728,70729,70730", "86576,86575,80333",
+                        //    Session["LoginName"].ToString(),
+                        //    Convert.ToInt32(Session["currentUserId"].ToString()), "江苏安太");
+
                         base.Response.Redirect("~/Main.htm");
                     }
                 }
@@ -68,6 +106,9 @@ namespace VAN_OA
                 base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('" + ex.Message + "！');</script>");
             }
         }
+
+
+
         private int GetZhouQi(int month)
         {
             if (1 <= month && month <= 3)
@@ -92,15 +133,15 @@ namespace VAN_OA
         {
             txtUserName.Focus();
 
-            
+
 
 
             string para = "R730 E5-2680*2/64G/128G固态+3'5  4T*6/RAID5/导轨/3年7×24";
-            var a=HttpUtility.UrlEncode(para);
+            var a = HttpUtility.UrlEncode(para);
             var b = HttpUtility.UrlDecodeToBytes(para);
             var c = HttpUtility.UrlEncode(para);
 
-            var d=Uri.EscapeDataString(para);
+            var d = Uri.EscapeDataString(para);
             var f = Uri.EscapeUriString(para);
 
         }

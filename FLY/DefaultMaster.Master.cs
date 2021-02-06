@@ -13,30 +13,32 @@ using System.Xml.Linq;
 
 
 using VAN_OA.Dal;
-using VAN_OA.Model; 
+using VAN_OA.Model;
 using System.Collections.Generic;
 using VAN_OA.Dal.EFrom;
- 
+
 using VAN_OA.Model.EFrom;
+using VAN_OA.Dal.JXC;
+
 namespace VAN_OA
 {
     public partial class DefaultMaster : MasterPage
     {
-     
-       
+
+
 
         protected void LinkButton1_Click(object sender, EventArgs e)
         {
             base.Session.RemoveAll();
             //Request.Path
-            Response.Write(string.Format("<script>top.location.href='{0}';</script>","/login.aspx"));  
+            Response.Write(string.Format("<script>top.location.href='{0}';</script>", "/login.aspx"));
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (base.Session["currentUserId"] == null)
             {
-                Response.Write(string.Format("<script>top.location.href='{0}';</script>","/login.aspx"));  
+                Response.Write(string.Format("<script>top.location.href='{0}';</script>", "/login.aspx"));
             }
             else
             {
@@ -48,7 +50,7 @@ namespace VAN_OA
                 }
             }
 
-           
+
         }
 
         protected void Timer1_Tick(object sender, EventArgs e)
@@ -75,86 +77,88 @@ namespace VAN_OA
             else
             {
                 lblMessTodoOld.Text = "";
-                   lblMessTodo.Text = "";
+                lblMessTodo.Text = "";
                 imgMess.Visible = false;
             }
-            
+
             //查询自己所有正在处理的单据
 
 
             sql = string.Format("select count(*) from tb_EForm where state='执行中' and appPer={0}", UserId);
-            int zhixingzhongCount =Convert.ToInt32(DBHelp.ExeScalar(sql));
+            int zhixingzhongCount = Convert.ToInt32(DBHelp.ExeScalar(sql));
 
-            lblDoing.Text = string.Format("你有{0}个申请正在执行中....",zhixingzhongCount);
-            
+            lblDoing.Text = string.Format("你有{0}个申请正在执行中....", zhixingzhongCount);
+
             //查询今天 有多少单据审批成功
-             sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
+            sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
                                           where state='通过' and appPer={0} and MaxTime between '{1} 00:00:00' and '{1} 23:59:59'", UserId, DateTime.Now.ToShortDateString());
 
-             int succsess = Convert.ToInt32(DBHelp.ExeScalar(sql));
+            int succsess = Convert.ToInt32(DBHelp.ExeScalar(sql));
 
 
 
 
-             lblSuccess.Text = string.Format("今天 你有{0}个申请审批 通过", succsess);
+            lblSuccess.Text = string.Format("今天 你有{0}个申请审批 通过", succsess);
 
 
             //查询今天 有多少单据审批失败
-             sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
+            sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
                                           where state='不通过' and appPer={0} and MaxTime between '{1} 00:00:00' and '{1} 23:59:59'", UserId, DateTime.Now.ToShortDateString());
 
-             lblFail.Text = string.Format("今天 你有{0}个申请审批 没有通过审核", DBHelp.ExeScalar(sql));
+            lblFail.Text = string.Format("今天 你有{0}个申请审批 没有通过审核", DBHelp.ExeScalar(sql));
 
 
 
 
-             try
-             {  //查询今天在销售订单中采购人是我的 所有通过的单子
+            try
+            {  //查询今天在销售订单中采购人是我的 所有通过的单子
 
-                 sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
+                sql = string.Format(@"select count(*) from tb_EForm left join (select e_id,Max(doTime)AS MaxTime from tb_EForms group by e_id) as newTable on tb_EForm.id=newTable.e_id
                                           where state='通过'  and MaxTime between '{1} 00:00:00' and '{1} 23:59:59' 
                                     and  tb_EForm.alle_id in (select id from  TB_POOrder where caigou='{0}')
 and  proid=(select pro_Id from A_ProInfo where pro_Type='订单报批表')", base.Session["LoginName"].ToString(), DateTime.Now.ToShortDateString());
 
-                 int count = Convert.ToInt32(DBHelp.ExeScalar(sql));
+                int count = Convert.ToInt32(DBHelp.ExeScalar(sql));
 
-                 if (count > 0)
-                 {
-                     lblCaiSuccess.Text = string.Format("今天 订单审批通过个数： {0} ", count);
-                     lblCaiSuccess.Visible = true;
-                 }
-                 else
-                 {
-                     lblCaiSuccess.Visible = false;
-                 }
-             }
-             catch (Exception)
-             {
-
-
-             }
-             try
-             {  //查询合同是否要过期
-
-                 sql = "select count(*) from HR_Person where ContractCloseTime=convert(varchar(50),getdate(),23)";
-
-                 int count = Convert.ToInt32(DBHelp.ExeScalar(sql));
-
-                 if (count > 0 && Session["LoginName"] == "李琍")
-                 {
-                     lblContract.Text = string.Format("今天 合同到期个数： {0} ", count);
-                     lblContract.Visible = true;
-                 }
-                 else
-                 {
-                     lblContract.Visible = false;
-                 }
-             }
-             catch (Exception)
-             { 
+                if (count > 0)
+                {
+                    lblCaiSuccess.Text = string.Format("今天 订单审批通过个数： {0} ", count);
+                    lblCaiSuccess.Visible = true;
+                }
+                else
+                {
+                    lblCaiSuccess.Visible = false;
+                }
+            }
+            catch (Exception)
+            {
 
 
-             }
+            }
+            try
+            {  //查询合同是否要过期
+
+                sql = "select count(*) from HR_Person where ContractCloseTime=convert(varchar(50),getdate(),23)";
+
+                int count = Convert.ToInt32(DBHelp.ExeScalar(sql));
+
+                if (count > 0 && Session["LoginName"] == "李琍")
+                {
+                    lblContract.Text = string.Format("今天 合同到期个数： {0} ", count);
+                    lblContract.Visible = true;
+                }
+                else
+                {
+                    lblContract.Visible = false;
+                }
+            }
+            catch (Exception)
+            {
+
+
+            }
+
+            lbtnX.Text = string.Format("你有{0}条商品已入库需出库", new RuSellReportService().GetCountByAE(Session["LoginName"].ToString()));
         }
 
         protected void lblSuccess_Click(object sender, EventArgs e)
@@ -182,7 +186,7 @@ and  proid=(select pro_Id from A_ProInfo where pro_Type='订单报批表')", bas
         }
 
         protected void lblMessTodo_Click(object sender, EventArgs e)
-        {           
+        {
 
             WebQuerySessin Sess = new WebQuerySessin("");
             Response.Redirect("~/EFrom/MyEFormsTodo_New.aspx");
@@ -212,6 +216,12 @@ and  proid=(select pro_Id from A_ProInfo where pro_Type='订单报批表')", bas
         {
             WebQuerySessin Sess = new WebQuerySessin("");
             Response.Redirect("~/HR/PersonList.aspx?ContractRemind=1");
+        }
+
+        protected void lbtnX_Click(object sender, EventArgs e)
+        {
+            WebQuerySessin Sess = new WebQuerySessin("");
+            Response.Redirect("~/JXC/WFRuSellReport.aspx?X=1");
         }
     }
 }

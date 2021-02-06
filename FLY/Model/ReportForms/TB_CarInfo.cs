@@ -81,5 +81,11 @@ namespace VAN_OA.Model.ReportForms
         /// </summary>
         public decimal OilNumber { get; set; }
 
+        /// <summary>
+        /// 是否停用
+        /// </summary>
+        public bool IsStop { get; set; }
+
+
     }
 }

@@ -91,6 +91,8 @@ namespace VAN_OA.Quartz.net
 				}
 
 				_logger.InfoFormat("第1个Job：" + DateTime.Now.ToString());
+
+				//new Job2().Execute(context);
 			}
 		}
 	}

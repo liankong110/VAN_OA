@@ -11,6 +11,7 @@ function show()
     
 }
 </script>
+     <script src="../Scripts/My97DatePicker/WdatePicker.js"></script>
 
    <%--  <script src="../My97DatePicker/WdatePicker.js" type="text/javascript"></script>--%>
      
@@ -74,19 +75,24 @@ function show()
              <td >
              外出时间：</td>
             <td>
-             <asp:TextBox ID="txtGoTime" runat="server" ></asp:TextBox>
-              
-                
+             <asp:TextBox ID="txtGoTime" runat="server" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  AutoCompleteType="Disabled"  AutoComplete="off"></asp:TextBox>
+             <%--  <asp:ImageButton ID="Image1" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                 <cc1:CalendarExtender ID="CalendarExtender1" PopupButtonID="Image1" runat="server"
+                    Format="yyyy-MM-dd hh:mm:ss"  TargetControlID="txtGoTime">
+                </cc1:CalendarExtender>--%>
             </td>
-        </tr>
-        
+        </tr>        
         <tr>
-               <td >
+               <td>
              回来时间：
              </td>
             <td>
-             <asp:TextBox ID="txtBackTime" runat="server"></asp:TextBox>
-             
+             <asp:TextBox ID="txtBackTime" runat="server" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" AutoCompleteType="Disabled" AutoComplete="off"></asp:TextBox>
+              <%-- <asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+                
+                <cc1:CalendarExtender ID="CalendarExtender2" runat="server" PopupButtonID="ImageButton1"
+                    Format="yyyy-MM-dd hh:mm:ss" TargetControlID="txtBackTime">
+                </cc1:CalendarExtender>--%>
                 
             </td>
         </tr>

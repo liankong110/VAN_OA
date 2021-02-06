@@ -15,9 +15,25 @@ namespace VAN_OA.Model.JXC
     public class AllSellTotalModel
     {
 
-	 
 
-		public decimal PV { get; set; }
+        /// <summary>
+        ///  净利润率=项目净利/销售额 ，如果销售额=0 ，净利润率=0 
+        /// </summary>
+        public decimal JingLi
+        {
+            get
+            {
+
+                if (PoTotal == 0)
+                {
+                    return 0;
+                }
+                return PoLiRunTotal / PoTotal;
+            }
+        }
+
+
+        public decimal PV { get; set; }
         public decimal SPI { get; set; }
         public decimal SumPOTotal { get; set; }
         public decimal SumPOTotal_QZ { get; set; }

@@ -358,9 +358,6 @@ namespace VAN_OA.JXC
                 }
                 fuhao += string.Format(" and SumPOTotal{0}{1}", ddlEquPOTotal.Text,Convert.ToDecimal(txtEquTotal.Text));
             }
-
-           
-
             if (ddlJingLiTotal.Text != "-1")
             {
                 fuhao += string.Format(" and maoliTotal {0} (isnull(InvoTotal,0)-isnull(goodTotal,0))", ddlJingLiTotal.Text);
@@ -393,6 +390,7 @@ namespace VAN_OA.JXC
                     base.ClientScript.RegisterStartupScript(base.GetType(), null, "<script>alert('净利润率 格式错误！');</script>");
                     return;
                 }
+
             }
                 List<JXC_REPORTTotal> pOOrderList = this.POSer.GetListArray_Total(sql, having, fuhao);
             if (ddlTrueZhangQI.Text != "-1")

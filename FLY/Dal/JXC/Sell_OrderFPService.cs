@@ -309,7 +309,7 @@ where PONo  in (select PONo from Sell_OrderFP where id={0}) and ifzhui=0;", mode
                         }
 
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         tan.Rollback();
                         return false;

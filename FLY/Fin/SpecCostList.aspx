@@ -4,6 +4,7 @@
 <%@ Import Namespace="VAN_OA.Model.BaseInfo" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Linq" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="SampleContent" runat="server">
     <table cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#999999" bordercolordark="#FFFFFF"
         border="1">
@@ -17,7 +18,7 @@
                 财年年月：
             </td>
             <td>
-                <asp:DropDownList ID="ddlYear" runat="server">
+                <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged">
                 </asp:DropDownList>
                 <asp:DropDownList ID="ddlMonth" runat="server">
                     <asp:ListItem Value="01" Text="01"></asp:ListItem>
@@ -45,6 +46,13 @@
                 <asp:DropDownList ID="ddlUser" runat="server" DataTextField="LoginName" DataValueField="Id"
                     Width="200PX" AutoPostBack="True" OnSelectedIndexChanged="ddlUser_SelectedIndexChanged">
                 </asp:DropDownList>
+                考核前期日期:
+                <asp:TextBox ID="txtFrom" runat="server" Width="70px"></asp:TextBox>
+                <asp:ImageButton ID="Image1" runat="server" ImageUrl="~/Image/Calendar_scheduleHS.png" />
+
+                 <cc1:CalendarExtender ID="CalendarExtender1" PopupButtonID="Image1" runat="server"
+                    Format="yyyy-MM-dd" TargetControlID="txtFrom">
+                </cc1:CalendarExtender>
             </td>
         </tr>
         <tr>
